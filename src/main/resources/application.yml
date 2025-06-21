@@ -7,11 +7,3 @@ micronaut:
         url: # MICRONAUT_HTTP_SERVICES_ZENDESK_URL
         email: # MICRONAUT_HTTP_SERVICES_ZENDESK_EMAIL
         token: # MICRONAUT_HTTP_SERVICES_ZENDESK_TOKEN
-datasources:
-  default:
-    url: jdbc:h2:mem:devDb;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password: ''
-    driver-class-name: org.h2.Driver
-    schema-generate: CREATE_DROP
-    dialect: H2

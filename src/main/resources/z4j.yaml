@@ -1,0 +1,2135 @@
+openapi: 3.0.2
+info:
+  title: Help Center API
+  description: Help Center v2 REST API
+  version: 2.0.0
+tags:
+  - name: User Subscriptions
+paths:
+  /api/v2/help_center/user_segments:
+    get:
+      operationId: ListUserSegments
+      tags:
+        - User Segments
+      summary: List User Segments
+      description: |
+        Some user segments can only be applied to sections and topics on certain Guide plans. For instance, user 
+        segments with a `user_type` of `"staff"` cannot be applied to sections and topics on accounts on the Guide 
+        Lite plan or the Suite Team plan. <br>
+        Allowed for Help Center managers
+      parameters:
+        - name: built_in
+          in: query
+          description: Only built_in user segments if true, only custom user segments if false
+          allowEmptyValue: true
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSegmentsResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/UserSegmentsResponseExample'
+    post:
+      operationId: CreateUserSegment
+      tags:
+        - User Segments
+      summary: Create User Segment
+      description: |
+        Allowed for Help Center managers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_segment:
+                  $ref: '#/components/schemas/UserSegment'
+      responses:
+        "201":
+          description: Created response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSegmentResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/UserSegmentResponseExample'
+        "400":
+          description: Bad request response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestErrorResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/BadRequestCreateUserSegment'
+  /api/v2/help_center/user_segments/{user_segment_id}:
+    parameters:
+      - $ref: '#/components/parameters/UserSegmentId'
+    get:
+      operationId: ShowUserSegment
+      tags:
+        - User Segments
+      summary: Show User Segment
+      description: |
+        Allowed for Help Center managers
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSegmentResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/UserSegmentResponseExample'
+    put:
+      operationId: UpdateUserSegment
+      tags:
+        - User Segments
+      summary: Update User Segment
+      description: |
+        Allowed for Help Center managers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_segment:
+                  $ref: '#/components/schemas/UserSegment'
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserSegmentResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/UserSegmentResponseExample'
+        "400":
+          description: Bad request Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestErrorResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/BadRequestUpdateUserSegment'
+    delete:
+      operationId: DeleteUserSegment
+      tags:
+        - User Segments
+      summary: Delete User Segment
+      description: |
+        Allowed for Help Center managers
+      responses:
+        "204":
+          description: Response when the  was deleted
+  /api/v2/help_center/user_segments/{user_segment_id}/sections:
+    parameters:
+      - $ref: '#/components/parameters/UserSegmentId'
+    get:
+      operationId: ListUserSegmentSections
+      tags:
+        - User Segments
+      summary: List Sections with User Segment
+      description: |
+        Lists the sections that use the specified user segment.
+
+        Allowed for Help Center managers
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SectionsResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/UserSegmentSectionsResponseExample'
+  /api/v2/help_center/user_segments/{user_segment_id}/topics:
+    parameters:
+      - $ref: '#/components/parameters/UserSegmentId'
+    get:
+      operationId: ListUserSegmentTopics
+      tags:
+        - User Segments
+      summary: List Topics with User Segment
+      description: |
+        Lists the topics that use the specified user segment.
+
+        This endpoint supports pagination as described in [Pagination](developer.zendesk.com/api-reference/help_center/help-center-api/help-center-api/#pagination).
+
+        #### Allowed for
+
+        * Help Center managers
+
+        #### Pagination
+
+        * Cursor pagination (recommended)
+        * Offset pagination
+
+        See [Pagination](developer.zendesk.com/api-reference/introduction/pagination/).
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TopicsResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/UserSegmentTopicsResponseExample'
+components:
+  schemas:
+    ArticleAttachment:
+      type: object
+      properties:
+        article_id:
+          type: integer
+          format: int64
+          description: The associated article, if present
+        content_type:
+          type: string
+          description: 'The file type. Example: image/png'
+          readOnly: true
+        content_url:
+          type: string
+          description: URL where the attachment file can be downloaded
+          readOnly: true
+        created_at:
+          type: string
+          description: The time the article attachment was created
+          readOnly: true
+        file:
+          type: object
+          description: File to upload, applicable only during creation.
+        file_name:
+          type: string
+          description: The file name
+          readOnly: true
+        guide_media_id:
+          type: string
+          description: Unique identifier for the guide-media to associate with this attachment, applicable only during creation.
+        id:
+          type: integer
+          format: int64
+          description: Assigned ID when the article attachment is created
+          readOnly: true
+        inline:
+          type: boolean
+          description: The attached file is shown in the admin interface for inline attachments. Its URL can be referenced in the article's HTML body. Inline attachments are image files directly embedded in the article body. If false, the attachment is listed in the list of attachments. The default value is false
+        locale:
+          type: string
+          description: The locale of translation that the attachment will be attached to and can only be set on inline attachments
+        size:
+          type: integer
+          format: int64
+          description: The attachment file size in bytes
+          readOnly: true
+        updated_at:
+          type: string
+          description: The time the article attachment was last updated
+          readOnly: true
+        url:
+          type: string
+          description: The URL of the article attachment
+          readOnly: true
+      example:
+        article_id: 23
+        content_type: application/pdf
+        content_url: https://company.zendesk.com/hc/article_attachments/200109629
+        created_at: "2012-04-04T09:14:57Z"
+        file_name: party_invitation.pdf
+        id: 1428
+        inline: false
+        locale: en_us
+        size: 58298
+    ArticleAttachmentResponse:
+      type: object
+      properties:
+        article_attachment:
+          $ref: '#/components/schemas/ArticleAttachment'
+    ArticleAttachmentsResponse:
+      type: object
+      properties:
+        article_attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArticleAttachment'
+    Article:
+      type: object
+      properties:
+        author_id:
+          type: integer
+          format: int64
+          description: The id of the user who wrote the article (set to the user who made the request on create by default)
+        body:
+          type: string
+          description: HTML body of the article. Unsafe tags and attributes may be removed before display. For a list of safe tags and attributes, see [Allowing unsafe HTML in Help Center articles](https://support.zendesk.com/hc/en-us/articles/115015895948) in Zendesk help
+        comments_disabled:
+          type: boolean
+          description: True if comments are disabled; false otherwise
+        content_tag_ids:
+          type: array
+          description: The list of content tags attached to the article
+          items:
+            type: string
+        created_at:
+          type: string
+          description: The time the article was created
+          readOnly: true
+        draft:
+          type: boolean
+          description: True if the translation for the current locale is a draft; false otherwise. false by default. Can be set when creating but not when updating. For updating, see Translations
+          readOnly: true
+        edited_at:
+          type: string
+          description: The time the article was last edited in its displayed locale
+          readOnly: true
+        html_url:
+          type: string
+          description: The url of the article in Help Center
+          readOnly: true
+        id:
+          type: integer
+          format: int64
+          description: Automatically assigned when the article is created
+          readOnly: true
+        label_names:
+          type: array
+          description: An array of label names associated with this article. By default no label names are used. Only available on certain plans
+          items:
+            type: string
+        locale:
+          type: string
+          description: The locale that the article is being displayed in
+        outdated:
+          type: boolean
+          description: Deprecated. Always false because the source translation is always the most up-to-date translation
+          readOnly: true
+        outdated_locales:
+          type: array
+          description: Locales in which the article was marked as outdated
+          items:
+            type: string
+          readOnly: true
+        permission_group_id:
+          type: integer
+          format: int64
+          description: The id of the permission group which defines who can edit and publish this article
+        position:
+          type: integer
+          format: int64
+          description: The position of this article in the article list. 0 by default
+        promoted:
+          type: boolean
+          description: True if this article is promoted; false otherwise. false by default
+        section_id:
+          type: integer
+          format: int64
+          description: The id of the section to which this article belongs
+        source_locale:
+          type: string
+          description: The source (default) locale of the article
+          readOnly: true
+        title:
+          type: string
+          description: The title of the article
+        updated_at:
+          type: string
+          description: The time the article was last updated
+          readOnly: true
+        url:
+          type: string
+          description: The API url of the article
+          readOnly: true
+        user_segment_id:
+          type: integer
+          format: int64
+          description: The id of the user segment which defines who can see this article. Set to null to make it accessible to everyone. Either user_segment_id or user_segment_ids must be specified
+          nullable: true
+        user_segment_ids:
+          type: array
+          description: List of user segment ids which define who can view this article. Set to an empty list to make it accessible to everyone. For Enterprise plans only this may contain more than one user_segment_id. Either user_segment_id or user_segment_ids must be specified
+        vote_count:
+          type: integer
+          format: int64
+          description: The total number of upvotes and downvotes
+          readOnly: true
+        vote_sum:
+          type: integer
+          format: int64
+          description: The sum of upvotes (+1) and downvotes (-1), which may be positive or negative
+          readOnly: true
+      example:
+        author_id: 3465
+        comments_disabled: false
+        id: 1635
+        locale: en
+        permission_group_id: 13
+        title: The article
+        user_segment_id: 12
+      required:
+        - title
+        - locale
+        - permission_group_id
+    ArticleRequest:
+      type: object
+      properties:
+        article:
+          type: object
+          properties:
+            body:
+              type: string
+              example: Use a tripod
+            locale:
+              type: string
+              example: en-us
+            permission_group_id:
+              type: integer
+              format: int64
+              default: 0
+              example: 56
+            title:
+              type: string
+              example: Taking photos in low light
+            user_segment_id:
+              type: integer
+              format: int64
+              example: 123
+          required:
+            - title
+            - locale
+            - user_segment_id
+            - permission_group_id
+        notify_subscribers:
+          type: boolean
+          example: false
+      required:
+        - article
+    ArticleResponse:
+      type: object
+      properties:
+        article:
+          $ref: '#/components/schemas/Article'
+    ArticleSearchResponse:
+      type: object
+      properties:
+        result_type:
+          type: string
+          description: For articles, always the string `article`
+          default: article
+          readOnly: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Article'
+        snippet:
+          type: string
+          description: |
+            The portion of an article that is relevant to the search query, with matching words or phrases delimited by <em></em> tags. Example: a query for `carrot potato` might return the snippet `...don't confuse <em>carrots</em> with <em>potatoes</em>...`
+          readOnly: true
+    ArticlesResponse:
+      type: object
+      properties:
+        articles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Article'
+    BadRequestErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: object
+          additionalProperties: true
+      example:
+        errors:
+          field_name_with_error:
+            - cannot process this field
+    CategoriesResponse:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+    Category:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          description: The time at which the category was created
+          readOnly: true
+        description:
+          type: string
+          description: The description of the category
+        html_url:
+          type: string
+          description: The url of this category in Help Center
+        #          readOnly: true
+        id:
+          type: integer
+          format: int64
+          description: Automatically assigned when creating categories
+        #          readOnly: true
+        locale:
+          type: string
+          description: The locale where the category is displayed
+        name:
+          type: string
+          description: The name of the category
+        outdated:
+          type: boolean
+          description: Whether the category is out of date
+        #          readOnly: true
+        position:
+          type: integer
+          format: int64
+          description: The position of this category relative to other categories
+        source_locale:
+          type: string
+          description: The source (default) locale of the category
+        #          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: The time at which the category was last updated
+        #          readOnly: true
+        url:
+          type: string
+          description: The API url of this category
+      #          readOnly: true
+      example:
+        description: ""
+        html_url: https://company.zendesk.com/hc/en-us/categories/354362577
+        id: 1635
+        locale: en-us
+        name: Self Help Articles
+        source_locale: en-us
+        url: https://company.zendesk.com/api/v2/help_center/categories/354362577
+      required:
+        - id
+        - name
+        - locale
+    CategoryResponse:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/Category'
+    Comment:
+      type: object
+      properties:
+        author_id:
+          type: integer
+          format: int64
+          description: The id of the author of this comment. Writable on create by Help Center managers. See [Create Comment](#create-comment)
+        body:
+          type: string
+          description: The comment made by the author. See [User content](#user-content)
+        created_at:
+          type: string
+          description: The time the comment was created. Writable on create by Help Center managers. See [Create Comment](#create-comment)
+        html_url:
+          type: string
+          description: The url at which the comment is presented in Help Center
+          readOnly: true
+        id:
+          type: integer
+          format: int64
+          description: Automatically assigned when the comment is created
+          readOnly: true
+        locale:
+          type: string
+          description: The locale in which this comment was made
+        non_author_editor_id:
+          type: integer
+          format: int64
+          description: The user id of whoever performed the most recent (if any) non-author edit. A non-author edit consists of an edit make by a user other than the author that creates or updates the `body` or `author_id`. Note that only edits made after May 17, 2021 will be reflected in this field. If no non-author edits have occured since May 17, 2021, then this field will be `null`.
+          readOnly: true
+        non_author_updated_at:
+          type: string
+          format: date-time
+          description: When the comment was last edited by a non-author user
+          readOnly: true
+        source_id:
+          type: integer
+          format: int64
+          description: The id of the item on which this comment was made
+          readOnly: true
+        source_type:
+          type: string
+          description: The type of the item on which this comment was made. Currently only supports 'Article'
+          readOnly: true
+        updated_at:
+          type: string
+          description: The time at which the comment was last updated
+          readOnly: true
+        url:
+          type: string
+          description: The API url of this comment
+          readOnly: true
+        vote_count:
+          type: integer
+          format: int64
+          description: The total number of upvotes and downvotes
+          readOnly: true
+        vote_sum:
+          type: integer
+          format: int64
+          description: The sum of upvotes (+1) and downvotes (-1), which may be positive or negative
+          readOnly: true
+      example:
+        author_id: 3465
+        body: Thanks for your help!
+        created_at: "2012-04-04T09:14:57Z"
+        id: 1635
+        locale: en-us
+        source_id: 65466
+        source_type: Article
+      required:
+        - body
+        - locale
+    CommentResponse:
+      type: object
+      properties:
+        comment:
+          $ref: '#/components/schemas/Comment'
+    CommentsResponse:
+      type: object
+      properties:
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+    CommunityPostSearchResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+    ContentSubscription:
+      type: object
+      properties:
+        content_id:
+          type: integer
+          format: int64
+          description: The id of the subscribed item
+          readOnly: true
+        content_type:
+          type: string
+          description: The type of the subscribed item
+          readOnly: true
+        created_at:
+          type: string
+          description: The time at which the subscription was created
+          readOnly: true
+        id:
+          type: integer
+          format: int64
+          description: Automatically assigned when the subscription is created
+          readOnly: true
+        include_comments:
+          type: boolean
+          description: Subscribe also to article comments / post comments. Only for section / topic subscriptions.
+          readOnly: true
+        locale:
+          type: string
+          description: The locale of the subscribed item
+          readOnly: true
+        source_locale:
+          type: string
+          description: Used only for [Create Section Subscription](#create-section-subscription) and [Create Article Subscription](#create-article-subscription), where it's mandatory. Selects the locale of the content to be subscribed
+        updated_at:
+          type: string
+          description: The time at which the subscription was last updated
+          readOnly: true
+        url:
+          type: string
+          description: The API url of the subscription
+          readOnly: true
+        user_id:
+          type: integer
+          format: int64
+          description: The id of the user who has this subscription
+          readOnly: true
+      example:
+        content_id: 65466
+        created_at: "2012-04-04T09:14:57Z"
+        id: 1635
+        locale: en-us
+        user_id: 3465
+      required:
+        - locale
+    ContentSubscriptionsResponse:
+      type: object
+      properties:
+        subscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentSubscription'
+    CreateUserImageResponse:
+      type: object
+      properties:
+        user_image:
+          type: object
+          properties:
+            content_type:
+              type: string
+            path:
+              type: string
+            size:
+              type: number
+    HelpCenterLocalesResponse:
+      type: object
+      properties:
+        locales:
+          type: array
+          items:
+            type: string
+    HelpCenterSession:
+      type: object
+      properties:
+        csrf_token:
+          type: string
+    HelpCenterSessionResponse:
+      type: object
+      properties:
+        current_session:
+          $ref: '#/components/schemas/HelpCenterSession'
+    Label:
+      type: object
+      properties:
+        created_at:
+          type: string
+          description: The time at which the label was created
+          readOnly: true
+        id:
+          type: integer
+          format: int64
+          description: Automatically assigned when the label is created
+          readOnly: true
+        name:
+          type: string
+          description: The actual name of the label
+        updated_at:
+          type: string
+          description: The time at which the label was last updated
+          readOnly: true
+        url:
+          type: string
+          description: The API url of this label
+          readOnly: true
+      example:
+        created_at: "2012-04-04T09:14:57Z"
+        id: 2003
+        name: instructions
+      required:
+        - name
+    LabelResponse:
+      type: object
+      properties:
+        label:
+          $ref: '#/components/schemas/Label'
+    LabelsResponse:
+      type: object
+      properties:
+        labels:
+          type: array
+          items:
+            $ref: '#/components/schemas/Label'
+    LocalesWithDefaultResponse:
+      type: object
+      properties:
+        default_locale:
+          type: string
+        locales:
+          type: array
+          items:
+            type: string
+    PostComment:
+      type: object
+      properties:
+        author_id:
+          type: integer
+          format: int64
+          description: The id of the author of the comment. Writable on create by Help Center managers. See [Create Post Comment](#create-post-comment)
+        body:
+          type: string
+          description: The comment made by the author. See [User content](#user-content)
+        created_at:
+          type: string
+          description: When the comment was created. Writable on create by Help Center managers. See [Create Post Comment](#create-post-comment)
+        html_url:
+          type: string
+          description: The community url of the comment
+          readOnly: true
+        id:
+          type: integer
+          format: int64
+          description: Automatically assigned when the comment is created
+          readOnly: true
+        non_author_editor_id:
+          type: integer
+          format: int64
+          description: The user id of whoever performed the most recent (if any) non-author edit. A non-author edit consists of an edit make by a user other than the author that creates or updates the `body`. Note that only edits made after May 17, 2021 will be reflected in this field. If no non-author edits have occured since May 17, 2021, then this field will be `null`.
+          readOnly: true
+        non_author_updated_at:
+          type: string
+          format: date-time
+          description: When the comment was last edited by a non-author user
+          readOnly: true
+        official:
+          type: boolean
+          description: Whether the comment is marked as official
+        post_id:
+          type: integer
+          format: int64
+          description: The id of the post on which the comment was made
+          readOnly: true
+        updated_at:
+          type: string
+          description: When the comment was last updated
+          readOnly: true
+        url:
+          type: string
+          description: The API url of the comment
+          readOnly: true
+        vote_count:
+          type: integer
+          format: int64
+          description: The total number of upvotes and downvotes
+          readOnly: true
+        vote_sum:
+          type: integer
+          format: int64
+          description: The sum of upvotes (+1) and downvotes (-1), which may be positive or negative
+          readOnly: true
+      example:
+        author_id: 89567
+        body: My printer is on fire!
+        id: 35467
+        official: false
+        vote_count: 15
+        vote_sum: 10
+      required:
+        - body
+    PostCommentResponse:
+      type: object
+      properties:
+        comment:
+          $ref: '#/components/schemas/PostComment'
+    PostCommentsResponse:
+      type: object
+      properties:
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostComment'
+    Post:
+      type: object
+      properties:
+        author_id:
+          type: integer
+          format: int64
+          description: The id of the author of the post. *Writable on create by Help Center managers -- see Create Post
+          readOnly: true
+        closed:
+          type: boolean
+          description: Whether further comments are allowed
+        comment_count:
+          type: integer
+          format: int64
+          description: The number of comments on the post
+          readOnly: true
+        content_tag_ids:
+          type: array
+          description: The list of content tags attached to the post
+          items:
+            type: integer
+            format: int64
+        created_at:
+          type: string
+          format: date-time
+          description: When the post was created. Writable on create by Help Center managers -- see [Create Post](#create-post)
+          readOnly: true
+        details:
+          type: string
+          description: The details of the post made by the author. See [User content](#user-content)
+        featured:
+          type: boolean
+          description: Whether the post is featured
+        follower_count:
+          type: integer
+          format: int64
+          description: The number of followers of the post
+          readOnly: true
+        html_url:
+          type: string
+          description: The community url of the post
+          readOnly: true
+        id:
+          type: integer
+          format: int64
+          description: Automatically assigned when the post is created
+          readOnly: true
+        non_author_editor_id:
+          type: integer
+          format: int64
+          description: The user id of whoever performed the most recent (if any) non-author edit. A non-author edit consists of an edit make by a user other than the author that creates or updates the `title` or `details`. Note that only edits made after May 17, 2021 will be reflected in this field. If no non-author edits have occured since May 17, 2021, then this field will be `null`.
+          readOnly: true
+        non_author_updated_at:
+          type: string
+          format: date-time
+          description: When the post was last edited by a non-author user
+          readOnly: true
+        pinned:
+          type: boolean
+          description: When true, pins the post to the top of its topic
+        status:
+          type: string
+          description: 'The status of the post. Possible values: "planned", "not_planned" , "answered", or "completed"'
+        title:
+          type: string
+          description: The title of the post
+        topic_id:
+          type: integer
+          format: int64
+          description: The id of the topic that the post belongs to
+        updated_at:
+          type: string
+          format: date-time
+          description: When the post was last updated
+          readOnly: true
+        url:
+          type: string
+          description: The API url of the post
+          readOnly: true
+        vote_count:
+          type: integer
+          format: int64
+          description: The total number of upvotes and downvotes
+          readOnly: true
+        vote_sum:
+          type: integer
+          format: int64
+          description: The sum of upvotes (+1) and downvotes (-1), which may be positive or negative
+          readOnly: true
+      example:
+        author_id: 3465
+        featured: true
+        id: 1635
+        title: The post
+      required:
+        - title
+    PostResponse:
+      type: object
+      properties:
+        post:
+          $ref: '#/components/schemas/Post'
+    PostsResponse:
+      type: object
+      properties:
+        posts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+    RequestUserImageUploadResponse:
+      type: object
+      properties:
+        upload:
+          type: object
+          properties:
+            headers:
+              type: object
+              additionalProperties: true
+            token:
+              type: string
+            url:
+              type: string
+    Search:
+      type: object
+      properties:
+        results:
+          type: array
+          description: An array with the base articles or community posts
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Article'
+              - $ref: '#/components/schemas/PostComment'
+      required:
+        - results
+    Section:
+      type: object
+      properties:
+        category_id:
+          type: integer
+          format: int64
+          description: The id of the category to which this section belongs
+        created_at:
+          type: string
+          description: The time at which the section was created
+          readOnly: true
+        description:
+          type: string
+          description: The description of the section
+        html_url:
+          type: string
+          description: The url of this section in HC
+          readOnly: true
+        id:
+          type: integer
+          format: int64
+          description: Automatically assigned when creating subscriptions
+          readOnly: true
+        locale:
+          type: string
+          description: The locale in which the section is displayed
+        name:
+          type: string
+          description: The name of the section
+        outdated:
+          type: boolean
+          description: Whether the section is out of date
+          readOnly: true
+        parent_section_id:
+          type: integer
+          format: int64
+          description: The id of the section to which this section belongs. Only writable for Guide Enterprise customers
+          nullable: true
+        position:
+          type: integer
+          format: int64
+          description: The position of this section in the section list. Used when sorting is set to ´manual´. By default the section is added to the end of the list
+        source_locale:
+          type: string
+          description: The source (default) locale of the section
+          readOnly: true
+        theme_template:
+          type: string
+          description: The theme template name used to display this section in Help Center.
+          example: section_template
+        updated_at:
+          type: string
+          description: The time at which the section was last updated
+          readOnly: true
+        url:
+          type: string
+          description: The API url of this section
+          readOnly: true
+      example:
+        category_id: 3465
+        description: This section contains tricks for the airborne
+        id: 1635
+        locale: en-us
+        name: Avionics
+      required:
+        - name
+        - locale
+    SectionPutRequest:
+      type: object
+      properties:
+        section:
+          type: object
+          properties:
+            category_id:
+              type: integer
+              format: int64
+              description: The id of the category to which this section belongs
+            description:
+              type: string
+              description: The description of the section
+            name:
+              type: string
+              description: The name of the section
+            parent_section_id:
+              type: integer
+              format: int64
+              description: The id of the section to which this section belongs. Only writable for Guide Enterprise customers
+            position:
+              type: integer
+              format: int64
+              description: The position of this section in the section list. Used when sorting is set to ´manual´.
+            sorting:
+              type: string
+              description: Defines the type of sorting used in this section
+              enum:
+                - manual
+                - title
+                - creation_desc
+                - creation_asc
+            theme_template:
+              type: string
+              description: The theme template name used to display this section in Help Center.
+              example: section_template
+      required:
+        - section
+    SectionResponse:
+      type: object
+      properties:
+        section:
+          $ref: '#/components/schemas/Section'
+    SectionsResponse:
+      type: object
+      properties:
+        sections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Section'
+    SubscriptionResponse:
+      type: object
+      properties:
+        subscription:
+          $ref: '#/components/schemas/ContentSubscription'
+    Topic:
+      type: object
+      description: |
+        The `manageable_by` attribute takes one of the following values:
+
+        | Value     | Users                       |
+        |-----------|---------------------------- |
+        | staff     | agents and managers         |
+        | managers  | only Help Center managers   |
+
+        Note that `manageable_by` is only displayed to users who can manage the topic.
+      properties:
+        created_at:
+          type: string
+          description: When the topic was created
+          readOnly: true
+        description:
+          type: string
+          description: The description of the topic. By default an empty string
+          nullable: true
+        follower_count:
+          type: integer
+          format: int64
+          description: The number of users following the topic
+          readOnly: true
+        html_url:
+          type: string
+          description: The community url of the topic
+          readOnly: true
+        id:
+          type: integer
+          format: int64
+          description: Automatically assigned when the topic is created
+          readOnly: true
+        manageable_by:
+          type: string
+          description: The set of users who can manage this topic.
+          enum:
+            - staff
+            - managers
+        name:
+          type: string
+          description: The name of the topic
+        position:
+          type: integer
+          format: int64
+          description: The position of the topic relative to other topics in the community
+        updated_at:
+          type: string
+          description: When the topic was last updated
+          readOnly: true
+        url:
+          type: string
+          description: The API url of the topic
+          readOnly: true
+        user_segment_id:
+          type: integer
+          format: int64
+          description: The id of the user segment to which this topic belongs
+          nullable: true
+      example:
+        created_at: "2012-04-04T09:14:57Z"
+        description: Security Best Practices
+        follower_count: 332
+        id: 1635
+        manageable_by: staff
+        name: Security
+      required:
+        - name
+    TopicResponse:
+      type: object
+      properties:
+        topic:
+          $ref: '#/components/schemas/Topic'
+    TopicsResponse:
+      type: object
+      properties:
+        topics:
+          type: array
+          items:
+            $ref: '#/components/schemas/Topic'
+    Translation:
+      type: object
+      properties:
+        body:
+          type: string
+          description: HTML body of the translation. Empty by default
+        created_at:
+          type: string
+          description: The time at which the translation was created
+          readOnly: true
+        created_by_id:
+          type: integer
+          format: int64
+          description: The id of the user who created the translation
+          readOnly: true
+        draft:
+          type: boolean
+          description: True if the translation is a draft; false otherwise. False by default
+        html_url:
+          type: string
+          description: The url of the translation in Help Center
+          readOnly: true
+        id:
+          type: integer
+          format: int64
+          description: Automatically assigned when a translation is created
+          readOnly: true
+        locale:
+          type: string
+          description: The locale of the translation
+        outdated:
+          type: boolean
+          description: True if the translation is outdated; false otherwise. False by default
+        source_id:
+          type: integer
+          format: int64
+          description: The id of the item that has this translation
+          readOnly: true
+        source_type:
+          type: string
+          description: The type of the item that has this translation. Can be "article", "section", or "category".
+          readOnly: true
+        title:
+          type: string
+          description: The title of the translation
+        updated_at:
+          type: string
+          description: The time at which the translation was last updated
+          readOnly: true
+        updated_by_id:
+          type: integer
+          format: int64
+          description: The id of the user who last updated the translation
+          nullable: true
+          readOnly: true
+        url:
+          type: string
+          description: The API url of the translation
+          readOnly: true
+      example:
+        id: 3243452
+        locale: en
+        source_id: 768934
+        source_type: Article
+        title: Hello translation
+      required:
+        - locale
+        - title
+    TranslationResponse:
+      type: object
+      properties:
+        translation:
+          $ref: '#/components/schemas/Translation'
+    TranslationsResponse:
+      type: object
+      properties:
+        translations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Translation'
+    UnifiedSearchResult:
+      type: object
+      properties:
+        title:
+          type: string
+        type:
+          type: string
+          enum:
+            - ARTICLE
+            - POST
+            - EXTERNAL_RECORD
+        updated_at:
+          type: string
+          format: date-time
+        url:
+          type: string
+    UnifiedSearchResultSet:
+      type: object
+      properties:
+        meta:
+          type: object
+          properties:
+            after_cursor:
+              type: string
+            before_cursor:
+              type: string
+            has_more:
+              type: boolean
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/UnifiedSearchResult'
+    UserSegment:
+      type: object
+      description: |
+        The `user_type` attribute takes one of the following values:
+
+        | Value               | Users                                |
+        |---------------------|--------------------------------------|
+        | signed_in_users     | only authenticated users             |
+        | staff               | only agents and Help Center managers |
+
+
+        For `group_ids`, `organization_ids`, `tags`, and `or_tags`,
+        an empty array means that access is not restricted by the attribute. For example,
+        if no group ids are specified, then users don't have to be in any specific group to
+        have access.
+
+        For `tags`, a user must have all the listed tags to have access. For `or_tags`, a
+        user must have at least one of the listed tags to have access.
+      properties:
+        added_user_ids:
+          type: array
+          description: The ids of users added specifically to this user segment, regardless of matching tags or other criteria
+          items:
+            type: integer
+            format: int64
+        built_in:
+          type: boolean
+          description: Whether the user segment is built-in. Built-in user segments cannot be modified
+          readOnly: true
+        created_at:
+          type: string
+          description: When the user segment was created
+          readOnly: true
+        group_ids:
+          type: array
+          description: The ids of the groups that have access
+          items:
+            type: integer
+            format: int64
+        id:
+          type: integer
+          format: int64
+          description: Automatically assigned when the user segment is created
+        name:
+          type: string
+          description: User segment name (localized to the locale of the current user for built-in user segments)
+        or_tags:
+          type: array
+          description: A user must have at least one tag in the list to have access
+          items:
+            type: string
+        organization_ids:
+          type: array
+          description: The ids of the organizations that have access
+          items:
+            type: integer
+            format: int64
+        tags:
+          type: array
+          description: All the tags a user must have to have access
+          items:
+            type: string
+        updated_at:
+          type: string
+          description: When the user segment was last updated
+          readOnly: true
+        user_type:
+          type: string
+          description: The set of users who can view content
+      example:
+        built_in: false
+        created_at: "2017-07-20T22:55:29Z"
+        group_ids:
+          - 12
+        name: VIP agents
+        organization_ids:
+          - 42
+        tags:
+          - vip
+        updated_at: "2017-07-23T21:43:28Z"
+        user_type: staff
+      required:
+        - user_type
+        - name
+    UserSegmentResponse:
+      type: object
+      properties:
+        user_segment:
+          $ref: '#/components/schemas/UserSegment'
+    UserSegmentsResponse:
+      type: object
+      properties:
+        user_segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSegment'
+    UserSubscription:
+      type: object
+      properties:
+        followed_id:
+          type: integer
+          format: int64
+          description: The id of the user being followed
+          readOnly: true
+        follower_id:
+          type: integer
+          format: int64
+          description: The id of the user doing the following
+          readOnly: true
+        id:
+          type: integer
+          format: int64
+          description: Automatically assigned when the subscription is created
+          readOnly: true
+      example:
+        followed_id: 65466
+        follower_id: 98354
+        id: 1635
+      required:
+        - followed_id
+        - follower_id
+        - id
+    UserSubscriptionsResponse:
+      type: object
+      properties:
+        user_subscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSubscription'
+    Vote:
+      type: object
+      properties:
+        created_at:
+          type: string
+          description: The time at which the vote was created
+          readOnly: true
+        id:
+          type: integer
+          format: int64
+          description: Automatically assigned when the vote is created
+          readOnly: true
+        item_id:
+          type: integer
+          format: int64
+          description: The id of the item for which this vote was cast
+          readOnly: true
+        item_type:
+          type: string
+          description: The type of the item. Can be "Article", "Comment", "Post" or "PostComment"
+          readOnly: true
+        updated_at:
+          type: string
+          description: The time at which the vote was last updated
+          readOnly: true
+        url:
+          type: string
+          description: The API url of this vote
+          readOnly: true
+        user_id:
+          type: integer
+          format: int64
+          description: The id of the user who cast this vote
+          readOnly: true
+        value:
+          type: integer
+          format: int64
+          description: The value of the vote
+      example:
+        created_at: "2012-04-04T09:14:57Z"
+        id: 1635
+        item_id: 65466
+        item_type: Article
+        user_id: 3465
+        value: 1
+      required:
+        - value
+    VoteResponse:
+      type: object
+      properties:
+        vote:
+          $ref: '#/components/schemas/Vote'
+    VotesResponse:
+      type: object
+      properties:
+        votes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Vote'
+  parameters:
+    ArticleAttachmentId:
+      name: article_attachment_id
+      in: path
+      description: The unique ID of the article attachment
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 1428
+    ArticleId:
+      name: article_id
+      in: path
+      description: The unique ID of the article
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 360026053753
+    ArticlesSortBy:
+      name: sort_by
+      in: query
+      description: Sorts the articles by one of the accepted values
+      schema:
+        type: string
+        enum:
+          - position
+          - title
+          - created_at
+          - updated_at
+    CategoryId:
+      name: category_id
+      in: path
+      description: The unique ID of the category
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 360002011513
+    CommentId:
+      name: comment_id
+      in: path
+      description: The unique ID of the comment
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 360004163994
+    LabelId:
+      name: label_id
+      in: path
+      description: The unique ID of the label
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 360015727233
+    OptionalLocale:
+      name: locale
+      in: path
+      description: The locale the item is displayed in
+      required: true
+      schema:
+        type: string
+        example: en-us
+      example: en-us
+    PostCommentId:
+      name: post_comment_id
+      in: path
+      description: The unique ID of the post comment
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 360010837133
+    PostId:
+      name: post_id
+      in: path
+      description: The unique ID of the post
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 360039436873
+    RequiredLocale:
+      name: locale
+      in: path
+      description: Mandatory locale parameter
+      required: true
+      schema:
+        type: string
+        example: en-us
+      example: en-us
+    SectionId:
+      name: section_id
+      in: path
+      description: The unique ID of the section
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 360004785313
+    SortBy:
+      name: sort_by
+      in: query
+      description: Sorts the results by one of the accepted values
+      schema:
+        type: string
+        enum:
+          - position
+          - created_at
+          - updated_at
+    SortOrder:
+      name: sort_order
+      in: query
+      description: Selects the order of the results
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+    SubscriptionId:
+      name: subscription_id
+      in: path
+      description: The unique ID of the subscription
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 1234
+    TopicId:
+      name: topic_id
+      in: path
+      description: The unique ID of the topic
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 360001326113
+    TranslationId:
+      name: translation_id
+      in: path
+      description: The unique ID of the translation
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 1234
+    UserId:
+      name: user_id
+      in: path
+      description: The unique ID of the user
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 1234
+    UserSegmentId:
+      name: user_segment_id
+      in: path
+      description: The unique ID of the user segment
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 1234
+    VoteId:
+      name: vote_id
+      in: path
+      description: The unique ID of the vote
+      required: true
+      schema:
+        type: integer
+        format: int64
+      example: 35467
+  examples:
+    ArticleAttachmentResponseExample:
+      value:
+        article_attachment:
+          article_id: 23
+          content_type: application/jpeg
+          content_url: https://company.zendesk.com/hc/article_attachments/200109629/logo.jpg
+          file_name: logo.jpg
+          id: 1428
+          inline: true
+          locale: en_us
+          size: 1428
+    ArticleAttachmentsResponseExample:
+      value:
+        article_attachments:
+          - article_id: 23
+            content_type: application/jpeg
+            content_url: https://company.zendesk.com/hc/article_attachments/200109629/logo.jpg
+            file_name: logo.jpg
+            id: 1428
+            inline: true
+            size: 1428
+          - article_id: 23
+            content_type: application/pdf
+            content_url: https://company.zendesk.com/hc/article_attachments/200109629/party_invitation.pdf
+            file_name: party_invitation.pdf
+            id: 2857
+            inline: false
+            size: 58298
+    ArticleLabelResponseExample:
+      value:
+        label:
+          created_at: "2012-04-04T09:14:57Z"
+          id: 2003
+          name: instructions
+          updated_at: "2012-04-04T09:14:57Z"
+          url: https://{subdomain}.zendesk.com/api/v2/help_center/en-us/articles/labels/42.json
+    ArticleLabelsResponseExample:
+      value:
+        labels:
+          - created_at: "2012-04-04T09:14:57Z"
+            id: 2003
+            name: instructions
+            updated_at: "2012-04-04T09:14:57Z"
+            url: https://{subdomain}.zendesk.com/api/v2/help_center/articles/labels/42.json
+    ArticleRequestExample:
+      value:
+        article:
+          body: Use a tripod
+          locale: en-us
+          permission_group_id: 56
+          title: Taking photos in low light
+          user_segment_id: 123
+        notify_subscribers: false
+    ArticleResponseExample:
+      value:
+        article:
+          author_id: 3465
+          comments_disabled: true
+          content_tag_ids:
+            - 01GT23D51Y
+            - 01GT23FWWN
+          id: 37486578
+          locale: en_us
+          permission_group_id: 123
+          position: 42
+          promoted: false
+          title: Article title
+          user_segment_id: 12
+    ArticleSearchResponseExample:
+      value:
+        results:
+          - author_id: 888887
+            draft: false
+            id: 35467
+            locale: en
+            permission_group_id: 123
+            title: Printing orders
+            user_segment_id: 12
+    ArticleSubscriptionResponseExample:
+      value:
+        subscription:
+          content_id: 8748733
+          id: 35467
+          locale: en
+          user_id: 888887
+    ArticleSubscriptionsResponseExample:
+      value:
+        subscriptions:
+          - content_id: 8748733
+            id: 35467
+            locale: en
+            user_id: 888887
+    ArticleUpVoteResponseExample:
+      value:
+        vote:
+          id: 37486578
+          value: 1
+    ArticlesResponseExample:
+      value:
+        articles:
+          - author_id: 888887
+            draft: true
+            id: 35467
+            locale: en
+            permission_group_id: 123
+            title: Article title
+            user_segment_id: 12
+    BadRequestCreateSection:
+      value:
+        errors:
+          parent_section_id:
+            - cannot be assigned non-null value on this Guide plan
+    BadRequestCreateUserSegment:
+      value:
+        errors:
+          user_type:
+            - value `foo` invalid; must be either `staff` or `signed_in_users`
+    BadRequestUpdateSection:
+      value:
+        errors:
+          parent_section_id:
+            - would result in a cycle
+    BadRequestUpdateUserSegment:
+      value:
+        errors:
+          user_type:
+            - value `foo` invalid; must be either `staff` or `signed_in_users`
+    BlockArticleAttachmentsResponseExample:
+      value:
+        article_attachments:
+          - article_id: 23
+            content_type: application/pdf
+            content_url: https://company.zendesk.com/hc/article_attachments/200109629/logo.pdf
+            file_name: logo.pdf
+            id: 1428
+            inline: false
+            size: 1428
+          - article_id: 23
+            content_type: application/msword
+            content_url: https://company.zendesk.com/hc/article_attachments/200109629/results.doc
+            file_name: results.doc
+            id: 2857
+            inline: false
+            size: 234
+    CategoriesResponseExample:
+      value:
+        categories:
+          - description: This category contains a collection of Super Hero tricks
+            id: 37486578
+            locale: en-us
+            name: Super Hero Tricks
+          - description: All the cool tricks!
+            id: 354675463
+            locale: en-us
+            name: Tips & Tricks
+    CategoryResponse:
+      value:
+        category:
+          description: This category contains a collection of Super Hero tricks
+          id: 37486578
+          locale: en-us
+          name: Super Hero Tricks
+          position: 2
+    CategoryResponseExample:
+      value:
+        category:
+          description: This category contains a collection of Super Hero tricks
+          id: 37486578
+          locale: en-us
+          name: Super Hero Tricks
+    CommentResponseExample:
+      value:
+        comment:
+          author_id: 89567
+          body: Good info!
+          id: 35467
+          locale: en
+    CommentsResponseExample:
+      value:
+        comments:
+          - author_id: 89567
+            body: My printer is on fire
+            id: 35467
+            locale: en
+          - author_id: 89589
+            body: My printer is on fire too!
+            id: 36221
+            locale: en
+    CommunityPostSearchResponseExample:
+      value:
+        results:
+          - author_id: 4333787
+            id: 4212256
+            title: How do I make a return?
+    ContentSubscriptionsResponseExample:
+      value:
+        subscriptions:
+          - content_id: 8748733
+            content_type: Article
+            id: 35467
+            locale: en
+            user_id: 888887
+    CreateuserImageResponseExample:
+      value:
+        user_image:
+          content_type: image/jpeg
+          path: /hc/user_images/Bvj4bPDuRd-7d5hFVszvmQ.jpeg
+          size: 169846
+    HelpCenterSessionResponseExample:
+      value:
+        current_session:
+          csrf_token: 2hYE_3L80UfRteoLN1Z1eDA06lmzHlSyS
+    InlineArticleAttachmentsResponseExample:
+      value:
+        article_attachments:
+          - article_id: 23
+            content_type: application/jpeg
+            content_url: https://company.zendesk.com/hc/article_attachments/200109629/logo.jpg
+            file_name: logo.jpg
+            id: 1428
+            inline: true
+            size: 1428
+          - article_id: 23
+            content_type: application/gif
+            content_url: https://company.zendesk.com/hc/article_attachments/200109629/footer.gif
+            file_name: footer.gif
+            id: 2857
+            inline: true
+            locale: en_us
+            size: 234
+    LocalesWithDefaultResponseExample:
+      value:
+        default_locale: it-it
+        locales:
+          - de-de
+          - en-uk
+          - en-us
+          - es-419
+          - es-es
+          - fr-fr
+          - it-it
+          - ja-jp
+          - pt-br
+    MissingTranslationsResponseExample:
+      value:
+        locales:
+          - en-us
+          - da-dk
+    PostCommentResponseExample:
+      value:
+        comment:
+          author_id: 89567
+          body: <p>I love my new non-flammable printer!</p>
+          id: 35467
+    PostCommentsResponseExample:
+      value:
+        comments:
+          - author_id: 89567
+            body: My printer is on fire!
+            id: 35467
+          - author_id: 89589
+            body: My printer is on fire too!
+            id: 36221
+    PostResponseExample:
+      value:
+        post:
+          author_id: 888887
+          content_tag_ids:
+            - 6776
+            - 4545
+          featured: true
+          id: 35467
+          title: Post title
+    PostSubscriptionResponseExample:
+      value:
+        subscription:
+          content_id: 8748733
+          id: 35467
+          locale: en
+          user_id: 888887
+    PostSubscriptionsResponseExample:
+      value:
+        subscriptions:
+          - content_id: 8748733
+            id: 35467
+            locale: en
+            user_id: 888887
+    PostsResponseExample:
+      value:
+        posts:
+          - id: 35467
+            title: How do I open the safe
+    RequestUserImageUploadResponseExample:
+      value:
+        upload:
+          headers:
+            Content-Disposition: attachment; filename="01F1D8HVJ3TK6CZH8HM51YEQRG.jpeg"
+            Content-Type: image/jpeg
+            X-Amz-Server-Side-Encryption: AES256
+          token: 01F1D8HVJ3TK6CZH8HM51YEQRG
+          url: https://{subdomain}.zendesk.com.com/aus-uploaded-assets/1/42/01F1D8HVJ3TK6CZH8HM51YEQRG?Content-Type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ACCESSKEY%2F20210322%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210322T152346Z&X-Amz-Expires=3600&X-Amz-Signature=a5fd09fb179fe3dc3e085398423988f1c5fc5f6a6eb66a0c020905f47b72f11b&X-Amz-SignedHeaders=content-disposition%3Bhost%3Bx-amz-server-side-encryption&x-amz-server-side-encryption=AES256
+    SectionResponseExample:
+      value:
+        section:
+          description: This section contains articles on flight instruments
+          id: 3457836
+          locale: en-us
+          name: Avionics
+          position: 2
+    SectionSubscriptionResponseExample:
+      value:
+        subscription:
+          content_id: 8748733
+          id: 35467
+          locale: en
+          user_id: 888887
+    SectionSubscriptionsResponseExample:
+      value:
+        subscriptions:
+          - content_id: 8748733
+            id: 35467
+            locale: en
+            user_id: 888887
+    SectionsResponseExample:
+      value:
+        sections:
+          - category_id: 888887
+            description: This section contains articles on flight instruments
+            id: 35467
+            locale: en-us
+            name: Avionics
+          - category_id: 887285
+            description: This section contains weather resources for pilots
+            id: 36169
+            locale: en-us
+            name: Weather
+    TopicResponseExample:
+      value:
+        topic:
+          description: Security Best Practices
+          id: 35467
+          name: Help Center-Tricks
+    TopicSubscriptionResponseExample:
+      value:
+        subscription:
+          content_id: 8748733
+          id: 35467
+          locale: en
+          user_id: 888887
+    TopicSubscriptionsResponseExample:
+      value:
+        subscriptions:
+          - content_id: 8748733
+            id: 35467
+            locale: en
+            user_id: 888887
+    TopicsResponseExample:
+      value:
+        topics:
+          - html_url: https://{subdomain}.zendesk.com/hc/en-us/community/topics/10-Using-Help-Center-Tips-Tricks
+            id: 10
+            name: Using Help Center - Tips & Tricks
+            url: https://{subdomain}.zendesk.com/api/v2/community/topics/10.json
+          - html_url: https://{subdomain}.zendesk.com/hc/en-us/community/topics/11-Using-Help-Center-Getting-Started-Guide
+            id: 11
+            name: Using Help Center - Getting Started Guide
+            url: https://{subdomain}.zendesk.com/api/v2/community/topics/11.json
+    TranslationResponseExample:
+      value:
+        translation:
+          id: 634578
+          locale: en-us
+          source_id: 348756
+          source_type: Article
+          title: How to take pictures in low light
+    TranslationsResponseExample:
+      value:
+        translations:
+          - id: 634578
+            locale: en-us
+            outdated: true
+            source_id: 348756
+            source_type: Article
+            title: Translation title
+    UnifiedSearchResponseExample:
+      value:
+        meta:
+          after_cursor: WzEuMCwxNjld
+          before_cursor: WzEuMCwxNjhd
+          has_more: true
+        results:
+          - title: How to make fish stew
+            type: ARTICLE
+            updated_at: "2021-10-11T15:02:22Z"
+            url: http://example.zendesk.com/hc/en-us/articles/38393937-How-to-make-fish-stew
+          - title: Latest updates on fish stew
+            type: EXTERNAL_RECORD
+            updated_at: "2021-11-12T15:02:22Z"
+            url: http://example.com/blog/fish-stew-latest
+    UserSegmentResponseExample:
+      value:
+        user_segment:
+          built_in: false
+          created_at: "2017-05-21T20:01:12Z"
+          group_ids:
+            - 12
+          id: 7284
+          name: VIP agents
+          or_tags: [ ]
+          organization_ids: [ ]
+          tags:
+            - vip
+          updated_at: "2017-05-21T20:01:12Z"
+          user_type: staff
+    UserSegmentSectionsResponseExample:
+      value:
+        sections:
+          - html_url: https://{subdomain}.zendesk.com/hc/en/sections/3242-A-section-
+            id: 3242
+            locale: en
+            name: A section
+            url: https://{subdomain}.zendesk.com/api/v2/help_center/en/sections/3242-A-section-.json
+          - html_url: https://{subdomain}.zendesk.com/hc/en/sections/7352-Another-section-
+            id: 7352
+            locale: en
+            name: Another section
+            url: https://{subdomain}.zendesk.com/api/v2/help_center/en/sections/7352-Another-section-.json
+    UserSegmentTopicsResponseExample:
+      value:
+        topics:
+          - html_url: https://{subdomain}.zendesk.com/hc/en/community/topics/9273-A-topic-
+            id: 9273
+            name: A topic
+            url: https://{subdomain}.zendesk.com/api/v2/community/topics/9273.json
+          - html_url: https://{subdomain}.zendesk.com/hc/en/community/topics/2292-Another-topic-
+            id: 2292
+            name: Another topic
+            url: https://{subdomain}.zendesk.com/api/v2/community/topics/2292-Another-topic-.json
+    UserSegmentsResponseExample:
+      value:
+        user_segments:
+          - built_in: false
+            created_at: "2017-05-21T20:01:12Z"
+            group_ids:
+              - 12
+            id: 7284
+            name: VIP agents
+            or_tags: [ ]
+            organization_ids: [ ]
+            tags:
+              - vip
+            updated_at: "2017-06-30T01:00:25Z"
+            user_type: staff
+          - built_in: false
+            created_at: "2017-04-09T15:33:11Z"
+            group_ids: [ ]
+            id: 9930
+            name: Privileged users
+            or_tags: [ ]
+            organization_ids:
+              - 42
+            tags: [ ]
+            updated_at: "2017-08-10T18:41:01Z"
+            user_type: signed_in_users
+    UserSubscriptionsResponseExample:
+      value:
+        user_subscriptions:
+          - followed_id: 8748733
+            follower_id: 398452
+            id: 35467
+    UserVotesResponseExample:
+      value:
+        votes:
+          - id: 35467
+            user_id: 888887
+            value: -1
+    VoteResponseExample:
+      value:
+        vote:
+          id: 35467
+          user_id: 888887
+          value: -1
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

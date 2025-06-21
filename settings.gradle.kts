@@ -1,4 +1,1 @@
-
-
-rootProject.name="zendesk4j"
-
+rootProject.name = "z4j"

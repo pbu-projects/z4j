@@ -1,0 +1,30 @@
+name: Test
+on:
+  pull_request:
+    branches:
+      - "main"
+      - "[0-9]+.[0-9]+.[0-9]+" # release branches
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      MICRONAUT_HTTP_SERVICES_ZENDESK_EMAIL: ${{ secrets.ZENDESK_EMAIL}}
+      MICRONAUT_HTTP_SERVICES_ZENDESK_TOKEN: ${{ secrets.ZENDESK_TOKEN }}
+      MICRONAUT_HTTP_SERVICES_ZENDESK_URL: ${{ secrets.ZENDESK_URL }}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK
+      uses: graalvm/setup-graalvm@v1
+      with:
+        java-version: '17'
+        distribution: 'graalvm-community'
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+    - name: Check Zendesk env vars are set
+      run: |
+        [ -z "${MICRONAUT_HTTP_SERVICES_ZENDESK_EMAIL}" ] && echo "EMAIL is NOT set" || echo "EMAIL is set"
+        [ -z "${MICRONAUT_HTTP_SERVICES_ZENDESK_TOKEN}" ] && echo "TOKEN is NOT set" || echo "TOKEN is set"
+        [ -z "${MICRONAUT_HTTP_SERVICES_ZENDESK_URL}" ] && echo "URL is NOT set" || echo "URL is set"
+    - name: Run Tests
+      run: ./gradlew test

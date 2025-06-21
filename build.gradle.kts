@@ -1,55 +1,42 @@
 plugins {
+    id("it.nicolasfarabegoli.conventional-commits") version "3.1.3"
     id("groovy")
     id("io.micronaut.application") version "4.5.3"
-    id("it.nicolasfarabegoli.conventional-commits") version "3.1.3"
-    id("org.asciidoctor.jvm.convert") version "3.3.2"
     id("io.micronaut.aot") version "4.5.3"
+    id("io.micronaut.library") version "4.5.3"
+    id("io.micronaut.openapi") version "4.5.3"
 }
 
-version = project.properties["zendesk4jVersion"]!!
+version = project.properties["z4jVersion"]!!
 group = "lol.pbu"
 
-apply(from = "gradle/asciidoc.gradle")
+application {
+    mainClass.set("lol.pbu.Application")
+}
+
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
+    annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
+    compileOnly("org.projectlombok:lombok")
     implementation("io.micronaut.reactor:micronaut-reactor-http-client")
     implementation("io.micronaut:micronaut-http-client")
-    implementation("io.micronaut.data:micronaut-data-jdbc")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
-    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
     implementation("org.slf4j:jul-to-slf4j")
     implementation("io.micronaut.validation:micronaut-validation")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
-    runtimeOnly("com.h2database:h2")
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("org.testcontainers:spock")
     testImplementation("org.testcontainers:testcontainers")
-    testImplementation("net.datafaker:datafaker:2.4.3")
 }
 
-
-application {
-    mainClass = "lol.pbu.Application"
-}
 java {
-    sourceCompatibility = JavaVersion.toVersion("17")
-}
-
-fun loadEnv() {
-    if (file(".env").exists())
-        file(".env").readLines().forEach {
-            val (key, value) = it.split("=", limit = 2)
-            System.setProperty(key.trim(), value.trim())
-        }
-}
-
-tasks.withType<Test> {
-    loadEnv()
+    sourceCompatibility = JavaVersion.toVersion("17") // graalvm-ce
 }
 
 micronaut {
@@ -70,5 +57,18 @@ micronaut {
         deduceEnvironment = true
         optimizeNetty = true
         replaceLogbackXml = true
+    }
+    openapi {
+        version = "6.16.0"
+        client(file("src/main/resources/z4j.yaml")) {
+            apiPackageName.set("lol.pbu.z4j.client")
+            modelPackageName.set("lol.pbu.z4j.model")
+            useReactive.set(false)
+            useAuth.set(false)
+            lombok.set(true)
+            clientId.set("zendesk")
+            apiNameSuffix.set("Client")
+            alwaysUseGenerateHttpResponse.set(true)
+        }
     }
 }

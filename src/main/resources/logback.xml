@@ -9,14 +9,6 @@
         </encoder>
     </appender>
 
-    <logger name="io.micronaut.http.client" level="DEBUG">
-        <appender-ref ref="STDOUT"/>
-    </logger>
-
-    <logger name="lol.pbu" level="DEBUG">
-        <appender-ref ref="STDOUT"/>
-    </logger>
-
     <root level="info">
         <appender-ref ref="STDOUT" />
     </root>

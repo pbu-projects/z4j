@@ -3,9 +3,9 @@
     <ExternalSystemSettings>
       <option name="env">
         <map>
-          <entry key="MICRONAUT_HTTP_SERVICES_ZENDESK_EMAIL" value="my email address" />
-          <entry key="MICRONAUT_HTTP_SERVICES_ZENDESK_TOKEN" value="my token" />
-          <entry key="MICRONAUT_HTTP_SERVICES_ZENDESK_URL" value="my-zendesk.zendesk.com" />
+          <entry key="MICRONAUT_HTTP_SERVICES_ZENDESK_EMAIL" value="jonathan.zollinger@gmail.com" />
+          <entry key="MICRONAUT_HTTP_SERVICES_ZENDESK_TOKEN" value="wdku0ZaFSpFfpQwDGdsMkJJPVsBlUmImJi2WbiQl" />
+          <entry key="MICRONAUT_HTTP_SERVICES_ZENDESK_URL" value="https://d3v-peanutbutterunicorn.zendesk.com" />
         </map>
       </option>
       <option name="executionName" />
@@ -19,7 +19,7 @@
         <list>
           <option value=":test" />
           <option value="--tests" />
-          <option value="&quot;lol.pbu.zendesk.client.UserSegmentsClientSpec.can list user segments&quot;" />
+          <option value="&quot;lol.pbu.z4j.client.UserSegmentsClientSpec.can list user segments&quot;" />
         </list>
       </option>
       <option name="vmOptions" />

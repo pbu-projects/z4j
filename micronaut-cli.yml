@@ -1,6 +1,0 @@
-applicationType: default
-defaultPackage: lol.pbu
-testFramework: spock
-sourceLanguage: kotlin
-buildTool: gradle_kotlin
-features: [app-name, asciidoctor, data, data-jdbc, gradle, h2, http-client, jdbc-hikari, jul-to-slf4j, kotlin, kotlin-application, ksp, logback, micronaut-aot, micronaut-build, micronaut-http-validation, netty-server, readme, serialization-jackson, shade, spock, static-resources, testcontainers, yaml, yaml-build]
