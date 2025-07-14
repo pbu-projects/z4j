@@ -2,14 +2,12 @@ package lol.pbu.z4j.client
 
 import io.micronaut.http.HttpStatus
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
-import jakarta.inject.Inject
 import lol.pbu.z4j.model.CreateUserSegmentRequest
 import lol.pbu.z4j.model.UserSegment
 import spock.lang.Shared
-import spock.lang.Specification
 
 @MicronautTest
-class UserSegmentsClientSpec extends Specification {
+class UserSegmentsClientSpec extends Z4jSpec {
 
     /**
      * NOTE: there're two an undocumented defects in zendesk's documented api vs their actual behavior.
@@ -18,9 +16,13 @@ class UserSegmentsClientSpec extends Specification {
      * - the update user segment endpoint requires a user segment object (the createUserSegment Object can be used)
      */
 
-    @Inject
     @Shared
     UserSegmentsClient userSegmentsClient
+
+    def setupSpec() {
+        userSegmentsClient = adminCtx.getBean(UserSegmentsClient.class)
+    }
+
 
 
     def "can list user segments"() {

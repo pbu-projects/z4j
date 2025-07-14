@@ -3,9 +3,83 @@ info:
   title: Help Center API
   description: Help Center v2 REST API
   version: 2.0.0
-tags:
-  - name: User Subscriptions
+  tags:
+    - User Subscriptions
+    - Locales
 paths:
+  /api/v2/locales:
+    get:
+      operationId: ListLocales
+      tags:
+        - Locales
+      summary: List Locales
+      description: |
+        Lists the translation locales available for the account.
+        
+        Allowed for anyone
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocalesResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/LocalesResponseExample'
+  /api/v2/help_center/{locale}/articles:
+    parameters:
+      - $ref: '#/components/parameters/OptionalLocale'
+    get:
+      operationId: ListArticles
+      tags:
+        - Articles
+      summary: List Articles
+      parameters:
+        - name: sort_by
+          in: query
+          description: Sorts the articles by one of the accepted values
+          required: false
+          schema:
+            type: string
+            enum:
+              - position
+              - title
+              - created_at
+              - updated_at
+        - name: sort_order
+          in: query
+          description: Selects the order of the results.
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        - name: start_time
+          in: query
+          required: false
+          description: You can use the incremental article endpoint to list all the articles that were updated since a certain date and time.
+          schema:
+            type: integer
+          example: 1404345231
+        - name: label_names
+          required: false
+          in: query
+          description: Only articles that have all the labels are returned.
+          schema:
+            type: string
+          example: photos,camera
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticlesResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/ArticlesResponseExample'
   /api/v2/help_center/user_segments:
     get:
       operationId: ListUserSegments
@@ -747,6 +821,54 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Label'
+    Locale:
+      type: object
+      properties:
+        created_at:
+          type: string
+          format: date-time
+          description: The ISO 8601 formatted date-time the locale was created
+          readOnly: true
+        id:
+          type: integer
+          description: The unique ID of the locale
+          readOnly: true
+        locale:
+          type: string
+          description: The name of the locale
+          readOnly: true
+        name:
+          type: string
+          description: The name of the language
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          description: The ISO 8601 formatted date-time when the locale was last updated
+          readOnly: true
+        url:
+          type: string
+          description: The URL of the locale record
+          readOnly: true
+      example:
+        created_at: "2009-07-20T22:55:29Z"
+        id: 1
+        locale: en-US
+        name: English
+        updated_at: "2011-05-05T10:38:52Z"
+        url: https://company.zendesk.com/api/v2/locales/en-US.json
+    LocaleResponse:
+      type: object
+      properties:
+        locale:
+          $ref: '#/components/schemas/Locale'
+    LocalesResponse:
+      type: object
+      properties:
+        locales:
+          type: array
+          items:
+            $ref: '#/components/schemas/Locale'
     LocalesWithDefaultResponse:
       type: object
       properties:
@@ -1531,7 +1653,7 @@ components:
     OptionalLocale:
       name: locale
       in: path
-      description: The locale the item is displayed in
+      description: The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case)
       required: true
       schema:
         type: string
@@ -1877,6 +1999,21 @@ components:
             inline: true
             locale: en_us
             size: 234
+    LocalesResponseExample:
+      value:
+        locales:
+          - created_at: "2009-07-20T22:55:29Z"
+            id: 1
+            locale: en-US
+            name: English
+            updated_at: "2011-05-05T10:38:52Z"
+            url: https://company.zendesk.com/api/v2/locales/en-US.json
+          - created_at: "2010-12-23T12:45:22Z"
+            id: 8
+            locale: de
+            name: Deutsch
+            updated_at: "2012-04-01T10:44:12Z"
+            url: https://company.zendesk.com/api/v2/locales/de.json
     LocalesWithDefaultResponseExample:
       value:
         default_locale: it-it
@@ -2129,7 +2266,3 @@ components:
           id: 35467
           user_id: 888887
           value: -1
-  securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic

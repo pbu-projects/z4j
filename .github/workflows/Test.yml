@@ -8,9 +8,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      MICRONAUT_HTTP_SERVICES_ZENDESK_EMAIL: ${{ secrets.ZENDESK_EMAIL}}
-      MICRONAUT_HTTP_SERVICES_ZENDESK_TOKEN: ${{ secrets.ZENDESK_TOKEN }}
-      MICRONAUT_HTTP_SERVICES_ZENDESK_URL: ${{ secrets.ZENDESK_URL }}
+      Z4J_URL: ${{ secrets.ZENDESK_URL }}
+      Z4J_TOKEN: ${{ secrets.ZENDESK_TOKEN }}
+      Z4J_ADMIN_EMAIL: ${{ secrets.ZENDESK_ADMIN_EMAIL}}
+      Z4J_AGENT_EMAIL: ${{ secrets.ZENDESK_AGENT_EMAIL}}
+      Z4J_END_USER_EMAIL: ${{ secrets.ZENDESK_END_USER_EMAIL}}
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK

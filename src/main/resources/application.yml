@@ -4,6 +4,6 @@ micronaut:
   http:
     services:
       zendesk:
-        url: # MICRONAUT_HTTP_SERVICES_ZENDESK_URL
+        url: ${:Z4J_URL} # MICRONAUT_HTTP_SERVICES_ZENDESK_URL
         email: # MICRONAUT_HTTP_SERVICES_ZENDESK_EMAIL
         token: # MICRONAUT_HTTP_SERVICES_ZENDESK_TOKEN
