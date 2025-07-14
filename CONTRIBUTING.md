@@ -18,8 +18,8 @@ PBU projects are open to contributions! Below are some instructions on best prac
 ### Prerequisites:
 - Gradle doesn't need to be installed locally, a [gradle wrapper] is provided with this repo.
 - Docker or Podman installed and running at compile time
-- Graal-CE 17
-- Git
+- [Graal-CE 17]
+- [Git]
 
 #### Getting Started
 Create your own fork of `z4j`, clone your fork and call the gradle wrapper to build the project
@@ -182,6 +182,7 @@ This method is a little tricky to test for negative tests because the only way t
 
 [adequate]:#Testing-Strategy
 [branches of code]:https://medium.com/@zubairkhansh/branch-testing-and-branch-coverage-3fb4bbd9f949
+[code of conduct]:CODE_OF_CONDUCT.md
 [conventional commits]:https://www.conventionalcommits.org/en/v1.0.0/
 [delegate build and run actions to gradle]:https://www.jetbrains.com/help/idea/work-with-gradle-projects.html#delegate_build_gradle
 [different roles]:#Required-Roles-for-Testing
@@ -189,7 +190,9 @@ This method is a little tricky to test for negative tests because the only way t
 [google's styleguide]:https://google.github.io/styleguide/javaguide.html#s7-javadoc
 [gradle]:https://gradle.org/maven-and-gradle/
 [gradle wrapper]:https://docs.gradle.org/current/userguide/gradle_wrapper_basics.html
-[graal community distro]:https://www.graalvm.org/
+[Git]:https://gist.github.com/Jonathan-Zollinger/8d9a231a57f3d33ff813989c34df00e0
+[graal community distro]:https://www.graalvm.org/release-notes/JDK_17/
+[Graal-CE 17]:https://www.graalvm.org/jdk17/docs/
 [Environment Variables]:#Required-Environment-Variables
 [source function]:https://gist.github.com/Jonathan-Zollinger/96160f971741f5f3a8749d10127e7764
 [test it]:https://www.geeksforgeeks.org/software-engineering/difference-between-positive-testing-and-negative-testing/
