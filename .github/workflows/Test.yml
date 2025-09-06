@@ -25,8 +25,16 @@ jobs:
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
     - name: Check Zendesk env vars are set
       run: |
-        [ -z "${MICRONAUT_HTTP_SERVICES_ZENDESK_EMAIL}" ] && echo "EMAIL is NOT set" || echo "EMAIL is set"
-        [ -z "${MICRONAUT_HTTP_SERVICES_ZENDESK_TOKEN}" ] && echo "TOKEN is NOT set" || echo "TOKEN is set"
-        [ -z "${MICRONAUT_HTTP_SERVICES_ZENDESK_URL}" ] && echo "URL is NOT set" || echo "URL is set"
+        [ -z "${Z4J_URL}" ] && echo "Z4J_URL is NOT set" || echo "Z4J_URL is set"
+        [ -z "${Z4J_TOKEN}" ] && echo "Z4J_TOKEN is NOT set" || echo "Z4J_TOKEN is set"
+        [ -z "${Z4J_ADMIN_EMAIL}" ] && echo "Z4J_ADMIN_EMAIL is NOT set" || echo "Z4J_ADMIN_EMAIL is set"
+        [ -z "${Z4J_AGENT_EMAIL}" ] && echo "Z4J_AGENT_EMAIL is NOT set" || echo "Z4J_AGENT_EMAIL is set"
+        [ -z "${Z4J_END_USER_EMAIL}" ] && echo "Z4J_END_USER_EMAIL is NOT set" || echo "Z4J_END_USER_EMAIL is set"
     - name: Run Tests
       run: ./gradlew test
+    - name: Upload test report
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-report
+        path: build/reports/tests/test

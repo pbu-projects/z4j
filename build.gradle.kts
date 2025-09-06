@@ -8,6 +8,7 @@ plugins {
 }
 
 version = project.properties["z4jVersion"]!!
+val dataFakerVersion = project.properties["dataFakerVersion"]!!
 group = "lol.pbu"
 
 application {
@@ -16,7 +17,6 @@ application {
 
 repositories {
     mavenCentral()
-    mavenLocal()
 }
 
 dependencies {
@@ -31,8 +31,7 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     runtimeOnly("org.yaml:snakeyaml")
-    testImplementation("org.testcontainers:spock")
-    testImplementation("org.testcontainers:testcontainers")
+    testImplementation("net.datafaker:datafaker:$dataFakerVersion")
 }
 
 java {

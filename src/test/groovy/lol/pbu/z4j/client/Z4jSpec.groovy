@@ -3,6 +3,7 @@ package lol.pbu.z4j.client
 import io.micronaut.context.ApplicationContext
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import net.datafaker.Faker
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -12,6 +13,9 @@ class Z4jSpec extends Specification {
     @Shared
     ApplicationContext adminCtx, agentCtx, userCtx, badTokenCtx, badEmailCtx, badUrlCtx
 
+    @Shared
+    Faker faker
+
     void setupSpec() {
         adminCtx = getCtx("Z4J_ADMIN_EMAIL")
         agentCtx = getCtx("Z4J_AGENT_EMAIL")
@@ -19,6 +23,7 @@ class Z4jSpec extends Specification {
         badTokenCtx = getCtx("Z4J_ADMIN_EMAIL", ["micronaut.http.services.zendesk.token": "this-is-an-invalid-token"])
         badEmailCtx = getCtx("Z4J_ADMIN_EMAIL", ["micronaut.http.services.zendesk.email": "this-is-an-invalid-email"])
         badUrlCtx = getCtx("Z4J_ADMIN_EMAIL", ["micronaut.http.services.zendesk.url": "https://fake-url.lol"])
+        faker = new Faker()
     }
 
     void cleanupSpec() {
