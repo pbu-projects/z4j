@@ -11,6 +11,8 @@ version = project.properties["z4jVersion"]!!
 val dataFakerVersion = project.properties["dataFakerVersion"]!!
 group = "lol.pbu"
 
+extra["netty.version"] = "4.1.124.Final"
+
 application {
     mainClass.set("lol.pbu.Application")
 }
@@ -20,6 +22,7 @@ repositories {
 }
 
 dependencies {
+    implementation(platform("io.micronaut.platform:micronaut-platform:4.5.3"))
     annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
     compileOnly("org.projectlombok:lombok")
