@@ -15,7 +15,7 @@ import static java.util.Base64.getEncoder;
  *
 
  * @author Jonathan Zollinger
- * @since 0.0.1    micronaut.application.name
+ * @since 0.0.1
  */
 @ClientFilter("/**")
 @Requires(property = "micronaut.http.services.zendesk.email")

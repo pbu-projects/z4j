@@ -108,18 +108,21 @@ After setting up your [users] and token, export the following environment variab
 * `Z4J_AGENT_EMAIL`: The email address for your Agent user.
 * `Z4J_END_USER_EMAIL`: The email address for your End-user.
 
+
 > [!NOTE] use a `.env` file with these variables assigned on each line and save it in the root of this repo (don't track
 > it in your git history). On windows it may be a bit tricky to dot-source an env file, but you can use this [source function] for similar behavior.
 
 ## Testing Strategy
 
-One of the most important parts of contributing to z4j is getting tests right. A test is written right if:
+One of the most important parts of contributing to z4j is getting tests right. A test is written adequately if:
 - Tests don't take a lot of developer time to write.
 - Tests don't overstep their bounds
-- Tests cover everything they need. 
+- Tests are thorough and comprehensive.
+  - Negative tests
+  - e.g. behaviors between different auth level
 
 ### Testing Commandments
-- Methods and Features are to have [adequate] unit and integration tests written before any pull request can be accepted.
+- Methods and features are to have [adequate] unit and integration tests written before any pull request can be accepted.
 - Because we use lombok, we don't need to test setters and getters. Using getters and setters is the preferred way to access class fields.
 - Features are to have [adequate] integration and end-to-end tests.
 - Fixes are to have [adequate] unit, integration and end-to-end tests included with the fix for the sake of [regression testing]. Fixes should also document their fixes such that regression testing is properly captured. 
