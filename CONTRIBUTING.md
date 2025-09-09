@@ -109,8 +109,9 @@ After setting up your [users] and token, export the following environment variab
 * `Z4J_END_USER_EMAIL`: The email address for your End-user.
 
 
-> [!NOTE] use a `.env` file with these variables assigned on each line and save it in the root of this repo (don't track
-> it in your git history). On windows it may be a bit tricky to dot-source an env file, but you can use this [source function] for similar behavior.
+> [!NOTE] 
+> Use the `dotenv` file in the root of this folder as a starter for your own `.env` (don't track it in your git history). On windows it may be a bit tricky to dot-source an env file, but you can use this [source function] for similar behavior.
+
 
 ## Testing Strategy
 
