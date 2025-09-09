@@ -15,41 +15,30 @@ jobs:
       Z4J_END_USER_EMAIL: ${{ secrets.ZENDESK_END_USER_EMAIL}}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GITHUB_TOKEN is required for SonarCloud to decorate PRs
     steps:
-    - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # 4.3.0
-      with:
-        fetch-depth: 0 # SonarCloud needs a full history to assign issues correctly
-    - name: Set up JDK
-      uses: graalvm/setup-graalvm@7a1da54cb7fdef4ea19f6ecdfa9ecf59dc5a48fe
-      with:
-        java-version: '17'
-        distribution: 'graalvm-community'
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # 4.0.0
-    - name: Check Zendesk env vars are set
-      run: |
-        [ -z "${Z4J_URL}" ] && echo "Z4J_URL is NOT set" || echo "Z4J_URL is set"
-        [ -z "${Z4J_TOKEN}" ] && echo "Z4J_TOKEN is NOT set" || echo "Z4J_TOKEN is set"
-        [ -z "${Z4J_ADMIN_EMAIL}" ] && echo "Z4J_ADMIN_EMAIL is NOT set" || echo "Z4J_ADMIN_EMAIL is set"
-        [ -z "${Z4J_AGENT_EMAIL}" ] && echo "Z4J_AGENT_EMAIL is NOT set" || echo "Z4J_AGENT_EMAIL is set"
-        [ -z "${Z4J_END_USER_EMAIL}" ] && echo "Z4J_END_USER_EMAIL is NOT set" || echo "Z4J_END_USER_EMAIL is set"
-    - name: Build and run tests
-      run: ./gradlew build
-    - name: Sonar Scan
-      # Only run SonarQube on PRs to main
-      if: ${{ github.event.pull_request.base.ref == 'main' && github.event.action != 'closed' }}
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: |
-        ./gradlew sonar \
-        -Dsonar.projectKey=PeanutButter-Unicorn_z4j \
-        -Dsonar.organization=peanutbutter-unicorn \
-        -Dsonar.host.url=https://sonarcloud.io
-    - name: Upload test report
-      if: failure()
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # 4.6.2
-      with:
-        name: test-report
-        path: build/reports/tests/test
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # 4.3.0
+        with:
+          fetch-depth: 0 # SonarCloud needs a full history to assign issues correctly
+      - name: Set up JDK
+        uses: graalvm/setup-graalvm@7a1da54cb7fdef4ea19f6ecdfa9ecf59dc5a48fe
+        with:
+          java-version: '17'
+          distribution: 'graalvm-community'
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # 4.0.0
+      - name: Build and run tests
+        if: ${{ github.event.pull_request.base.ref != 'main' && github.event.action != 'closed' }}
+        run: ./gradlew build
+      - name: Sonar Scan
+        if: ${{ github.event.pull_request.base.ref == 'main' && github.event.action != 'closed' }} # Only run SonarQube on PRs to main
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew build sonar
+      - name: Upload test report
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # 4.6.2
+        with:
+          name: test-report
+          path: build/reports/tests/test
   dependency-submission:
     runs-on: ubuntu-latest
     permissions:
