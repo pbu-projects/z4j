@@ -2,6 +2,7 @@ package lol.pbu.z4j.client
 
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientException
+import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.model.Ticket
 import lol.pbu.z4j.model.TicketComment
 import lol.pbu.z4j.model.TicketCreateInput

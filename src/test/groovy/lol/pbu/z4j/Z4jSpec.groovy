@@ -1,4 +1,4 @@
-package lol.pbu.z4j.client
+package lol.pbu.z4j
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.runtime.server.EmbeddedServer
