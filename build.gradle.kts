@@ -5,6 +5,8 @@ plugins {
     id("io.micronaut.aot") version "4.5.3"
     id("io.micronaut.library") version "4.5.3"
     id("io.micronaut.openapi") version "4.5.3"
+    id("jacoco")
+    id("org.sonarqube") version "latest.release"
 }
 
 version = project.properties["z4jVersion"]!!
@@ -19,6 +21,13 @@ application {
 
 repositories {
     mavenCentral()
+    gradlePluginPortal()
+}
+
+sonarqube {
+    properties {
+        property("sonar.tests", "src/test/groovy")
+    }
 }
 
 dependencies {
@@ -73,4 +82,19 @@ micronaut {
             alwaysUseGenerateHttpResponse.set(true)
         }
     }
+}
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+    classDirectories.setFrom(files(classDirectories.files.map { fileTree(it) {
+        exclude("lol/pbu/Application.class")
+    } }))
+}
+tasks.test {
+    finalizedBy(tasks.jacocoTestReport)
+}
+tasks.check {
+    dependsOn(tasks.jacocoTestReport)
 }

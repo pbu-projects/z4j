@@ -1473,7 +1473,7 @@ components:
       properties:
         allow_attachments:
           type: boolean
-          description: Permission for agents to add add attachments to a comment. Defaults to true
+          description: Permission for agents to add attachments to a comment. Defaults to true
           readOnly: true
         allow_channelback:
           type: boolean
