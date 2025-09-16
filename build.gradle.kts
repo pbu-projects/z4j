@@ -1,6 +1,8 @@
 plugins {
     id("it.nicolasfarabegoli.conventional-commits") version "3.1.3"
     id("groovy")
+    id("maven-publish")
+    id("signing")
     id("io.micronaut.application") version "4.5.3"
     id("io.micronaut.aot") version "4.5.3"
     id("io.micronaut.library") version "4.5.3"
@@ -97,4 +99,58 @@ tasks.test {
 }
 tasks.check {
     dependsOn(tasks.jacocoTestReport)
+}
+
+// --- Publishing Configuration ---
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+
+            pom {
+                name.set(project.name)
+                description.set("A Java client for the Zendesk API, generated from OpenAPI specs.")
+                url.set("https://github.com/pbu-lol/z4j")
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("jonathan-zollinger")
+                        name.set("Jonathan Zollinger")
+                        email.set("jonathan.zollinger@gmail.com")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/pbu-lol/z4j.git")
+                    developerConnection.set("scm:git:ssh://github.com/pbu-lol/z4j.git")
+                    url.set("https://github.com/pbu-lol/z4j")
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "sonatype"
+            url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                username = System.getenv("SONATYPE_USERNAME")
+                password = System.getenv("SONATYPE_PASSWORD")
+            }
+        }
+    }
+}
+
+signing {
+    // This uses the environment variables from your proposed workflow
+    useInMemoryPgpKeys(
+        System.getenv("GPG_KEY_ID"),
+        System.getenv("GPG_FILE"), // The raw, non-decoded secret
+        System.getenv("GPG_PASSWORD")
+    )
+    sign(publishing.publications["maven"])
 }
