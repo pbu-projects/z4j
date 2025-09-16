@@ -6,13 +6,17 @@ on:
       - "[0-9]+.[0-9]+.[0-9]+" # release branches
 jobs:
   build-and-analyze:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
     env:
       Z4J_URL: ${{ secrets.ZENDESK_URL }}
       Z4J_TOKEN: ${{ secrets.ZENDESK_TOKEN }}
       Z4J_ADMIN_EMAIL: ${{ secrets.ZENDESK_ADMIN_EMAIL}}
       Z4J_AGENT_EMAIL: ${{ secrets.ZENDESK_AGENT_EMAIL}}
       Z4J_END_USER_EMAIL: ${{ secrets.ZENDESK_END_USER_EMAIL}}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GITHUB_TOKEN is required for SonarCloud to decorate PRs
     steps:
       - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # 4.3.0
