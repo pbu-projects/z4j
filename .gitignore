@@ -5,6 +5,8 @@ build/
 target/
 out/
 .micronaut/
+.jreleaser/
+ps.env
 .idea
 *.iml
 *.ipr
