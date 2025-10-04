@@ -99,7 +99,7 @@ paths:
           description: Only articles that have all the labels are returned.
           schema:
             type: string
-          example: photos,camera
+          example: [ photos,camera ]
       responses:
         "200":
           description: OK Response
