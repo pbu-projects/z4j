@@ -8,6 +8,34 @@ info:
     - Locales
     - Tickets
 paths:
+  /api/v2/tickets/count:
+    get:
+      operationId: CountTickets
+      tags:
+        - Tickets
+      summary: Count Tickets
+      description: |-
+        Returns an approximate count of tickets in the account. If the count exceeds 100,000, it is updated every 24 hours.
+
+        `ccd` lists tickets that the specified user is cc'd on.
+
+        The `count[refreshed_at]` property is a timestamp that indicates when the count was last updated.
+
+        **Note**: When the count exceeds 100,000, `count[refreshed_at]` may occasionally be null.
+        This indicates that the count is being updated in the background, and `count[value]` is limited to 100,000 until the update is complete.
+
+        #### Allowed For
+        * Agents
+      responses:
+        "200":
+          description: Count of tickets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketCountResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/TicketCountResponseExample'
   /api/v2/locales:
     get:
       operationId: ListLocales
@@ -1793,6 +1821,18 @@ components:
           channel: web
       required:
         - requester_id
+    TicketCountResponse:
+      type: object
+      properties:
+        count:
+          type: object
+          properties:
+            refreshed_at:
+              type: string
+              format: date-time
+            value:
+              type: integer
+              format: int64
     TicketCreateInput:
       type: object
       allOf:
@@ -1920,7 +1960,7 @@ components:
           nullable: true
         email_ccs:
           type: array
-          description: An array of objects that represent agent or end users email CCs to add or delete from the ticket. See [Setting email CCs](/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-email-ccs)
+          description: An array of objects that represent agent or end users email CCs to add or delete from the ticket. See [Setting email CCs](/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs)
           items:
             $ref: '#/components/schemas/EmailCC'
         external_id:
@@ -1928,7 +1968,7 @@ components:
           description: An id you can use to link Zendesk Support tickets to local records
         followers:
           type: array
-          description: An array of objects that represent agent followers to add or delete from the ticket. See [Setting followers](/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-followers)
+          description: An array of objects that represent agent followers to add or delete from the ticket. See [Setting followers](/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers)
           items:
             $ref: '#/components/schemas/Follower'
         group_id:
@@ -3067,6 +3107,11 @@ components:
             id: 36169
             locale: en-us
             name: Weather
+    TicketCountResponseExample:
+      value:
+        count:
+          refreshed_at: "2020-04-06T02:18:17Z"
+          value: 102
     TicketCreateRequestExample:
       value:
         ticket:
@@ -3208,7 +3253,7 @@ components:
             id: 10
             name: Using Help Center - Tips & Tricks
             url: https://{subdomain}.zendesk.com/api/v2/community/topics/10.json
-          - html_url: https://{subdomain}.zendesk.com/hc/en-us/community/topics/11-Using-Help-Center-Getting-Started-Guide
+          - html_url: https://{subdomain}.zendesk.com/hc/en/community/topics/11-Using-Help-Center-Getting-Started-Guide
             id: 11
             name: Using Help Center - Getting Started Guide
             url: https://{subdomain}.zendesk.com/api/v2/community/topics/11.json
