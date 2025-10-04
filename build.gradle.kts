@@ -55,7 +55,7 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.toVersion("17") // graalvm-ce
+    sourceCompatibility = JavaVersion.toVersion("21") // graalvm-ce
     withSourcesJar()
     withJavadocJar()
 }
