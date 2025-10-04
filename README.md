@@ -4,22 +4,43 @@ A Java client for the Zendesk API
 
 ## About The Project
 
-`z4j` is a Java 17+ client for the Zendesk API, built with [Micronaut](https://micronaut.io/). It is designed to be [Ahead-of-Time (AOT) compiled](https://en.wikipedia.org/wiki/Ahead-of-time_compilation), resulting in quick performance and a low memory footprint.
+Z4j is a Java client for the Zendesk's APIs built for quick performance and enterprise grade applications.
+Z4j gets its speed and durability from the [Micronaut] framework and thorough [testing].
 
 ## Getting Started
 
-To get a local copy up and running, please follow the detailed setup instructions in our 
-[Contributing Guide](CONTRIBUTING.md#set-up-your-machine).
+To get a local copy up and running, please follow the detailed setup instructions in our
+[Contributing Guide].
 
+### Installation
 
-## Key Advantages
+| Gradle Kotlin                                  | Gradle                                        |
+|:-----------------------------------------------|:----------------------------------------------|
+| <pre>implementation("lol.pbu:z4j:0.0.7")</pre> | <pre>implementation 'lol.pbu:z4j:0.0.7'</pre> |
 
-`z4j` offers distinct advantages for building robust, high-performance applications:
+**Maven**
 
-*   **Performance and Efficiency:** Because `z4j` uses micronaut\'s AOT compilation, applications using z4j benefit from:
-    *   **Faster Startup:** Quick Start time, a major advantage for microservices and serverless functions.
-    *   **Lower Memory Footprint:** AOT-compiled applications use significantly less memory, reducing cloud hosting costs and allowing for more efficient resource utilization.
+```xml
+<dependency>
+	<groupId>lol.pbu</groupId>
+	<artifactId>z4j</artifactId>
+	<version>0.0.7</version>
+</dependency>
+```
+
+## Example Projects
+
+- [Zencli] is built with z4j and compiled to a native image with graalvm.
 
 ## Contributing
 
-Please read our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contributing Guide](CONTRIBUTING.md) for details on our development process, style guides, and testing strategy.
+Please read our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contributing Guide](CONTRIBUTING.md) for details on our
+development process, style guides, and testing strategy.
+
+[Contributing Guide]:CONTRIBUTING.md#set-up-your-machine
+
+[Micronaut]:https://graal.cloud/gdk/
+
+[testing]:CONTRIBUTING.md#testing
+
+[Zencli]:https://github.com/PeanutButter-Unicorn/zencli

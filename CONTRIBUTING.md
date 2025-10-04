@@ -13,12 +13,12 @@ PBU projects are open to contributions! Below are some instructions on best prac
 - We follow (and enforce) [conventional commits] in this repo.
 ## Set up your machine
 
-`z4j` is written in java 17, runs on [graal community distro], and uses [gradle] as its build tool.
+`z4j` is written in java 21, runs on [graal community distro], and uses [gradle] as its build tool.
 
 ### Prerequisites:
 - Gradle doesn't need to be installed locally, a [gradle wrapper] is provided with this repo.
 - Docker or Podman installed and running at compile time
-- [Graal-CE 17]
+- [Graal-CE 21]
 - [Git]
 
 #### Getting Started
@@ -113,6 +113,110 @@ After setting up your [users] and token, export the following environment variab
 > Use the `dotenv` file in the root of this folder as a starter for your own `.env` (don't track it in your git history). On windows it may be a bit tricky to dot-source an env file, but you can use this [source function] for similar behavior.
 
 
+### Custom Ticket Fields Setup
+
+To ensure tests run correctly, your Zendesk instance must be configured with the following custom ticket fields. You can create these under **Admin Center -> Objects and rules -> Tickets -> Fields**.
+
+---
+
+#### 1. Topic
+A dropdown menu to categorize the ticket's subject.
+
+*   **Field Type**: `Dropdown` (`tagger`)
+*   **Description**: `Topic`
+*   **Field ID**: `40971535122835`
+
+**Field values:**
+| Field option title | Tag |
+| :----------------- | :---- |
+| Delivery | `delivery` |
+| Order | `order` |
+| Other | `other` |
+
+---
+
+#### 2. Refund Type
+A dropdown menu to specify the type of refund being processed.
+
+*   **Field Type**: `Dropdown` (`tagger`)
+*   **Field ID**: `45241019372563`
+
+**Field values:**
+| Field option title | Tag | Default |
+| :----------------- | :---- |:---:|
+| Full Refund | `full_refund` | |
+| Partial REfund | `partial_refund` | |
+| Store Credit | `store_credit` | ✅ |
+| Replacement Item Sent | `replacement_item_sent` | |
+
+---
+
+#### 3. Confirmed Delivered
+A checkbox that sets a tag when checked.
+
+*   **Field Type**: `Checkbox` (`checkbox`)
+*   **Tag set when checked**: `delivered`
+*   **Field ID**: `45241036997395`
+
+---
+
+#### 4. sku
+A text field for a product's Stock Keeping Unit (SKU).
+
+*   **Field Type**: `Text` (`text`)
+*   **Description for agents**: `product ID`
+*   **Field ID**: `45241045418771`
+
+---
+
+#### 5. link to shipping manifest
+A text field that validates input against a URL regular expression.
+
+*   **Field Type**: `Text` (`regexp`)
+*   **Validation (Regex)**: `^https?:\/\/(?:[a-zA-Z0-9\-\.])+\.[a-zA-Z0-9\-]{2,}(?:\:\d{1,5})*(?:\/[a-zA-Z0-9\_\-\.\~\:\/\?\#[\]\@\!\$\&\'\(\)\*\+\,\;\%\=]*)*$`
+*   **Field ID**: `45241064449171`
+
+---
+
+#### 6. Account Number
+A numeric field for the customer's account number.
+
+*   **Field Type**: `Numeric` (`integer`)
+*   **Description**: `Account ID`
+*   **Field ID**: `45241144361491`
+
+---
+
+#### 7. Expected Arrival Date
+A date field for a package's ETA.
+
+*   **Field Type**: `Date` (`date`)
+*   **Description for agents**: `ETA for shipped package`
+*   **Field ID**: `45241153830419`
+
+---
+
+#### 8. Gratuity
+A decimal field for adding a tip.
+
+*   **Field Type**: `Decimal` (`decimal`)
+*   **Description**: `Tip your help desk agent!`
+*   **Field ID**: `45241190844179`
+
+---
+
+#### 9. Reported Error
+A multi-select dropdown for reporting one or more errors.
+
+*   **Field Type**: `Multi-select` (`multiselect`)
+*   **Title shown to end-users**: `What went wrong`
+*   **Description for agents**: `Error reported by end user`
+*   **Field ID**: `45241327496595`
+
+*(Note: This list is abbreviated for the diff example. The full list from above should be used.)*
+
+---
+
 ## Testing Strategy
 
 One of the most important parts of contributing to z4j is getting tests right. A test is written adequately if:
@@ -195,8 +299,8 @@ This method is a little tricky to test for negative tests because the only way t
 [gradle]:https://gradle.org/maven-and-gradle/
 [gradle wrapper]:https://docs.gradle.org/current/userguide/gradle_wrapper_basics.html
 [Git]:https://gist.github.com/Jonathan-Zollinger/8d9a231a57f3d33ff813989c34df00e0
-[graal community distro]:https://www.graalvm.org/release-notes/JDK_17/
-[Graal-CE 17]:https://www.graalvm.org/jdk17/docs/
+[graal community distro]:https://www.graalvm.org/release-notes/JDK_21/
+[Graal-CE 21]:https://www.graalvm.org/jdk21/docs/
 [Environment Variables]:#Required-Environment-Variables
 [source function]:https://gist.github.com/Jonathan-Zollinger/96160f971741f5f3a8749d10127e7764
 [test it]:https://www.geeksforgeeks.org/software-engineering/difference-between-positive-testing-and-negative-testing/
