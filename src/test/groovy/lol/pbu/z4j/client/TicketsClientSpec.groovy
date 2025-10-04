@@ -25,68 +25,51 @@ class TicketsClientSpec extends Z4jSpec {
         tickets = ticketsAgentClient.listTickets(null).body().getTickets()
     }
 
-    def "can list tickets as agent or admin"() {
+    def "calling listTickets() #expectedTitle succeed when used with a(n) #clientType client"() {
         when:
         def response = client.listTickets(null)
 
         then:
-        response.status() == HttpStatus.OK
-
-        and:
-        response.body().getTickets() != null
-
-        where:
-        client             | _
-        ticketsAgentClient | _
-        ticketsAdminClient | _
-    }
-
-    def "Listing tickets fail with unsupported queries as expected"() {
-        when:
-        client.listTickets(null)
-
-        then:
+        if (shouldSucceed) {
+            verifyAll {
+                response.status() == HttpStatus.OK
+                response.body().getTickets() != null
+            }
+            return
+        }
         thrown(HttpClientException)
 
         where:
-        client               | _
-        ticketBadEmailClient | _
-        ticketBadUrlClient   | _
-        ticketsUserClient    | _
+        client               | clientType    | shouldSucceed | expectedTitle
+        ticketsAgentClient   | "Agent"       | true          | "should"
+        ticketsAdminClient   | "Admin"       | true          | "should"
+        ticketBadEmailClient | "bad email"   | false         | "should not"
+        ticketBadUrlClient   | "bad url"     | false         | "should not"
+        ticketsUserClient    | "simple user" | false         | "should not"
     }
 
-
-    def "can get a ticket"() {
+    def "calling showTicket() #expectedTitle succeed when used with a(n) #clientType client"() {
         when:
         def response = client.showTicket(tickets.get(0).getId())
 
         then:
-        response.status() == HttpStatus.OK
-
-        and:
-        response.body().getTicket() != null
-
-        where:
-        client             | _
-        ticketsAgentClient | _
-        ticketsAdminClient | _
-    }
-
-    def "can get a ticket"() {
-        when:
-        client.showTicket(tickets.get(0).getId())
-
-        then:
+        if (shouldSucceed) {
+            response.status() == HttpStatus.OK
+            response.body().getTicket() != null
+            return
+        }
         thrown(HttpClientException)
 
         where:
-        client               | _
-        ticketBadEmailClient | _
-        ticketBadUrlClient   | _
-        ticketsUserClient    | _
+        client               | clientType    | shouldSucceed | expectedTitle
+        ticketsAgentClient   | "Agent"       | true          | "should"
+        ticketsAdminClient   | "Admin"       | true          | "should"
+        ticketBadEmailClient | "bad email"   | false         | "should not"
+        ticketBadUrlClient   | "bad url"     | false         | "should not"
+        ticketsUserClient    | "simple user" | false         | "should not"
     }
 
-    def "can create a ticket"() {
+    def "Trying to  create a ticket #expectedTitle succeed when used with a(n) #clientType client"() {
         given:
         def ticketComment = new TicketComment().setBody(faker.chuckNorris().fact())
         def createTicketInput = new TicketCreateInput(ticketComment)
@@ -98,34 +81,22 @@ class TicketsClientSpec extends Z4jSpec {
         def response = client.createTicket(createTicketRequest)
 
         then:
-        response.status() == HttpStatus.CREATED
-
-        and:
-        response.body().getTicket() != null
-
-        where:
-        client             | _
-        ticketsAgentClient | _
-        ticketsAdminClient | _
-    }
-
-    def "can create a ticket"() {
-        given:
-        def ticketComment = new TicketComment().setBody(faker.chuckNorris().fact())
-        def createTicketInput = new TicketCreateInput(ticketComment)
-        createTicketInput.setRawSubject(faker.chuckNorris().fact())
-        def createTicketRequest = new TicketCreateRequest(createTicketInput)
-
-        when:
-        client.createTicket(createTicketRequest)
-
-        then:
+        if (shouldSucceed) {
+            verifyAll {
+                response.status() == HttpStatus.CREATED
+                response.body().getTicket() != null
+            }
+            return
+        }
         thrown(HttpClientException)
 
         where:
-        client               | _
-        ticketBadEmailClient | _
-        ticketBadUrlClient   | _
-        ticketsUserClient    | _
+        client               | clientType    | shouldSucceed | expectedTitle
+        ticketsAgentClient   | "Agent"       | true          | "should"
+        ticketsAdminClient   | "Admin"       | true          | "should"
+        ticketBadEmailClient | "bad email"   | false         | "should not"
+        ticketBadUrlClient   | "bad url"     | false         | "should not"
+        ticketsUserClient    | "simple user" | false         | "should not"
     }
+
 }
