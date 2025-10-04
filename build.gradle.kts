@@ -5,51 +5,34 @@ plugins {
     id("maven-publish")
     id("signing")
     id("com.gradleup.nmcp.aggregation").version("1.1.0")
-    id("io.micronaut.application") version "4.5.3"
-    id("io.micronaut.aot") version "4.5.3"
     id("io.micronaut.library") version "4.5.3"
     id("io.micronaut.openapi") version "4.5.3"
     id("jacoco")
     id("org.sonarqube") version "latest.release"
 }
 
+group = "lol.pbu"
 version = project.properties["z4jVersion"]!!
+
 val dataFakerVersion = project.properties["dataFakerVersion"]!!
 val lombokVersion = project.properties["lombokVersion"]!!
-group = "lol.pbu"
-
-extra["netty.version"] = "4.1.124.Final"
+extra["netty.version"] = project.properties["nettyVersion"]!!
 
 configurations.create("lombok")
-
-application {
-    mainClass.set("lol.pbu.Application")
-}
 
 repositories {
     mavenCentral()
     gradlePluginPortal()
 }
 
-sonarqube {
-    properties {
-        property("sonar.tests", "src/test/groovy")
-    }
-}
-
 dependencies {
-    implementation(platform("io.micronaut.platform:micronaut-platform:4.5.3"))
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
     implementation("io.micronaut.reactor:micronaut-reactor-http-client")
-    implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
-    implementation("org.slf4j:jul-to-slf4j")
     implementation("io.micronaut.validation:micronaut-validation")
     "lombok"("org.projectlombok:lombok:${lombokVersion}")
-    runtimeOnly("ch.qos.logback:logback-classic")
-    runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("net.datafaker:datafaker:$dataFakerVersion")
 }
@@ -66,25 +49,12 @@ tasks.withType<Javadoc>().configureEach {
     source = files().asFileTree
 }
 
-
 micronaut {
     runtime("netty")
     testRuntime("spock2")
     processing {
         incremental(true)
         annotations("lol.pbu.*")
-    }
-    aot {
-        // Please review carefully the optimizations enabled below
-        // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
-        optimizeServiceLoading = false
-        convertYamlToJava = false
-        precomputeOperations = true
-        cacheEnvironment = true
-        optimizeClassLoading = true
-        deduceEnvironment = true
-        optimizeNetty = true
-        replaceLogbackXml = true
     }
     openapi {
         version = "6.16.0"
@@ -100,6 +70,13 @@ micronaut {
         }
     }
 }
+
+sonarqube {
+    properties {
+        property("sonar.tests", "src/test/groovy")
+    }
+}
+
 tasks.jacocoTestReport {
     reports {
         xml.required.set(true)
@@ -111,12 +88,15 @@ tasks.jacocoTestReport {
         }
     }))
 }
+
 tasks.test {
     finalizedBy(tasks.jacocoTestReport)
 }
+
 tasks.check {
     dependsOn(tasks.jacocoTestReport)
 }
+
 tasks.withType<Test> {
     useJUnitPlatform()
     testLogging {
