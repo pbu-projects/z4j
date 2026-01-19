@@ -8,6 +8,58 @@ info:
     - Locales
     - Tickets
 paths:
+  /api/v2/tickets:
+    get:
+      operationId: ListTickets
+      tags:
+        - Tickets
+      summary: List Tickets
+      parameters:
+        - name: external_id
+          in: query
+          description: Lists tickets by external id. External ids don't have to be unique for each ticket. As a result, the request may return multiple tickets with the same external id.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List tickets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketsResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/TicketsResponseExample'
+    post:
+      operationId: CreateTicket
+      tags:
+        - Tickets
+      summary: Create Ticket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketCreateRequest'
+            examples:
+              default:
+                $ref: '#/components/examples/TicketCreateRequestExample'
+      responses:
+        "201":
+          description: Create ticket
+          headers:
+            Location:
+              description: The URL of the created ticket
+              schema:
+                type: string
+                format: url
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/TicketResponseExample'
   /api/v2/tickets/count:
     get:
       operationId: CountTickets
@@ -36,6 +88,51 @@ paths:
               examples:
                 default:
                   $ref: '#/components/examples/TicketCountResponseExample'
+  /api/v2/tickets/{ticket_id}:
+    get:
+      operationId: ShowTicket
+      tags:
+        - Tickets
+      summary: Show Ticket
+      description: |-
+        Returns a number of ticket properties though not the ticket comments. To get the comments, use [List Comments](developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/#list-comments)
+
+        #### Allowed For
+        * Agents
+      parameters:
+        - $ref: '#/components/parameters/TicketId'
+      responses:
+        "200":
+          description: Ticket
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketResponse'
+              examples:
+                default:
+                  $ref: '#/components/examples/TicketResponseExample'
+    put:
+      operationId: UpdateTicket
+      tags:
+        - Tickets
+      summary: Update Ticket
+      parameters:
+        - $ref: '#/components/parameters/TicketId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketUpdateRequest'
+            examples:
+              default:
+                $ref: '#/components/examples/TicketUpdateRequestExample'
+      responses:
+        "200":
+          description: Successful request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketUpdateResponse'
   /api/v2/locales:
     get:
       operationId: ListLocales
@@ -291,81 +388,7 @@ paths:
               examples:
                 default:
                   $ref: '#/components/examples/UserSegmentTopicsResponseExample'
-  /api/v2/tickets:
-    get:
-      operationId: ListTickets
-      tags:
-        - Tickets
-      summary: List Tickets
-      parameters:
-        - name: external_id
-          in: query
-          description: Lists tickets by external id. External ids don't have to be unique for each ticket. As a result, the request may return multiple tickets with the same external id.
-          schema:
-            type: string
-      responses:
-        "200":
-          description: List tickets
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TicketsResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/TicketsResponseExample'
-    post:
-      operationId: CreateTicket
-      tags:
-        - Tickets
-      summary: Create Ticket
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TicketCreateRequest'
-            examples:
-              default:
-                $ref: '#/components/examples/TicketCreateRequestExample'
-      responses:
-        "201":
-          description: Create ticket
-          headers:
-            Location:
-              description: The URL of the created ticket
-              schema:
-                type: string
-                format: url
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TicketResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/TicketResponseExample'
-  /api/v2/tickets/{ticket_id}:
-    get:
-      operationId: ShowTicket
-      tags:
-        - Tickets
-      summary: Show Ticket
-      description: |-
-        Returns a number of ticket properties though not the ticket comments. To get the comments, use [List Comments](developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/#list-comments)
 
-        #### Allowed For
-        * Agents
-      parameters:
-        - $ref: '#/components/parameters/TicketId'
-      responses:
-        "200":
-          description: Ticket
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TicketResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/TicketResponseExample'
 components:
   schemas:
     Attachment:
@@ -707,6 +730,54 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Article'
+    Audit:
+      type: object
+      properties:
+        author_id:
+          type: integer
+          readOnly: true
+          format: int64
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        events:
+          type: array
+          items:
+            type: object
+            properties:
+              body:
+                type: string
+                readOnly: true
+              field_name:
+                type: string
+                readOnly: true
+              id:
+                type: integer
+                readOnly: true
+                format: int64
+              type:
+                type: string
+                readOnly: true
+              value:
+                oneOf:
+                  - type: string
+                  - type: integer
+                    format: int64
+          readOnly: true
+        id:
+          type: integer
+          format: int64
+          readOnly: true
+        metadata:
+          type: object
+          readOnly: true
+        ticket_id:
+          type: integer
+          format: int64
+          readOnly: true
+        via:
+          $ref: '#/components/schemas/Via'
     BadRequestErrorResponse:
       type: object
       properties:
@@ -2038,6 +2109,18 @@ components:
           body: The smoke is very colorful.
         priority: urgent
         subject: My printer is on fire!
+    TicketUpdateResponse:
+      type: object
+      properties:
+        audit:
+          $ref: '#/components/schemas/Audit'
+        ticket:
+          $ref: '#/components/schemas/Ticket'
+    TicketUpdateRequest:
+      type: object
+      properties:
+        ticket: #Should be named "ticketUpdateInput" to avoid confusion, but maintain json property "ticket"
+          $ref: '#/components/schemas/TicketUpdateInput'
     TicketAuditVia:
       type: object
       description: Describes how the object was created. See the [Via object reference](/documentation/ticketing/reference-guides/via-object-reference)

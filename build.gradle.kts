@@ -57,7 +57,7 @@ micronaut {
         annotations("lol.pbu.*")
     }
     openapi {
-        version = "6.16.0"
+        version = "6.19.3"
         client(file("src/main/resources/z4j.yaml")) {
             apiPackageName.set("lol.pbu.z4j.client")
             modelPackageName.set("lol.pbu.z4j.model")
