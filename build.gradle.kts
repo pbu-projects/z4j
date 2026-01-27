@@ -114,8 +114,8 @@ publishing {
 
             pom {
                 name.set(project.name)
-                description.set("A Java client for the Zendesk API, generated from OpenAPI specs.")
-                url.set("https://github.com/pbu-lol/z4j")
+                description.set("A Java client for the Zendesk API.")
+                url.set("https://github.com/PeanutButter-Unicorn/z4j")
                 licenses {
                     license {
                         name.set("The Apache License, Version 2.0")
@@ -130,9 +130,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection.set("scm:git:git://github.com/pbu-lol/z4j.git")
-                    developerConnection.set("scm:git:ssh://github.com/pbu-lol/z4j.git")
-                    url.set("https://github.com/pbu-lol/z4j")
+                    connection.set("scm:git:git://github.com/PeanutButter-Unicorn/z4j")
+                    developerConnection.set("scm:git:ssh://github.com/PeanutButter-Unicorn/z4j")
+                    url.set("https://github.com/PeanutButter-Unicorn/z4j")
                 }
             }
         }
