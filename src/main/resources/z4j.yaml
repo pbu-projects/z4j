@@ -3,10 +3,6 @@ info:
   title: Help Center API
   description: Help Center v2 REST API
   version: 2.0.0
-  tags:
-    - User Subscriptions
-    - Locales
-    - Tickets
 paths:
   /api/v2/tickets:
     get:
@@ -123,9 +119,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/TicketUpdateRequest'
-            examples:
-              default:
-                $ref: '#/components/examples/TicketUpdateRequestExample'
       responses:
         "200":
           description: Successful request
@@ -217,7 +210,7 @@ paths:
         Some user segments can only be applied to sections and topics on certain Guide plans. For instance, user 
         segments with a `user_type` of `"staff"` cannot be applied to sections and topics on accounts on the Guide 
         Lite plan or the Suite Team plan. <br>
-        Allowed for Help Center managers
+        (Allowed for Help Center managers)
       parameters:
         - name: built_in
           in: query
@@ -241,7 +234,7 @@ paths:
         - User Segments
       summary: Create User Segment
       description: |
-        Allowed for Help Center managers
+        (Allowed for Help Center managers)
       requestBody:
         content:
           application/json:
@@ -278,7 +271,7 @@ paths:
         - User Segments
       summary: Show User Segment
       description: |
-        Allowed for Help Center managers
+        (Allowed for Help Center managers)
       responses:
         "200":
           description: OK Response
@@ -295,7 +288,7 @@ paths:
         - User Segments
       summary: Update User Segment
       description: |
-        Allowed for Help Center managers
+        (Allowed for Help Center managers)
       requestBody:
         content:
           application/json:
@@ -329,7 +322,7 @@ paths:
         - User Segments
       summary: Delete User Segment
       description: |
-        Allowed for Help Center managers
+        (Allowed for Help Center managers)
       responses:
         "204":
           description: Response when the  was deleted
@@ -344,7 +337,7 @@ paths:
       description: |
         Lists the sections that use the specified user segment.
 
-        Allowed for Help Center managers
+        (Allowed for Help Center managers)
       responses:
         "200":
           description: OK Response

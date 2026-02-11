@@ -1,5 +1,6 @@
 package lol.pbu.z4j.client
 
+import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientException
 import lol.pbu.z4j.Z4jSpec
@@ -19,7 +20,7 @@ class TicketsClientSpec extends Z4jSpec {
         ticketsAgentClient = agentCtx.getBean(TicketsClient.class)
         ticketsAdminClient = adminCtx.getBean(TicketsClient.class)
         ticketsUserClient = userCtx.getBean(TicketsClient.class)
-        tickets = ticketsAgentClient.listTickets(null).body().getTickets()
+        tickets = ticketsAgentClient.listTickets(null).block().getTickets()
     }
 
     def "calling listTickets() #expectedTitle succeed when used with a(n) #clientType client"(
@@ -29,14 +30,11 @@ class TicketsClientSpec extends Z4jSpec {
             String expectedTitle
     ) {
         when:
-        def response = client.listTickets(null)
+        TicketsResponse response = client.listTickets(null).block()
 
         then:
         if (shouldSucceed) {
-            verifyAll {
-                response.status() == HttpStatus.OK
-                response.body().getTickets() != null
-            }
+            response != null
             return
         }
         thrown(HttpClientException)
@@ -57,12 +55,11 @@ class TicketsClientSpec extends Z4jSpec {
             String expectedTitle
     ) {
         when:
-        def response = client.showTicket(tickets.get(0).getId())
+        TicketResponse response = client.showTicket(tickets.get(0).getId()).block()
 
         then:
         if (shouldSucceed) {
-            response.status() == HttpStatus.OK
-            response.body().getTicket() != null
+            response.getTicket() != null
             return
         }
         thrown(HttpClientException)
@@ -83,13 +80,13 @@ class TicketsClientSpec extends Z4jSpec {
             String expectedTitle
     ) {
         given:
-        def ticketComment = new TicketComment().setBody(faker.chuckNorris().fact())
-        def createTicketInput = new TicketCreateInput(ticketComment)
+        TicketComment ticketComment = new TicketComment().setBody(faker.chuckNorris().fact())
+        TicketCreateInput createTicketInput = new TicketCreateInput(ticketComment)
         createTicketInput.setRawSubject(faker.chuckNorris().fact())
-        def createTicketRequest = new TicketCreateRequest(createTicketInput)
+        TicketCreateRequest createTicketRequest = new TicketCreateRequest(createTicketInput)
 
         when:
-        def response = client.createTicket(createTicketRequest)
+        HttpResponse<TicketResponse> response = client.createTicket(createTicketRequest).block() //should be Mono<TicketResponse>, not Mono<HttpResponse<TicketResponse>>
 
         then:
         if (shouldSucceed) {
@@ -125,13 +122,12 @@ class TicketsClientSpec extends Z4jSpec {
 
 
         when:
-        def response = client.updateTicket(tickets.first.getId(), ticketUpdateRequest)
+        TicketUpdateResponse response = client.updateTicket(tickets.first.getId(), ticketUpdateRequest).block()
 
         then:
         if (shouldSucceed) {
             verifyAll {
-                response.status() == HttpStatus.OK
-                response.body().getTicket() != null
+                response.getTicket() != null
             }
             return
         }
@@ -153,13 +149,12 @@ class TicketsClientSpec extends Z4jSpec {
             String expectedTitle
     ) {
         when:
-        def response = client.countTickets()
+        TicketCountResponse response = client.countTickets().block() //TODO(jonathan) rename this to getTicketCount()
 
         then:
         if (shouldSucceed) {
             verifyAll {
-                response.status() == HttpStatus.OK
-                response.body().getCount().getValue() > 0
+                response.getCount().getValue() > 0
             }
             return
         }

@@ -64,12 +64,12 @@ micronaut {
         client(file("src/main/resources/z4j.yaml")) {
             apiPackageName.set("lol.pbu.z4j.client")
             modelPackageName.set("lol.pbu.z4j.model")
-            useReactive.set(false)
+            useReactive.set(true)
             useAuth.set(false)
             lombok.set(true)
             clientId.set("zendesk")
             apiNameSuffix.set("Client")
-            alwaysUseGenerateHttpResponse.set(true)
+            alwaysUseGenerateHttpResponse.set(false)
         }
     }
 }

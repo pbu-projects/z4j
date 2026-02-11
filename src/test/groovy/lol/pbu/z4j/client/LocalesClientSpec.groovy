@@ -1,9 +1,11 @@
 package lol.pbu.z4j.client
 
-import io.micronaut.http.HttpStatus
+
 import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
+import lol.pbu.z4j.model.LocalesResponse
+import reactor.core.publisher.Mono
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -25,12 +27,12 @@ class LocalesClientSpec extends Z4jSpec {
 
 
     @Unroll
-    def "can list public locales for #clientName"() {
+    def "can list public locales for #clientName"(String clientName, LocalesClient localesClient) {
         when:
-        def response = localesClient.listLocales()
+        Mono<LocalesResponse> response = localesClient.listLocales()
 
         then:
-        response.status() == HttpStatus.OK
+        response.block() != null
 
         where:
         clientName              | localesClient
@@ -42,10 +44,14 @@ class LocalesClientSpec extends Z4jSpec {
     }
 
     def "calling locales client with a bad URL throws an exception"() {
-        when:
-        badUrlLocalesClient.listLocales()
+        when:"create the mono<LocalesResponse> with a bad URL"
+        def response = badUrlLocalesClient.listLocales()
 
-        then:
+        and:"attempt to get next signal"
+        response.block()
+
+        then:"bad url causes an httpclientException"
         thrown(HttpClientException)
+
     }
 }
