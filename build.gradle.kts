@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
+
 plugins {
     id("it.nicolasfarabegoli.conventional-commits") version "3.1.3"
     id("groovy")
@@ -100,8 +103,8 @@ tasks.check {
 tasks.withType<Test> {
     useJUnitPlatform()
     testLogging {
-        events = setOf(org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED)
-        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        events = setOf(FAILED)
+        exceptionFormat = FULL
         showStackTraces = true
         showCauses = true
     }
