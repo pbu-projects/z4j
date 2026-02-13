@@ -264,23 +264,23 @@ With these requirements, we use spock's data driven testing to provide the follo
     @Unroll
     def "can list public locales for #clientName"() {
         when:
-        def response = localesClient.listLocales()
+        def response = LocaleClient.listLocales()
 
         then:
         response.status() == HttpStatus.OK
 
         where:
-        clientName              | localesClient
-        "managers client"       | managersLocalesClient
-        "agents client"         | agentsLocalesClient
-        "users client"          | usersLocalesClient
-        "no-auth client"        | noAuthLocalesClient
-        "bad email client"      | badEmailLocalesClient
+        clientName              | LocaleClient
+        "managers client"       | managersLocaleClient
+        "agents client"         | agentsLocaleClient
+        "users client"          | usersLocaleClient
+        "no-auth client"        | noAuthLocaleClient
+        "bad email client"      | badEmailLocaleClient
     }
 
     def "calling locales client with a bad URL throws an exception"() {
         when:
-        badUrlLocalesClient.listLocales()
+        badUrlLocaleClient.listLocales()
 
         then:
         thrown(HttpClientException)

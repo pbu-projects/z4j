@@ -7,23 +7,24 @@ import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.model.*
 import spock.lang.Shared
 
-class TicketsClientSpec extends Z4jSpec {
+class TicketClientSpec extends Z4jSpec {
+
     @Shared
-    TicketsClient ticketsAgentClient, ticketsAdminClient, ticketsUserClient, ticketBadEmailClient, ticketBadUrlClient
+    TicketClient ticketsAgentClient, ticketsAdminClient, ticketsUserClient, ticketBadEmailClient, ticketBadUrlClient
 
     @Shared
     List<Ticket> tickets
 
     void setupSpec() {
-        ticketBadEmailClient = badEmailCtx.getBean(TicketsClient.class)
-        ticketBadUrlClient = badUrlCtx.getBean(TicketsClient.class)
-        ticketsAgentClient = agentCtx.getBean(TicketsClient.class)
-        ticketsAdminClient = adminCtx.getBean(TicketsClient.class)
-        ticketsUserClient = userCtx.getBean(TicketsClient.class)
+        ticketBadEmailClient = badEmailCtx.getBean(TicketClient.class)
+        ticketBadUrlClient = badUrlCtx.getBean(TicketClient.class)
+        ticketsAgentClient = agentCtx.getBean(TicketClient.class)
+        ticketsAdminClient = adminCtx.getBean(TicketClient.class)
+        ticketsUserClient = userCtx.getBean(TicketClient.class)
         tickets = ticketsAgentClient.listTickets(null).block().getTickets()
     }
 
-    def "calling listTickets() #expectedTitle succeed when used with a(n) #clientType client"(TicketsClient client,
+    def "calling listTickets() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client,
                                                                                               String clientType,
                                                                                               Boolean shouldSucceed,
                                                                                               String expectedTitle) {
@@ -46,7 +47,7 @@ class TicketsClientSpec extends Z4jSpec {
         ticketsUserClient    | "simple user" | false         | "should not"
     }
 
-    def "calling showTicket() #expectedTitle succeed when used with a(n) #clientType client"(TicketsClient client,
+    def "calling showTicket() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client,
                                                                                              String clientType,
                                                                                              Boolean shouldSucceed,
                                                                                              String expectedTitle) {
@@ -69,7 +70,7 @@ class TicketsClientSpec extends Z4jSpec {
         ticketsUserClient    | "simple user" | false         | "should not"
     }
 
-    def "Trying to create a ticket #expectedTitle succeed when used with a(n) #clientType client"(TicketsClient client,
+    def "Trying to create a ticket #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client,
                                                                                                   String clientType,
                                                                                                   Boolean shouldSucceed,
                                                                                                   String expectedTitle) {
@@ -101,7 +102,7 @@ class TicketsClientSpec extends Z4jSpec {
         ticketsUserClient    | "simple user" | false         | "should not"
     }
 
-    def "calling updateTicket() #expectedTitle succeed when used with a(n) #clientType client"(TicketsClient client,
+    def "calling updateTicket() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client,
                                                                                                String clientType,
                                                                                                Boolean shouldSucceed,
                                                                                                String expectedTitle) {
@@ -132,7 +133,7 @@ class TicketsClientSpec extends Z4jSpec {
         ticketsUserClient    | "simple user" | false         | "should not"
     }
 
-    def "calling countTickets() #expectedTitle succeed when used with a(n) #clientType client"(TicketsClient client,
+    def "calling countTickets() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client,
                                                                                                String clientType,
                                                                                                Boolean shouldSucceed,
                                                                                                String expectedTitle) {

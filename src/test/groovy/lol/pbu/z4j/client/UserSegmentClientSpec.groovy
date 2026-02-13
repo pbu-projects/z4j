@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono
 import spock.lang.Shared
 
 @MicronautTest
-class UserSegmentsClientSpec extends Z4jSpec {
+class UserSegmentClientSpec extends Z4jSpec {
 
     //TODO: usertype needs to be an enum, not a string (it can only be "signed_in_users" or "staff")
 
@@ -26,16 +26,16 @@ class UserSegmentsClientSpec extends Z4jSpec {
      */
 
     @Shared
-    UserSegmentsClient userSegmentsClient
+    UserSegmentClient userSegmentClient
 
     def setupSpec() {
-        userSegmentsClient = adminCtx.getBean(UserSegmentsClient.class)
+        userSegmentClient = adminCtx.getBean(UserSegmentClient.class)
     }
 
 
     def "can list user segments"() {
         when: "list user segments with query value '#segmentQuery'"
-        Mono<UserSegmentsResponse> response = userSegmentsClient.listUserSegments(segmentQuery)
+        Mono<UserSegmentsResponse> response = userSegmentClient.listUserSegments(segmentQuery)
 
         and: "reading response causes no error"
         response.block().getUserSegments()
@@ -52,7 +52,7 @@ class UserSegmentsClientSpec extends Z4jSpec {
 
     def "can create user segment named '#segmentName' with '#userType' user type"(String userType, String segmentName) {
         when:
-        HttpResponse<UserSegmentResponse> response = userSegmentsClient.createUserSegment(new CreateUserSegmentRequest(
+        HttpResponse<UserSegmentResponse> response = userSegmentClient.createUserSegment(new CreateUserSegmentRequest(
                 new UserSegment(segmentName, userType))).block() // should be Mono<UserSegmentResponse>, not Mono<HttpResponse<UserSegmentResponse>>
 
         then: "received expected 201 response"
@@ -69,7 +69,7 @@ class UserSegmentsClientSpec extends Z4jSpec {
         UserSegment userSegment = createUserSegment(userType, segmentName)
 
         when: "delete user segment from previous step"
-        HttpResponse<Void> response = userSegmentsClient.deleteUserSegment(userSegment.getId()).block() //shouldn't include an HTTPResponse?
+        HttpResponse<Void> response = userSegmentClient.deleteUserSegment(userSegment.getId()).block() //shouldn't include an HTTPResponse?
 
         then: "received expected 204 response"
         response.status() == HttpStatus.NO_CONTENT
@@ -85,7 +85,7 @@ class UserSegmentsClientSpec extends Z4jSpec {
         UserSegment userSegment = createUserSegment(userType, segmentName)
 
         when: "list sections with user segment from previous step"
-        SectionsResponse response = userSegmentsClient.listUserSegmentSections(userSegment.getId()).block()
+        SectionsResponse response = userSegmentClient.listUserSegmentSections(userSegment.getId()).block()
 
         and: "query resultant sections"
         response.getSections()
@@ -104,7 +104,7 @@ class UserSegmentsClientSpec extends Z4jSpec {
         UserSegment userSegment = createUserSegment(userType, segmentName)
 
         when: "list topics with user segment from previous step"
-        Mono<TopicsResponse> response = userSegmentsClient.listUserSegmentTopics(userSegment.getId())
+        Mono<TopicsResponse> response = userSegmentClient.listUserSegmentTopics(userSegment.getId())
 
         and:"query resultant Topics"
         response.block().getTopics()
@@ -123,7 +123,7 @@ class UserSegmentsClientSpec extends Z4jSpec {
         def userSegment = createUserSegment(userType, segmentName)
 
         when: "show user segment with user segment ID from previous step"
-        Mono<UserSegmentResponse> response = userSegmentsClient.showUserSegment(userSegment.getId())
+        Mono<UserSegmentResponse> response = userSegmentClient.showUserSegment(userSegment.getId())
 
         and: "query resultant userSegments"
         response.block().getUserSegment() // don't test more than this api client. testing Zendesk's behavior is out of scope
@@ -150,7 +150,7 @@ class UserSegmentsClientSpec extends Z4jSpec {
         }
 
         and: "send the update to zendesk"
-        UserSegmentResponse response = userSegmentsClient.updateUserSegment(
+        UserSegmentResponse response = userSegmentClient.updateUserSegment(
                 userSegment.getId(),
                 new CreateUserSegmentRequest(userSegment)).block()
 
@@ -175,7 +175,7 @@ class UserSegmentsClientSpec extends Z4jSpec {
      * @return the ID of the created user segment
      */
     UserSegment createUserSegment(String userType, String name) {
-        return userSegmentsClient.createUserSegment(new CreateUserSegmentRequest(
+        return userSegmentClient.createUserSegment(new CreateUserSegmentRequest(
                 new UserSegment(name, userType))).block().body().getUserSegment()
     }
 }

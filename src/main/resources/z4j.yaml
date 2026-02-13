@@ -168,7 +168,7 @@ paths:
     get:
       operationId: ListTickets
       tags:
-        - Tickets
+        - Ticket
       summary: List Tickets
       parameters:
         - name: external_id
@@ -189,7 +189,7 @@ paths:
     post:
       operationId: CreateTicket
       tags:
-        - Tickets
+        - Ticket
       summary: Create Ticket
       requestBody:
         required: true
@@ -220,7 +220,7 @@ paths:
     get:
       operationId: CountTickets
       tags:
-        - Tickets
+        - Ticket
       summary: Count Tickets
       description: |-
         Returns an approximate count of tickets in the account. If the count exceeds 100,000, it is updated every 24 hours.
@@ -248,7 +248,7 @@ paths:
     get:
       operationId: ShowTicket
       tags:
-        - Tickets
+        - Ticket
       summary: Show Ticket
       description: |-
         Returns a number of ticket properties though not the ticket comments. To get the comments, use [List Comments](developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/#list-comments)
@@ -270,7 +270,7 @@ paths:
     put:
       operationId: UpdateTicket
       tags:
-        - Tickets
+        - Ticket
       summary: Update Ticket
       parameters:
         - $ref: '#/components/parameters/TicketId'
@@ -290,7 +290,7 @@ paths:
     get:
       operationId: ListLocales
       tags:
-        - Locales
+        - Locale
       summary: List Locales
       description: |
         Lists the translation locales available for the account.
@@ -312,7 +312,7 @@ paths:
     get:
       operationId: ListArticles
       tags:
-        - Articles
+        - Article
       summary: List Articles
       parameters:
         - name: sort_by
@@ -364,7 +364,7 @@ paths:
     get:
       operationId: ListUserSegments
       tags:
-        - User Segments
+        - User Segment
       summary: List User Segments
       description: |
         Some user segments can only be applied to sections and topics on certain Guide plans. For instance, user 
@@ -391,7 +391,7 @@ paths:
     post:
       operationId: CreateUserSegment
       tags:
-        - User Segments
+        - User Segment
       summary: Create User Segment
       description: |
         (Allowed for Help Center managers)
@@ -428,7 +428,7 @@ paths:
     get:
       operationId: ShowUserSegment
       tags:
-        - User Segments
+        - User Segment
       summary: Show User Segment
       description: |
         (Allowed for Help Center managers)
@@ -445,7 +445,7 @@ paths:
     put:
       operationId: UpdateUserSegment
       tags:
-        - User Segments
+        - User Segment
       summary: Update User Segment
       description: |
         (Allowed for Help Center managers)
@@ -479,7 +479,7 @@ paths:
     delete:
       operationId: DeleteUserSegment
       tags:
-        - User Segments
+        - User Segment
       summary: Delete User Segment
       description: |
         (Allowed for Help Center managers)
@@ -492,7 +492,7 @@ paths:
     get:
       operationId: ListUserSegmentSections
       tags:
-        - User Segments
+        - User Segment
       summary: List Sections with User Segment
       description: |
         Lists the sections that use the specified user segment.
@@ -514,7 +514,7 @@ paths:
     get:
       operationId: ListUserSegmentTopics
       tags:
-        - User Segments
+        - User Segment
       summary: List Topics with User Segment
       description: |
         Lists the topics that use the specified user segment.

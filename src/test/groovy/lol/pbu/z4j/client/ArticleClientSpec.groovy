@@ -9,26 +9,26 @@ import spock.lang.Shared
 import spock.lang.Unroll
 
 @MicronautTest
-class ArticlesClientSpec extends Z4jSpec {
+class ArticleClientSpec extends Z4jSpec {
 
     @Shared
-    ArticlesClient adminArticlesClient, agentArticlesClient, userArticlesClient
+    ArticleClient adminArticleClient, agentArticleClient, userArticleClient
 
     @Shared
     List<String> allLocales
 
     def setupSpec() {
-        adminArticlesClient = adminCtx.getBean(ArticlesClient.class)
-        agentArticlesClient = agentCtx.getBean(ArticlesClient.class)
-        userArticlesClient = userCtx.getBean(ArticlesClient.class)
-        allLocales = userCtx.getBean(LocalesClient.class).listLocales().block().locales.collect { it.locale.toLowerCase() }
+        adminArticleClient = adminCtx.getBean(ArticleClient.class)
+        agentArticleClient = agentCtx.getBean(ArticleClient.class)
+        userArticleClient = userCtx.getBean(ArticleClient.class)
+        allLocales = userCtx.getBean(LocaleClient.class).listLocales().block().locales.collect { it.locale.toLowerCase() }
     }
 
     @Unroll
-    def "can use ListArticles for other tests using the '#locale' locale"(ArticlesClient articlesClient, String locale) {
+    def "can use ListArticles for other tests using the '#locale' locale"(ArticleClient ArticleClient, String locale) {
         // https://github.com/PeanutButter-Unicorn/z4j/issues/31
         when: "query articles list for the '#locale' locale"
-        Mono<ArticlesResponse> response = articlesClient.listArticles(locale, null, null, null, null)
+        Mono<ArticlesResponse> response = ArticleClient.listArticles(locale, null, null, null, null)
 
         then:
         ArticlesResponse articlesResponse = response.block()
@@ -40,7 +40,7 @@ class ArticlesClientSpec extends Z4jSpec {
         }
 
         where:
-        [articlesClient, locale] << [[adminArticlesClient, agentArticlesClient, userArticlesClient],
+        [ArticleClient, locale] << [[adminArticleClient, agentArticleClient, userArticleClient],
                                      allLocales].combinations()
     }
 }
