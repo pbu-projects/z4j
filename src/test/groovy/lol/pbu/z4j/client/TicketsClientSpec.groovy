@@ -23,12 +23,10 @@ class TicketsClientSpec extends Z4jSpec {
         tickets = ticketsAgentClient.listTickets(null).block().getTickets()
     }
 
-    def "calling listTickets() #expectedTitle succeed when used with a(n) #clientType client"(
-            TicketsClient client,
-            String clientType,
-            Boolean shouldSucceed,
-            String expectedTitle
-    ) {
+    def "calling listTickets() #expectedTitle succeed when used with a(n) #clientType client"(TicketsClient client,
+                                                                                              String clientType,
+                                                                                              Boolean shouldSucceed,
+                                                                                              String expectedTitle) {
         when:
         TicketsResponse response = client.listTickets(null).block()
 
@@ -48,12 +46,10 @@ class TicketsClientSpec extends Z4jSpec {
         ticketsUserClient    | "simple user" | false         | "should not"
     }
 
-    def "calling showTicket() #expectedTitle succeed when used with a(n) #clientType client"(
-            TicketsClient client,
-            String clientType,
-            Boolean shouldSucceed,
-            String expectedTitle
-    ) {
+    def "calling showTicket() #expectedTitle succeed when used with a(n) #clientType client"(TicketsClient client,
+                                                                                             String clientType,
+                                                                                             Boolean shouldSucceed,
+                                                                                             String expectedTitle) {
         when:
         TicketResponse response = client.showTicket(tickets.get(0).getId()).block()
 
@@ -73,12 +69,10 @@ class TicketsClientSpec extends Z4jSpec {
         ticketsUserClient    | "simple user" | false         | "should not"
     }
 
-    def "Trying to create a ticket #expectedTitle succeed when used with a(n) #clientType client"(
-            TicketsClient client,
-            String clientType,
-            Boolean shouldSucceed,
-            String expectedTitle
-    ) {
+    def "Trying to create a ticket #expectedTitle succeed when used with a(n) #clientType client"(TicketsClient client,
+                                                                                                  String clientType,
+                                                                                                  Boolean shouldSucceed,
+                                                                                                  String expectedTitle) {
         given:
         TicketComment ticketComment = new TicketComment().setBody(faker.chuckNorris().fact())
         TicketCreateInput createTicketInput = new TicketCreateInput(ticketComment)
@@ -107,17 +101,13 @@ class TicketsClientSpec extends Z4jSpec {
         ticketsUserClient    | "simple user" | false         | "should not"
     }
 
-    def "calling updateTicket() #expectedTitle succeed when used with a(n) #clientType client"(
-            TicketsClient client,
-            String clientType,
-            Boolean shouldSucceed,
-            String expectedTitle
-    ) {
+    def "calling updateTicket() #expectedTitle succeed when used with a(n) #clientType client"(TicketsClient client,
+                                                                                               String clientType,
+                                                                                               Boolean shouldSucceed,
+                                                                                               String expectedTitle) {
         given:
         TicketUpdateInput ticketUpdateInput = new TicketUpdateInput()
-                .setComment(
-                        new TicketComment().setBody(faker.hitchhikersGuideToTheGalaxy().marvinQuote().toString())
-                )
+                .setComment(new TicketComment().setBody(faker.hitchhikersGuideToTheGalaxy().marvinQuote().toString()))
         TicketUpdateRequest ticketUpdateRequest = new TicketUpdateRequest().setTicket(ticketUpdateInput)
 
 
@@ -142,12 +132,10 @@ class TicketsClientSpec extends Z4jSpec {
         ticketsUserClient    | "simple user" | false         | "should not"
     }
 
-    def "calling countTickets() #expectedTitle succeed when used with a(n) #clientType client"(
-            TicketsClient client,
-            String clientType,
-            Boolean shouldSucceed,
-            String expectedTitle
-    ) {
+    def "calling countTickets() #expectedTitle succeed when used with a(n) #clientType client"(TicketsClient client,
+                                                                                               String clientType,
+                                                                                               Boolean shouldSucceed,
+                                                                                               String expectedTitle) {
         when:
         TicketCountResponse response = client.countTickets().block() //TODO(jonathan) rename this to getTicketCount()
 
