@@ -70,6 +70,7 @@ micronaut {
             clientId.set("zendesk")
             apiNameSuffix.set("Client")
             alwaysUseGenerateHttpResponse.set(false)
+            generateHttpResponseWhereRequired.set(false)
         }
     }
 }
