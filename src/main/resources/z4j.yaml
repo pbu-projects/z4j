@@ -11,57 +11,27 @@ paths:
         - Ticket
       summary: List Ticket Fields
       description: |
-        Returns a list of all system and custom ticket fields in your account.
-
-        For end users, only the ticket fields with visible_in_portal set to true are returned.
-
-        Cursor pagination returns a maximum of 100 records per page and fields are returned in the order specified by their id.
-
-        If the results are not paginated, every field is returned in the response and fields are returned in the order specified by the position.
-
-        You can adjust the position of ticket fields by:
-
-        - Using the [Update Ticket Field](/api-reference/ticketing/tickets/ticket_fields/#update-ticket-field) endpoint
-        - Using the [Reorder Ticket Fields](/api-reference/ticketing/tickets/ticket_fields/#reorder-ticket-fields) endpoint
-        - Ticket Fields page in the Admin Center (**Admin Center** > **Manage** > **Ticket** > **Fields** > **Actions** > **Edit order**)
-
-        These adjustments determine the order in which fields are displayed in various locations. For accounts without access to multiple ticket forms, the order will also be used to display field values within tickets. However, for accounts with access to multiple ticket forms, the field order on the ticket page is defined within each form.
-
-        Consider caching this resource to use with the [Tickets](/api-reference/ticketing/tickets/tickets/#json-format) API.
-
-        #### Pagination
-
-        - Cursor pagination (recommended)
-        - No pagination
-
-        See [Pagination](/api-reference/introduction/pagination/).
-
-        #### Sideloads
-
-        The following sideloads are supported:
-
-        | Name             | Will sideload
-        | ---------------- | -------------
-        | users            | The user or users that created the ticket field
-
-        #### Allowed For
-
-        * Anyone
+        <p>Returns a list of all system and custom ticket fields in your account.</p>
+        <p>For end users, only the ticket fields with visible_in_portal set to true are returned.</p>
+        <p>Consider caching this resource to use with the{@link TicketClient}.</p>
+        <h4 id="allowed-for">Allowed For</h4>
+        <ul>
+            <li>Anyone</li>
+        </ul>
       parameters:
         - name: locale
           in: query
           description: |
-            Forces the `title_in_portal` property to return a dynamic content variant for the specified locale.
-             Only accepts [active locale ids](/api-reference/ticketing/account-configuration/locales/#list-locales).
-            Example: `locale="de"`.
+            Forces the {@code titleInPortal} property to return a dynamic content variant for the specified locale.
+            Only accepts {@link LocaleClient#listLocales() active locale ids}.
           schema:
             type: string
         - name: creator
           in: query
           description: |
-            Displays the `creator_user_id` and `creator_app_name` properties. If the ticket field is created
-             by an app, `creator_app_name` is the name of the app and `creator_user_id` is `-1`. If the ticket field
-             is not created by an app, `creator_app_name` is null
+            Includes the {@code creatorUserId} and {@code creatorAppName} properties in the response. If the ticket field is created
+             by an app, {@code creatorAppName} is the name of the app and {@code creatorUserId} is {@code -1}. If the ticket field
+             is not created by an app, {@code creatorAppName} is null.
           schema:
             type: boolean
       responses:
@@ -338,7 +308,9 @@ paths:
         - name: start_time
           in: query
           required: false
-          description: You can use the incremental article endpoint to list all the articles that were updated since a certain date and time.
+          description: | 
+            You can use the incremental article endpoint to list all the articles that were updated since a certain date and time.
+            This time is given as a <a href='https://www.epochconverter.com/'>Unix epoch timeStamp</a>
           schema:
             type: integer
             format: int64
@@ -346,10 +318,10 @@ paths:
         - name: label_names
           required: false
           in: query
-          description: Only articles that have all the labels are returned.
+          description: Only articles that have all the labels are returned. Multiple labels can be passed in a comma delimited string
           schema:
             type: string
-          example: [ photos,camera ]
+            pattern: ^\\S+$
       responses:
         "200":
           description: OK Response
@@ -1242,6 +1214,7 @@ components:
           description: The label displayed to end users
         id:
           type: integer
+          format: int64
           description: Automatically assigned when the custom ticket status is created
           readOnly: true
         status_category:
@@ -1263,6 +1236,7 @@ components:
       properties:
         id:
           type: integer
+          format: int64
           description: Automatically assigned upon creation
           readOnly: true
         name:
@@ -2242,6 +2216,7 @@ components:
           description: Name of the app that created the ticket field, or a null value if no app created the ticket field
         creator_user_id:
           type: integer
+          format: int64
           description: The id of the user that created the ticket field, or a value of "-1" if an app created the ticket field
         custom_field_options:
           type: array
@@ -2262,6 +2237,7 @@ components:
           description: Whether this field is editable by end users in Help Center
         id:
           type: integer
+          format: int64
           description: Automatically assigned when created
           readOnly: true
         position:
