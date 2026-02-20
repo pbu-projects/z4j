@@ -146,7 +146,7 @@ class TicketClientSpec extends Z4jSpec {
 
         where:
         [[client, clientType, shouldSucceed, expectedTitle], creator, locale] << [
-                clientTestMatrix.findAll { it.shouldSucceed }, [true, false, null], accountLocales
+                clientTestMatrix.findAll { it.shouldSucceed || it.clientType == "simple user" }, [true, false, null], accountLocales
         ].combinations()
     }
 
@@ -159,7 +159,7 @@ class TicketClientSpec extends Z4jSpec {
 
         where:
         [[client, clientType, shouldSucceed, expectedTitle], creator, locale] << [
-                clientTestMatrix.findAll { !it.shouldSucceed }, [true, false, null], accountLocales
+                clientTestMatrix.findAll { !it.shouldSucceed && it.clientType != "simple user"}, [true, false, null], accountLocales
         ].combinations()
     }
 }
