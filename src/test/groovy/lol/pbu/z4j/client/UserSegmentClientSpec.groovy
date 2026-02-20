@@ -22,8 +22,7 @@ class UserSegmentClientSpec extends Z4jSpec {
      * NOTE: there're two an undocumented defects in zendesk's documented api vs their actual behavior.
      *
      * - the user_segment object requires an ID and a name, whereas their docs say the ID is all that's required.
-     * - the update user segment endpoint requires a user segment object (the createUserSegment Object can be used)
-     */
+     * - the update user segment endpoint requires a user segment object (the createUserSegment Object can be used)*/
 
     @Shared
     UserSegmentClient userSegmentClient
@@ -52,11 +51,14 @@ class UserSegmentClientSpec extends Z4jSpec {
 
     def "can create user segment named '#segmentName' with '#userType' user type"(String userType, String segmentName) {
         when:
-        HttpResponse<UserSegmentResponse> response = userSegmentClient.createUserSegment(new CreateUserSegmentRequest(
-                new UserSegment(segmentName, userType))).block() // should be Mono<UserSegmentResponse>, not Mono<HttpResponse<UserSegmentResponse>>
+        UserSegment userSegment = userSegmentClient.createUserSegment(
+                new CreateUserSegmentRequest(new UserSegment(segmentName, userType))).block().getUserSegment()
 
-        then: "received expected 201 response"
-        response.status() == HttpStatus.CREATED
+        then:
+        noExceptionThrown()
+
+        cleanup:
+        userSegmentClient.deleteUserSegment(userSegment.getId()).block()
 
         where:
         userType          | segmentName          | _
@@ -69,10 +71,13 @@ class UserSegmentClientSpec extends Z4jSpec {
         UserSegment userSegment = createUserSegment(userType, segmentName)
 
         when: "delete user segment from previous step"
-        HttpResponse<Void> response = userSegmentClient.deleteUserSegment(userSegment.getId()).block() //shouldn't include an HTTPResponse?
+        userSegmentClient.deleteUserSegment(userSegment.getId()).block()
 
-        then: "received expected 204 response"
-        response.status() == HttpStatus.NO_CONTENT
+        then:
+        noExceptionThrown()
+
+        cleanup:
+        userSegmentClient.deleteUserSegment(userSegment.getId()).block()
 
         where:
         userType          | segmentName          | _
@@ -85,10 +90,7 @@ class UserSegmentClientSpec extends Z4jSpec {
         UserSegment userSegment = createUserSegment(userType, segmentName)
 
         when: "list sections with user segment from previous step"
-        SectionsResponse response = userSegmentClient.listUserSegmentSections(userSegment.getId()).block()
-
-        and: "query resultant sections"
-        response.getSections()
+        userSegmentClient.listUserSegmentSections(userSegment.getId()).block()
 
         then:
         noExceptionThrown()
@@ -104,13 +106,13 @@ class UserSegmentClientSpec extends Z4jSpec {
         UserSegment userSegment = createUserSegment(userType, segmentName)
 
         when: "list topics with user segment from previous step"
-        Mono<TopicsResponse> response = userSegmentClient.listUserSegmentTopics(userSegment.getId())
-
-        and:"query resultant Topics"
-        response.block().getTopics()
+        userSegmentClient.listUserSegmentTopics(userSegment.getId()).block()
 
         then:
         noExceptionThrown()
+
+        cleanup:
+        userSegmentClient.deleteUserSegment(userSegment.getId()).block()
 
         where:
         userType          | segmentName          | _
@@ -123,13 +125,16 @@ class UserSegmentClientSpec extends Z4jSpec {
         def userSegment = createUserSegment(userType, segmentName)
 
         when: "show user segment with user segment ID from previous step"
-        Mono<UserSegmentResponse> response = userSegmentClient.showUserSegment(userSegment.getId())
+        UserSegmentResponse response = userSegmentClient.showUserSegment(userSegment.getId()).block()
 
         and: "query resultant userSegments"
-        response.block().getUserSegment() // don't test more than this api client. testing Zendesk's behavior is out of scope
+        response.getUserSegment() // don't test more than this api client. testing Zendesk's behavior is out of scope
 
         then:
         noExceptionThrown()
+
+        cleanup:
+        userSegmentClient.deleteUserSegment(userSegment.getId()).block()
 
         where:
         userType          | segmentName          | _
@@ -150,16 +155,14 @@ class UserSegmentClientSpec extends Z4jSpec {
         }
 
         and: "send the update to zendesk"
-        UserSegmentResponse response = userSegmentClient.updateUserSegment(
-                userSegment.getId(),
+        userSegmentClient.updateUserSegment(userSegment.getId(),
                 new CreateUserSegmentRequest(userSegment)).block()
 
-        then: "query resultant user segment"
-        response.userSegment
-
-        and:
+        then:
         noExceptionThrown()
 
+        cleanup:
+        userSegmentClient.deleteUserSegment(userSegment.getId()).block()
 
         where:
         userType          | segmentName          | _
@@ -175,7 +178,6 @@ class UserSegmentClientSpec extends Z4jSpec {
      * @return the ID of the created user segment
      */
     UserSegment createUserSegment(String userType, String name) {
-        return userSegmentClient.createUserSegment(new CreateUserSegmentRequest(
-                new UserSegment(name, userType))).block().body().getUserSegment()
+        return userSegmentClient.createUserSegment(new CreateUserSegmentRequest(new UserSegment(name, userType))).block().getUserSegment()
     }
 }
