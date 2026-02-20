@@ -153,9 +153,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TicketsResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/TicketsResponseExample'
     post:
       operationId: CreateTicket
       tags:
@@ -167,9 +164,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/TicketCreateRequest'
-            examples:
-              default:
-                $ref: '#/components/examples/TicketCreateRequestExample'
       responses:
         "201":
           description: Create ticket
@@ -183,9 +177,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TicketResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/TicketResponseExample'
   /api/v2/tickets/count:
     get:
       operationId: CountTickets
@@ -211,9 +202,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TicketCountResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/TicketCountResponseExample'
   /api/v2/tickets/{ticket_id}:
     get:
       operationId: ShowTicket
@@ -234,9 +222,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TicketResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/TicketResponseExample'
     put:
       operationId: UpdateTicket
       tags:
@@ -273,9 +258,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LocalesResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/LocalesResponseExample'
   /api/v2/help_center/{locale}/articles:
     parameters:
       - $ref: '#/components/parameters/OptionalLocale'
@@ -329,9 +311,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ArticlesResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/ArticlesResponseExample'
   /api/v2/help_center/user_segments:
     get:
       operationId: ListUserSegments
@@ -357,9 +336,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserSegmentsResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/UserSegmentsResponseExample'
     post:
       operationId: CreateUserSegment
       tags:
@@ -382,18 +358,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserSegmentResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/UserSegmentResponseExample'
         "400":
           description: Bad request response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestErrorResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/BadRequestCreateUserSegment'
   /api/v2/help_center/user_segments/{user_segment_id}:
     parameters:
       - $ref: '#/components/parameters/UserSegmentId'
@@ -411,9 +381,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserSegmentResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/UserSegmentResponseExample'
     put:
       operationId: UpdateUserSegment
       tags:
@@ -436,18 +403,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserSegmentResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/UserSegmentResponseExample'
         "400":
           description: Bad request Response
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/BadRequestErrorResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/BadRequestUpdateUserSegment'
     delete:
       operationId: DeleteUserSegment
       tags:
@@ -477,9 +438,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SectionsResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/UserSegmentSectionsResponseExample'
   /api/v2/help_center/user_segments/{user_segment_id}/topics:
     parameters:
       - $ref: '#/components/parameters/UserSegmentId'
@@ -510,9 +468,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TopicsResponse'
-              examples:
-                default:
-                  $ref: '#/components/examples/UserSegmentTopicsResponseExample'
 components:
   schemas:
     Attachment:
@@ -3177,620 +3132,3 @@ components:
         type: integer
         format: int64
       example: 35467
-  examples:
-    ArticleAttachmentResponseExample:
-      value:
-        article_attachment:
-          article_id: 23
-          content_type: application/jpeg
-          content_url: https://company.zendesk.com/hc/article_attachments/200109629/logo.jpg
-          file_name: logo.jpg
-          id: 1428
-          inline: true
-          locale: en_us
-          size: 1428
-    ArticleAttachmentsResponseExample:
-      value:
-        article_attachments:
-          - article_id: 23
-            content_type: application/jpeg
-            content_url: https://company.zendesk.com/hc/article_attachments/200109629/logo.jpg
-            file_name: logo.jpg
-            id: 1428
-            inline: true
-            size: 1428
-          - article_id: 23
-            content_type: application/pdf
-            content_url: https://company.zendesk.com/hc/article_attachments/200109629/party_invitation.pdf
-            file_name: party_invitation.pdf
-            id: 2857
-            inline: false
-            size: 58298
-    ArticleLabelResponseExample:
-      value:
-        label:
-          created_at: "2012-04-04T09:14:57Z"
-          id: 2003
-          name: instructions
-          updated_at: "2012-04-04T09:14:57Z"
-          url: https://{subdomain}.zendesk.com/api/v2/help_center/en-us/articles/labels/42.json
-    ArticleLabelsResponseExample:
-      value:
-        labels:
-          - created_at: "2012-04-04T09:14:57Z"
-            id: 2003
-            name: instructions
-            updated_at: "2012-04-04T09:14:57Z"
-            url: https://{subdomain}.zendesk.com/api/v2/help_center/articles/labels/42.json
-    ArticleRequestExample:
-      value:
-        article:
-          body: Use a tripod
-          locale: en-us
-          permission_group_id: 56
-          title: Taking photos in low light
-          user_segment_id: 123
-        notify_subscribers: false
-    ArticleResponseExample:
-      value:
-        article:
-          author_id: 3465
-          comments_disabled: true
-          content_tag_ids:
-            - 01GT23D51Y
-            - 01GT23FWWN
-          id: 37486578
-          locale: en_us
-          permission_group_id: 123
-          position: 42
-          promoted: false
-          title: Article title
-          user_segment_id: 12
-    ArticleSearchResponseExample:
-      value:
-        results:
-          - author_id: 888887
-            draft: false
-            id: 35467
-            locale: en
-            permission_group_id: 123
-            title: Printing orders
-            user_segment_id: 12
-    ArticleSubscriptionResponseExample:
-      value:
-        subscription:
-          content_id: 8748733
-          id: 35467
-          locale: en
-          user_id: 888887
-    ArticleSubscriptionsResponseExample:
-      value:
-        subscriptions:
-          - content_id: 8748733
-            id: 35467
-            locale: en
-            user_id: 888887
-    ArticleUpVoteResponseExample:
-      value:
-        vote:
-          id: 37486578
-          value: 1
-    ArticlesResponseExample:
-      value:
-        articles:
-          - author_id: 888887
-            draft: true
-            id: 35467
-            locale: en
-            permission_group_id: 123
-            title: Article title
-            user_segment_id: 12
-    BadRequestCreateSection:
-      value:
-        errors:
-          parent_section_id:
-            - cannot be assigned non-null value on this Guide plan
-    BadRequestCreateUserSegment:
-      value:
-        errors:
-          user_type:
-            - value `foo` invalid; must be either `staff` or `signed_in_users`
-    BadRequestUpdateSection:
-      value:
-        errors:
-          parent_section_id:
-            - would result in a cycle
-    BadRequestUpdateUserSegment:
-      value:
-        errors:
-          user_type:
-            - value `foo` invalid; must be either `staff` or `signed_in_users`
-    BlockArticleAttachmentsResponseExample:
-      value:
-        article_attachments:
-          - article_id: 23
-            content_type: application/pdf
-            content_url: https://company.zendesk.com/hc/article_attachments/200109629/logo.pdf
-            file_name: logo.pdf
-            id: 1428
-            inline: false
-            size: 1428
-          - article_id: 23
-            content_type: application/msword
-            content_url: https://company.zendesk.com/hc/article_attachments/200109629/results.doc
-            file_name: results.doc
-            id: 2857
-            inline: false
-            size: 234
-    CategoriesResponseExample:
-      value:
-        categories:
-          - description: This category contains a collection of Super Hero tricks
-            id: 37486578
-            locale: en-us
-            name: Super Hero Tricks
-          - description: All the cool tricks!
-            id: 354675463
-            locale: en-us
-            name: Tips & Tricks
-    CategoryResponse:
-      value:
-        category:
-          description: This category contains a collection of Super Hero tricks
-          id: 37486578
-          locale: en-us
-          name: Super Hero Tricks
-          position: 2
-    CategoryResponseExample:
-      value:
-        category:
-          description: This category contains a collection of Super Hero tricks
-          id: 37486578
-          locale: en-us
-          name: Super Hero Tricks
-    CommentResponseExample:
-      value:
-        comment:
-          author_id: 89567
-          body: Good info!
-          id: 35467
-          locale: en
-    CommentsResponseExample:
-      value:
-        comments:
-          - author_id: 89567
-            body: My printer is on fire
-            id: 35467
-            locale: en
-          - author_id: 89589
-            body: My printer is on fire too!
-            id: 36221
-            locale: en
-    CommunityPostSearchResponseExample:
-      value:
-        results:
-          - author_id: 4333787
-            id: 4212256
-            title: How do I make a return?
-    ContentSubscriptionsResponseExample:
-      value:
-        subscriptions:
-          - content_id: 8748733
-            content_type: Article
-            id: 35467
-            locale: en
-            user_id: 888887
-    CreateuserImageResponseExample:
-      value:
-        user_image:
-          content_type: image/jpeg
-          path: /hc/user_images/Bvj4bPDuRd-7d5hFVszvmQ.jpeg
-          size: 169846
-    HelpCenterSessionResponseExample:
-      value:
-        current_session:
-          csrf_token: 2hYE_3L80UfRteoLN1Z1eDA06lmzHlSyS
-    InlineArticleAttachmentsResponseExample:
-      value:
-        article_attachments:
-          - article_id: 23
-            content_type: application/jpeg
-            content_url: https://company.zendesk.com/hc/article_attachments/200109629/logo.jpg
-            file_name: logo.jpg
-            id: 1428
-            inline: true
-            size: 1428
-          - article_id: 23
-            content_type: application/gif
-            content_url: https://company.zendesk.com/hc/article_attachments/200109629/footer.gif
-            file_name: footer.gif
-            id: 2857
-            inline: true
-            locale: en_us
-            size: 234
-    LocalesResponseExample:
-      value:
-        locales:
-          - created_at: "2009-07-20T22:55:29Z"
-            id: 1
-            locale: en-US
-            name: English
-            updated_at: "2011-05-05T10:38:52Z"
-            url: https://company.zendesk.com/api/v2/locales/en-US.json
-          - created_at: "2010-12-23T12:45:22Z"
-            id: 8
-            locale: de
-            name: Deutsch
-            updated_at: "2012-04-01T10:44:12Z"
-            url: https://company.zendesk.com/api/v2/locales/de.json
-    LocalesWithDefaultResponseExample:
-      value:
-        default_locale: it-it
-        locales:
-          - de-de
-          - en-uk
-          - en-us
-          - es-419
-          - es-es
-          - fr-fr
-          - it-it
-          - ja-jp
-          - pt-br
-    MissingTranslationsResponseExample:
-      value:
-        locales:
-          - en-us
-          - da-dk
-    PostCommentResponseExample:
-      value:
-        comment:
-          author_id: 89567
-          body: <p>I love my new non-flammable printer!</p>
-          id: 35467
-    PostCommentsResponseExample:
-      value:
-        comments:
-          - author_id: 89567
-            body: My printer is on fire!
-            id: 35467
-          - author_id: 89589
-            body: My printer is on fire too!
-            id: 36221
-    PostResponseExample:
-      value:
-        post:
-          author_id: 888887
-          content_tag_ids:
-            - 6776
-            - 4545
-          featured: true
-          id: 35467
-          title: Post title
-    PostSubscriptionResponseExample:
-      value:
-        subscription:
-          content_id: 8748733
-          id: 35467
-          locale: en
-          user_id: 888887
-    PostSubscriptionsResponseExample:
-      value:
-        subscriptions:
-          - content_id: 8748733
-            id: 35467
-            locale: en
-            user_id: 888887
-    PostsResponseExample:
-      value:
-        posts:
-          - id: 35467
-            title: How do I open the safe
-    RequestUserImageUploadResponseExample:
-      value:
-        upload:
-          headers:
-            Content-Disposition: attachment; filename="01F1D8HVJ3TK6CZH8HM51YEQRG.jpeg"
-            Content-Type: image/jpeg
-            X-Amz-Server-Side-Encryption: AES256
-          token: 01F1D8HVJ3TK6CZH8HM51YEQRG
-          url: https://{subdomain}.zendesk.com.com/aus-uploaded-assets/1/42/01F1D8HVJ3TK6CZH8HM51YEQRG?Content-Type=image%2Fjpeg&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ACCESSKEY%2F20210322%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210322T152346Z&X-Amz-Expires=3600&X-Amz-Signature=a5fd09fb179fe3dc3e085398423988f1c5fc5f6a6eb66a0c020905f47b72f11b&X-Amz-SignedHeaders=content-disposition%3Bhost%3Bx-amz-server-side-encryption&x-amz-server-side-encryption=AES256
-    SectionResponseExample:
-      value:
-        section:
-          description: This section contains articles on flight instruments
-          id: 3457836
-          locale: en-us
-          name: Avionics
-          position: 2
-    SectionSubscriptionResponseExample:
-      value:
-        subscription:
-          content_id: 8748733
-          id: 35467
-          locale: en
-          user_id: 888887
-    SectionSubscriptionsResponseExample:
-      value:
-        subscriptions:
-          - content_id: 8748733
-            id: 35467
-            locale: en
-            user_id: 888887
-    SectionsResponseExample:
-      value:
-        sections:
-          - category_id: 888887
-            description: This section contains articles on flight instruments
-            id: 35467
-            locale: en-us
-            name: Avionics
-          - category_id: 887285
-            description: This section contains weather resources for pilots
-            id: 36169
-            locale: en-us
-            name: Weather
-    TicketCountResponseExample:
-      value:
-        count:
-          refreshed_at: "2020-04-06T02:18:17Z"
-          value: 102
-    TicketCreateRequestExample:
-      value:
-        ticket:
-          comment:
-            body: The smoke is very colorful.
-          priority: urgent
-          subject: My printer is on fire!
-    TicketResponseExample:
-      value:
-        ticket:
-          assignee_id: 235323
-          collaborator_ids:
-            - 35334
-            - 234
-          created_at: "2009-07-20T22:55:29Z"
-          custom_fields:
-            - id: 27642
-              value: "745"
-            - id: 27648
-              value: "yes"
-          custom_status_id: 123
-          description: The fire is very colorful.
-          due_at: null
-          external_id: ahg35h3jh
-          follower_ids:
-            - 35334
-            - 234
-          from_messaging_channel: false
-          generated_timestamp: 1304553600
-          group_id: 98738
-          has_incidents: false
-          id: 35436
-          organization_id: 509974
-          priority: high
-          problem_id: 9873764
-          raw_subject: '{{dc.printer_on_fire}}'
-          recipient: support@company.com
-          requester_id: 20978392
-          satisfaction_rating:
-            comment: Great support!
-            id: 1234
-            score: good
-          sharing_agreement_ids:
-            - 84432
-          status: open
-          subject: Help, my printer is on fire!
-          submitter_id: 76872
-          tags:
-            - enterprise
-            - other_tag
-          type: incident
-          updated_at: "2011-05-05T10:38:52Z"
-          url: https://company.zendesk.com/api/v2/tickets/35436.json
-          via:
-            channel: web
-    TicketsCreateRequestExample:
-      value:
-        tickets:
-          - comment:
-              body: The smoke is very colorful.
-            priority: urgent
-            subject: My printer is on fire!
-          - comment:
-              body: This is a comment
-            priority: normal
-            subject: Help
-    TicketsResponseExample:
-      value:
-        tickets:
-          - assignee_id: 235323
-            collaborator_ids:
-              - 35334
-              - 234
-            created_at: "2009-07-20T22:55:29Z"
-            custom_fields:
-              - id: 27642
-                value: "745"
-              - id: 27648
-                value: "yes"
-            custom_status_id: 123
-            description: The fire is very colorful.
-            due_at: null
-            external_id: ahg35h3jh
-            follower_ids:
-              - 35334
-              - 234
-            from_messaging_channel: false
-            generated_timestamp: 1304553600
-            group_id: 98738
-            has_incidents: false
-            id: 35436
-            organization_id: 509974
-            priority: high
-            problem_id: 9873764
-            raw_subject: '{{dc.printer_on_fire}}'
-            recipient: support@company.com
-            requester_id: 20978392
-            satisfaction_rating:
-              comment: Great support!
-              id: 1234
-              score: good
-            sharing_agreement_ids:
-              - 84432
-            status: open
-            subject: Help, my printer is on fire!
-            submitter_id: 76872
-            tags:
-              - enterprise
-              - other_tag
-            type: incident
-            updated_at: "2011-05-05T10:38:52Z"
-            url: https://company.zendesk.com/api/v2/tickets/35436.json
-            via:
-              channel: web
-    TopicResponseExample:
-      value:
-        topic:
-          description: Security Best Practices
-          id: 35467
-          name: Help Center-Tricks
-    TopicSubscriptionResponseExample:
-      value:
-        subscription:
-          content_id: 8748733
-          id: 35467
-          locale: en
-          user_id: 888887
-    TopicSubscriptionsResponseExample:
-      value:
-        subscriptions:
-          - content_id: 8748733
-            id: 35467
-            locale: en
-            user_id: 888887
-    TopicsResponseExample:
-      value:
-        topics:
-          - html_url: https://{subdomain}.zendesk.com/hc/en-us/community/topics/10-Using-Help-Center-Tips-Tricks
-            id: 10
-            name: Using Help Center - Tips & Tricks
-            url: https://{subdomain}.zendesk.com/api/v2/community/topics/10.json
-          - html_url: https://{subdomain}.zendesk.com/hc/en/community/topics/11-Using-Help-Center-Getting-Started-Guide
-            id: 11
-            name: Using Help Center - Getting Started Guide
-            url: https://{subdomain}.zendesk.com/api/v2/community/topics/11.json
-    TranslationResponseExample:
-      value:
-        translation:
-          id: 634578
-          locale: en-us
-          source_id: 348756
-          source_type: Article
-          title: How to take pictures in low light
-    TranslationsResponseExample:
-      value:
-        translations:
-          - id: 634578
-            locale: en-us
-            outdated: true
-            source_id: 348756
-            source_type: Article
-            title: Translation title
-    UnifiedSearchResponseExample:
-      value:
-        meta:
-          after_cursor: WzEuMCwxNjld
-          before_cursor: WzEuMCwxNjhd
-          has_more: true
-        results:
-          - title: How to make fish stew
-            type: ARTICLE
-            updated_at: "2021-10-11T15:02:22Z"
-            url: http://example.zendesk.com/hc/en-us/articles/38393937-How-to-make-fish-stew
-          - title: Latest updates on fish stew
-            type: EXTERNAL_RECORD
-            updated_at: "2021-11-12T15:02:22Z"
-            url: http://example.com/blog/fish-stew-latest
-    UserSegmentResponseExample:
-      value:
-        user_segment:
-          built_in: false
-          created_at: "2017-05-21T20:01:12Z"
-          group_ids:
-            - 12
-          id: 7284
-          name: VIP agents
-          or_tags: [ ]
-          organization_ids: [ ]
-          tags:
-            - vip
-          updated_at: "2017-05-21T20:01:12Z"
-          user_type: staff
-    UserSegmentSectionsResponseExample:
-      value:
-        sections:
-          - html_url: https://{subdomain}.zendesk.com/hc/en/sections/3242-A-section-
-            id: 3242
-            locale: en
-            name: A section
-            url: https://{subdomain}.zendesk.com/api/v2/help_center/en/sections/3242-A-section-.json
-          - html_url: https://{subdomain}.zendesk.com/hc/en/sections/7352-Another-section-
-            id: 7352
-            locale: en
-            name: Another section
-            url: https://{subdomain}.zendesk.com/api/v2/help_center/en/sections/7352-Another-section-.json
-    UserSegmentTopicsResponseExample:
-      value:
-        topics:
-          - html_url: https://{subdomain}.zendesk.com/hc/en/community/topics/9273-A-topic-
-            id: 9273
-            name: A topic
-            url: https://{subdomain}.zendesk.com/api/v2/community/topics/9273.json
-          - html_url: https://{subdomain}.zendesk.com/hc/en/community/topics/2292-Another-topic-
-            id: 2292
-            name: Another topic
-            url: https://{subdomain}.zendesk.com/api/v2/community/topics/2292-Another-topic-.json
-    UserSegmentsResponseExample:
-      value:
-        user_segments:
-          - built_in: false
-            created_at: "2017-05-21T20:01:12Z"
-            group_ids:
-              - 12
-            id: 7284
-            name: VIP agents
-            or_tags: [ ]
-            organization_ids: [ ]
-            tags:
-              - vip
-            updated_at: "2017-06-30T01:00:25Z"
-            user_type: staff
-          - built_in: false
-            created_at: "2017-04-09T15:33:11Z"
-            group_ids: [ ]
-            id: 9930
-            name: Privileged users
-            or_tags: [ ]
-            organization_ids:
-              - 42
-            tags: [ ]
-            updated_at: "2017-08-10T18:41:01Z"
-            user_type: signed_in_users
-    UserSubscriptionsResponseExample:
-      value:
-        user_subscriptions:
-          - followed_id: 8748733
-            follower_id: 398452
-            id: 35467
-    UserVotesResponseExample:
-      value:
-        votes:
-          - id: 35467
-            user_id: 888887
-            value: -1
-    VoteResponseExample:
-      value:
-        vote:
-          id: 35467
-          user_id: 888887
-          value: -1
