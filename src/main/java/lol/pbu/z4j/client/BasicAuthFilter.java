@@ -44,5 +44,6 @@ public class BasicAuthFilter {
         String credentialsString = String.format("%s/token:%s", email, token);
         log.debug("Add basic auth header: Basic {}/token:<token>", email);
         request.header("Authorization", "Basic " + getEncoder().encodeToString(credentialsString.getBytes()));
+        request.header("Content-Type", "application/json");
     }
 }
