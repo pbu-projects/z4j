@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # 4.3.0
         with:
           fetch-depth: 0
-      - uses: gradle/actions/wrapper-validation@ed408507eac070d1f99cc633dbcf757c94c7933a
+      - uses: gradle/actions/wrapper-validation@78f7dee6337f393c0a872d0afbda4c51a20e543d
       - name: Set up JDK
         uses: graalvm/setup-graalvm@7a1da54cb7fdef4ea19f6ecdfa9ecf59dc5a48fe
         with:
