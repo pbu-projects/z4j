@@ -30,10 +30,7 @@ class TicketClientSpec extends Z4jSpec {
                             [client: ticketsUserClient, clientType: "simple user", shouldSucceed: false, expectedTitle: "should not"]]
     }
 
-    def "calling listTickets() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client,
-                                                                                              String clientType,
-                                                                                              Boolean shouldSucceed,
-                                                                                              String expectedTitle) {
+    def "calling listTickets() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean shouldSucceed, String expectedTitle) {
         when:
         TicketsResponse response = client.listTickets(null).block()
 
@@ -48,10 +45,7 @@ class TicketClientSpec extends Z4jSpec {
         [client, clientType, shouldSucceed, expectedTitle] << clientTestMatrix
     }
 
-    def "calling showTicket() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client,
-                                                                                             String clientType,
-                                                                                             Boolean shouldSucceed,
-                                                                                             String expectedTitle) {
+    def "calling showTicket() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean shouldSucceed, String expectedTitle) {
         when:
         TicketResponse response = client.showTicket(tickets.get(0).getId()).block()
 
@@ -66,10 +60,7 @@ class TicketClientSpec extends Z4jSpec {
         [client, clientType, shouldSucceed, expectedTitle] << clientTestMatrix
     }
 
-    def "Trying to create a ticket #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client,
-                                                                                                  String clientType,
-                                                                                                  Boolean shouldSucceed,
-                                                                                                  String expectedTitle) {
+    def "Trying to create a ticket #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean shouldSucceed, String expectedTitle) {
         given:
         TicketComment ticketComment = new TicketComment().setBody(faker.chuckNorris().fact())
         TicketCreateInput createTicketInput = new TicketCreateInput(ticketComment)
@@ -90,10 +81,7 @@ class TicketClientSpec extends Z4jSpec {
         [client, clientType, shouldSucceed, expectedTitle] << clientTestMatrix
     }
 
-    def "calling updateTicket() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client,
-                                                                                               String clientType,
-                                                                                               Boolean shouldSucceed,
-                                                                                               String expectedTitle) {
+    def "calling updateTicket() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean shouldSucceed, String expectedTitle) {
         given:
         TicketUpdateInput ticketUpdateInput = new TicketUpdateInput()
                 .setComment(new TicketComment().setBody(faker.hitchhikersGuideToTheGalaxy().marvinQuote().toString()))
@@ -114,10 +102,7 @@ class TicketClientSpec extends Z4jSpec {
         [client, clientType, shouldSucceed, expectedTitle] << clientTestMatrix
     }
 
-    def "calling countTickets() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client,
-                                                                                               String clientType,
-                                                                                               Boolean shouldSucceed,
-                                                                                               String expectedTitle) {
+    def "calling countTickets() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean shouldSucceed, String expectedTitle) {
         when:
         TicketCountResponse response = client.getTicketCount().block()
 
