@@ -190,7 +190,7 @@ paths:
         <br><br>
         The {@code count[refreshed_at]} property is a timestamp that indicates when the count was last updated.
         <br><br>
-        <string>Note</strong>: When the count exceeds 100,000, {@code count[refreshed_at]} may occasionally be null.
+        <strong>Note</strong>: When the count exceeds 100,000, {@code count[refreshed_at]} may occasionally be null.
         This indicates that the count is being updated in the background, and {count[value]} is limited to 100,000 until the update is complete.
 
         <h4>Allowed For</h4>
@@ -783,7 +783,7 @@ components:
       properties:
         result_type:
           type: string
-          description: For articles, always the string `article`
+          description: For articles, always the string <code>article</code>
           default: article
           readOnly: true
         results:
@@ -948,13 +948,13 @@ components:
         author_id:
           type: integer
           format: int64
-          description: The id of the author of this comment. Writable on create by Help Center managers. See [Create Comment](#create-comment)
+          description: The id of the author of this comment. Writable on create by Help Center managers. See <a href="#create-comment">Create Comment</a>
         body:
           type: string
-          description: The comment made by the author. See [User content](#user-content)
+          description: The comment made by the author. See <a href="#user-content">User content</a>
         created_at:
           type: string
-          description: The time the comment was created. Writable on create by Help Center managers. See [Create Comment](#create-comment)
+          description: The time the comment was created. Writable on create by Help Center managers. See <a href="#create-comment">Create Comment</a>
         html_url:
           type: string
           description: The url at which the comment is presented in Help Center
@@ -970,7 +970,7 @@ components:
         non_author_editor_id:
           type: integer
           format: int64
-          description: The user id of whoever performed the most recent (if any) non-author edit. A non-author edit consists of an edit make by a user other than the author that creates or updates the `body` or `author_id`. Note that only edits made after May 17, 2021 will be reflected in this field. If no non-author edits have occured since May 17, 2021, then this field will be `null`.
+          description: The user id of whoever performed the most recent (if any) non-author edit. A non-author edit consists of an edit make by a user other than the author that creates or updates the <code>body</code> or <code>author_id</code>. Note that only edits made after May 17, 2021 will be reflected in this field. If no non-author edits have occured since May 17, 2021, then this field will be <code>null</code>.
           readOnly: true
         non_author_updated_at:
           type: string
@@ -1065,7 +1065,7 @@ components:
           readOnly: true
         source_locale:
           type: string
-          description: Used only for [Create Section Subscription](#create-section-subscription) and [Create Article Subscription](#create-article-subscription), where it's mandatory. Selects the locale of the content to be subscribed
+          description: Used only for <a href="#create-section-subscription">Create Section Subscription</a> and <a href="#create-article-subscription">Create Article Subscription</a>, where it's mandatory. Selects the locale of the content to be subscribed
         updated_at:
           type: string
           description: The time at which the subscription was last updated
@@ -1384,13 +1384,13 @@ components:
         author_id:
           type: integer
           format: int64
-          description: The id of the author of the comment. Writable on create by Help Center managers. See [Create Post Comment](#create-post-comment)
+          description: The id of the author of the comment. Writable on create by Help Center managers. See <a href="#create-post-comment">Create Post Comment</a>
         body:
           type: string
-          description: The comment made by the author. See [User content](#user-content)
+          description: The comment made by the author. See <a href="#user-content">User content</a>
         created_at:
           type: string
-          description: When the comment was created. Writable on create by Help Center managers. See [Create Post Comment](#create-post-comment)
+          description: When the comment was created. Writable on create by Help Center managers. See <a href="#create-post-comment">Create Post Comment</a>
         html_url:
           type: string
           description: The community url of the comment
@@ -1403,7 +1403,7 @@ components:
         non_author_editor_id:
           type: integer
           format: int64
-          description: The user id of whoever performed the most recent (if any) non-author edit. A non-author edit consists of an edit make by a user other than the author that creates or updates the `body`. Note that only edits made after May 17, 2021 will be reflected in this field. If no non-author edits have occured since May 17, 2021, then this field will be `null`.
+          description: The user id of whoever performed the most recent (if any) non-author edit. A non-author edit consists of an edit make by a user other than the author that creates or updates the <code>body</code>. Note that only edits made after May 17, 2021 will be reflected in this field. If no non-author edits have occured since May 17, 2021, then this field will be <code>null</code>.
           readOnly: true
         non_author_updated_at:
           type: string
@@ -1463,7 +1463,7 @@ components:
         author_id:
           type: integer
           format: int64
-          description: The id of the author of the post. *Writable on create by Help Center managers -- see Create Post
+          description: The id of the author of the post. *Writable on create by Help Center managers -- see <a href="#create-post">Create Post</a>
           readOnly: true
         closed:
           type: boolean
@@ -1482,11 +1482,11 @@ components:
         created_at:
           type: string
           format: date-time
-          description: When the post was created. Writable on create by Help Center managers -- see [Create Post](#create-post)
+          description: When the post was created. Writable on create by Help Center managers -- see <a href="#create-post">Create Post</a>
           readOnly: true
         details:
           type: string
-          description: The details of the post made by the author. See [User content](#user-content)
+          description: The details of the post made by the author. See <a href="#user-content">User content</a>
         featured:
           type: boolean
           description: Whether the post is featured
@@ -1507,7 +1507,7 @@ components:
         non_author_editor_id:
           type: integer
           format: int64
-          description: The user id of whoever performed the most recent (if any) non-author edit. A non-author edit consists of an edit make by a user other than the author that creates or updates the `title` or `details`. Note that only edits made after May 17, 2021 will be reflected in this field. If no non-author edits have occured since May 17, 2021, then this field will be `null`.
+          description: The user id of whoever performed the most recent (if any) non-author edit. A non-author edit consists of an edit make by a user other than the author that creates or updates the <code>title</code> or <code>details</code>. Note that only edits made after May 17, 2021 will be reflected in this field. If no non-author edits have occured since May 17, 2021, then this field will be <code>null</code>.
           readOnly: true
         non_author_updated_at:
           type: string
@@ -1752,7 +1752,7 @@ components:
         brand_id:
           type: integer
           format: int64
-          description: The id of the brand this ticket is associated with. See [Setting up multiple brands](https://support.zendesk.com/hc/en-us/articles/4408829476378)
+          description: The id of the brand this ticket is associated with. See <a href="https://support.zendesk.com/hc/en-us/articles/4408829476378">Setting up multiple brands</a>
         collaborator_ids:
           type: array
           description: The ids of users currently CC'ed on the ticket
@@ -1761,12 +1761,12 @@ components:
             format: int64
         collaborators:
           type: array
-          description: POST requests only. Users to add as cc's when creating a ticket. See [Setting Collaborators](/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-collaborators)
+          description: POST requests only. Users to add as cc's when creating a ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-collaborators">Setting Collaborators</a>
           items:
             $ref: '#/components/schemas/Collaborator'
         comment:
           type: object
-          description: Write only. An object that adds a comment to the ticket. See [Ticket comments](developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/). To include an attachment with the comment, see [Attaching files](/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#attaching-files). A ticket can contain up to 5000 comments in total, including both public and private comments. Once this limit is reached, any additional attempts to add comments results in a 422 error. The ticket can still be updated in other ways, provided that no new comments are added.
+          description: Write only. An object that adds a comment to the ticket. See <a href="developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/">Ticket comments</a>. To include an attachment with the comment, see <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#attaching-files">Attaching files</a>. A ticket can contain up to 5000 comments in total, including both public and private comments. Once this limit is reached, any additional attempts to add comments results in a 422 error. The ticket can still be updated in other ways, provided that no new comments are added.
           writeOnly: true
         created_at:
           type: string
@@ -1775,7 +1775,7 @@ components:
           readOnly: true
         custom_fields:
           type: array
-          description: Custom fields for the ticket. See [Setting custom field values](/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-custom-field-values)
+          description: Custom fields for the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-custom-field-values">Setting custom field values</a>
           items:
             type: object
             properties:
@@ -1789,39 +1789,39 @@ components:
         custom_status_id:
           type: integer
           format: int64
-          description: The custom ticket status id of the ticket. See [custom ticket statuses](#custom-ticket-statuses)
+          description: The custom ticket status id of the ticket. See <a href="#custom-ticket-statuses">custom ticket statuses</a>
         description:
           type: string
           description: |
-            Read-only first comment on the ticket. When [creating a ticket](#create-ticket), use `comment` to set the description. See [Description and first comment](#description-and-first-comment)
+            Read-only first comment on the ticket. When <a href="#create-ticket">creating a ticket</a>, use <code>comment</code> to set the description. See <a href="#description-and-first-comment">Description and first comment</a>
           readOnly: true
         due_at:
           type: string
           format: date-time
-          description: If this is a ticket of type "task" it has a due date.  Due date format uses [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) format
+          description: If this is a ticket of type "task" it has a due date.  Due date format uses <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format
           nullable: true
         email_cc_ids:
           type: array
-          description: The ids of agents or end users currently CC'ed on the ticket. Ignored when [CCs and followers](https://support.zendesk.com/hc/en-us/articles/360020585233) is not enabled
+          description: The ids of agents or end users currently CC'ed on the ticket. Ignored when <a href="https://support.zendesk.com/hc/en-us/articles/360020585233">CCs and followers</a> is not enabled
           items:
             type: integer
             format: int64
         email_ccs:
           type: object
-          description: Write only. An array of objects that represents agent or end users email CCs to add or delete from the ticket. See [Setting email CCs](/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs). Ignored when [CCs and followers](https://support.zendesk.com/hc/en-us/articles/360020585233) is not enabled
+          description: Write only. An array of objects that represents agent or end users email CCs to add or delete from the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs">Setting email CCs</a>. Ignored when <a href="https://support.zendesk.com/hc/en-us/articles/360020585233">CCs and followers</a> is not enabled
           writeOnly: true
         external_id:
           type: string
           description: An id you can use to link Zendesk Support tickets to local records
         follower_ids:
           type: array
-          description: The ids of agents currently following the ticket. Ignored when [CCs and followers](https://support.zendesk.com/hc/en-us/articles/360020585233) is not enabled
+          description: The ids of agents currently following the ticket. Ignored when <a href="https://support.zendesk.com/hc/en-us/articles/360020585233">CCs and followers</a> is not enabled
           items:
             type: integer
             format: int64
         followers:
           type: object
-          description: Write only. An array of objects that represents agent followers to add or delete from the ticket. See [Setting followers](/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers). Ignored when [CCs and followers](https://support.zendesk.com/hc/en-us/articles/360020585233) is not enabled
+          description: Write only. An array of objects that represents agent followers to add or delete from the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers">Setting followers</a>. Ignored when <a href="https://support.zendesk.com/hc/en-us/articles/360020585233">CCs and followers</a> is not enabled
           writeOnly: true
         followup_ids:
           type: array
@@ -1837,7 +1837,7 @@ components:
           readOnly: true
         from_messaging_channel:
           type: boolean
-          description: If true, the ticket's [via type](/documentation/ticketing/reference-guides/via-object-reference/) is a messaging channel.
+          description: If true, the ticket's <a href="/documentation/ticketing/reference-guides/via-object-reference/">via type</a> is a messaging channel.
           readOnly: true
         generated_timestamp:
           type: integer
@@ -1874,12 +1874,12 @@ components:
             format: int64
         metadata:
           type: object
-          description: Write only. Metadata for the audit. In the `audit` object, the data is specified in the `custom` property of the `metadata` object. See [Setting Metadata](/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-metadata)
+          description: Write only. Metadata for the audit. In the <code>audit</code> object, the data is specified in the <code>custom</code> property of the <code>metadata</code> object. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-metadata">Setting Metadata</a>
           writeOnly: true
         organization_id:
           type: integer
           format: int64
-          description: The organization of the requester. You can only specify the ID of an organization associated with the requester. See [Organization Memberships](developer.zendesk.com/api-reference/ticketing/organizations/organization_memberships/)
+          description: The organization of the requester. You can only specify the ID of an organization associated with the requester. See <a href="developer.zendesk.com/api-reference/ticketing/organizations/organization_memberships/">Organization Memberships</a>
         priority:
           type: string
           description: The urgency with which the ticket should be addressed
@@ -1895,13 +1895,13 @@ components:
         raw_subject:
           type: string
           description: |
-            The dynamic content placeholder, if present, or the "subject" value, if not. See [Dynamic Content Items](developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/)
+            The dynamic content placeholder, if present, or the "subject" value, if not. See <a href="developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content Items</a>
         recipient:
           type: string
           description: The original recipient e-mail address of the ticket. Notification emails for the ticket are sent from this address
         requester:
           type: object
-          description: Write only. See [Creating a ticket with a new requester](/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#creating-a-ticket-with-a-new-requester)
+          description: Write only. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#creating-a-ticket-with-a-new-requester">Creating a ticket with a new requester</a>
           writeOnly: true
         requester_id:
           type: integer
@@ -1909,7 +1909,7 @@ components:
           description: The user who requested this ticket
         safe_update:
           type: boolean
-          description: Write only. Optional boolean. When true and an `update_stamp` date is included, protects against ticket update collisions and returns a message to let you know if one occurs. See [Protecting against ticket update collisions](/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#protecting-against-ticket-update-collisions). A value of false has the same effect as true. Omit the property to force the updates to not be safe
+          description: Write only. Optional boolean. When true and an <code>update_stamp</code> date is included, protects against ticket update collisions and returns a message to let you know if one occurs. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#protecting-against-ticket-update-collisions">Protecting against ticket update collisions</a>. A value of false has the same effect as true. Omit the property to force the updates to not be safe
           writeOnly: true
         satisfaction_rating:
           type: object
@@ -1928,7 +1928,7 @@ components:
             The state of the ticket.
 
             If your account has activated custom ticket statuses, this is the ticket's
-            status category. See [custom ticket statuses](#custom-ticket-statuses)
+            status category. See <a href="#custom-ticket-statuses">custom ticket statuses</a>
           enum:
             - new
             - open
@@ -1939,14 +1939,14 @@ components:
         subject:
           type: string
           description: |
-            The value of the subject field for this ticket. See [Subject](developer.zendesk.com/api-reference/ticketing/tickets/tickets/#subject)
+            The value of the subject field for this ticket. See <a href="developer.zendesk.com/api-reference/ticketing/tickets/tickets/#subject">Subject</a>
         submitter_id:
           type: integer
           format: int64
           description: The user who submitted the ticket. The submitter always becomes the author of the first comment on the ticket
         tags:
           type: array
-          description: The array of tags applied to this ticket. Unless otherwise specified, the [set tag](developer.zendesk.com/api-reference/ticketing/ticket-management/tags/#set-tags) behavior is used, which overwrites and replaces existing tags
+          description: The array of tags applied to this ticket. Unless otherwise specified, the <a href="developer.zendesk.com/api-reference/ticketing/ticket-management/tags/#set-tags">set tag</a> behavior is used, which overwrites and replaces existing tags
           items:
             type: string
         ticket_form_id:
@@ -1964,11 +1964,11 @@ components:
         updated_at:
           type: string
           format: date-time
-          description: When this record last got updated. It is updated only if the update generates a [ticket event](#incremental-ticket-event-export)
+          description: When this record last got updated. It is updated only if the update generates a <a href="#incremental-ticket-event-export">ticket event</a>
           readOnly: true
         updated_stamp:
           type: string
-          description: Write only. Datetime of last update received from API. See the `safe_update` property
+          description: Write only. Datetime of last update received from API. See the <code>safe_update</code> property
           writeOnly: true
         url:
           type: string
@@ -1976,7 +1976,7 @@ components:
           readOnly: true
         via:
           type: object
-          description: For more information, see the [Via object reference](/documentation/ticketing/reference-guides/via-object-reference)
+          description: For more information, see the <a href="/documentation/ticketing/reference-guides/via-object-reference">Via object reference</a>
           properties:
             channel:
               type: string
@@ -1990,15 +1990,15 @@ components:
         via_followup_source_id:
           type: integer
           format: int64
-          description: POST requests only. The id of a closed ticket when creating a follow-up ticket. See [Creating a follow-up ticket](/documentation/ticketing/managing-tickets/creating-and-updating-tickets#creating-a-follow-up-ticket)
+          description: POST requests only. The id of a closed ticket when creating a follow-up ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#creating-a-follow-up-ticket">Creating a follow-up ticket</a>
         via_id:
           type: integer
           format: int64
-          description: Write only. For more information, see the [Via object reference](/documentation/ticketing/reference-guides/via-object-reference/)
+          description: Write only. For more information, see the <a href="/documentation/ticketing/reference-guides/via-object-reference/">Via object reference</a>
           writeOnly: true
         voice_comment:
           type: object
-          description: Write only. See [Creating voicemail ticket](developer.zendesk.com/api-reference/voice/talk-partner-edition-api/reference/#creating-voicemail-tickets)
+          description: Write only. See <a href="developer.zendesk.com/api-reference/voice/talk-partner-edition-api/reference/#creating-voicemail-tickets">Creating voicemail ticket</a>
           writeOnly: true
       example:
         assignee_id: 235323
@@ -2072,18 +2072,18 @@ components:
               description: Enterprise only. The id of the brand this ticket is associated with
             collaborators:
               type: array
-              description: POST requests only. Users to add as cc's when creating a ticket. See [Setting Collaborators](/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-collaborators)
+              description: POST requests only. Users to add as cc's when creating a ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-collaborators">Setting Collaborators</a>
               items:
                 $ref: '#/components/schemas/Collaborator'
             email_cc_ids:
               type: array
-              description: The ids of agents or end users currently CC'ed on the ticket. See [CCs and followers resources](https://support.zendesk.com/hc/en-us/articles/360020585233) in the Support Help Center
+              description: The ids of agents or end users currently CC'ed on the ticket. See <a href="https://support.zendesk.com/hc/en-us/articles/360020585233">CCs and followers resources</a> in the Support Help Center
               items:
                 type: integer
                 format: int64
             follower_ids:
               type: array
-              description: The ids of agents currently following the ticket. See [CCs and followers resources](https://support.zendesk.com/hc/en-us/articles/360020585233)
+              description: The ids of agents currently following the ticket. See <a href="https://support.zendesk.com/hc/en-us/articles/360020585233">CCs and followers resources</a>
               items:
                 type: integer
                 format: int64
@@ -2096,7 +2096,7 @@ components:
             raw_subject:
               type: string
               description: |
-                The dynamic content placeholder, if present, or the "subject" value, if not. See [Dynamic Content Items](developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/)
+                The dynamic content placeholder, if present, or the "subject" value, if not. See <a href="developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content Items</a>
             recipient:
               type: string
               description: The original recipient e-mail address of the ticket
@@ -2113,7 +2113,7 @@ components:
             via_followup_source_id:
               type: integer
               format: int64
-              description: POST requests only. The id of a closed ticket when creating a follow-up ticket. See [Creating a follow-up ticket](/documentation/ticketing/managing-tickets/creating-and-updating-tickets#creating-a-follow-up-ticket)
+              description: POST requests only. The id of a closed ticket when creating a follow-up ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#creating-a-follow-up-ticket">Creating a follow-up ticket</a>
           required:
             - comment
       example:
@@ -2193,13 +2193,13 @@ components:
           description: The relative position of the ticket field on a ticket. Note that for accounts with ticket forms, positions are controlled by the different forms
         raw_description:
           type: string
-          description: The dynamic content placeholder if present, or the `description` value if not. See [Dynamic Content](/api-reference/ticketing/ticket-management/dynamic_content/)
+          description: The dynamic content placeholder if present, or the <code>description</code> value if not. See <a href="/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content</a>
         raw_title:
           type: string
-          description: The dynamic content placeholder if present, or the `title` value if not. See [Dynamic Content](/api-reference/ticketing/ticket-management/dynamic_content/)
+          description: The dynamic content placeholder if present, or the <code>title</code> value if not. See <a href="/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content</a>
         raw_title_in_portal:
           type: string
-          description: The dynamic content placeholder if present, or the "title_in_portal" value if not. See [Dynamic Content](/api-reference/ticketing/ticket-management/dynamic_content/)
+          description: The dynamic content placeholder if present, or the "title_in_portal" value if not. See <a href="/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content</a>
         regexp_for_validation:
           type: string
           description: For "regexp" fields only. The validation pattern for a field value to be deemed valid
@@ -2241,7 +2241,7 @@ components:
           description: The title of the ticket field for end users in Help Center
         type:
           type: string
-          description: System or custom field type. Editable for custom field types and only on creation. See [Create Ticket Field](#create-ticket-field)
+          description: System or custom field type. Editable for custom field types and only on creation. See <a href="#create-ticket-field">Create Ticket Field</a>
         updated_at:
           type: string
           format: date-time
@@ -2281,7 +2281,7 @@ components:
       properties:
         additional_collaborators:
           type: array
-          description: An array of numeric IDs, emails, or objects containing name and email properties. See [Setting Collaborators](developer.zendesk.com/api-reference/ticketing/tickets/tickets/#setting-collaborators). An email notification is sent to them when the ticket is updated
+          description: An array of numeric IDs, emails, or objects containing name and email properties. See <a href="developer.zendesk.com/api-reference/ticketing/tickets/tickets/#setting-collaborators">Setting Collaborators</a>. An email notification is sent to them when the ticket is updated
           items:
             $ref: '#/components/schemas/Collaborator'
         assignee_email:
@@ -2305,20 +2305,20 @@ components:
           $ref: '#/components/schemas/TicketComment'
         custom_fields:
           type: array
-          description: Custom fields for the ticket. See [Setting custom field values](/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-custom-field-values)
+          description: Custom fields for the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-custom-field-values">Setting custom field values</a>
           items:
             $ref: '#/components/schemas/CustomField'
         custom_status_id:
           type: integer
-          description: The custom ticket status id of the ticket. See [custom ticket statuses](#custom-ticket-statuses)
+          description: The custom ticket status id of the ticket. See <a href="#custom-ticket-statuses">custom ticket statuses</a>
         due_at:
           type: string
           format: date-time
-          description: If this is a ticket of type "task" it has a due date.  Due date format uses [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) format.
+          description: If this is a ticket of type "task" it has a due date.  Due date format uses <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format.
           nullable: true
         email_ccs:
           type: array
-          description: An array of objects that represent agent or end users email CCs to add or delete from the ticket. See [Setting email CCs](/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs)
+          description: An array of objects that represent agent or end users email CCs to add or delete from the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs">Setting email CCs</a>
           items:
             $ref: '#/components/schemas/EmailCC'
         external_id:
@@ -2326,7 +2326,7 @@ components:
           description: An id you can use to link Zendesk Support tickets to local records
         followers:
           type: array
-          description: An array of objects that represent agent followers to add or delete from the ticket. See [Setting followers](/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers)
+          description: An array of objects that represent agent followers to add or delete from the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers">Setting followers</a>
           items:
             $ref: '#/components/schemas/Follower'
         group_id:
@@ -2334,7 +2334,7 @@ components:
           description: The group this ticket is assigned to
         organization_id:
           type: integer
-          description: The organization of the requester. You can only specify the ID of an organization associated with the requester. See [Organization Memberships](developer.zendesk.com/api-reference/ticketing/organizations/organization_memberships/)
+          description: The organization of the requester. You can only specify the ID of an organization associated with the requester. See <a href="developer.zendesk.com/api-reference/ticketing/organizations/organization_memberships/">Organization Memberships</a>
         priority:
           type: string
           description: The urgency with which the ticket should be addressed.
@@ -2363,7 +2363,7 @@ components:
             The state of the ticket.
 
             If your account has activated custom ticket statuses, this is the ticket's
-            status category. See [custom ticket statuses](#custom-ticket-statuses).
+            status category. See <a href="#custom-ticket-statuses">custom ticket statuses</a>.
           enum:
             - new
             - open
@@ -2410,7 +2410,7 @@ components:
           $ref: '#/components/schemas/TicketUpdateInput'
     TicketAuditVia:
       type: object
-      description: Describes how the object was created. See the [Via object reference](/documentation/ticketing/reference-guides/via-object-reference)
+      description: Describes how the object was created. See the <a href="/documentation/ticketing/reference-guides/via-object-reference">Via object reference</a>
       properties:
         channel:
           type: string
@@ -2426,20 +2426,20 @@ components:
       properties:
         attachments:
           type: array
-          description: Attachments, if any. See [Attachment](developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/)
+          description: Attachments, if any. See <a href="developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/">Attachment</a>
           items:
             $ref: '#/components/schemas/Attachment'
           readOnly: true
         audit_id:
           type: integer
-          description: The id of the ticket audit record. See [Show Audit](developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#show-audit)
+          description: The id of the ticket audit record. See <a href="developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#show-audit">Show Audit</a>
           readOnly: true
         author_id:
           type: integer
-          description: The id of the comment author. See [Author id](#author-id)
+          description: The id of the comment author. See <a href="#author-id">Author id</a>
         body:
           type: string
-          description: The comment string. See [Bodies](#bodies)
+          description: The comment string. See <a href="#bodies">Bodies</a>
         created_at:
           type: string
           format: date-time
@@ -2447,30 +2447,30 @@ components:
           readOnly: true
         html_body:
           type: string
-          description: The comment formatted as HTML. See [Bodies](#bodies)
+          description: The comment formatted as HTML. See <a href="#bodies">Bodies</a>
         id:
           type: integer
           description: Automatically assigned when the comment is created
           readOnly: true
         metadata:
           type: object
-          description: System information (web client, IP address, etc.) and comment flags, if any. See [Comment flags](#comment-flags)
+          description: System information (web client, IP address, etc.) and comment flags, if any. See <a href="#comment-flags">Comment flags</a>
           additionalProperties: true
           readOnly: true
         plain_body:
           type: string
-          description: The comment presented as plain text. See [Bodies](#bodies)
+          description: The comment presented as plain text. See <a href="#bodies">Bodies</a>
           readOnly: true
         public:
           type: boolean
           description: true if a public comment; false if an internal note. The initial value set on ticket creation persists for any additional comment unless you change it
         type:
           type: string
-          description: '`Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See [Adding voice comments to tickets](/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets)'
+          description: '`Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See <a href="/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets">Adding voice comments to tickets</a>'
           readOnly: true
         uploads:
           type: array
-          description: List of tokens received from [uploading files](developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/#upload-files) for comment attachments. The files are attached by creating or updating tickets with the tokens. See [Attaching files](developer.zendesk.com/api-reference/ticketing/tickets/tickets/#attaching-files) in Tickets
+          description: List of tokens received from <a href="developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/#upload-files">uploading files</a> for comment attachments. The files are attached by creating or updating tickets with the tokens. See <a href="developer.zendesk.com/api-reference/ticketing/tickets/tickets/#attaching-files">Attaching files</a> in Tickets
           items:
             type: string
         via:
@@ -2505,14 +2505,26 @@ components:
     Topic:
       type: object
       description: |
-        The `manageable_by` attribute takes one of the following values:
-
-        | Value     | Users                       |
-        |-----------|---------------------------- |
-        | staff     | agents and managers         |
-        | managers  | only Help Center managers   |
-
-        Note that `manageable_by` is only displayed to users who can manage the topic.
+        <p>The <code>manageable_by</code> attribute takes one of the following values:</p>
+        <table>
+        <thead>
+        <tr>
+        <th>Value</th>
+        <th>Users</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>staff</td>
+        <td>agents and managers</td>
+        </tr>
+        <tr>
+        <td>managers</td>
+        <td>only Help Center managers</td>
+        </tr>
+        </tbody>
+        </table>
+        <p>Note that <code>manageable_by</code> is only displayed to users who can manage the topic.</p>
       properties:
         created_at:
           type: string
@@ -2698,21 +2710,31 @@ components:
     UserSegment:
       type: object
       description: |
-        The `user_type` attribute takes one of the following values:
-
-        | Value               | Users                                |
-        |---------------------|--------------------------------------|
-        | signed_in_users     | only authenticated users             |
-        | staff               | only agents and Help Center managers |
-
-
-        For `group_ids`, `organization_ids`, `tags`, and `or_tags`,
+        <p>The <code>user_type</code> attribute takes one of the following values:</p>
+        <table>
+        <thead>
+        <tr>
+        <th>Value</th>
+        <th>Users</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>signed_in_users</td>
+        <td>only authenticated users</td>
+        </tr>
+        <tr>
+        <td>staff</td>
+        <td>only agents and Help Center managers</td>
+        </tr>
+        </tbody>
+        </table>
+        <p>For <code>group_ids</code>, <code>organization_ids</code>, <code>tags</code>, and <code>or_tags</code>,
         an empty array means that access is not restricted by the attribute. For example,
         if no group ids are specified, then users don't have to be in any specific group to
-        have access.
-
-        For `tags`, a user must have all the listed tags to have access. For `or_tags`, a
-        user must have at least one of the listed tags to have access.
+        have access.</p>
+        <p>For <code>tags</code>, a user must have all the listed tags to have access. For <code>or_tags</code>, a
+        user must have at least one of the listed tags to have access.</p>
       properties:
         added_user_ids:
           type: array
@@ -2738,6 +2760,7 @@ components:
           type: integer
           format: int64
           description: Automatically assigned when the user segment is created
+          readOnly: true
         name:
           type: string
           description: User segment name (localized to the locale of the current user for built-in user segments)
@@ -2827,7 +2850,7 @@ components:
     Via:
       type: object
       description: |
-        An object explaining how the ticket was created. See the [Via object reference](/documentation/ticketing/reference-guides/via-object-reference)
+        An object explaining how the ticket was created. See the <a href="/documentation/ticketing/reference-guides/via-object-reference">Via object reference</a>
       properties:
         channel:
           type: string
