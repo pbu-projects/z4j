@@ -179,22 +179,24 @@ paths:
                 $ref: '#/components/schemas/TicketResponse'
   /api/v2/tickets/count:
     get:
-      operationId: CountTickets
+      operationId: getTicketCount
       tags:
         - Ticket
       summary: Count Tickets
       description: |-
         Returns an approximate count of tickets in the account. If the count exceeds 100,000, it is updated every 24 hours.
+        <br><br>
+        {@code ccd} lists tickets that the specified user is cc'd on.
+        <br><br>
+        The {@code count[refreshed_at]} property is a timestamp that indicates when the count was last updated.
+        <br><br>
+        <string>Note</strong>: When the count exceeds 100,000, {@code count[refreshed_at]} may occasionally be null.
+        This indicates that the count is being updated in the background, and {count[value]} is limited to 100,000 until the update is complete.
 
-        `ccd` lists tickets that the specified user is cc'd on.
-
-        The `count[refreshed_at]` property is a timestamp that indicates when the count was last updated.
-
-        **Note**: When the count exceeds 100,000, `count[refreshed_at]` may occasionally be null.
-        This indicates that the count is being updated in the background, and `count[value]` is limited to 100,000 until the update is complete.
-
-        #### Allowed For
-        * Agents
+        <h4>Allowed For</h4>
+        <ul>
+          <li>Agents</li>
+        </ul>
       responses:
         "200":
           description: Count of tickets

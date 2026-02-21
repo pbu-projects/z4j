@@ -119,7 +119,7 @@ class TicketClientSpec extends Z4jSpec {
                                                                                                Boolean shouldSucceed,
                                                                                                String expectedTitle) {
         when:
-        TicketCountResponse response = client.countTickets().block() //TODO(jonathan) rename this to getTicketCount()
+        TicketCountResponse response = client.getTicketCount().block()
 
         then:
         if (shouldSucceed) {
