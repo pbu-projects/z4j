@@ -14,6 +14,8 @@ To get a local copy up and running, please follow the detailed setup instruction
 
 ### Installation
 
+**Gradle**
+
 | Gradle Kotlin                                  | Gradle                                        |
 |:-----------------------------------------------|:----------------------------------------------|
 | <pre>implementation("lol.pbu:z4j:0.1.0")</pre> | <pre>implementation 'lol.pbu:z4j:0.1.0'</pre> |
@@ -30,7 +32,7 @@ To get a local copy up and running, please follow the detailed setup instruction
 
 ## Example Projects
 
-- [Zencli] is built with z4j and compiled to a native image with graalvm.
+- [zcmi] is a cli project built with z4j.
 
 ## Contributing
 
@@ -43,4 +45,4 @@ development process, style guides, and testing strategy.
 
 [testing]:CONTRIBUTING.md#testing
 
-[Zencli]:https://github.com/PeanutButter-Unicorn/zencli
+[zcmi]:https://github.com/PeanutButter-Unicorn/zcmi
