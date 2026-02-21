@@ -14,7 +14,7 @@ jobs:
       GPG_FILE: ${{ secrets.GPG_FILE }}
       GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # 4.3.1
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           fetch-depth: 0
       - uses: gradle/actions/wrapper-validation@78f7dee6337f393c0a872d0afbda4c51a20e543d
