@@ -211,10 +211,11 @@ paths:
         - Ticket
       summary: Show Ticket
       description: |-
-        Returns a number of ticket properties though not the ticket comments. To get the comments, use [List Comments](developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/#list-comments)
-
-        #### Allowed For
-        * Agents
+        <p>Returns a number of ticket properties though not the ticket comments. To get the comments, use <a href="developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/#list-comments">List Comments</a></p>
+        <h4 id="allowed-for">Allowed For</h4>
+        <ul>
+            <li>Agents</li>
+        </ul>
       parameters:
         - $ref: '#/components/parameters/TicketId'
       responses:
@@ -250,7 +251,7 @@ paths:
         - Locale
       summary: List Locales
       description: |
-        Lists the translation locales available for the account.
+        Lists the translation locales available for the account.<br><br>
         
         Allowed for anyone
       responses:
@@ -320,10 +321,10 @@ paths:
         - User Segment
       summary: List User Segments
       description: |
-        Some user segments can only be applied to sections and topics on certain Guide plans. For instance, user 
-        segments with a `user_type` of `"staff"` cannot be applied to sections and topics on accounts on the Guide 
-        Lite plan or the Suite Team plan. <br>
-        (Allowed for Help Center managers)
+        <p>Some user segments can only be applied to sections and topics on certain Guide plans. For instance, user
+            segments with a <code>user_type</code> of <code>&quot;staff&quot;</code> cannot be applied to sections and topics on accounts on the Guide
+            Lite plan or the Suite Team plan. <br>
+            (Allowed for Help Center managers)</p>
       parameters:
         - name: built_in
           in: query
@@ -420,7 +421,7 @@ paths:
         (Allowed for Help Center managers)
       responses:
         "204":
-          description: Response when the  was deleted
+          description: Response when the use rsegment was deleted
   /api/v2/help_center/user_segments/{user_segment_id}/sections:
     parameters:
       - $ref: '#/components/parameters/UserSegmentId'
@@ -430,7 +431,7 @@ paths:
         - User Segment
       summary: List Sections with User Segment
       description: |
-        Lists the sections that use the specified user segment.
+        Lists the sections that use the specified user segment.<br><br>
 
         (Allowed for Help Center managers)
       responses:
@@ -449,20 +450,18 @@ paths:
         - User Segment
       summary: List Topics with User Segment
       description: |
-        Lists the topics that use the specified user segment.
-
-        This endpoint supports pagination as described in [Pagination](developer.zendesk.com/api-reference/help_center/help-center-api/help-center-api/#pagination).
-
-        #### Allowed for
-
-        * Help Center managers
-
-        #### Pagination
-
-        * Cursor pagination (recommended)
-        * Offset pagination
-
-        See [Pagination](developer.zendesk.com/api-reference/introduction/pagination/).
+        <p>Lists the topics that use the specified user segment.</p>
+        <p>This endpoint supports pagination as described in <a href="developer.zendesk.com/api-reference/help_center/help-center-api/help-center-api/#pagination">Pagination</a>.</p>
+        <h4 id="allowed-for">Allowed for</h4>
+        <ul>
+            <li>Help Center managers</li>
+        </ul>
+        <h4 id="pagination">Pagination</h4>
+        <ul>
+            <li>Cursor pagination (recommended)</li>
+            <li>Offset pagination</li>
+        </ul>
+        <p>See <a href="developer.zendesk.com/api-reference/introduction/pagination/">Pagination</a>.</p>
       responses:
         "200":
           description: OK Response
@@ -474,22 +473,11 @@ components:
   schemas:
     Attachment:
       type: object
-      description: A file represented as an [Attachment](developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/) object
+      description: |
+        <p>A file represented as an <a href="developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/">Attachment</a> object</p>
       allOf:
         - $ref: '#/components/schemas/AttachmentBase'
         - $ref: '#/components/schemas/AttachmentThumbnails'
-      example:
-        content_type: image/png
-        content_url: https://company.zendesk.com/attachments/my_funny_profile_pic.png
-        file_name: my_funny_profile_pic.png
-        id: 928374
-        size: 166144
-        thumbnails:
-          - content_type: image/png
-            content_url: https://company.zendesk.com/attachments/my_funny_profile_pic_thumb.png
-            file_name: my_funny_profile_pic_thumb.png
-            id: 928375
-            size: 58298
     AttachmentBase:
       type: object
       properties:
@@ -499,7 +487,8 @@ components:
           readOnly: true
         content_url:
           type: string
-          description: A full URL where the attachment image file can be downloaded. The file may be hosted externally so take care not to inadvertently send Zendesk authentication credentials. See [Working with url properties](/documentation/ticketing/managing-tickets/working-with-url-properties)
+          description: |
+            <p>A full URL where the attachment image file can be downloaded. The file may be hosted externally so take care not to inadvertently send Zendesk authentication credentials. See <a href="/documentation/ticketing/managing-tickets/working-with-url-properties">Working with url properties</a></p>
           readOnly: true
         deleted:
           type: boolean
@@ -640,7 +629,9 @@ components:
           description: The id of the user who wrote the article (set to the user who made the request on create by default)
         body:
           type: string
-          description: HTML body of the article. Unsafe tags and attributes may be removed before display. For a list of safe tags and attributes, see [Allowing unsafe HTML in Help Center articles](https://support.zendesk.com/hc/en-us/articles/115015895948) in Zendesk help
+          description: |
+            <p>HTML body of the article. Unsafe tags and attributes may be removed before display. For a list of safe tags and attributes, 
+            see <a href="https://support.zendesk.com/hc/en-us/articles/115015895948">Allowing unsafe HTML in Help Center articles</a> in Zendesk help</p>
         comments_disabled:
           type: boolean
           description: True if comments are disabled; false otherwise
@@ -802,7 +793,7 @@ components:
         snippet:
           type: string
           description: |
-            The portion of an article that is relevant to the search query, with matching words or phrases delimited by <em></em> tags. Example: a query for `carrot potato` might return the snippet `...don't confuse <em>carrots</em> with <em>potatoes</em>...`
+            <p>The portion of an article that is relevant to the search query, with matching words or phrases delimited by &lt;em&gt;&lt;/em&gt; tags. Example: a query for <code>carrot potato</code> might return the snippet <code>...don&#39;t confuse &lt;em&gt;carrots&lt;/em&gt; with &lt;em&gt;potatoes&lt;/em&gt;...</code></p>
           readOnly: true
     ArticlesResponse:
       type: object
