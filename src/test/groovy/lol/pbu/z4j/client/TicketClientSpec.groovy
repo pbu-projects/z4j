@@ -30,37 +30,51 @@ class TicketClientSpec extends Z4jSpec {
                             [client: ticketsUserClient, clientType: "simple user", shouldSucceed: false, expectedTitle: "should not"]]
     }
 
-    def "calling listTickets() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean shouldSucceed, String expectedTitle) {
+    def "calling listTickets() succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         when:
-        TicketsResponse response = client.listTickets(null).block()
+        client.listTickets(null).block()
 
         then:
-        if (shouldSucceed) {
-            response != null
-            return
-        }
+        noExceptionThrown()
+
+        where:
+        [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { it.shouldSucceed }
+    }
+
+    def "calling listTickets() fails when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
+        when:
+        client.listTickets(null).block()
+
+        then:
         thrown(HttpClientException)
 
         where:
-        [client, clientType, shouldSucceed, expectedTitle] << clientTestMatrix
+        [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { !it.shouldSucceed }
     }
 
-    def "calling showTicket() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean shouldSucceed, String expectedTitle) {
+    def "calling showTicket() succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         when:
-        TicketResponse response = client.showTicket(tickets.get(0).getId()).block()
+        client.showTicket(tickets.get(0).getId()).block()
 
         then:
-        if (shouldSucceed) {
-            response.getTicket() != null
-            return
-        }
+        noExceptionThrown()
+
+        where:
+        [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { it.shouldSucceed }
+    }
+
+    def "calling showTicket() fails when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
+        when:
+        client.showTicket(tickets.get(0).getId()).block()
+
+        then:
         thrown(HttpClientException)
 
         where:
-        [client, clientType, shouldSucceed, expectedTitle] << clientTestMatrix
+        [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { !it.shouldSucceed }
     }
 
-    def "Trying to create a ticket #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean shouldSucceed, String expectedTitle) {
+    def "Trying to create a ticket succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         given:
         TicketComment ticketComment = new TicketComment().setBody(faker.chuckNorris().fact())
         TicketCreateInput createTicketInput = new TicketCreateInput(ticketComment)
@@ -68,20 +82,33 @@ class TicketClientSpec extends Z4jSpec {
         TicketCreateRequest createTicketRequest = new TicketCreateRequest(createTicketInput)
 
         when:
-        TicketResponse response = client.createTicket(createTicketRequest).block()
+        client.createTicket(createTicketRequest).block()
 
         then:
-        if (shouldSucceed) {
-            response.getTicket() != null
-            return
-        }
+        noExceptionThrown()
+
+        where:
+        [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { it.shouldSucceed }
+    }
+
+    def "Trying to create a ticket fails when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
+        given:
+        TicketComment ticketComment = new TicketComment().setBody(faker.chuckNorris().fact())
+        TicketCreateInput createTicketInput = new TicketCreateInput(ticketComment)
+        createTicketInput.setRawSubject(faker.chuckNorris().fact())
+        TicketCreateRequest createTicketRequest = new TicketCreateRequest(createTicketInput)
+
+        when:
+        client.createTicket(createTicketRequest).block()
+
+        then:
         thrown(HttpClientException)
 
         where:
-        [client, clientType, shouldSucceed, expectedTitle] << clientTestMatrix
+        [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { !it.shouldSucceed }
     }
 
-    def "calling updateTicket() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean shouldSucceed, String expectedTitle) {
+    def "calling updateTicket() succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         given:
         TicketUpdateInput ticketUpdateInput = new TicketUpdateInput()
                 .setComment(new TicketComment().setBody(faker.hitchhikersGuideToTheGalaxy().marvinQuote().toString()))
@@ -89,35 +116,55 @@ class TicketClientSpec extends Z4jSpec {
 
 
         when:
-        TicketUpdateResponse response = client.updateTicket(tickets.first.getId(), ticketUpdateRequest).block()
+        client.updateTicket(tickets.first.getId(), ticketUpdateRequest).block()
 
         then:
-        if (shouldSucceed) {
-            response.getTicket() != null
-            return
-        }
-        thrown(HttpClientException)
+        noExceptionThrown()
 
         where:
-        [client, clientType, shouldSucceed, expectedTitle] << clientTestMatrix
+        [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { it.shouldSucceed }
     }
 
-    def "calling countTickets() #expectedTitle succeed when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean shouldSucceed, String expectedTitle) {
+    def "calling updateTicket() fails when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
+        given:
+        TicketUpdateInput ticketUpdateInput = new TicketUpdateInput()
+                .setComment(new TicketComment().setBody(faker.hitchhikersGuideToTheGalaxy().marvinQuote().toString()))
+        TicketUpdateRequest ticketUpdateRequest = new TicketUpdateRequest().setTicket(ticketUpdateInput)
+
+
         when:
-        TicketCountResponse response = client.getTicketCount().block()
+        client.updateTicket(tickets.first.getId(), ticketUpdateRequest).block()
 
         then:
-        if (shouldSucceed) {
-            response.getCount().getValue() > 0
-            return
-        }
         thrown(HttpClientException)
 
         where:
-        [client, clientType, shouldSucceed, expectedTitle] << clientTestMatrix
+        [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { !it.shouldSucceed }
     }
 
-    def "can call listTicketFields when using a(n) #clientType client and #creator flag"(TicketClient client, String clientType, Boolean shouldSucceed, String expectedTitle, Boolean creator, Locale locale) {
+    def "calling countTickets() succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
+        when:
+        client.getTicketCount().block()
+
+        then:
+        noExceptionThrown()
+
+        where:
+        [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { it.shouldSucceed }
+    }
+
+    def "calling countTickets() fails when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
+        when:
+        client.getTicketCount().block()
+
+        then:
+        thrown(HttpClientException)
+
+        where:
+        [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { !it.shouldSucceed }
+    }
+
+    def "can call listTicketFields when using a(n) #clientType client and #creator flag"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored, Boolean creator, Locale locale) {
         when:
         client.listTicketFields(locale.getLocale(), creator).block()
 
@@ -130,12 +177,12 @@ class TicketClientSpec extends Z4jSpec {
         }
 
         where:
-        [[client, clientType, shouldSucceed, expectedTitle], creator, locale] << [
+        [[client, clientType, ignored, alsoIgnored], creator, locale] << [
                 clientTestMatrix.findAll { it.shouldSucceed || it.clientType == "simple user" }, [true, false, null], accountLocales
         ].combinations()
     }
 
-    def "calling listTicketFields when using a(n) #clientType client and #creator flag fails"(TicketClient client, String clientType, Boolean shouldSucceed, String expectedTitle, Boolean creator, Locale locale) {
+    def "calling listTicketFields when using a(n) #clientType client and #creator flag fails"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored, Boolean creator, Locale locale) {
         when:
         client.listTicketFields(locale.getLocale(), creator).block()
 
@@ -143,7 +190,7 @@ class TicketClientSpec extends Z4jSpec {
         thrown(HttpClientException)
 
         where:
-        [[client, clientType, shouldSucceed, expectedTitle], creator, locale] << [
+        [[client, clientType, ignored, alsoIgnored], creator, locale] << [
                 clientTestMatrix.findAll { !it.shouldSucceed && it.clientType != "simple user"}, [true, false, null], accountLocales
         ].combinations()
     }
