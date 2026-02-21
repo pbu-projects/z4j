@@ -4,7 +4,7 @@ plugins {
     id("java-library")
     id("maven-publish")
     id("signing")
-    id("com.gradleup.nmcp.aggregation").version("1.1.0")
+    id("com.gradleup.nmcp.aggregation").version("1.4.4")
     id("io.micronaut.library") version "4.5.3"
     id("io.micronaut.openapi") version "4.5.3"
     id("jacoco")
