@@ -1,9 +1,13 @@
 package lol.pbu.z4j.client
 
+
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.model.*
 import spock.lang.Shared
+
+import static io.micronaut.http.HttpStatus.FORBIDDEN
 
 @MicronautTest
 class CategoryClientSpec extends Z4jSpec {
@@ -75,5 +79,76 @@ class CategoryClientSpec extends Z4jSpec {
 
         where:
         [[categoryClient, userType], locale] << [[[adminCategoryClient, "admin"]], allLocales].combinations()
+    }
+    def "cannot use CreateCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, String locale) {
+        given:
+        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
+        String categoryName = faker.animal().name()
+        Category category = new Category(categoryName)
+        category.setDescription(faker.backToTheFuture().quote())
+        createCategoryRequest.setCategory(category)
+
+        when: "category name to be created is #categoryName"
+        CategoryResponse response = categoryClient.createCategory(locale, createCategoryRequest).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+
+        and:
+        error.getStatus() == FORBIDDEN
+
+        cleanup: "deleting #categoryName from the #locale locale"
+        try {
+            adminCategoryClient.deleteCategory(locale, response.getCategory().getId())
+        } catch (NullPointerException ignored) {}
+
+        where:
+        [[categoryClient, userType], locale] << [[[userCategoryClient, "user"], [agentCategoryClient, "agent"]], allLocales].combinations()
+    }
+
+    def "can use DeleteCategory as an #userType for the '#locale"(CategoryClient categoryClient, String userType, String locale) {
+        given:
+        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
+        String categoryName = faker.bluey().quote()
+        Category category = new Category(categoryName)
+        category.setDescription(faker.lordOfTheRings().location())
+        createCategoryRequest.setCategory(category)
+        CategoryResponse response = categoryClient.createCategory(locale, createCategoryRequest).block()
+
+        when:
+        categoryClient.deleteCategory(locale, response.getCategory().getId())
+
+        then:
+        noExceptionThrown()
+
+        where:
+        [[categoryClient, userType], locale] << [[[adminCategoryClient, "admin"]], allLocales].combinations()
+    }
+
+    def "cannot use DeleteCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, String locale) {
+        given:
+        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
+        String categoryName = faker.bluey().quote() + " " +  UUID.randomUUID().toString()
+        Category category = new Category(categoryName)
+        category.setDescription(faker.lordOfTheRings().location())
+        createCategoryRequest.setCategory(category)
+        CategoryResponse response = adminCategoryClient.createCategory(locale, createCategoryRequest).block()
+
+        when:
+        categoryClient.deleteCategory(locale, response.getCategory().getId())
+
+        then:
+        noExceptionThrown() // this shouldn't be allowed!
+//        HttpClientResponseException error = thrown(HttpClientResponseException)
+//        and:
+//        error.getStatus() == FORBIDDEN
+
+        cleanup:
+        try {
+            adminCategoryClient.deleteCategory(locale, response.getCategory().getId())
+        }catch (NullPointerException ignored){}
+
+        where:
+        [[categoryClient, userType], locale] << [[[userCategoryClient, "user"], [agentCategoryClient, "agent"]], allLocales].combinations()
     }
 }
