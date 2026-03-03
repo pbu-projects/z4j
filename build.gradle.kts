@@ -35,6 +35,7 @@ dependencies {
     implementation("io.micronaut.reactor:micronaut-reactor-http-client")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     implementation("io.micronaut.validation:micronaut-validation")
+    implementation("io.micronaut:micronaut-retry")
     "lombok"("org.projectlombok:lombok:${lombokVersion}")
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("net.datafaker:datafaker:$dataFakerVersion")
@@ -60,7 +61,7 @@ micronaut {
         annotations("lol.pbu.*")
     }
     openapi {
-        version = "6.19.3"
+        version = "6.20.0"
         client(file("src/main/resources/z4j.yaml")) {
             apiPackageName.set("lol.pbu.z4j.client")
             modelPackageName.set("lol.pbu.z4j.model")
@@ -71,6 +72,7 @@ micronaut {
             apiNameSuffix.set("Client")
             alwaysUseGenerateHttpResponse.set(false)
             generateHttpResponseWhereRequired.set(false)
+            additionalProperties.put("retryable", "true")
         }
     }
 }
