@@ -10,7 +10,7 @@ class CategoriesResponseSpec extends Z4jSpec {
         given:
         def categoriesResponse = new CategoriesResponse()
         categoriesResponse.categories == null
-        def category = new Category(faker.number().randomNumber(), faker.lorem().word(), faker.lorem().sentence())
+        def category = new Category(faker.lorem().word())
 
         when:
         categoriesResponse.addCategoriesItem(category)
@@ -23,10 +23,10 @@ class CategoriesResponseSpec extends Z4jSpec {
     @Unroll
     def "add categories item to existing list"() {
         given:
-        def existingCategory = new Category(faker.number().randomNumber(), faker.lorem().word(), faker.lorem().sentence())
+        def existingCategory = new Category(faker.lorem().word())
         def categoriesResponse = new CategoriesResponse()
         categoriesResponse.categories = [existingCategory]
-        def newCategory = new Category(faker.number().randomNumber(), faker.lorem().word(), faker.lorem().sentence())
+        def newCategory = new Category(faker.lorem().word())
 
         when:
         categoriesResponse.addCategoriesItem(newCategory)

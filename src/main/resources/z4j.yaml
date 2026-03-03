@@ -469,6 +469,319 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TopicsResponse'
+  /api/v2/help_center/{locale}/categories:
+    parameters:
+    - $ref: '#/components/parameters/OptionalLocale'
+    get:
+      operationId: ListCategories
+      tags:
+      - Category
+      summary: List Categories by Locale
+      description: |-
+        <h4>Allowed for</h4>
+        <ul>
+            <li>Anonymous users</li>
+        </ul>
+        <p>The response will list only the categories that the agent, end user, or
+        anonymous user can view in the help center.</p>
+        <p>Translations are embedded within the category because they're
+        not shared between resources.</p>
+      parameters:
+      - name: sort_by
+        in: query
+        description: |
+          <p>The <code>sort_by</code> parameter can have one of the following values:</p>
+          <table>
+              <thead>
+              <tr>
+                  <th>value</th>
+                  <th>description</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                  <td><code>position</code></td>
+                  <td>order set manually using the Arrange Content page. Default order</td>
+              </tr>
+              <tr>
+                  <td><code>created_at</code></td>
+                  <td>order by creation time</td>
+              </tr>
+              <tr>
+                  <td><code>updated_at</code></td>
+                  <td>order by update time</td>
+              </tr>
+              </tbody>
+          </table>
+        schema:
+          type: string
+          enum:
+          - position
+          - created_at
+          - updated_at
+      - name: sort_order
+        in: query
+        description: |
+          <table>
+              <thead>
+              <tr>
+                  <th>value</th>
+                  <th>description</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                  <td><code>asc</code></td>
+                  <td>ascending order</td>
+              </tr>
+              <tr>
+                  <td><code>desc</code></td>
+                  <td>descending order</td>
+              </tr>
+              </tbody>
+          </table>
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriesResponse'
+    post:
+      operationId: CreateCategory
+      tags:
+      - Category
+      summary: Create Category by Locale
+      description: |-
+        <p>You must specify a category name and locale. The locale can be omitted if it's specified
+        in the URL. Optionally, you can specify multiple <a href="/api-reference/help_center/help-center-api/translations">translations</a> for
+        the category. The specified locales must be enabled for the current Help Center.</p>
+        <h4>Allowed for</h4>
+        <ul>
+            <li>Help Center managers</li>
+        </ul>
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  $ref: '#/components/schemas/Category'
+      responses:
+        "201":
+          description: OK Response
+          headers:
+            Location:
+              description: The URL of the new created category
+              schema:
+                type: string
+                format: url
+              example: https://{subdomain}.zendesk.com/api/v2/help_center/categories/{category_id}.json
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+  /api/v2/help_center/{locale}/categories/{category_id}:
+    parameters:
+    - $ref: '#/components/parameters/OptionalLocale'
+    - $ref: '#/components/parameters/CategoryId'
+    get:
+      operationId: ShowCategory
+      tags:
+      - Category
+      summary: Show Category by Locale
+      description: |-
+        <p><strong>Note</strong>: <code>{/locale}</code> is an optional parameter for admins and agents. End users and anonymous users must provide the parameter.</p>
+        <h4>Allowed for</h4>
+        <ul>
+            <li>Anonymous users</li>
+        </ul>
+        <p>Translations are embedded within the category because they're
+        not shared between resources.</p>
+      responses:
+        "200":
+          description: <p>description</p>
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+    put:
+      operationId: UpdateCategory
+      tags:
+      - Category
+      summary: Update Category by Locale
+      description: |-
+        <p>These endpoints only update category-level metadata such as the sorting position.
+        They don't update category translations.</p>
+        <h4>Allowed for</h4>
+        <ul>
+            <li>Help Center managers</li>
+        </ul>
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+    delete:
+      operationId: DeleteCategory
+      tags:
+      - Category
+      summary: Delete Category by Locale
+      description: |-
+        <p><strong>WARNING: Every section and all articles in the category will also be deleted.</strong></p>
+        <h4>Allowed for</h4>
+        <ul>
+            <li>Help Center managers</li>
+        </ul>
+      responses:
+        "204":
+          description: No content
+  /api/v2/help_center/categories/{category_id}/source_locale:
+    parameters:
+    - $ref: '#/components/parameters/CategoryId'
+    put:
+      operationId: UpdateCategorySourceLocale
+      tags:
+      - Category
+      summary: Update Category Source Locale by Locale
+      description: |-
+        <p>The endpoint updates the category <code>source_locale</code> property</p>
+        <h4>Allowed for</h4>
+        <ul>
+            <li>Agents</li>
+        </ul>
+      responses:
+        "200":
+          description: <p>OK Response</p>
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+  /api/v2/help_center/categories:
+    get:
+      operationId: ListCategoriesNoLocale
+      tags:
+      - Category
+      summary: List Categories
+      description: |-
+        <h4>Allowed for</h4>
+        <ul>
+            <li>Agents</li>
+        </ul>
+        <p>The response will list only the categories that the agent can view in the help center.</p>
+      parameters:
+      - name: sort_by
+        in: query
+        description: <p>Sorts the results by one of the accepted values</p>
+        schema:
+          type: string
+          enum:
+          - position
+          - created_at
+          - updated_at
+      - name: sort_order
+        in: query
+        description: <p>Selects the order of the results.</p>
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+      responses:
+        "200":
+          description: <p>description</p>
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriesResponse'
+    post:
+      operationId: CreateCategoryNoLocale
+      tags:
+      - Category
+      summary: Create Category
+      description: |-
+        <p>You must specify a category name and locale. The locale can be omitted if it's specified
+        in the URL. Optionally, you can specify multiple <a href="/api-reference/help_center/help-center-api/translations">translations</a> for
+        the category. The specified locales must be enabled for the current Help Center.</p>
+        <h4>Allowed for</h4>
+        <ul>
+            <li>Help Center managers</li>
+        </ul>
+      responses:
+        "201":
+          description: OK Response
+          headers:
+            Location:
+              description: The URL of the new created category
+              schema:
+                type: string
+                format: url
+              example: https://{subdomain}.zendesk.com/api/v2/help_center/categories/{category_id}.json
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+  /api/v2/help_center/categories/{category_id}:
+    parameters:
+    - $ref: '#/components/parameters/CategoryId'
+    get:
+      operationId: ShowCategoryNoLocale
+      tags:
+      - Category
+      summary: Show Category
+      description: |-
+        <h4>Allowed for</h4>
+        <ul>
+            <li>Agents</li>
+        </ul>
+      responses:
+        "200":
+          description: <p>description</p>
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+    put:
+      operationId: UpdateCategoryNoLocale
+      tags:
+      - Category
+      summary: Update Category
+      description: |-
+        <p>These endpoints only update category-level metadata such as the sorting position.
+        They don't update category translations.</p>
+        <h4>Allowed for</h4>
+        <ul>
+            <li>Help Center managers</li>
+        </ul>
+      responses:
+        "200":
+          description: OK Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponse'
+    delete:
+      operationId: DeleteCategoryNoLocale
+      tags:
+      - Category
+      summary: Delete Category
+      description: |-
+        <p><strong>WARNING: Every section and all articles in the category will also be deleted.</strong></p>
+        <h4>Allowed for</h4>
+        <ul>
+            <li>Help Center managers</li>
+        </ul>
+      responses:
+        "204":
+          description: <p>No content</p>
 components:
   schemas:
     Attachment:
@@ -914,18 +1227,8 @@ components:
           type: string
           description: The API url of this category
       #          readOnly: true
-      example:
-        description: ""
-        html_url: https://company.zendesk.com/hc/en-us/categories/354362577
-        id: 1635
-        locale: en-us
-        name: Self Help Articles
-        source_locale: en-us
-        url: https://company.zendesk.com/api/v2/help_center/categories/354362577
       required:
-        - id
         - name
-        - locale
     CategoryResponse:
       type: object
       properties:

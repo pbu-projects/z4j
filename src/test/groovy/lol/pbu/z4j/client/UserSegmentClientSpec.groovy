@@ -1,12 +1,9 @@
 package lol.pbu.z4j.client
 
-import io.micronaut.http.HttpResponse
-import io.micronaut.http.HttpStatus
+
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.model.CreateUserSegmentRequest
-import lol.pbu.z4j.model.SectionsResponse
-import lol.pbu.z4j.model.TopicsResponse
 import lol.pbu.z4j.model.UserSegment
 import lol.pbu.z4j.model.UserSegmentResponse
 import lol.pbu.z4j.model.UserSegmentsResponse
