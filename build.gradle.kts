@@ -19,7 +19,6 @@ version = project.properties["z4jVersion"]!!
 
 val dataFakerVersion = project.properties["dataFakerVersion"]!!
 val lombokVersion = project.properties["lombokVersion"]!!
-extra["netty.version"] = project.properties["nettyVersion"]!!
 
 configurations.create("lombok")
 
