@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0
       - uses: gradle/actions/wrapper-validation@263d8fe18eb54ae581bcdc2e263c5a49173958a3
       - name: Set up JDK
-        uses: graalvm/setup-graalvm@03e8abf916fd0e281b2efe7b2da3378bb0a1d085
+        uses: graalvm/setup-graalvm@2149f395d36ce12ad4ee5d7f334b26bf081fa555
         with:
           java-version: '21'
           distribution: 'graalvm-community'
