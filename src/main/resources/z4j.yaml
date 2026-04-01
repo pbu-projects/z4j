@@ -575,7 +575,7 @@ paths:
                   $ref: '#/components/schemas/Category'
       responses:
         "201":
-          description: OK Response
+          description: Created response
           headers:
             Location:
               description: The URL of the new created category
@@ -782,12 +782,83 @@ paths:
       responses:
         "204":
           description: <p>No content</p>
+  /api/v2/search:
+    get:
+      operationId: List
+      tags:
+        - Search
+      summary: List Search Results
+      description: |-
+        <p>Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter.</p>
+        <p>Use the ampersand character (&amp;) to append the {@code sort_by} or {@code sort_order} parameters to the URL.</p>
+        <p>For examples, see <a href='https://developer.zendesk.com/documentation/ticketing/using-the-zendesk-api/searching-with-the-zendesk-api'>Searching with Zendesk API</a>.</p>
+        <p>This endpoint has its own rate limit. The rate limit counts towards the global API rate limit. See <a href='https://developer.zendesk.com/api-reference/ticketing/introduction/#limits'>Limits</a>.</p>
+        <h4 id='allowed-for'>Allowed For</h4>
+        <ul>
+            <li>Agents</li>
+        </ul>
+
+      parameters:
+        - name: query
+          in: query
+          description: Returns the search results. See <a href="https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax">Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href="https://support.zendesk.com/hc/en-us/articles/203663226">Zendesk Support search reference</a>.
+          required: true
+          schema:
+            type: string
+        - name: sort_by
+          in: query
+          description: One of {@code updated_at}, {@code created_at}, {@code priority}, {@code status}, or {@code ticket_type}. Defaults to sorting by relevance
+          schema:
+            $ref: '#/components/schemas/SearchSortBy'
+        - name: sort_order
+          in: query
+          description: Defaults to descending
+          schema:
+            $ref: '#/components/schemas/SearchSortOrder'
+        - $ref: '#/components/parameters/SearchInclude'
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+        "400":
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestErrorResponse'
 components:
   schemas:
+    SearchSortBy:
+      type: string
+      enum:
+        - updated_at
+        - created_at
+        - priority
+        - status
+        - ticket_type
+      x-enum-name: SearchSortBy
+      x-enum-varnames:
+        - UPDATED_AT
+        - CREATED_AT
+        - PRIORITY
+        - STATUS
+        - TICKET_TYPE
+    SearchSortOrder:
+      type: string
+      enum:
+        - asc
+        - desc
+      x-enum-name: SearchSortOrder
+      x-enum-varnames:
+        - ASCENDING
+        - DESCENDING
     Attachment:
       type: object
       description: |
-        <p>A file represented as an <a href="developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/">Attachment</a> object</p>
+        A file represented as an <a href="developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/">Attachment</a> object
       allOf:
         - $ref: '#/components/schemas/AttachmentBase'
         - $ref: '#/components/schemas/AttachmentThumbnails'
@@ -801,7 +872,7 @@ components:
         content_url:
           type: string
           description: |
-            <p>A full URL where the attachment image file can be downloaded. The file may be hosted externally so take care not to inadvertently send Zendesk authentication credentials. See <a href="/documentation/ticketing/managing-tickets/working-with-url-properties">Working with url properties</a></p>
+            A full URL where the attachment image file can be downloaded. The file may be hosted externally so take care not to inadvertently send Zendesk authentication credentials. See <a href="/documentation/ticketing/managing-tickets/working-with-url-properties">Working with url properties</a>
           readOnly: true
         deleted:
           type: boolean
@@ -832,6 +903,17 @@ components:
         malware_scan_result:
           type: string
           description: 'The result of the malware scan. There is a delay between the time the attachment is uploaded and when the malware scan is completed. Usually the scan is done within a few seconds, but high load conditions can delay the scan results. Possible values: "malware_found", "malware_not_found", "failed_to_scan", "not_scanned"'
+          enum:
+            - malware_found
+            - malware_not_found
+            - failed_to_scan
+            - not_scanned
+          x-enum-name: MalwareScanResult
+          x-enum-varnames:
+            - MALWARE_FOUND
+            - MALWARE_NOT_FOUND
+            - FAILED_TO_SCAN
+            - NOT_SCANNED
           readOnly: true
         mapped_content_url:
           type: string
@@ -3259,6 +3341,64 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Vote'
+    SearchResult:
+      type: object
+      properties:
+        created_at:
+          type: string
+          description: When the resource was created
+        default:
+          type: boolean
+          description: Flag to indicate whether this is the default resource
+        deleted:
+          type: boolean
+          description: Flag to indicate whether or not resource has been deleted
+        description:
+          type: string
+          description: The description of the resource
+        id:
+          type: integer
+          description: The ID of the resource
+        name:
+          type: string
+          description: The name of the resource
+        result_type:
+          type: string
+          description: The type of the resource
+        updated_at:
+          type: string
+          description: When the resource was last updated
+        url:
+          type: string
+          description: The url of the resource
+    SearchResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: The number of resources returned by the query corresponding to this page of results in the paginated response
+          readOnly: true
+        facets:
+          type: string
+          description: The facets corresponding to the search query
+          nullable: true
+          readOnly: true
+        next_page:
+          type: string
+          description: URL to the next page of results
+          nullable: true
+          readOnly: true
+        previous_page:
+          type: string
+          description: URL to the previous page of results
+          nullable: true
+          readOnly: true
+        results:
+          type: array
+          description: May consist of tickets, users, groups, or organizations, as specified by the `result_type` property in each result object
+          items:
+            $ref: '#/components/schemas/SearchResult'
+          readOnly: true
   parameters:
     ArticleAttachmentId:
       name: article_attachment_id
@@ -3352,6 +3492,14 @@ components:
         type: string
         example: en-us
       example: en-us
+    SearchInclude:
+      name: include
+      in: query
+      description: |
+        Sideloads to include in the response. Accepts a comma-separated list of values.
+        The available sideloads depend on the search result types.
+      schema:
+        type: string
     SectionId:
       name: section_id
       in: path
