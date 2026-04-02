@@ -797,7 +797,6 @@ paths:
         <ul>
             <li>Agents</li>
         </ul>
-
       parameters:
         - name: query
           in: query
@@ -816,6 +815,39 @@ paths:
           schema:
             $ref: '#/components/schemas/SearchSortOrder'
         - $ref: '#/components/parameters/SearchInclude'
+      responses:
+        "200":
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+        "400":
+          description: Error response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestErrorResponse'
+  /api/v2/search/count:
+    get:
+      operationId: Count
+      tags:
+        - Search
+      summary: Show Search Results Count
+      description: |
+        Returns the number of items matching the query rather than returning the items. The search string works the same as a regular search.
+
+        <h4 id='allowed-for'>Allowed For</h4>
+        <ul>
+            <li>Agents</li>
+        </ul>
+      parameters:
+        - name: query
+          in: query
+          description: Returns the search results. See <a href="https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax">Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href="https://support.zendesk.com/hc/en-us/articles/203663226">Zendesk Support search reference</a>.
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: Success response
