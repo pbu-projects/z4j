@@ -41,7 +41,7 @@ class SearchClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         where:
-        [[client, clientName]] << [[adminSearchClient, "admin"], [agentSearchClient, "agent"]]
+        [client, clientName] << [[adminSearchClient, "admin"], [agentSearchClient, "agent"]]
     }
 
     @Unroll("a simple user querying the list method fails with #sortBy, #sortOrder and #include")
