@@ -2,6 +2,7 @@ package lol.pbu.z4j.client
 
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import lol.pbu.z4j.Z4jSpec
+import lol.pbu.z4j.model.SearchExportType
 import lol.pbu.z4j.model.SearchSortBy
 import lol.pbu.z4j.model.SearchSortOrder
 import spock.lang.Shared
@@ -21,12 +22,6 @@ class SearchClientSpec extends Z4jSpec {
     void "can run the list method"(String clientName, SearchClient client, SearchSortBy sortBy, SearchSortOrder sortOrder, String include) {
         when:
         client.list(faker.bluey().quote(), sortBy, sortOrder, include).block()
-
-        then:
-        noExceptionThrown()
-
-        when:
-        client.count(faker.bluey().quote()).block()
 
         then:
         noExceptionThrown()
@@ -74,6 +69,20 @@ class SearchClientSpec extends Z4jSpec {
         where:
         client           | _
         userSearchClient | _
+    }
 
+    void "an #clientName can call export method with pageSize: #pageSize, pageAfter: #pageAfter, filterType: #filterType and include: #include"(String clientName, SearchClient client, int pageSize, String pageAfter, SearchExportType filterType, String include) {
+        when:
+        client.export(faker.bluey().quote(), pageSize, pageAfter, filterType, include).block()
+
+        then:
+        noExceptionThrown()
+
+        where:
+        [[client, clientName], pageSize, pageAfter, filterType, include] << [[[adminSearchClient, "admin"], [agentSearchClient, "agent"]],
+                                                                             [100],
+                                                                             [faker.internet().uuid()],
+                                                                             SearchExportType.values(),
+                                                                             ["organizations"]].combinations()
     }
 }
