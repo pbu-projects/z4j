@@ -623,6 +623,14 @@ paths:
         <ul>
             <li>Help Center managers</li>
         </ul>
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  $ref: '#/components/schemas/Category'
       responses:
         "200":
           description: OK Response
@@ -715,6 +723,14 @@ paths:
         <ul>
             <li>Help Center managers</li>
         </ul>
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  $ref: '#/components/schemas/Category'
       responses:
         "201":
           description: OK Response
@@ -761,6 +777,14 @@ paths:
         <ul>
             <li>Help Center managers</li>
         </ul>
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  $ref: '#/components/schemas/Category'
       responses:
         "200":
           description: OK Response
@@ -1418,6 +1442,12 @@ components:
         source_locale:
           type: string
           description: The source (default) locale of the category
+        #          readOnly: true
+        translations:
+          type: array
+          description: The translations for the category
+          items:
+            $ref: '#/components/schemas/Translation'
         updated_at:
           type: string
           format: date-time
@@ -2967,7 +2997,7 @@ components:
           description: true if a public comment; false if an internal note. The initial value set on ticket creation persists for any additional comment unless you change it
         type:
           type: string
-          description: '`Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See <a href='/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets'>Adding voice comments to tickets</a>'
+          description: "`Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See <a href='/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets'>Adding voice comments to tickets</a>"
           readOnly: true
         uploads:
           type: array

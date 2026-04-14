@@ -80,6 +80,18 @@ class CategoryClientSpec extends Z4jSpec {
         where:
         [[categoryClient, userType], locale] << [[[adminCategoryClient, "admin"]], allLocales].combinations()
     }
+
+    def "can use CreateCategoryNoLocale as an #userType"(CategoryClient categoryClient, String userType){
+        given:
+        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
+        String categoryName = faker.animal().name()
+
+        when:
+        CategoryResponse response = categoryClient.createCategoryNoLocale(createCategoryRequest).block()
+
+    }
+
+
     def "cannot use CreateCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, String locale) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
