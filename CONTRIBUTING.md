@@ -45,6 +45,8 @@ To run the tests, you will need:
 1. A Zendesk account with the Help Center activated, along with an API token for access.
 2. Users with [different roles] created in your Zendesk instance.
 3. [Environment variables] configured in your test environment
+4. [Custom ticket fields] configured in your sandbox
+5. [Expected locales] enabled in your help center.
 
 ### Required Roles for Testing
 
@@ -217,6 +219,16 @@ A multi-select dropdown for reporting one or more errors.
 
 ---
 
+## Expected Locales
+A few locales are to be enabled. See Zendesk's current docs on how to do that.
+
+The following languages are required for testing:
+- Spanish (`es`)
+- French (`fr`)
+- English (`en`)
+
+---
+
 ## Testing Strategy
 
 One of the most important parts of contributing to z4j is getting tests right. A test is written adequately if:
@@ -292,6 +304,8 @@ This method is a little tricky to test for negative tests because the only way t
 [branches of code]:https://medium.com/@zubairkhansh/branch-testing-and-branch-coverage-3fb4bbd9f949
 [code of conduct]:CODE_OF_CONDUCT.md
 [conventional commits]:https://www.conventionalcommits.org/en/v1.0.0/
+[Custom ticket fields]:#custom-ticket-fields-setup
+[Expected locales]:#Expected-Locales
 [delegate build and run actions to gradle]:https://www.jetbrains.com/help/idea/work-with-gradle-projects.html#delegate_build_gradle
 [different roles]:#Required-Roles-for-Testing
 [google's java style guide]:https://google.github.io/styleguide/javaguide.html

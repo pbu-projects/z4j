@@ -85,8 +85,9 @@ class CategoryClientSpec extends Z4jSpec {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         String categoryName = faker.animal().name()
+        def translations = List.of(new Translation(LocaleAbbv.FR, faker.backToTheFuture().quote()))
         Category category = new Category(categoryName)
-                .setTranslations(List.of(new Translation().setLocale( "fr").set, faker.backToTheFuture().quote)))
+                .setTranslations(List.of(new Translation().setLocale( "fr").set, faker.backToTheFuture().quote))
         createCategoryRequest.setCategory(category)
 
 

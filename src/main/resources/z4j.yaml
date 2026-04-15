@@ -3261,12 +3261,6 @@ components:
           type: string
           description: The API url of the translation
           readOnly: true
-      example:
-        id: 3243452
-        locale: en
-        source_id: 768934
-        source_type: Article
-        title: Hello translation
       required:
         - locale
         - title
