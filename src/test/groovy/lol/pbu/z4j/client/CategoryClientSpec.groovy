@@ -81,13 +81,24 @@ class CategoryClientSpec extends Z4jSpec {
         [[categoryClient, userType], locale] << [[[adminCategoryClient, "admin"]], allLocales].combinations()
     }
 
-    def "can use CreateCategoryNoLocale as an #userType"(CategoryClient categoryClient, String userType){
+    def "can use CreateCategoryNoLocale as an #userType"(CategoryClient categoryClient, String userType) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         String categoryName = faker.animal().name()
+        Category category = new Category(categoryName)
+                .setTranslations(List.of(new Translation().setLocale( "fr").set, faker.backToTheFuture().quote)))
+        createCategoryRequest.setCategory(category)
+
 
         when:
         CategoryResponse response = categoryClient.createCategoryNoLocale(createCategoryRequest).block()
+
+        then:
+        noExceptionThrown()
+
+        where:
+        [[categoryClient, userType]] << [[[adminCategoryClient, "admin"]]].combinations()
+
 
     }
 
@@ -112,7 +123,8 @@ class CategoryClientSpec extends Z4jSpec {
         cleanup: "deleting #categoryName from the #locale locale"
         try {
             adminCategoryClient.deleteCategory(locale, response.getCategory().getId())
-        } catch (NullPointerException ignored) {}
+        } catch (NullPointerException ignored) {
+        }
 
         where:
         [[categoryClient, userType], locale] << [[[userCategoryClient, "user"], [agentCategoryClient, "agent"]], allLocales].combinations()
@@ -140,7 +152,7 @@ class CategoryClientSpec extends Z4jSpec {
     def "cannot use DeleteCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, String locale) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
-        String categoryName = faker.bluey().quote() + " " +  UUID.randomUUID().toString()
+        String categoryName = faker.bluey().quote() + " " + UUID.randomUUID().toString()
         Category category = new Category(categoryName)
         category.setDescription(faker.lordOfTheRings().location())
         createCategoryRequest.setCategory(category)
@@ -158,7 +170,8 @@ class CategoryClientSpec extends Z4jSpec {
         cleanup:
         try {
             adminCategoryClient.deleteCategory(locale, response.getCategory().getId())
-        }catch (NullPointerException ignored){}
+        } catch (NullPointerException ignored) {
+        }
 
         where:
         [[categoryClient, userType], locale] << [[[userCategoryClient, "user"], [agentCategoryClient, "agent"]], allLocales].combinations()

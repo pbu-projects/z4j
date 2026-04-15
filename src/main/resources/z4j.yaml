@@ -1888,6 +1888,83 @@ components:
         name: English
         updated_at: "2011-05-05T10:38:52Z"
         url: https://company.zendesk.com/api/v2/locales/en-US.json
+    LocaleAbbreviation:
+      type: string
+      description: The locale of the translation
+      enum:
+        - ar
+        - pt-br
+        - bg
+        - cs
+        - da
+        - nl
+        - en-gb
+        - en-us
+        - fa-af
+        - fil
+        - fi
+        - fr
+        - fr-ca
+        - de
+        - el
+        - he
+        - hi
+        - hu
+        - id
+        - it
+        - ja
+        - ko
+        - ms
+        - no
+        - pl
+        - ro
+        - ru
+        - zh-cn
+        - es
+        - sk
+        - sv
+        - th
+        - zh-tw
+        - tr
+        - uk
+        - vi
+      x-enum-varnames:
+        - ARABIC
+        - PORTUGUESE_BRAZIL
+        - BULGARIAN
+        - CZECH
+        - DANISH
+        - DUTCH
+        - ENGLISH_UNITED_KINGDOM
+        - ENGLISH_UNITED_STATES
+        - DARI_PERSIAN_AFGHANISTAN
+        - FILIPINO
+        - FINNISH
+        - FRENCH
+        - FRENCH_CANADA
+        - GERMAN
+        - GREEK
+        - HEBREW
+        - HINDI
+        - HUNGARIAN
+        - INDONESIAN
+        - ITALIAN
+        - JAPANESE
+        - KOREAN
+        - MALAY
+        - NORWEGIAN
+        - POLISH
+        - ROMANIAN
+        - RUSSIAN
+        - SIMPLIFIED_CHINESE
+        - SPANISH
+        - SLOVAK
+        - SWEDISH
+        - THAI
+        - TRADITIONAL_CHINESE
+        - TURKISH
+        - UKRAINIAN
+        - VIETNAMESE
     LocaleResponse:
       type: object
       properties:
@@ -3154,8 +3231,7 @@ components:
           description: Automatically assigned when a translation is created
           readOnly: true
         locale:
-          type: string
-          description: The locale of the translation
+          $ref: '#/components/schemas/LocaleAbbreviation'
         outdated:
           type: boolean
           description: True if the translation is outdated; false otherwise. False by default
