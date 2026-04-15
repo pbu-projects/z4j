@@ -4,22 +4,23 @@ By participating in this project, you agree to abide our
 [code of conduct]
 
 
-**✨ Thank you for contributing to z4j! ✨**
+<strong>Thank you for contributing to z4j</strong>
 
-PBU projects are open to contributions! Below are some instructions on best practices and standards used when contributing to this project!
+Below are some instructions on best practices and standards used when contributing to this project!
 
 ## Style Guide
 - This project uses [google's java style guide].
 - We follow (and enforce) [conventional commits] in this repo.
 ## Set up your machine
 
-`z4j` is written in java 21, runs on [graal community distro], and uses [gradle] as its build tool.
+`z4j` is written in java 21, compiled with the [graalvm], and uses [gradle] as its build tool.
 
-### Prerequisites:
+### What you need locally:
 - Gradle doesn't need to be installed locally, a [gradle wrapper] is provided with this repo.
 - Docker or Podman installed and running at compile time
 - [Graal-CE 21]
 - [Git]
+- a decent IDE like IntelliJ 
 
 #### Getting Started
 Create your own fork of `z4j`, clone your fork and call the gradle wrapper to build the project
@@ -30,7 +31,7 @@ cd z4j
 ./gradlew build
 ```
 ## IDE
-Any IDE specific documentation will reference IntelliJ configured to [delegate build and run actions to gradle].
+Any IDE specific documentation in this repo will reference IntelliJ, specifically one configured to [delegate build and run actions to gradle].
 
 # Testing
 
@@ -60,6 +61,8 @@ You'll need to set up the following users in your Zendesk account:
 <details id="user-configuration"><summary><strong>User Configuration</strong></summary>
 
 View a user's configured role by navigating to {domain}.zendesk.com/admin/people/team/members, then selecting a user.
+
+
 <table>
   <thead>
     <tr>
@@ -129,6 +132,7 @@ A dropdown menu to categorize the ticket's subject.
 *   **Field ID**: `40971535122835`
 
 **Field values:**
+
 | Field option title | Tag |
 | :----------------- | :---- |
 | Delivery | `delivery` |
@@ -144,6 +148,7 @@ A dropdown menu to specify the type of refund being processed.
 *   **Field ID**: `45241019372563`
 
 **Field values:**
+
 | Field option title | Tag | Default |
 | :----------------- | :---- |:---:|
 | Full Refund | `full_refund` | |
@@ -313,7 +318,7 @@ This method is a little tricky to test for negative tests because the only way t
 [gradle]:https://gradle.org/maven-and-gradle/
 [gradle wrapper]:https://docs.gradle.org/current/userguide/gradle_wrapper_basics.html
 [Git]:https://gist.github.com/Jonathan-Zollinger/8d9a231a57f3d33ff813989c34df00e0
-[graal community distro]:https://www.graalvm.org/release-notes/JDK_21/
+[graalvm]:https://www.graalvm.org/release-notes/JDK_21/
 [Graal-CE 21]:https://www.graalvm.org/jdk21/docs/
 [Environment Variables]:#Required-Environment-Variables
 [source function]:https://gist.github.com/Jonathan-Zollinger/96160f971741f5f3a8749d10127e7764
