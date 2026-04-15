@@ -1398,12 +1398,10 @@ components:
         html_url:
           type: string
           description: The url of this category in Help Center
-        #          readOnly: true
         id:
           type: integer
           format: int64
           description: Automatically assigned when creating categories
-        #          readOnly: true
         locale:
           type: string
           description: The locale where the category is displayed
@@ -1413,7 +1411,6 @@ components:
         outdated:
           type: boolean
           description: Whether the category is out of date
-        #          readOnly: true
         position:
           type: integer
           format: int64
@@ -1421,16 +1418,13 @@ components:
         source_locale:
           type: string
           description: The source (default) locale of the category
-        #          readOnly: true
         updated_at:
           type: string
           format: date-time
           description: The time at which the category was last updated
-        #          readOnly: true
         url:
           type: string
           description: The API url of this category
-      #          readOnly: true
       required:
         - name
     CategoryResponse:
