@@ -38,6 +38,7 @@ dependencies {
     "lombok"("org.projectlombok:lombok:${lombokVersion}")
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("net.datafaker:datafaker:$dataFakerVersion")
+    testImplementation("ch.qos.logback:logback-classic")
 }
 
 java {
