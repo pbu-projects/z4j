@@ -18,7 +18,7 @@ To get a local copy up and running, please follow the detailed setup instruction
 
 | Gradle Kotlin                                  | Gradle                                        |
 |:-----------------------------------------------|:----------------------------------------------|
-| <pre>implementation("lol.pbu:z4j:0.1.0")</pre> | <pre>implementation 'lol.pbu:z4j:0.1.0'</pre> |
+| <pre>implementation("lol.pbu:z4j:0.1.1")</pre> | <pre>implementation 'lol.pbu:z4j:0.1.1'</pre> |
 
 **Maven**
 
@@ -26,7 +26,7 @@ To get a local copy up and running, please follow the detailed setup instruction
 <dependency>
 	<groupId>lol.pbu</groupId>
 	<artifactId>z4j</artifactId>
-	<version>0.1.0</version>
+	<version>0.1.1</version>
 </dependency>
 ```
 
