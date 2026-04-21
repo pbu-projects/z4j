@@ -1427,8 +1427,7 @@ components:
           format: int64
           description: Automatically assigned when creating categories
         locale:
-          type: string
-          description: The locale where the category is displayed
+          $ref: '#/components/schemas/LocaleAbbreviation'
         name:
           type: string
           description: The name of the category
@@ -1440,9 +1439,7 @@ components:
           format: int64
           description: The position of this category relative to other categories
         source_locale:
-          type: string
-          description: The source (default) locale of the category
-        #          readOnly: true
+          $ref: '#/components/schemas/LocaleAbbreviation'
         translations:
           type: array
           description: The translations for the category
@@ -3678,9 +3675,7 @@ components:
       description: The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case)
       required: true
       schema:
-        type: string
-        example: en-us
-      example: en-us
+        $ref: '#/components/schemas/LocaleAbbreviation'
     PostCommentId:
       name: post_comment_id
       in: path

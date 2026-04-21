@@ -1,6 +1,5 @@
 package lol.pbu.z4j.client
 
-
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
@@ -10,6 +9,7 @@ import spock.lang.Shared
 import static io.micronaut.http.HttpStatus.FORBIDDEN
 
 @MicronautTest
+@SuppressWarnings("GroovyAssignabilityCheck")
 class CategoryClientSpec extends Z4jSpec {
 
     @Shared
@@ -19,19 +19,19 @@ class CategoryClientSpec extends Z4jSpec {
     List<UserSegment> userSegments
 
     @Shared
-    List<String> allLocales
+    List<LocaleAbbreviation> allLocales
 
     def setupSpec() {
         adminCategoryClient = adminCtx.getBean(CategoryClient.class)
         agentCategoryClient = agentCtx.getBean(CategoryClient.class)
         userCategoryClient = userCtx.getBean(CategoryClient.class)
-        allLocales = adminCtx.getBean(LocaleClient.class).listLocales().block().locales.collect { it.locale.toLowerCase() }
+        allLocales = List.of(LocaleAbbreviation.ENGLISH_UNITED_STATES, LocaleAbbreviation.FRENCH)
         userSegments = adminCtx.getBean(UserSegmentClient.class).listUserSegments(null).block().getUserSegments()
         assert userSegments.size() >= 2
         // built in segments should be at least 2, this is here to just double check this doesn't change
     }
 
-    def "can use ListArticles using the '#locale' locale for the #userType user type"(CategoryClient categoryClient, String userType, String locale, ListCategoriesSortByParameter sortBy, ListArticlesSortOrderParameter sortOrder) {
+    def "can use ListArticles using the '#locale' locale for the #userType user type"(CategoryClient categoryClient, String userType, LocaleAbbreviation locale, ListCategoriesSortByParameter sortBy, ListArticlesSortOrderParameter sortOrder) {
         when: "query Categories list for the '#locale' locale"
         categoryClient.listCategories(locale, sortBy, sortOrder).block()
 
@@ -60,7 +60,7 @@ class CategoryClientSpec extends Z4jSpec {
         ].combinations()
     }
 
-    def "can use CreateCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, String locale) {
+    def "can use CreateCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation locale) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         String categoryName = faker.animal().name()
@@ -81,21 +81,30 @@ class CategoryClientSpec extends Z4jSpec {
         [[categoryClient, userType], locale] << [[[adminCategoryClient, "admin"]], allLocales].combinations()
     }
 
-    def "can use CreateCategoryNoLocale as an #userType"(CategoryClient categoryClient, String userType) {
+    def "can use CreateCategoryNoLocale as an #userType and update it with a translation"(CategoryClient categoryClient, String userType) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         String categoryName = faker.animal().name()
-        def translations = List.of(new Translation(LocaleAbbv.FR, faker.backToTheFuture().quote()))
+        def translations = List.of(new Translation(LocaleAbbreviation.FRENCH, faker.backToTheFuture().quote()),
+                new Translation(LocaleAbbreviation.ENGLISH_UNITED_STATES, faker.redDeadRedemption2().quote()))
         Category category = new Category(categoryName)
-                .setTranslations(List.of(new Translation().setLocale( "fr").set, faker.backToTheFuture().quote))
+                .setLocale(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                .setPosition(0)
         createCategoryRequest.setCategory(category)
 
 
         when:
         CategoryResponse response = categoryClient.createCategoryNoLocale(createCategoryRequest).block()
 
+        and:
+        category.setTranslations(translations)
+        categoryClient.updateCategoryNoLocale(response.getCategory().getId(), new CreateCategoryRequest(category)).block()
+
         then:
         noExceptionThrown()
+
+        cleanup:
+        categoryClient.deleteCategory(LocaleAbbreviation.ENGLISH_UNITED_STATES, response.category.id)
 
         where:
         [[categoryClient, userType]] << [[[adminCategoryClient, "admin"]]].combinations()
@@ -104,7 +113,7 @@ class CategoryClientSpec extends Z4jSpec {
     }
 
 
-    def "cannot use CreateCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, String locale) {
+    def "cannot use CreateCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation locale) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         String categoryName = faker.animal().name()
@@ -131,7 +140,7 @@ class CategoryClientSpec extends Z4jSpec {
         [[categoryClient, userType], locale] << [[[userCategoryClient, "user"], [agentCategoryClient, "agent"]], allLocales].combinations()
     }
 
-    def "can use DeleteCategory as an #userType for the '#locale"(CategoryClient categoryClient, String userType, String locale) {
+    def "can use DeleteCategory as an #userType for the '#locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation locale) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         String categoryName = faker.bluey().quote()
@@ -150,7 +159,7 @@ class CategoryClientSpec extends Z4jSpec {
         [[categoryClient, userType], locale] << [[[adminCategoryClient, "admin"]], allLocales].combinations()
     }
 
-    def "cannot use DeleteCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, String locale) {
+    def "cannot use DeleteCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation locale) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         String categoryName = faker.bluey().quote() + " " + UUID.randomUUID().toString()
