@@ -141,6 +141,27 @@ class CategoryClientSpec extends Z4jSpec {
         [[categoryClient, userType], locale] << [[[userCategoryClient, "user"], [agentCategoryClient, "agent"]], allLocales].combinations()
     }
 
+    def "cannot use CreateCategoryNoLocale as an #userType"(CategoryClient categoryClient, String userType) {
+        given:
+        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
+        String categoryName = faker.animal().name()
+        Category category = new Category(categoryName)
+        category.setDescription(faker.backToTheFuture().quote())
+        createCategoryRequest.setCategory(category)
+
+        when: "category name to be created is #categoryName"
+        categoryClient.createCategoryNoLocale(createCategoryRequest).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+
+        and:
+        error.getStatus() == FORBIDDEN
+
+        where:
+        [[categoryClient, userType]] << [[[userCategoryClient, "user"], [agentCategoryClient, "agent"]]].combinations()
+    }
+
     def "can use DeleteCategory as an #userType for the '#locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation locale) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
