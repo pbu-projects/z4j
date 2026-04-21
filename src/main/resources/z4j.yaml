@@ -716,8 +716,8 @@ paths:
       - Category
       summary: Create Category
       description: |-
-        <p>You must specify a category name and locale. The locale can be omitted if it's specified
-        in the URL. Optionally, you can specify multiple <a href='/api-reference/help_center/help-center-api/translations'>translations</a> for
+        <p>You must specify a category name and locale.
+        Optionally, you can specify multiple <a href='/api-reference/help_center/help-center-api/translations'>translations</a> for
         the category. The specified locales must be enabled for the current Help Center.</p>
         <h4>Allowed for</h4>
         <ul>
