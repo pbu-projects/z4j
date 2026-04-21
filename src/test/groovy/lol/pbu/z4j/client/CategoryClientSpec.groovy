@@ -6,6 +6,7 @@ import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.model.*
 import spock.lang.Shared
 
+import static io.micronaut.http.HttpStatus.BAD_REQUEST
 import static io.micronaut.http.HttpStatus.FORBIDDEN
 
 @MicronautTest
@@ -178,12 +179,79 @@ class CategoryClientSpec extends Z4jSpec {
 //        error.getStatus() == FORBIDDEN
 
         cleanup:
-        try {
-            adminCategoryClient.deleteCategory(locale, response.getCategory().getId())
-        } catch (NullPointerException ignored) {
-        }
+        adminCategoryClient.deleteCategory(locale, response.getCategory().getId())
+
 
         where:
         [[categoryClient, userType], locale] << [[[userCategoryClient, "user"], [agentCategoryClient, "agent"]], allLocales].combinations()
+    }
+
+    def "can use ShowCategory as a #userType for the #locale locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation locale) {
+        given:
+        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
+        String categoryName = faker.animal().name()
+        Category category = new Category(categoryName)
+        category.setDescription(faker.backToTheFuture().quote())
+        createCategoryRequest.setCategory(category)
+        CategoryResponse createdCategory = adminCategoryClient.createCategory(locale, createCategoryRequest).block()
+
+        when: "showing category #categoryName"
+        categoryClient.showCategory(locale, createdCategory.getCategory().getId()).block()
+
+        then:
+        noExceptionThrown()
+
+        cleanup:
+        adminCategoryClient.deleteCategory(locale, createdCategory.getCategory().getId()).block()
+
+        where:
+        [[categoryClient, userType], locale] << [[[adminCategoryClient, "admin"], [agentCategoryClient, "agent"], [userCategoryClient, "user"]], allLocales].combinations()
+    }
+
+    def "can use ShowCategoryNoLocale as a #userType"(CategoryClient categoryClient, String userType) {
+        given:
+        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
+        String categoryName = faker.animal().name()
+        Category category = new Category(categoryName)
+        category.setDescription(faker.backToTheFuture().quote())
+        createCategoryRequest.setCategory(category)
+        CategoryResponse createdCategory = adminCategoryClient.createCategoryNoLocale(createCategoryRequest).block()
+
+        when: "showing category #categoryName"
+        categoryClient.showCategoryNoLocale(createdCategory.getCategory().getId()).block()
+
+        then:
+        noExceptionThrown()
+
+        cleanup:
+        adminCategoryClient.deleteCategory(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdCategory.getCategory().getId()).block()
+
+        where:
+        [[categoryClient, userType]] << [[[adminCategoryClient, "admin"], [agentCategoryClient, "agent"]]].combinations()
+    }
+
+    def "cannot use ShowCategoryNoLocale as a #userType"(CategoryClient categoryClient, String userType) {
+        given:
+        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
+        String categoryName = faker.animal().name()
+        Category category = new Category(categoryName)
+        category.setDescription(faker.backToTheFuture().quote())
+        createCategoryRequest.setCategory(category)
+        CategoryResponse createdCategory = adminCategoryClient.createCategoryNoLocale(createCategoryRequest).block()
+
+        when: "showing category #categoryName"
+        categoryClient.showCategoryNoLocale(createdCategory.getCategory().getId()).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+
+        and:
+        error.getStatus() == BAD_REQUEST
+
+        cleanup:
+        adminCategoryClient.deleteCategory(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdCategory.getCategory().getId()).block()
+
+        where:
+        [[categoryClient, userType]] << [[[userCategoryClient, "user"]]].combinations()
     }
 }

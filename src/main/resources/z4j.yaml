@@ -754,10 +754,13 @@ paths:
       - Category
       summary: Show Category
       description: |-
+        <p><strong>Note</strong>: <code>{/locale}</code> is an optional parameter for admins and agents. End users and anonymous users must provide the parameter.</p>
         <h4>Allowed for</h4>
         <ul>
             <li>Agents</li>
         </ul>
+        <p>Translations are embedded within the category because they're
+        not shared between resources.</p>
       responses:
         "200":
           description: <p>description</p>
