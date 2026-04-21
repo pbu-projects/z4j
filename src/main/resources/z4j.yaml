@@ -14,7 +14,7 @@ paths:
         <p>Returns a list of all system and custom ticket fields in your account.</p>
         <p>For end users, only the ticket fields with visible_in_portal set to true are returned.</p>
         <p>Consider caching this resource to use with the{@link TicketClient}.</p>
-        <h4 id="allowed-for">Allowed For</h4>
+        <h4 id="allowed-for'>Allowed For</h4>
         <ul>
             <li>Anyone</li>
         </ul>
@@ -105,7 +105,7 @@ paths:
             <tr>
                 <td>lookup</td>
                 <td>A field to create a relationship (see <a
-                        href="/api-reference/ticketing/lookup_relationships/lookup_relationships/">lookup relationships</a>) to
+                        href="/api-reference/ticketing/lookup_relationships/lookup_relationships/'>lookup relationships</a>) to
                     another object such as a user, ticket, or organization
                 </td>
             </tr>
@@ -114,13 +114,13 @@ paths:
         <p><strong>Note</strong>: Tags can&#39;t be re-used across custom ticket fields. For example, if you configure a tag for
             a checkbox field, you can&#39;t use that tag value for a dropdown (tagger) field option. The use of tags isn&#39;t
             validated and can prevent editing in the future.</p>
-        <p>See <a href="https://support.zendesk.com/hc/en-us/articles/203661866">About custom field types</a> in the Zendesk
+        <p>See <a href='https://support.zendesk.com/hc/en-us/articles/203661866'>About custom field types</a> in the Zendesk
             Help Center.</p>
-        <h4 id="allowed-for">Allowed For</h4>
+        <h4 id="allowed-for'>Allowed For</h4>
         <ul>
             <li>Admins</li>
         </ul>
-        <h4 id="field-limits">Field limits</h4>
+        <h4 id="field-limits'>Field limits</h4>
         <p>We recommend the following best practices for ticket fields limits. Creating more than these amounts can affect
             performance.</p>
         <ul>
@@ -211,8 +211,8 @@ paths:
         - Ticket
       summary: Show Ticket
       description: |-
-        <p>Returns a number of ticket properties though not the ticket comments. To get the comments, use <a href="developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/#list-comments">List Comments</a></p>
-        <h4 id="allowed-for">Allowed For</h4>
+        <p>Returns a number of ticket properties though not the ticket comments. To get the comments, use <a href='developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/#list-comments'>List Comments</a></p>
+        <h4 id="allowed-for'>Allowed For</h4>
         <ul>
             <li>Agents</li>
         </ul>
@@ -451,17 +451,17 @@ paths:
       summary: List Topics with User Segment
       description: |
         <p>Lists the topics that use the specified user segment.</p>
-        <p>This endpoint supports pagination as described in <a href="developer.zendesk.com/api-reference/help_center/help-center-api/help-center-api/#pagination">Pagination</a>.</p>
-        <h4 id="allowed-for">Allowed for</h4>
+        <p>This endpoint supports pagination as described in <a href='developer.zendesk.com/api-reference/help_center/help-center-api/help-center-api/#pagination'>Pagination</a>.</p>
+        <h4 id="allowed-for'>Allowed for</h4>
         <ul>
             <li>Help Center managers</li>
         </ul>
-        <h4 id="pagination">Pagination</h4>
+        <h4 id="pagination'>Pagination</h4>
         <ul>
             <li>Cursor pagination (recommended)</li>
             <li>Offset pagination</li>
         </ul>
-        <p>See <a href="developer.zendesk.com/api-reference/introduction/pagination/">Pagination</a>.</p>
+        <p>See <a href='developer.zendesk.com/api-reference/introduction/pagination/'>Pagination</a>.</p>
       responses:
         "200":
           description: OK Response
@@ -559,7 +559,7 @@ paths:
       summary: Create Category by Locale
       description: |-
         <p>You must specify a category name and locale. The locale can be omitted if it's specified
-        in the URL. Optionally, you can specify multiple <a href="/api-reference/help_center/help-center-api/translations">translations</a> for
+        in the URL. Optionally, you can specify multiple <a href='/api-reference/help_center/help-center-api/translations'>translations</a> for
         the category. The specified locales must be enabled for the current Help Center.</p>
         <h4>Allowed for</h4>
         <ul>
@@ -623,6 +623,14 @@ paths:
         <ul>
             <li>Help Center managers</li>
         </ul>
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  $ref: '#/components/schemas/Category'
       responses:
         "200":
           description: OK Response
@@ -708,13 +716,21 @@ paths:
       - Category
       summary: Create Category
       description: |-
-        <p>You must specify a category name and locale. The locale can be omitted if it's specified
-        in the URL. Optionally, you can specify multiple <a href="/api-reference/help_center/help-center-api/translations">translations</a> for
+        <p>You must specify a category name and locale.
+        Optionally, you can specify multiple <a href='/api-reference/help_center/help-center-api/translations'>translations</a> for
         the category. The specified locales must be enabled for the current Help Center.</p>
         <h4>Allowed for</h4>
         <ul>
             <li>Help Center managers</li>
         </ul>
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  $ref: '#/components/schemas/Category'
       responses:
         "201":
           description: OK Response
@@ -738,10 +754,13 @@ paths:
       - Category
       summary: Show Category
       description: |-
+        <p><strong>Note</strong>: <code>{/locale}</code> is an optional parameter for admins and agents. End users and anonymous users must provide the parameter.</p>
         <h4>Allowed for</h4>
         <ul>
             <li>Agents</li>
         </ul>
+        <p>Translations are embedded within the category because they're
+        not shared between resources.</p>
       responses:
         "200":
           description: <p>description</p>
@@ -761,6 +780,14 @@ paths:
         <ul>
             <li>Help Center managers</li>
         </ul>
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  $ref: '#/components/schemas/Category'
       responses:
         "200":
           description: OK Response
@@ -808,7 +835,7 @@ paths:
       parameters:
         - name: query
           in: query
-          description: Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href="https://support.zendesk.com/hc/en-us/articles/203663226">Zendesk Support search reference</a>.
+          description: Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href='https://support.zendesk.com/hc/en-us/articles/203663226'>Zendesk Support search reference</a>.
           required: true
           schema:
             type: string
@@ -852,7 +879,7 @@ paths:
       parameters:
         - name: query
           in: query
-          description: Returns the search results. See <a href="https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax">Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href="https://support.zendesk.com/hc/en-us/articles/203663226">Zendesk Support search reference</a>.
+          description: Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href='https://support.zendesk.com/hc/en-us/articles/203663226'>Zendesk Support search reference</a>.
           required: true
           schema:
             type: string
@@ -902,7 +929,7 @@ paths:
       parameters:
         - name: query
           in: query
-          description: Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href="https://support.zendesk.com/hc/en-us/articles/203663226">Zendesk Support search reference</a>.
+          description: Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href='https://support.zendesk.com/hc/en-us/articles/203663226'>Zendesk Support search reference</a>.
           required: true
           schema:
             type: string
@@ -980,7 +1007,7 @@ components:
     Attachment:
       type: object
       description: |
-        A file represented as an <a href="developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/">Attachment</a> object
+        A file represented as an <a href='developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/'>Attachment</a> object
       allOf:
         - $ref: '#/components/schemas/AttachmentBase'
         - $ref: '#/components/schemas/AttachmentThumbnails'
@@ -994,7 +1021,7 @@ components:
         content_url:
           type: string
           description: |
-            A full URL where the attachment image file can be downloaded. The file may be hosted externally so take care not to inadvertently send Zendesk authentication credentials. See <a href="/documentation/ticketing/managing-tickets/working-with-url-properties">Working with url properties</a>
+            A full URL where the attachment image file can be downloaded. The file may be hosted externally so take care not to inadvertently send Zendesk authentication credentials. See <a href='/documentation/ticketing/managing-tickets/working-with-url-properties'>Working with url properties</a>
           readOnly: true
         deleted:
           type: boolean
@@ -1148,7 +1175,7 @@ components:
           type: string
           description: |
             <p>HTML body of the article. Unsafe tags and attributes may be removed before display. For a list of safe tags and attributes, 
-            see <a href="https://support.zendesk.com/hc/en-us/articles/115015895948">Allowing unsafe HTML in Help Center articles</a> in Zendesk help</p>
+            see <a href='https://support.zendesk.com/hc/en-us/articles/115015895948'>Allowing unsafe HTML in Help Center articles</a> in Zendesk help</p>
         comments_disabled:
           type: boolean
           description: True if comments are disabled; false otherwise
@@ -1398,39 +1425,36 @@ components:
         html_url:
           type: string
           description: The url of this category in Help Center
-        #          readOnly: true
         id:
           type: integer
           format: int64
           description: Automatically assigned when creating categories
-        #          readOnly: true
         locale:
-          type: string
-          description: The locale where the category is displayed
+          $ref: '#/components/schemas/LocaleAbbreviation'
         name:
           type: string
           description: The name of the category
         outdated:
           type: boolean
           description: Whether the category is out of date
-        #          readOnly: true
         position:
           type: integer
           format: int64
           description: The position of this category relative to other categories
         source_locale:
-          type: string
-          description: The source (default) locale of the category
-        #          readOnly: true
+          $ref: '#/components/schemas/LocaleAbbreviation'
+        translations:
+          type: array
+          description: The translations for the category
+          items:
+            $ref: '#/components/schemas/Translation'
         updated_at:
           type: string
           format: date-time
           description: The time at which the category was last updated
-        #          readOnly: true
         url:
           type: string
           description: The API url of this category
-      #          readOnly: true
       required:
         - name
     CategoryResponse:
@@ -1455,13 +1479,13 @@ components:
         author_id:
           type: integer
           format: int64
-          description: The id of the author of this comment. Writable on create by Help Center managers. See <a href="#create-comment">Create Comment</a>
+          description: The id of the author of this comment. Writable on create by Help Center managers. See <a href='#create-comment'>Create Comment</a>
         body:
           type: string
-          description: The comment made by the author. See <a href="#user-content">User content</a>
+          description: The comment made by the author. See <a href='#user-content'>User content</a>
         created_at:
           type: string
-          description: The time the comment was created. Writable on create by Help Center managers. See <a href="#create-comment">Create Comment</a>
+          description: The time the comment was created. Writable on create by Help Center managers. See <a href='#create-comment'>Create Comment</a>
         html_url:
           type: string
           description: The url at which the comment is presented in Help Center
@@ -1572,7 +1596,7 @@ components:
           readOnly: true
         source_locale:
           type: string
-          description: Used only for <a href="#create-section-subscription">Create Section Subscription</a> and <a href="#create-article-subscription">Create Article Subscription</a>, where it's mandatory. Selects the locale of the content to be subscribed
+          description: Used only for <a href='#create-section-subscription'>Create Section Subscription</a> and <a href='#create-article-subscription'>Create Article Subscription</a>, where it's mandatory. Selects the locale of the content to be subscribed
         updated_at:
           type: string
           description: The time at which the subscription was last updated
@@ -1864,6 +1888,83 @@ components:
         name: English
         updated_at: "2011-05-05T10:38:52Z"
         url: https://company.zendesk.com/api/v2/locales/en-US.json
+    LocaleAbbreviation:
+      type: string
+      description: The locale of the translation
+      enum:
+        - ar
+        - pt-br
+        - bg
+        - cs
+        - da
+        - nl
+        - en-gb
+        - en-us
+        - fa-af
+        - fil
+        - fi
+        - fr
+        - fr-ca
+        - de
+        - el
+        - he
+        - hi
+        - hu
+        - id
+        - it
+        - ja
+        - ko
+        - ms
+        - no
+        - pl
+        - ro
+        - ru
+        - zh-cn
+        - es
+        - sk
+        - sv
+        - th
+        - zh-tw
+        - tr
+        - uk
+        - vi
+      x-enum-varnames:
+        - ARABIC
+        - PORTUGUESE_BRAZIL
+        - BULGARIAN
+        - CZECH
+        - DANISH
+        - DUTCH
+        - ENGLISH_UNITED_KINGDOM
+        - ENGLISH_UNITED_STATES
+        - DARI_PERSIAN_AFGHANISTAN
+        - FILIPINO
+        - FINNISH
+        - FRENCH
+        - FRENCH_CANADA
+        - GERMAN
+        - GREEK
+        - HEBREW
+        - HINDI
+        - HUNGARIAN
+        - INDONESIAN
+        - ITALIAN
+        - JAPANESE
+        - KOREAN
+        - MALAY
+        - NORWEGIAN
+        - POLISH
+        - ROMANIAN
+        - RUSSIAN
+        - SIMPLIFIED_CHINESE
+        - SPANISH
+        - SLOVAK
+        - SWEDISH
+        - THAI
+        - TRADITIONAL_CHINESE
+        - TURKISH
+        - UKRAINIAN
+        - VIETNAMESE
     LocaleResponse:
       type: object
       properties:
@@ -1891,13 +1992,13 @@ components:
         author_id:
           type: integer
           format: int64
-          description: The id of the author of the comment. Writable on create by Help Center managers. See <a href="#create-post-comment">Create Post Comment</a>
+          description: The id of the author of the comment. Writable on create by Help Center managers. See <a href='#create-post-comment'>Create Post Comment</a>
         body:
           type: string
-          description: The comment made by the author. See <a href="#user-content">User content</a>
+          description: The comment made by the author. See <a href='#user-content'>User content</a>
         created_at:
           type: string
-          description: When the comment was created. Writable on create by Help Center managers. See <a href="#create-post-comment">Create Post Comment</a>
+          description: When the comment was created. Writable on create by Help Center managers. See <a href='#create-post-comment'>Create Post Comment</a>
         html_url:
           type: string
           description: The community url of the comment
@@ -1970,7 +2071,7 @@ components:
         author_id:
           type: integer
           format: int64
-          description: The id of the author of the post. *Writable on create by Help Center managers -- see <a href="#create-post">Create Post</a>
+          description: The id of the author of the post. *Writable on create by Help Center managers -- see <a href='#create-post'>Create Post</a>
           readOnly: true
         closed:
           type: boolean
@@ -1989,11 +2090,11 @@ components:
         created_at:
           type: string
           format: date-time
-          description: When the post was created. Writable on create by Help Center managers -- see <a href="#create-post">Create Post</a>
+          description: When the post was created. Writable on create by Help Center managers -- see <a href='#create-post'>Create Post</a>
           readOnly: true
         details:
           type: string
-          description: The details of the post made by the author. See <a href="#user-content">User content</a>
+          description: The details of the post made by the author. See <a href='#user-content'>User content</a>
         featured:
           type: boolean
           description: Whether the post is featured
@@ -2259,7 +2360,7 @@ components:
         brand_id:
           type: integer
           format: int64
-          description: The id of the brand this ticket is associated with. See <a href="https://support.zendesk.com/hc/en-us/articles/4408829476378">Setting up multiple brands</a>
+          description: The id of the brand this ticket is associated with. See <a href='https://support.zendesk.com/hc/en-us/articles/4408829476378'>Setting up multiple brands</a>
         collaborator_ids:
           type: array
           description: The ids of users currently CC'ed on the ticket
@@ -2268,12 +2369,12 @@ components:
             format: int64
         collaborators:
           type: array
-          description: POST requests only. Users to add as cc's when creating a ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-collaborators">Setting Collaborators</a>
+          description: POST requests only. Users to add as cc's when creating a ticket. See <a href='/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-collaborators'>Setting Collaborators</a>
           items:
             $ref: '#/components/schemas/Collaborator'
         comment:
           type: object
-          description: Write only. An object that adds a comment to the ticket. See <a href="developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/">Ticket comments</a>. To include an attachment with the comment, see <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#attaching-files">Attaching files</a>. A ticket can contain up to 5000 comments in total, including both public and private comments. Once this limit is reached, any additional attempts to add comments results in a 422 error. The ticket can still be updated in other ways, provided that no new comments are added.
+          description: Write only. An object that adds a comment to the ticket. See <a href='developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/'>Ticket comments</a>. To include an attachment with the comment, see <a href='/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#attaching-files'>Attaching files</a>. A ticket can contain up to 5000 comments in total, including both public and private comments. Once this limit is reached, any additional attempts to add comments results in a 422 error. The ticket can still be updated in other ways, provided that no new comments are added.
           writeOnly: true
         created_at:
           type: string
@@ -2282,7 +2383,7 @@ components:
           readOnly: true
         custom_fields:
           type: array
-          description: Custom fields for the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-custom-field-values">Setting custom field values</a>
+          description: Custom fields for the ticket. See <a href='/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-custom-field-values'>Setting custom field values</a>
           items:
             type: object
             properties:
@@ -2296,39 +2397,39 @@ components:
         custom_status_id:
           type: integer
           format: int64
-          description: The custom ticket status id of the ticket. See <a href="#custom-ticket-statuses">custom ticket statuses</a>
+          description: The custom ticket status id of the ticket. See <a href='#custom-ticket-statuses'>custom ticket statuses</a>
         description:
           type: string
           description: |
-            Read-only first comment on the ticket. When <a href="#create-ticket">creating a ticket</a>, use <code>comment</code> to set the description. See <a href="#description-and-first-comment">Description and first comment</a>
+            Read-only first comment on the ticket. When <a href='#create-ticket'>creating a ticket</a>, use <code>comment</code> to set the description. See <a href='#description-and-first-comment'>Description and first comment</a>
           readOnly: true
         due_at:
           type: string
           format: date-time
-          description: If this is a ticket of type "task" it has a due date.  Due date format uses <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format
+          description: If this is a ticket of type "task" it has a due date.  Due date format uses <a href='http://en.wikipedia.org/wiki/ISO_8601'>ISO 8601</a> format
           nullable: true
         email_cc_ids:
           type: array
-          description: The ids of agents or end users currently CC'ed on the ticket. Ignored when <a href="https://support.zendesk.com/hc/en-us/articles/360020585233">CCs and followers</a> is not enabled
+          description: The ids of agents or end users currently CC'ed on the ticket. Ignored when <a href='https://support.zendesk.com/hc/en-us/articles/360020585233'>CCs and followers</a> is not enabled
           items:
             type: integer
             format: int64
         email_ccs:
           type: object
-          description: Write only. An array of objects that represents agent or end users email CCs to add or delete from the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs">Setting email CCs</a>. Ignored when <a href="https://support.zendesk.com/hc/en-us/articles/360020585233">CCs and followers</a> is not enabled
+          description: Write only. An array of objects that represents agent or end users email CCs to add or delete from the ticket. See <a href='/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs'>Setting email CCs</a>. Ignored when <a href='https://support.zendesk.com/hc/en-us/articles/360020585233'>CCs and followers</a> is not enabled
           writeOnly: true
         external_id:
           type: string
           description: An id you can use to link Zendesk Support tickets to local records
         follower_ids:
           type: array
-          description: The ids of agents currently following the ticket. Ignored when <a href="https://support.zendesk.com/hc/en-us/articles/360020585233">CCs and followers</a> is not enabled
+          description: The ids of agents currently following the ticket. Ignored when <a href='https://support.zendesk.com/hc/en-us/articles/360020585233'>CCs and followers</a> is not enabled
           items:
             type: integer
             format: int64
         followers:
           type: object
-          description: Write only. An array of objects that represents agent followers to add or delete from the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers">Setting followers</a>. Ignored when <a href="https://support.zendesk.com/hc/en-us/articles/360020585233">CCs and followers</a> is not enabled
+          description: Write only. An array of objects that represents agent followers to add or delete from the ticket. See <a href='/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers'>Setting followers</a>. Ignored when <a href='https://support.zendesk.com/hc/en-us/articles/360020585233'>CCs and followers</a> is not enabled
           writeOnly: true
         followup_ids:
           type: array
@@ -2344,7 +2445,7 @@ components:
           readOnly: true
         from_messaging_channel:
           type: boolean
-          description: If true, the ticket's <a href="/documentation/ticketing/reference-guides/via-object-reference/">via type</a> is a messaging channel.
+          description: If true, the ticket's <a href='/documentation/ticketing/reference-guides/via-object-reference/'>via type</a> is a messaging channel.
           readOnly: true
         generated_timestamp:
           type: integer
@@ -2381,12 +2482,12 @@ components:
             format: int64
         metadata:
           type: object
-          description: Write only. Metadata for the audit. In the <code>audit</code> object, the data is specified in the <code>custom</code> property of the <code>metadata</code> object. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-metadata">Setting Metadata</a>
+          description: Write only. Metadata for the audit. In the <code>audit</code> object, the data is specified in the <code>custom</code> property of the <code>metadata</code> object. See <a href='/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-metadata'>Setting Metadata</a>
           writeOnly: true
         organization_id:
           type: integer
           format: int64
-          description: The organization of the requester. You can only specify the ID of an organization associated with the requester. See <a href="developer.zendesk.com/api-reference/ticketing/organizations/organization_memberships/">Organization Memberships</a>
+          description: The organization of the requester. You can only specify the ID of an organization associated with the requester. See <a href='developer.zendesk.com/api-reference/ticketing/organizations/organization_memberships/'>Organization Memberships</a>
         priority:
           type: string
           description: The urgency with which the ticket should be addressed
@@ -2402,13 +2503,13 @@ components:
         raw_subject:
           type: string
           description: |
-            The dynamic content placeholder, if present, or the "subject" value, if not. See <a href="developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content Items</a>
+            The dynamic content placeholder, if present, or the "subject" value, if not. See <a href='developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/'>Dynamic Content Items</a>
         recipient:
           type: string
           description: The original recipient e-mail address of the ticket. Notification emails for the ticket are sent from this address
         requester:
           type: object
-          description: Write only. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#creating-a-ticket-with-a-new-requester">Creating a ticket with a new requester</a>
+          description: Write only. See <a href='/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#creating-a-ticket-with-a-new-requester'>Creating a ticket with a new requester</a>
           writeOnly: true
         requester_id:
           type: integer
@@ -2416,7 +2517,7 @@ components:
           description: The user who requested this ticket
         safe_update:
           type: boolean
-          description: Write only. Optional boolean. When true and an <code>update_stamp</code> date is included, protects against ticket update collisions and returns a message to let you know if one occurs. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#protecting-against-ticket-update-collisions">Protecting against ticket update collisions</a>. A value of false has the same effect as true. Omit the property to force the updates to not be safe
+          description: Write only. Optional boolean. When true and an <code>update_stamp</code> date is included, protects against ticket update collisions and returns a message to let you know if one occurs. See <a href='/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#protecting-against-ticket-update-collisions'>Protecting against ticket update collisions</a>. A value of false has the same effect as true. Omit the property to force the updates to not be safe
           writeOnly: true
         satisfaction_rating:
           type: object
@@ -2435,7 +2536,7 @@ components:
             The state of the ticket.
 
             If your account has activated custom ticket statuses, this is the ticket's
-            status category. See <a href="#custom-ticket-statuses">custom ticket statuses</a>
+            status category. See <a href='#custom-ticket-statuses'>custom ticket statuses</a>
           enum:
             - new
             - open
@@ -2446,14 +2547,14 @@ components:
         subject:
           type: string
           description: |
-            The value of the subject field for this ticket. See <a href="developer.zendesk.com/api-reference/ticketing/tickets/tickets/#subject">Subject</a>
+            The value of the subject field for this ticket. See <a href='developer.zendesk.com/api-reference/ticketing/tickets/tickets/#subject'>Subject</a>
         submitter_id:
           type: integer
           format: int64
           description: The user who submitted the ticket. The submitter always becomes the author of the first comment on the ticket
         tags:
           type: array
-          description: The array of tags applied to this ticket. Unless otherwise specified, the <a href="developer.zendesk.com/api-reference/ticketing/ticket-management/tags/#set-tags">set tag</a> behavior is used, which overwrites and replaces existing tags
+          description: The array of tags applied to this ticket. Unless otherwise specified, the <a href='developer.zendesk.com/api-reference/ticketing/ticket-management/tags/#set-tags'>set tag</a> behavior is used, which overwrites and replaces existing tags
           items:
             type: string
         ticket_form_id:
@@ -2471,7 +2572,7 @@ components:
         updated_at:
           type: string
           format: date-time
-          description: When this record last got updated. It is updated only if the update generates a <a href="#incremental-ticket-event-export">ticket event</a>
+          description: When this record last got updated. It is updated only if the update generates a <a href='#incremental-ticket-event-export'>ticket event</a>
           readOnly: true
         updated_stamp:
           type: string
@@ -2483,7 +2584,7 @@ components:
           readOnly: true
         via:
           type: object
-          description: For more information, see the <a href="/documentation/ticketing/reference-guides/via-object-reference">Via object reference</a>
+          description: For more information, see the <a href='/documentation/ticketing/reference-guides/via-object-reference'>Via object reference</a>
           properties:
             channel:
               type: string
@@ -2497,15 +2598,15 @@ components:
         via_followup_source_id:
           type: integer
           format: int64
-          description: POST requests only. The id of a closed ticket when creating a follow-up ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#creating-a-follow-up-ticket">Creating a follow-up ticket</a>
+          description: POST requests only. The id of a closed ticket when creating a follow-up ticket. See <a href='/documentation/ticketing/managing-tickets/creating-and-updating-tickets#creating-a-follow-up-ticket'>Creating a follow-up ticket</a>
         via_id:
           type: integer
           format: int64
-          description: Write only. For more information, see the <a href="/documentation/ticketing/reference-guides/via-object-reference/">Via object reference</a>
+          description: Write only. For more information, see the <a href='/documentation/ticketing/reference-guides/via-object-reference/'>Via object reference</a>
           writeOnly: true
         voice_comment:
           type: object
-          description: Write only. See <a href="developer.zendesk.com/api-reference/voice/talk-partner-edition-api/reference/#creating-voicemail-tickets">Creating voicemail ticket</a>
+          description: Write only. See <a href='developer.zendesk.com/api-reference/voice/talk-partner-edition-api/reference/#creating-voicemail-tickets'>Creating voicemail ticket</a>
           writeOnly: true
       example:
         assignee_id: 235323
@@ -2579,18 +2680,18 @@ components:
               description: Enterprise only. The id of the brand this ticket is associated with
             collaborators:
               type: array
-              description: POST requests only. Users to add as cc's when creating a ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-collaborators">Setting Collaborators</a>
+              description: POST requests only. Users to add as cc's when creating a ticket. See <a href='/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-collaborators'>Setting Collaborators</a>
               items:
                 $ref: '#/components/schemas/Collaborator'
             email_cc_ids:
               type: array
-              description: The ids of agents or end users currently CC'ed on the ticket. See <a href="https://support.zendesk.com/hc/en-us/articles/360020585233">CCs and followers resources</a> in the Support Help Center
+              description: The ids of agents or end users currently CC'ed on the ticket. See <a href='https://support.zendesk.com/hc/en-us/articles/360020585233'>CCs and followers resources</a> in the Support Help Center
               items:
                 type: integer
                 format: int64
             follower_ids:
               type: array
-              description: The ids of agents currently following the ticket. See <a href="https://support.zendesk.com/hc/en-us/articles/360020585233">CCs and followers resources</a>
+              description: The ids of agents currently following the ticket. See <a href='https://support.zendesk.com/hc/en-us/articles/360020585233'>CCs and followers resources</a>
               items:
                 type: integer
                 format: int64
@@ -2603,7 +2704,7 @@ components:
             raw_subject:
               type: string
               description: |
-                The dynamic content placeholder, if present, or the "subject" value, if not. See <a href="developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content Items</a>
+                The dynamic content placeholder, if present, or the "subject" value, if not. See <a href='developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/'>Dynamic Content Items</a>
             recipient:
               type: string
               description: The original recipient e-mail address of the ticket
@@ -2620,7 +2721,7 @@ components:
             via_followup_source_id:
               type: integer
               format: int64
-              description: POST requests only. The id of a closed ticket when creating a follow-up ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#creating-a-follow-up-ticket">Creating a follow-up ticket</a>
+              description: POST requests only. The id of a closed ticket when creating a follow-up ticket. See <a href='/documentation/ticketing/managing-tickets/creating-and-updating-tickets#creating-a-follow-up-ticket'>Creating a follow-up ticket</a>
           required:
             - comment
       example:
@@ -2700,13 +2801,13 @@ components:
           description: The relative position of the ticket field on a ticket. Note that for accounts with ticket forms, positions are controlled by the different forms
         raw_description:
           type: string
-          description: The dynamic content placeholder if present, or the <code>description</code> value if not. See <a href="/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content</a>
+          description: The dynamic content placeholder if present, or the <code>description</code> value if not. See <a href='/api-reference/ticketing/ticket-management/dynamic_content/'>Dynamic Content</a>
         raw_title:
           type: string
-          description: The dynamic content placeholder if present, or the <code>title</code> value if not. See <a href="/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content</a>
+          description: The dynamic content placeholder if present, or the <code>title</code> value if not. See <a href='/api-reference/ticketing/ticket-management/dynamic_content/'>Dynamic Content</a>
         raw_title_in_portal:
           type: string
-          description: The dynamic content placeholder if present, or the "title_in_portal" value if not. See <a href="/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content</a>
+          description: The dynamic content placeholder if present, or the "title_in_portal" value if not. See <a href='/api-reference/ticketing/ticket-management/dynamic_content/'>Dynamic Content</a>
         regexp_for_validation:
           type: string
           description: For "regexp" fields only. The validation pattern for a field value to be deemed valid
@@ -2748,7 +2849,7 @@ components:
           description: The title of the ticket field for end users in Help Center
         type:
           type: string
-          description: System or custom field type. Editable for custom field types and only on creation. See <a href="#create-ticket-field">Create Ticket Field</a>
+          description: System or custom field type. Editable for custom field types and only on creation. See <a href='#create-ticket-field'>Create Ticket Field</a>
         updated_at:
           type: string
           format: date-time
@@ -2788,7 +2889,7 @@ components:
       properties:
         additional_collaborators:
           type: array
-          description: An array of numeric IDs, emails, or objects containing name and email properties. See <a href="developer.zendesk.com/api-reference/ticketing/tickets/tickets/#setting-collaborators">Setting Collaborators</a>. An email notification is sent to them when the ticket is updated
+          description: An array of numeric IDs, emails, or objects containing name and email properties. See <a href='developer.zendesk.com/api-reference/ticketing/tickets/tickets/#setting-collaborators'>Setting Collaborators</a>. An email notification is sent to them when the ticket is updated
           items:
             $ref: '#/components/schemas/Collaborator'
         assignee_email:
@@ -2812,20 +2913,20 @@ components:
           $ref: '#/components/schemas/TicketComment'
         custom_fields:
           type: array
-          description: Custom fields for the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-custom-field-values">Setting custom field values</a>
+          description: Custom fields for the ticket. See <a href='/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-custom-field-values'>Setting custom field values</a>
           items:
             $ref: '#/components/schemas/CustomField'
         custom_status_id:
           type: integer
-          description: The custom ticket status id of the ticket. See <a href="#custom-ticket-statuses">custom ticket statuses</a>
+          description: The custom ticket status id of the ticket. See <a href='#custom-ticket-statuses'>custom ticket statuses</a>
         due_at:
           type: string
           format: date-time
-          description: If this is a ticket of type "task" it has a due date.  Due date format uses <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format.
+          description: If this is a ticket of type "task" it has a due date.  Due date format uses <a href='http://en.wikipedia.org/wiki/ISO_8601'>ISO 8601</a> format.
           nullable: true
         email_ccs:
           type: array
-          description: An array of objects that represent agent or end users email CCs to add or delete from the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs">Setting email CCs</a>
+          description: An array of objects that represent agent or end users email CCs to add or delete from the ticket. See <a href='/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs'>Setting email CCs</a>
           items:
             $ref: '#/components/schemas/EmailCC'
         external_id:
@@ -2833,7 +2934,7 @@ components:
           description: An id you can use to link Zendesk Support tickets to local records
         followers:
           type: array
-          description: An array of objects that represent agent followers to add or delete from the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers">Setting followers</a>
+          description: An array of objects that represent agent followers to add or delete from the ticket. See <a href='/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers'>Setting followers</a>
           items:
             $ref: '#/components/schemas/Follower'
         group_id:
@@ -2841,7 +2942,7 @@ components:
           description: The group this ticket is assigned to
         organization_id:
           type: integer
-          description: The organization of the requester. You can only specify the ID of an organization associated with the requester. See <a href="developer.zendesk.com/api-reference/ticketing/organizations/organization_memberships/">Organization Memberships</a>
+          description: The organization of the requester. You can only specify the ID of an organization associated with the requester. See <a href='developer.zendesk.com/api-reference/ticketing/organizations/organization_memberships/'>Organization Memberships</a>
         priority:
           type: string
           description: The urgency with which the ticket should be addressed.
@@ -2870,7 +2971,7 @@ components:
             The state of the ticket.
 
             If your account has activated custom ticket statuses, this is the ticket's
-            status category. See <a href="#custom-ticket-statuses">custom ticket statuses</a>.
+            status category. See <a href='#custom-ticket-statuses'>custom ticket statuses</a>.
           enum:
             - new
             - open
@@ -2917,7 +3018,7 @@ components:
           $ref: '#/components/schemas/TicketUpdateInput'
     TicketAuditVia:
       type: object
-      description: Describes how the object was created. See the <a href="/documentation/ticketing/reference-guides/via-object-reference">Via object reference</a>
+      description: Describes how the object was created. See the <a href='/documentation/ticketing/reference-guides/via-object-reference'>Via object reference</a>
       properties:
         channel:
           type: string
@@ -2933,20 +3034,20 @@ components:
       properties:
         attachments:
           type: array
-          description: Attachments, if any. See <a href="developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/">Attachment</a>
+          description: Attachments, if any. See <a href='developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/'>Attachment</a>
           items:
             $ref: '#/components/schemas/Attachment'
           readOnly: true
         audit_id:
           type: integer
-          description: The id of the ticket audit record. See <a href="developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#show-audit">Show Audit</a>
+          description: The id of the ticket audit record. See <a href='developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#show-audit'>Show Audit</a>
           readOnly: true
         author_id:
           type: integer
-          description: The id of the comment author. See <a href="#author-id">Author id</a>
+          description: The id of the comment author. See <a href='#author-id'>Author id</a>
         body:
           type: string
-          description: The comment string. See <a href="#bodies">Bodies</a>
+          description: The comment string. See <a href='#bodies'>Bodies</a>
         created_at:
           type: string
           format: date-time
@@ -2954,30 +3055,30 @@ components:
           readOnly: true
         html_body:
           type: string
-          description: The comment formatted as HTML. See <a href="#bodies">Bodies</a>
+          description: The comment formatted as HTML. See <a href='#bodies'>Bodies</a>
         id:
           type: integer
           description: Automatically assigned when the comment is created
           readOnly: true
         metadata:
           type: object
-          description: System information (web client, IP address, etc.) and comment flags, if any. See <a href="#comment-flags">Comment flags</a>
+          description: System information (web client, IP address, etc.) and comment flags, if any. See <a href='#comment-flags'>Comment flags</a>
           additionalProperties: true
           readOnly: true
         plain_body:
           type: string
-          description: The comment presented as plain text. See <a href="#bodies">Bodies</a>
+          description: The comment presented as plain text. See <a href='#bodies'>Bodies</a>
           readOnly: true
         public:
           type: boolean
           description: true if a public comment; false if an internal note. The initial value set on ticket creation persists for any additional comment unless you change it
         type:
           type: string
-          description: '`Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See <a href="/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets">Adding voice comments to tickets</a>'
+          description: "`Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See <a href='/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets'>Adding voice comments to tickets</a>"
           readOnly: true
         uploads:
           type: array
-          description: List of tokens received from <a href="developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/#upload-files">uploading files</a> for comment attachments. The files are attached by creating or updating tickets with the tokens. See <a href="developer.zendesk.com/api-reference/ticketing/tickets/tickets/#attaching-files">Attaching files</a> in Tickets
+          description: List of tokens received from <a href='developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/#upload-files'>uploading files</a> for comment attachments. The files are attached by creating or updating tickets with the tokens. See <a href='developer.zendesk.com/api-reference/ticketing/tickets/tickets/#attaching-files'>Attaching files</a> in Tickets
           items:
             type: string
         via:
@@ -3130,8 +3231,7 @@ components:
           description: Automatically assigned when a translation is created
           readOnly: true
         locale:
-          type: string
-          description: The locale of the translation
+          $ref: '#/components/schemas/LocaleAbbreviation'
         outdated:
           type: boolean
           description: True if the translation is outdated; false otherwise. False by default
@@ -3161,12 +3261,6 @@ components:
           type: string
           description: The API url of the translation
           readOnly: true
-      example:
-        id: 3243452
-        locale: en
-        source_id: 768934
-        source_type: Article
-        title: Hello translation
       required:
         - locale
         - title
@@ -3357,7 +3451,7 @@ components:
     Via:
       type: object
       description: |
-        An object explaining how the ticket was created. See the <a href="/documentation/ticketing/reference-guides/via-object-reference">Via object reference</a>
+        An object explaining how the ticket was created. See the <a href='/documentation/ticketing/reference-guides/via-object-reference'>Via object reference</a>
       properties:
         channel:
           type: string
@@ -3584,9 +3678,7 @@ components:
       description: The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case)
       required: true
       schema:
-        type: string
-        example: en-us
-      example: en-us
+        $ref: '#/components/schemas/LocaleAbbreviation'
     PostCommentId:
       name: post_comment_id
       in: path

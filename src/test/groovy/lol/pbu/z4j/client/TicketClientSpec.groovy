@@ -171,11 +171,6 @@ class TicketClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
 
-        and:
-        if (creator) {
-            //todo: https://github.com/PeanutButter-Unicorn/z4j/issues/52
-        }
-
         where:
         [[client, clientType, ignored, alsoIgnored], creator, locale] << [
                 clientTestMatrix.findAll { it.shouldSucceed || it.clientType == "simple user" }, [true, false, null], accountLocales

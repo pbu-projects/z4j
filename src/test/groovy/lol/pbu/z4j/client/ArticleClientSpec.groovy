@@ -5,6 +5,7 @@ import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.model.ArticlesResponse
 import lol.pbu.z4j.model.ListArticlesSortByParameter
 import lol.pbu.z4j.model.ListArticlesSortOrderParameter
+import lol.pbu.z4j.model.LocaleAbbreviation
 import reactor.core.publisher.Mono
 import spock.lang.Shared
 
@@ -15,16 +16,16 @@ class ArticleClientSpec extends Z4jSpec {
     ArticleClient adminArticleClient, agentArticleClient, userArticleClient
 
     @Shared
-    List<String> allLocales
+    List<LocaleAbbreviation> allLocales
 
     def setupSpec() {
         adminArticleClient = adminCtx.getBean(ArticleClient.class)
         agentArticleClient = agentCtx.getBean(ArticleClient.class)
         userArticleClient = userCtx.getBean(ArticleClient.class)
-        allLocales = userCtx.getBean(LocaleClient.class).listLocales().block().locales.collect { it.locale.toLowerCase() }
+        allLocales = List.of(LocaleAbbreviation.ENGLISH_UNITED_STATES, LocaleAbbreviation.FRENCH)
     }
 
-    def "can use ListArticles for other tests using the '#locale' locale"(ArticleClient articleClient, String locale, ListArticlesSortByParameter sortBy, ListArticlesSortOrderParameter sortOrder, Long startTime, String labelNames) {
+    def "can use ListArticles for other tests using the '#locale' locale"(ArticleClient articleClient, LocaleAbbreviation locale, ListArticlesSortByParameter sortBy, ListArticlesSortOrderParameter sortOrder, Long startTime, String labelNames) {
         // https://github.com/PeanutButter-Unicorn/z4j/issues/31
         when: "query articles list for the '#locale' locale"
         Mono<ArticlesResponse> response = articleClient.listArticles(locale, sortBy, sortOrder, startTime, labelNames)

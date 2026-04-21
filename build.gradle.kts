@@ -38,6 +38,7 @@ dependencies {
     "lombok"("org.projectlombok:lombok:${lombokVersion}")
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("net.datafaker:datafaker:$dataFakerVersion")
+    testImplementation("ch.qos.logback:logback-classic")
 }
 
 java {
@@ -87,11 +88,6 @@ tasks.jacocoTestReport {
         xml.required.set(true)
         html.required.set(true)
     }
-    classDirectories.setFrom(files(classDirectories.files.map {
-        fileTree(it) {
-            exclude("lol/pbu/Application.class")
-        }
-    }))
 }
 
 tasks.test {

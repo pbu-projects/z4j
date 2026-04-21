@@ -2,7 +2,7 @@
 
 <#
 .SYNOPSIS
-    This script paginates through all pages of the GET /api/v2/help_center/user_segments endpoint and deletes any user segment that is not built-in.
+    This script paginates through all pages of the GET /api/v2/help_center/categories endpoint and deletes all categories.
 .DESCRIPTION
     This script will first check for the presence of the following environment variables:
     - Z4J_URL: The URL of your Zendesk instance (e.g., https://your-subdomain.zendesk.com)
@@ -10,9 +10,8 @@
     - Z4J_ADMIN_EMAIL: The email address of a Zendesk admin.
 
     If all environment variables are present, it will then:
-    1. Paginate through all user segments.
-    2. Identify user segments that are not built-in.
-    3. Delete each of those user segments.
+    1. Paginate through all categories.
+    2. Delete each of those categories.
 .NOTES
     Author: Jonathan
     Date: $(Get-Date -Format "yyyy-MM-dd")
@@ -46,25 +45,23 @@ $headers = @{
     "Content-Type"  = "application/json"
 }
 
-$nextPage = "$Z4JUrl/api/v2/help_center/user_segments"
+$nextPage = "$Z4JUrl/api/v2/help_center/categories"
 
 do {
     try {
-        Write-Host "Fetching user segments from $nextPage"
+        Write-Host "Fetching categories from $nextPage"
         $response = Invoke-RestMethod -Uri $nextPage -Method Get -Headers $headers
 
-        if ($null -ne $response.user_segments) {
-            foreach ($segment in $response.user_segments) {
-                if ($segment.built_in -eq $false) {
-                    Write-Host "Deleting user segment: $($segment.name) (ID: $($segment.id))"
-                    $deleteUrl = "$Z4JUrl/api/v2/help_center/user_segments/$($segment.id)"
-                    try {
-                        Invoke-RestMethod -Uri $deleteUrl -Method Delete -Headers $headers
-                        Write-Host "Successfully deleted user segment: $($segment.name)"
-                    }
-                    catch {
-                        Write-Error "Error deleting user segment with ID $($segment.id): $_"
-                    }
+        if ($null -ne $response.categories) {
+            foreach ($category in $response.categories) {
+                Write-Host "Deleting category: $($category.name) (ID: $($category.id))"
+                $deleteUrl = "$Z4JUrl/api/v2/help_center/categories/$($category.id)"
+                try {
+                    Invoke-RestMethod -Uri $deleteUrl -Method Delete -Headers $headers
+                    Write-Host "Successfully deleted category: $($category.name)"
+                }
+                catch {
+                    Write-Error "Error deleting category with ID $($category.id): $_"
                 }
             }
         }
@@ -72,9 +69,9 @@ do {
         $nextPage = $response.next_page
     }
     catch {
-        Write-Error "Error fetching user segments: $_"
+        Write-Error "Error fetching categories: $_"
         exit 1
     }
 } while ($null -ne $nextPage)
 
-Write-Host "User segment cleanup complete."
+Write-Host "Category cleanup complete."

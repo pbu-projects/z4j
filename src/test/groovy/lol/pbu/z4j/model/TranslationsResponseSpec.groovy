@@ -6,26 +6,33 @@ import spock.lang.Unroll
 class TranslationsResponseSpec extends Z4jSpec {
 
     @Unroll
-    def "should add translations item"() {
+    def "should add translations item"(LocaleAbbreviation locale) {
         given:
         def translationsResponse = new TranslationsResponse()
         translationsResponse.translations == null
-        def translation = new Translation(faker.lorem().word(), faker.lorem().sentence())
+        def translation = new Translation(locale, faker.lorem().sentence())
 
         when:
         translationsResponse.addTranslationsItem(translation)
 
         then:
         translationsResponse.translations.size() == 1
-        translationsResponse.translations.getAt(0) == translation
+        translationsResponse.translations[0] == translation
+
+        where:
+        locale << LocaleAbbreviation.values()
     }
 
     @Unroll
-    def "add translations item to existing list"() {
+    def "add translations item to existing list"(LocaleAbbreviation locale) {
         given:
-        def existingTranslation = new Translation(faker.lorem().word(), faker.lorem().sentence())
+        def existingTranslation = new Translation(locale, faker.lorem().sentence())
         def translationsResponse = new TranslationsResponse(translations: [existingTranslation])
-        def newTranslation = new Translation(faker.lorem().word(), faker.lorem().sentence())
+        LocaleAbbreviation update = LocaleAbbreviation.HEBREW
+        if (locale == update) {
+            update = LocaleAbbreviation.SIMPLIFIED_CHINESE
+        }
+        def newTranslation = new Translation(update, faker.lorem().sentence())
 
         when:
         translationsResponse.addTranslationsItem(newTranslation)
@@ -33,5 +40,8 @@ class TranslationsResponseSpec extends Z4jSpec {
         then:
         translationsResponse.translations.size() == 2
         translationsResponse.translations.containsAll([existingTranslation, newTranslation])
+
+        where:
+        locale << LocaleAbbreviation.values()
     }
 }

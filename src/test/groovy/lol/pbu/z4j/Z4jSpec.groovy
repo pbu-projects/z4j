@@ -10,6 +10,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 @MicronautTest
+@SuppressWarnings("GroovyAssignabilityCheck")
 class Z4jSpec extends Specification {
 
     @Shared
