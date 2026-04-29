@@ -13,7 +13,6 @@ import static java.util.Base64.getEncoder;
 /**
  * Add a basic auth to anything
  *
-
  * @author Jonathan Zollinger
  * @since 0.0.1
  */
@@ -34,7 +33,7 @@ public class BasicAuthFilter {
      * @param token api token generated from z4j
      */
     public BasicAuthFilter(@Property(name = "micronaut.http.services.zendesk.email") String email,
-                           @Property(name = "micronaut.http.services.zendesk.token") String token){
+                           @Property(name = "micronaut.http.services.zendesk.token") String token) {
         this.email = email;
         this.token = token;
     }
