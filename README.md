@@ -1,16 +1,14 @@
 <img src="src/main/docs/z4j.svg" width="200" alt="z4j logo"> 
 
-A Java client for the Zendesk API
+The ultra-lightweight, cloud-native Java client for the Zendesk API
 
 ## About The Project
 
-Z4j is a Java client for the Zendesk's APIs built for quick performance and enterprise grade applications.
-Z4j gets its speed and durability from the [Micronaut] framework and thorough [testing].
+A zippy Zendesk client built for heavy lifting, z4j pairs Micronaut’s lightning-fast architecture and minimal footprint with a testing suite so rigorous it’s borderline obsessive.
 
 ## Getting Started
 
-To get a local copy up and running, please follow the detailed setup instructions in our
-[Contributing Guide].
+
 
 ### Installation
 
