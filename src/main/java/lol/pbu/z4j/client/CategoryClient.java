@@ -1,3 +1,18 @@
+/*
+ * Copyright 2026 Peanut Butter Unicorn, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package lol.pbu.z4j.client;
 
 import io.micronaut.core.annotation.Nullable;
@@ -10,99 +25,125 @@ import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.*;
 import reactor.core.publisher.Mono;
 
+/**
+ * <h1>Work with Categories in Zendesk.</h1>
+ * <ul>
+ *     <li>Create Category by Locale {@link #createCategory}</li>
+ *     <li>Create Category {@link #createCategoryNoLocale}</li>
+ *     <li>Delete Category by Locale {@link #deleteCategory}</li>
+ *     <li>Delete Category {@link #deleteCategoryNoLocale}</li>
+ *     <li>List Categories by Locale {@link #listCategories}</li>
+ *     <li>List Categories {@link #listCategoriesNoLocale}</li>
+ *     <li>Show Category by Locale {@link #showCategory}</li>
+ *     <li>Show Category {@link #showCategoryNoLocale}</li>
+ *     <li>Update Category by Locale {@link #updateCategory}</li>
+ *     <li>Update Category {@link #updateCategoryNoLocale}</li>
+ *     <li>Update Category Source Locale by Locale {@link #updateCategorySourceLocale}</li>
+ * </ul>
+ *
+ * @author Jonathan-Zollinger
+ * @since 0.1.1
+ */
 @Retryable
 @Client("zendesk")
 public interface CategoryClient {
 
     /**
-     * {@summary Create Category by Locale}
-     * <p>You must specify a category name and locale. The locale can be omitted if it's specified in the URL. Optionally, you can specify multiple <a href='/api-reference/help_center/help-center-api/translations'>translations</a> for the category. The specified locales must be enabled for the current Help Center.</p> <h4>Allowed for</h4> <ul>     <li>Help Center managers</li> </ul>
+     * <h1>{@summary Create Category by Locale}</h1>
+     * <p>You must specify a category name and locale.
+     * Though the Zendesk Api states you can create multiple translations at this time, in practice this doesn't work.</p>
+     * <h4>Allowed for Help Center managers</h4>
      *
-     * @param locale                The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case) (required)
-     * @param createCategoryRequest (optional)
+     * NOTE: pagination is not currently supported
+     *
+     * @param locale                The in which the item is displayed. (must be lowercase, even if returned from zendesk as mixed case) (required)
+     * @param createCategoryRequest The locale can be omitted from the createCategoryRequest. (required)
      * @return Created response (status code 201)
      */
     @Post("/api/v2/help_center/{locale}/categories")
     Mono<@Valid CategoryResponse> createCategory(
             @PathVariable("locale") @NotNull String locale,
-            @Body @Nullable @Valid CreateCategoryRequest createCategoryRequest
+            @Body @NotNull @Valid CreateCategoryRequest createCategoryRequest
     );
 
     /**
-     * {@summary Create Category}
-     * <p>You must specify a category name and locale. The locale can be omitted if it's specified in the URL. Optionally, you can specify multiple <a href='/api-reference/help_center/help-center-api/translations'>translations</a> for the category. The specified locales must be enabled for the current Help Center.</p> <h4>Allowed for</h4> <ul>     <li>Help Center managers</li> </ul>
+     * <h1>{@summary Create Category}</h1>
+     * <p>You must specify a category name and locale.
+     * Though the Zendesk Api states you can create multiple translations at this time, in practice this doesn't work.</p>
+     * <h4>Allowed for Help Center managers</h4>
      *
-     * @param createCategoryRequest (optional)
+     * NOTE: pagination is not currently supported
+     *
+     * @param createCategoryRequest The locale cannot be omitted from this createCategoryRequest. (required)
      * @return OK Response (status code 201)
      */
     @Post("/api/v2/help_center/categories")
-    Mono<@Valid CategoryResponse> createCategoryNoLocale(
-            @Body @Nullable @Valid CreateCategoryRequest createCategoryRequest
-    );
+    Mono<@Valid CategoryResponse> createCategoryNoLocale(@Body @Valid CreateCategoryRequest createCategoryRequest);
 
     /**
-     * {@summary Delete Category by Locale}
-     * <p><strong>WARNING: Every section and all articles in the category will also be deleted.</strong></p> <h4>Allowed for</h4> <ul>     <li>Help Center managers</li> </ul>
+     * <h1>{@summary Delete Category by Locale}</h1>
+     * <p><strong>WARNING: Every section and all articles in the category will also be deleted.</strong></p>
+     * <h4>Allowed for Help Center managers</h4>
      *
      * @param locale     The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case) (required)
      * @param categoryId The unique ID of the category (required)
      * @return No content (status code 204)
      */
     @Delete("/api/v2/help_center/{locale}/categories/{category_id}")
-    Mono<Void> deleteCategory(
-            @PathVariable("locale") @NotNull String locale,
-            @PathVariable("category_id") @NotNull Long categoryId
-    );
+    Mono<Void> deleteCategory(@PathVariable("locale") @NotNull String locale, @PathVariable("category_id") @NotNull Long categoryId);
 
     /**
-     * {@summary Delete Category}
-     * <p><strong>WARNING: Every section and all articles in the category will also be deleted.</strong></p> <h4>Allowed for</h4> <ul>     <li>Help Center managers</li> </ul>
+     * <h1>{@summary Delete Category}</h1>
+     * <p><strong>WARNING: Every section and all articles in the category will also be deleted.</strong></p>
+     * <h4>Allowed for Help Center managers</h4>
      *
      * @param categoryId The unique ID of the category (required)
      * @return <p>No content</p> (status code 204)
      */
     @Delete("/api/v2/help_center/categories/{category_id}")
-    Mono<Void> deleteCategoryNoLocale(
-            @PathVariable("category_id") @NotNull Long categoryId
-    );
+    Mono<Void> deleteCategoryNoLocale(@PathVariable("category_id") @NotNull Long categoryId);
 
     /**
-     * {@summary List Categories by Locale}
-     * <h4>Allowed for</h4> <ul>     <li>Anonymous users</li> </ul> <p>The response will list only the categories that the agent, end user, or anonymous user can view in the help center.</p> <p>Translations are embedded within the category because they're not shared between resources.</p>
+     * <h1>{@summary List Categories by Locale}</h1>
+     * <p>The response will list only the categories that the agent, end user, or anonymous user can view in the help center.</p>
+     * <p>Translations are embedded within the category because they're not shared between resources.</p>
+     * <h4>Allowed for Anonymous users</h4>
      *
      * @param locale    The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case) (required)
-     * @param sortBy    <p>The <code>sort_by</code> parameter can have one of the following values:</p> <table>     <thead>     <tr>         <th>value</th>         <th>description</th>     </tr>     </thead>     <tbody>     <tr>         <td><code>position</code></td>         <td>order set manually using the Arrange Content page. Default order</td>     </tr>     <tr>         <td><code>created_at</code></td>         <td>order by creation time</td>     </tr>     <tr>         <td><code>updated_at</code></td>         <td>order by update time</td>     </tr>     </tbody> </table>  (optional)
-     * @param sortOrder <table>     <thead>     <tr>         <th>value</th>         <th>description</th>     </tr>     </thead>     <tbody>     <tr>         <td><code>asc</code></td>         <td>ascending order</td>     </tr>     <tr>         <td><code>desc</code></td>         <td>descending order</td>     </tr>     </tbody> </table>  (optional)
+     * @param sortBy    {@link SortCategoryBy}  (optional)
+     * @param sortOrder {@link SortOrder}  (optional)
      * @return OK (status code 200)
      */
     @Get("/api/v2/help_center/{locale}/categories")
     Mono<@Valid CategoriesResponse> listCategories(
             @PathVariable("locale") @NotNull String locale,
-            @QueryValue("sort_by") @Nullable ListCategoriesSortByParameter sortBy,
-            @QueryValue("sort_order") @Nullable ListArticlesSortOrderParameter sortOrder
+            @QueryValue("sort_by") @Nullable SortCategoryBy sortBy,
+            @QueryValue("sort_order") @Nullable SortOrder sortOrder
     );
 
     /**
-     * {@summary List Categories}
-     * <h4>Allowed for</h4> <ul>     <li>Agents</li> </ul> <p>The response will list only the categories that the agent can view in the help center.</p>
+     * <h1>{@summary List Categories}</h1>
+     * Allowed for Agents<p>The response will list only the categories that the agent can view in the help center.</p>
      *
-     * @param sortBy    <p>Sorts the results by one of the accepted values</p> (optional)
-     * @param sortOrder <p>Selects the order of the results.</p> (optional)
-     * @return <p>description</p> (status code 200)
+     * @param sortBy    {@link SortCategoryBy}  (optional)
+     * @param sortOrder {@link SortOrder}  (optional)
+     * @return status code 200
      */
     @Get("/api/v2/help_center/categories")
     Mono<@Valid CategoriesResponse> listCategoriesNoLocale(
-            @QueryValue("sort_by") @Nullable ListCategoriesSortByParameter sortBy,
-            @QueryValue("sort_order") @Nullable ListArticlesSortOrderParameter sortOrder
+            @QueryValue("sort_by") @Nullable SortCategoryBy sortBy,
+            @QueryValue("sort_order") @Nullable SortOrder sortOrder
     );
 
     /**
-     * {@summary Show Category by Locale}
-     * <p><strong>Note</strong>: <code>{/locale}</code> is an optional parameter for admins and agents. End users and anonymous users must provide the parameter.</p> <h4>Allowed for</h4> <ul>     <li>Anonymous users</li> </ul> <p>Translations are embedded within the category because they're not shared between resources.</p>
-     *
+     * <h1>{@summary Show Category by Locale}</h1>
+     * Note: Admins and agents can query the{@link CategoryClient#showCategoryNoLocale(Long)}.
+     * End users and anonymous users can only use this command.</p>
+     * <p>Translations are embedded within the category because they're not shared between resources.</p>
+     *<h4>Allowed for Anonymous users</h4>
      * @param locale     The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case) (required)
      * @param categoryId The unique ID of the category (required)
-     * @return <p>description</p> (status code 200)
+     * @return status code 200
      */
     @Get("/api/v2/help_center/{locale}/categories/{category_id}")
     Mono<@Valid CategoryResponse> showCategory(
@@ -111,36 +152,36 @@ public interface CategoryClient {
     );
 
     /**
-     * {@summary Show Category}
-     * <h4>Allowed for</h4> <ul>     <li>Agents</li> </ul>
+     * <h1>{@summary Show Category}</h1>
+     * Allowed for Agents
      *
      * @param categoryId The unique ID of the category (required)
-     * @return <p>description</p> (status code 200)
+     * @return status code 200
      */
     @Get("/api/v2/help_center/categories/{category_id}")
-    Mono<@Valid CategoryResponse> showCategoryNoLocale(
-            @PathVariable("category_id") @NotNull Long categoryId
-    );
+    Mono<@Valid CategoryResponse> showCategoryNoLocale(@PathVariable("category_id") @NotNull Long categoryId);
 
     /**
-     * {@summary Update Category by Locale}
-     * <p>These endpoints only update category-level metadata such as the sorting position. They don't update category translations.</p> <h4>Allowed for</h4> <ul>     <li>Help Center managers</li> </ul>
+     * <h1>{@summary Update Category by Locale}</h1>
+     * <p>This only updates category-level metadata such as the sorting position. This doesn't update category translations.</p>
+     * <h4>Allowed for Help Center managers</h4>
      *
      * @param locale                The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case) (required)
      * @param categoryId            The unique ID of the category (required)
-     * @param createCategoryRequest (optional)
+     * @param createCategoryRequest {@link CreateCategoryRequest} (required)
      * @return OK Response (status code 200)
      */
     @Put("/api/v2/help_center/{locale}/categories/{category_id}")
     Mono<@Valid CategoryResponse> updateCategory(
             @PathVariable("locale") @NotNull String locale,
             @PathVariable("category_id") @NotNull Long categoryId,
-            @Body @Nullable @Valid CreateCategoryRequest createCategoryRequest
+            @Body @NotNull @Valid CreateCategoryRequest createCategoryRequest
     );
 
     /**
-     * {@summary Update Category}
-     * <p>These endpoints only update category-level metadata such as the sorting position. They don't update category translations.</p> <h4>Allowed for</h4> <ul>     <li>Help Center managers</li> </ul>
+     * <h1>{@summary Update Category}</h1>
+     * <p>This only updates category-level metadata such as the sorting position. This doesn't update category translations.</p>
+     * <h4>Allowed for Help Center managers</h4>
      *
      * @param categoryId            The unique ID of the category (required)
      * @param createCategoryRequest (optional)
@@ -153,14 +194,13 @@ public interface CategoryClient {
     );
 
     /**
-     * {@summary Update Category Source Locale by Locale}
-     * <p>The endpoint updates the category <code>source_locale</code> property</p> <h4>Allowed for</h4> <ul>     <li>Agents</li> </ul>
+     * <h1>{@summary Update Category Source Locale by Locale}</h1>
+     * <p>The endpoint updates the category <code>source_locale</code> property</p>
+     * <h4>Allowed for Agents</h4>
      *
      * @param categoryId The unique ID of the category (required)
      * @return <p>OK Response</p> (status code 200)
      */
     @Put("/api/v2/help_center/categories/{category_id}/source_locale")
-    Mono<@Valid CategoryResponse> updateCategorySourceLocale(
-            @PathVariable("category_id") @NotNull Long categoryId
-    );
+    Mono<@Valid CategoryResponse> updateCategorySourceLocale(@PathVariable("category_id") @NotNull Long categoryId);
 }
