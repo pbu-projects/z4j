@@ -97,7 +97,7 @@ public interface SearchClient {
     @Get("/api/v2/search/export")
     Mono<@Valid SearchResponse> export(
             @QueryValue("query") @NotNull String query,
-            @QueryValue("page[size]") @NotNull Integer pageSize,
+            @QueryValue("page[size]") @NotNull @Max(1000) Integer pageSize,
             @QueryValue("page[after]") @NotNull String pageAfter,
             @QueryValue("filter[type]") @NotNull SearchExportType filterType,
             @QueryValue("include") @Nullable String include
@@ -117,6 +117,8 @@ public interface SearchClient {
      * @param sortBy    One of {@code updated_at}, {@code created_at}, {@code priority}, {@code status}, or {@code ticket_type}. Defaults to sorting by relevance (optional)
      * @param sortOrder Defaults to descending (optional)
      * @param include   Sideloads to include in the response. Accepts a comma-separated list of values. The available sideloads depend on the search result types.  (optional)
+     * @param page      The page number to retrieve. (optional)
+     * @param perPage   The count of results to include in each page. (optional)
      * @return Success response (status code 200)
      * or Error response (status code 400)
      */
@@ -125,6 +127,8 @@ public interface SearchClient {
             @QueryValue("query") @NotNull String query,
             @QueryValue("sort_by") @Nullable SortBy sortBy,
             @QueryValue("sort_order") @Nullable SortOrder sortOrder,
-            @QueryValue("include") @Nullable String include
+            @QueryValue("include") @Nullable String include,
+            @QueryValue("page") @Nullable Integer page,
+            @QueryValue("per_page") @Nullable @Max(100) Integer perPage
     );
 }
