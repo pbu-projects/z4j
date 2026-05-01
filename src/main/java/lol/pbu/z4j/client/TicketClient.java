@@ -85,7 +85,7 @@ public interface TicketClient {
      * <h1>{@summary List Ticket Fields}</h1>
      * <p>Returns a list of all system and custom ticket fields in your account.</p> <p>For end users, only the ticket fields with visible_in_portal set to true are returned.</p> <p>Consider caching this resource to use with the{@link TicketClient}.</p> <h4 id=\"allowed-for'>Allowed For</h4> <ul>     <li>Anyone</li> </ul>
      *
-     * @param locale  Forces the {@code titleInPortal} property to return a dynamic content variant for the specified locale. Only accepts {@link LocaleClient#listLocales() active locale ids}.  (optional)
+     * @param localeAbbreviation  Forces the {@code titleInPortal} property to return a dynamic content variant for the specified locale. Only accepts {@link LocaleClient#listLocales() active locale ids}.  (optional)
      * @param creator Includes the {@code creatorUserId} and {@code creatorAppName} properties in the response. If the ticket field is created  by an app, {@code creatorAppName} is the name of the app and {@code creatorUserId} is {@code -1}. If the ticket field  is not created by an app, {@code creatorAppName} is null.  (optional)
      * @return Success response (status code 200)
      */
