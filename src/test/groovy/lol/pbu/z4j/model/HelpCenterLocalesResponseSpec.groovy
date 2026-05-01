@@ -25,14 +25,14 @@ class HelpCenterLocalesResponseSpec extends Z4jSpec {
         given:
         def helpCenterLocalesResponse = new HelpCenterLocalesResponse()
         helpCenterLocalesResponse.localeAbbreviations == null
-        def locale = faker.nation().language()
+        def locale = LocaleAbbreviation.NORWEGIAN
 
         when:
         helpCenterLocalesResponse.addLocalesItem(locale)
 
         then:
-        helpCenterLocalesResponse.locales.size() == 1
-        helpCenterLocalesResponse.locales[0] == locale
+        helpCenterLocalesResponse.localeAbbreviations.size() == 1
+        helpCenterLocalesResponse.localeAbbreviations[0] == locale
     }
 
     @Unroll

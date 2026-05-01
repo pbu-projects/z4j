@@ -45,9 +45,9 @@ class CategoryClientSpec extends Z4jSpec {
         // built in segments should be at least 2, this is here to just double check this doesn't change
     }
 
-    def "can use ListArticles using the '#locale' locale for the #userType user type"(
+    def "can use ListArticles using the '#localeAbbreviation' locale for the #userType user type"(
             CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation, SortCategoryBy sortBy, SortOrder sortOrder) {
-        when: "query Categories list for the '#locale' locale"
+        when: "query Categories list for the '#localeAbbreviation' locale"
         categoryClient.listCategories(localeAbbreviation, sortBy, sortOrder).block()
 
         then:
@@ -76,7 +76,7 @@ class CategoryClientSpec extends Z4jSpec {
         ].combinations()
     }
 
-    def "can use CreateCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation) {
+    def "can use CreateCategory as an #userType for the '#localeAbbreviation' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         String categoryName = faker.animal().name()
@@ -90,14 +90,14 @@ class CategoryClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
 
-        cleanup: "deleting #categoryName from the #locale locale"
+        cleanup: "deleting #categoryName from the #localeAbbreviation locale"
         categoryClient.deleteCategory(localeAbbreviation, response.getCategory().getId())
 
         where:
         [[categoryClient, userType], localeAbbreviation] << [[[adminCategoryClient, "admin"]], allLocales].combinations()
     }
 
-    def "cannot use CreateCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation) {
+    def "cannot use CreateCategory as an #userType for the '#localeAbbreviation' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         String categoryName = faker.animal().name()
@@ -114,7 +114,7 @@ class CategoryClientSpec extends Z4jSpec {
         and:
         error.getStatus() == FORBIDDEN
 
-        cleanup: "deleting #categoryName from the #locale locale"
+        cleanup: "deleting #categoryName from the #localeAbbreviation locale"
         try {
             adminCategoryClient.deleteCategory(localeAbbreviation, response.getCategory().getId())
         } catch (NullPointerException ignored) {
@@ -124,7 +124,7 @@ class CategoryClientSpec extends Z4jSpec {
         [[categoryClient, userType], localeAbbreviation] << [[[userCategoryClient, "user"], [agentCategoryClient, "agent"]], allLocales].combinations()
     }
 
-    def "can use DeleteCategory as an #userType for the '#locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation) {
+    def "can use DeleteCategory as an #userType for the '#localeAbbreviation"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         String categoryName = faker.bluey().quote()
@@ -143,7 +143,7 @@ class CategoryClientSpec extends Z4jSpec {
         [[categoryClient, userType], localeAbbreviation] << [[[adminCategoryClient, "admin"]], allLocales].combinations()
     }
 
-    def "cannot use DeleteCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation) {
+    def "cannot use DeleteCategory as an #userType for the '#localeAbbreviation' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         String categoryName = faker.bluey().quote() + " " + UUID.randomUUID().toString()

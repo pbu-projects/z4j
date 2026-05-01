@@ -40,10 +40,10 @@ class ArticleClientSpec extends Z4jSpec {
         allLocales = userCtx.getBean(LocaleClient.class).listLocales().block().locales.collect { it.localeAbbreviation }
     }
 
-    def "can use ListArticles for other tests using the '#locale' locale"(
+    def "can use ListArticles for other tests using the '#localeAbbreviation' locale"(
             ArticleClient articleClient, LocaleAbbreviation localeAbbreviation, SortArticleBy sortBy, SortOrder sortOrder, Long startTime, String labelNames) {
         // https://github.com/PeanutButter-Unicorn/z4j/issues/31
-        when: "query articles list for the '#locale' locale"
+        when: "query articles list for the '#localeAbbreviation' locale"
         Mono<ArticlesResponse> response = articleClient.listArticles(localeAbbreviation, sortBy, sortOrder, startTime, labelNames)
 
         then:
