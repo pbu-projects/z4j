@@ -1,3 +1,18 @@
+/*
+ * Copyright 2026 Peanut Butter Unicorn, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package lol.pbu.z4j.model
 
 import lol.pbu.z4j.Z4jSpec
@@ -10,13 +25,11 @@ class SearchSpec extends Z4jSpec {
         given:
         // SearchResultsInner is an interface, so we use a concrete implementation.
         // Assuming 'Article' is one such implementation.
-        def article1 = new Article(faker.locality().toString(),
-                faker.number().randomNumber(),
-                faker.book().title())
+        def article1 = new Article().setLocaleAbbreviation(LocaleAbbreviation.BULGARIAN)
+                .setPermissionGroupId(faker.number().randomNumber()).setTitle(faker.book().author())
 
-        def article2 = new Article(faker.locality().toString(),
-                faker.number().randomNumber(),
-                faker.book().title())
+        def article2 = new Article().setLocaleAbbreviation(LocaleAbbreviation.GERMAN)
+                .setPermissionGroupId(faker.number().randomNumber()).setTitle(faker.book().author())
 
         List<SearchResultsInner> searchResults = [article1, article2]
 
@@ -31,16 +44,18 @@ class SearchSpec extends Z4jSpec {
     @Unroll
     def "should add item to results"() {
         given:
-        def initialArticle = new Article(faker.locality().toString(),
-                faker.number().randomNumber(),
-                faker.book().title())
+        def initialArticle = new Article()
+                .setLocaleAbbreviation(LocaleAbbreviation.JAPANESE)
+                .setId(faker.number().randomNumber())
+                .setTitle(faker.book().title())
 
         List<SearchResultsInner> initialResults = [initialArticle]
         def search = new Search(initialResults)
 
-        Article newResult = new Article(faker.locality().toString(),
-                faker.number().randomNumber(),
-                faker.book().title())
+        Article newResult = new Article()
+                .setLocaleAbbreviation(LocaleAbbreviation.JAPANESE)
+                .setId(faker.number().randomNumber())
+                .setTitle(faker.book().title())
 
         when:
         def returnedSearch = search.addResultsItem(newResult)

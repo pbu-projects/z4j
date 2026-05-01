@@ -1,0 +1,120 @@
+
+>     CursorPaginationSort:
+        name: sort
+        in: query
+        description: |
+          Field to sort results by. Prefix with `-` for descending order.
+  
+          When used with cursor pagination, this determines the cursor ordering.
+  
+          Example: `?sort=name` or `?sort=-created_at`
+        schema:
+          type: string
+        example: name
+      CustomObjectFieldKeyOrId:
+        name: custom_object_field_key_or_id
+        in: path
+        description: The key or id of a custom object field
+        required: true
+        schema:
+          type: string
+        example: make
+      CustomObjectKey:
+>     DualPaginationPage:
+        name: page
+        in: query
+        description: |
+          Pagination parameter. Supports both traditional offset and cursor-based pagination:
+  
+          - Traditional: `?page=2` (integer page number)
+          - Cursor: `?page[size]=50&page[after]=cursor` (deepObject with size, after, before)
+  
+          These are mutually exclusive - use one format or the other, not both.
+        style: deepObject
+        explode: true
+        schema:
+          oneOf:
+            - type: integer
+              description: Traditional offset pagination page number (non-negative integer)
+              example: 1
+            - type: object
+              description: Cursor pagination parameters (JSON:API style)
+              properties:
+                after:
+>     PerPage:
+        name: per_page
+        in: query
+        description: |
+          Number of records to return per page.
+  
+          Note: Default and maximum values vary by endpoint. Check endpoint-specific
+          documentation for limits.
+        schema:
+          type: integer
+          minimum: 1
+        example: 50
+      RequestId:
+        name: request_id
+        in: path
+        description: The ID of the request
+        required: true
+        schema:
+          type: integer
+        example: 33
+      ResourceCollectionId:
+>     TicketSortBy:
+        name: sort_by
+        in: query
+        description: Sort by
+        schema:
+          type: string
+          enum:
+            - id
+            - subject
+            - deleted_at
+            - created_at
+            - updated_at
+            - status
+            - requester
+            - requester.name
+            - group
+            - assignee
+            - assignee.name
+>     TicketSortOrder:
+        name: sort_order
+        in: query
+        description: Sort order. Defaults to "asc"
+        schema:
+          type: string
+          enum:
+            - asc
+            - desc
+>     TicketSupportTypeScope:
+        name: support_type_scope
+        in: query
+        description: |
+          Lists tickets by support type. Possible values are "all", "agent", or "ai_agent". Defaults to "agent"
+        schema:
+          type: string
+>     TicketsInclude:
+        name: include
+        in: query
+        description: |
+          Sideloads to include in the response. Accepts a comma-separated list of values.
+          See [Sideloading](/api-reference/ticketing/tickets/tickets/#sideloading).
+        schema:
+          type: string
+        example: users,groups,organizations
+      TriggerActive:
+        name: active
+        in: query
+        description: Filter by active triggers if true or inactive triggers if false
+        schema:
+          type: boolean
+        example: true
+      TriggerCategoryId:
+        name: category_id
+        in: query
+        description: Filter triggers by category ID
+        schema:
+

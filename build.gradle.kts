@@ -1,3 +1,18 @@
+/*
+ * Copyright 2026 Peanut Butter Unicorn, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 
@@ -9,7 +24,6 @@ plugins {
     id("signing")
     id("com.gradleup.nmcp.aggregation").version("1.4.4")
     id("io.micronaut.library") version "4.6.2"
-    id("io.micronaut.openapi") version "4.6.2"
     id("jacoco")
     id("org.sonarqube") version "latest.release"
 }
@@ -59,21 +73,6 @@ micronaut {
     processing {
         incremental(true)
         annotations("lol.pbu.*")
-    }
-    openapi {
-        version = "6.20.0"
-        client(file("src/main/resources/z4j.yaml")) {
-            apiPackageName.set("lol.pbu.z4j.client")
-            modelPackageName.set("lol.pbu.z4j.model")
-            useReactive.set(true)
-            useAuth.set(false)
-            lombok.set(true)
-            clientId.set("zendesk")
-            apiNameSuffix.set("Client")
-            alwaysUseGenerateHttpResponse.set(false)
-            generateHttpResponseWhereRequired.set(false)
-            additionalProperties.put("retryable", "true")
-        }
     }
 }
 
@@ -125,7 +124,7 @@ publishing {
                 }
                 developers {
                     developer {
-                        id.set("jonathan-zollinger")
+                        id.set("Jonathan-Zollinger")
                         name.set("Jonathan Zollinger")
                         email.set("jonathan.zollinger@gmail.com")
                     }
@@ -158,3 +157,4 @@ nmcpAggregation {
     }
     publishAllProjectsProbablyBreakingProjectIsolation()
 }
+

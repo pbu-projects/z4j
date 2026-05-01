@@ -259,7 +259,7 @@ A good way to summarize the 'testing commandments' is "If it's documented, [test
 
 ```java
 /**
- * {@summary List Locales}
+ * <h1>{@summary List Locales}</h1>
  * Lists the translation locales available for the account.  Allowed for anyone
  *
  * @return Success response (status code 200)
