@@ -25,7 +25,7 @@ class CommentsResponseSpec extends Z4jSpec {
         given:
         def commentsResponse = new CommentsResponse()
         commentsResponse.comments == null
-        def comment = new Comment(faker.lorem().word(), faker.lorem().sentence())
+        def comment = new Comment().setBody(faker.lorem().sentence()).setLocaleAbbreviation(LocaleAbbreviation.PORTUGUESE_BRAZIL)
 
         when:
         commentsResponse.addCommentsItem(comment)
@@ -38,9 +38,9 @@ class CommentsResponseSpec extends Z4jSpec {
     @Unroll
     def "add comments item to existing list"() {
         given:
-        def existingComment = new Comment(faker.lorem().word(), faker.lorem().sentence())
+        def existingComment = new Comment().setBody(faker.lorem().sentence()).setLocaleAbbreviation(LocaleAbbreviation.PORTUGUESE_BRAZIL)
         def commentsResponse = new CommentsResponse(comments: [existingComment])
-        def newComment = new Comment(faker.lorem().word(), faker.lorem().sentence())
+        def newComment = new Comment().setBody(faker.lorem().sentence()).setLocaleAbbreviation(LocaleAbbreviation.ITALIAN)
 
         when:
         commentsResponse.addCommentsItem(newComment)

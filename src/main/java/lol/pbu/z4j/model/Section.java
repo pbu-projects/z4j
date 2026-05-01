@@ -77,7 +77,7 @@ public class Section {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_LOCALE)
-    private String locale;
+    private LocaleAbbreviation localeAbbreviation;
 
     /**
      * The name of the section
@@ -182,8 +182,8 @@ public class Section {
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private String url;
 
-    public Section(String locale, String name) {
-        this.locale = locale;
+    public Section(LocaleAbbreviation localeAbbreviation, String name) {
+        this.localeAbbreviation = localeAbbreviation;
         this.name = name;
     }
 

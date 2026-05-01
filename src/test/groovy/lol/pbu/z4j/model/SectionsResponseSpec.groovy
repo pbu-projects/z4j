@@ -25,22 +25,22 @@ class SectionsResponseSpec extends Z4jSpec {
         given:
         def sectionsResponse = new SectionsResponse()
         sectionsResponse.sections == null
-        def section = new Section(faker.lorem().word(), faker.lorem().sentence())
+        def section = new Section(LocaleAbbreviation.FRENCH, faker.lorem().sentence())
 
         when:
         sectionsResponse.addSectionsItem(section)
 
         then:
         sectionsResponse.sections.size() == 1
-        sectionsResponse.sections.getAt(0) == section
+        sectionsResponse.sections[0] == section
     }
 
     @Unroll
     def "add sections item to existing list"() {
         given:
-        def existingSection = new Section(faker.lorem().word(), faker.lorem().sentence())
+        def existingSection = new Section(LocaleAbbreviation.BULGARIAN, faker.lorem().sentence())
         def sectionsResponse = new SectionsResponse(sections: [existingSection])
-        def newSection = new Section(faker.lorem().word(), faker.lorem().sentence())
+        def newSection = new Section(LocaleAbbreviation.POLISH, faker.lorem().sentence())
 
         when:
         sectionsResponse.addSectionsItem(newSection)

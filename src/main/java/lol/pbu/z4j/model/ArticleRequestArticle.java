@@ -21,10 +21,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.Accessors;
 
 /**
@@ -37,6 +34,7 @@ import lombok.experimental.Accessors;
 @ToString
 @Getter
 @Setter
+@AllArgsConstructor
 @JsonPropertyOrder({
         ArticleRequestArticle.JSON_PROPERTY_LOCALE,
         ArticleRequestArticle.JSON_PROPERTY_PERMISSION_GROUP_ID,
@@ -55,7 +53,7 @@ public class ArticleRequestArticle {
 
     @NotNull
     @JsonProperty(JSON_PROPERTY_LOCALE)
-    private String locale;
+    private LocaleAbbreviation localeAbbreviation;
 
     @NotNull
     @JsonProperty(JSON_PROPERTY_PERMISSION_GROUP_ID)
@@ -74,11 +72,5 @@ public class ArticleRequestArticle {
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private String body;
 
-    public ArticleRequestArticle(String locale, Long permissionGroupId, String title, Long userSegmentId) {
-        this.locale = locale;
-        this.permissionGroupId = permissionGroupId;
-        this.title = title;
-        this.userSegmentId = userSegmentId;
-    }
 
 }

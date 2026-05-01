@@ -25,7 +25,8 @@ class ArticleSearchResponseSpec extends Z4jSpec {
         given:
         def articleSearchResponse = new ArticleSearchResponse()
         articleSearchResponse.results == null
-        def article = new Article(faker.book().title(), faker.number().randomNumber(), faker.book().author())
+        def article = new Article().setLocaleAbbreviation(LocaleAbbreviation.BULGARIAN)
+                .setPermissionGroupId(faker.number().randomNumber()).setTitle(faker.book().author())
 
         when:
         articleSearchResponse.addResultsItem(article)
@@ -38,9 +39,9 @@ class ArticleSearchResponseSpec extends Z4jSpec {
     @Unroll
     def "add results item to existing list"() {
         given:
-        def existingArticle = new Article(faker.book().title(), faker.number().randomNumber(), faker.book().author())
+        def existingArticle = new Article().setLocaleAbbreviation(LocaleAbbreviation.BULGARIAN).setPermissionGroupId(faker.number().randomNumber()).setTitle(faker.book().author())
         def articleSearchResponse = new ArticleSearchResponse(results: [existingArticle])
-        def newArticle = new Article(faker.book().title(), faker.number().randomNumber(), faker.book().author())
+        def newArticle = new Article().setLocaleAbbreviation(LocaleAbbreviation.RUSSIAN).setPermissionGroupId(faker.number().randomNumber()).setTitle(faker.book().author())
 
         when:
         articleSearchResponse.addResultsItem(newArticle)

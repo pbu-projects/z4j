@@ -24,7 +24,7 @@ class HelpCenterLocalesResponseSpec extends Z4jSpec {
     def "should add locales item"() {
         given:
         def helpCenterLocalesResponse = new HelpCenterLocalesResponse()
-        helpCenterLocalesResponse.locales == null
+        helpCenterLocalesResponse.localeAbbreviations == null
         def locale = faker.nation().language()
 
         when:
@@ -32,22 +32,22 @@ class HelpCenterLocalesResponseSpec extends Z4jSpec {
 
         then:
         helpCenterLocalesResponse.locales.size() == 1
-        helpCenterLocalesResponse.locales.getAt(0) == locale
+        helpCenterLocalesResponse.locales[0] == locale
     }
 
     @Unroll
     def "add locales item to existing list"() {
         given:
-        def existingLocale = faker.nation().language()
-        def helpCenterLocalesResponse = new HelpCenterLocalesResponse(locales: [existingLocale])
-        def newLocale = faker.nation().language()
+        def existingLocale = LocaleAbbreviation.BULGARIAN
+        def helpCenterLocalesResponse = new HelpCenterLocalesResponse(localeAbbreviations: [existingLocale])
+        def newLocale = LocaleAbbreviation.GREEK
 
         when:
         helpCenterLocalesResponse.addLocalesItem(newLocale)
 
         then:
-        helpCenterLocalesResponse.locales.size() == 2
-        helpCenterLocalesResponse.locales.containsAll([existingLocale, newLocale])
+        helpCenterLocalesResponse.localeAbbreviations.size() == 2
+        helpCenterLocalesResponse.localeAbbreviations.containsAll([existingLocale, newLocale])
     }
 }
 

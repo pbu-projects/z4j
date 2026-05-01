@@ -25,22 +25,22 @@ class ArticlesResponseSpec extends Z4jSpec {
         given:
         def articlesResponse = new ArticlesResponse()
         articlesResponse.articles == null
-        def article = new Article(faker.book().title(), faker.number().randomNumber(), faker.book().author())
+        def article = new Article().setLocaleAbbreviation(LocaleAbbreviation.BULGARIAN).setPermissionGroupId(faker.number().randomNumber()).setTitle(faker.book().author())
 
         when:
         articlesResponse.addArticlesItem(article)
 
         then:
         articlesResponse.articles.size() == 1
-        articlesResponse.articles.getAt(0) == article
+        articlesResponse.articles[0] == article
     }
 
     @Unroll
     def "add articles item to existing list"() {
         given:
-        def existingArticle = new Article(faker.book().title(), faker.number().randomNumber(), faker.book().author())
+        def existingArticle = new Article().setLocaleAbbreviation(LocaleAbbreviation.BULGARIAN).setPermissionGroupId(faker.number().randomNumber()).setTitle(faker.book().author())
         def articlesResponse = new ArticlesResponse(articles: [existingArticle])
-        def newArticle = new Article(faker.book().title(), faker.number().randomNumber(), faker.book().author())
+        def newArticle = new Article().setLocaleAbbreviation(LocaleAbbreviation.FRENCH).setPermissionGroupId(faker.number().randomNumber()).setTitle(faker.book().author())
 
         when:
         articlesResponse.addArticlesItem(newArticle)

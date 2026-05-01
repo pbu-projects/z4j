@@ -77,7 +77,7 @@ public class Locale {
     @Nullable
     @JsonProperty(JSON_PROPERTY_LOCALE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String localeName;
+    private LocaleAbbreviation localeAbbreviation;
 
     /**
      * The name of the language

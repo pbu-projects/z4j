@@ -47,18 +47,18 @@ public class HelpCenterLocalesResponse {
     @Nullable
     @JsonProperty(JSON_PROPERTY_LOCALES)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull String> locales;
+    private List<@NotNull LocaleAbbreviation> localeAbbreviations;
 
     /**
      * Add an item to the locales property in a chainable fashion.
      *
      * @return The same instance of HelpCenterLocalesResponse for chaining.
      */
-    public HelpCenterLocalesResponse addLocalesItem(String localesItem) {
-        if (locales == null) {
-            locales = new ArrayList<>();
+    public HelpCenterLocalesResponse addLocalesItem(LocaleAbbreviation localeAbbreviation) {
+        if (localeAbbreviations == null) {
+            localeAbbreviations = new ArrayList<>();
         }
-        locales.add(localesItem);
+        localeAbbreviations.add(localeAbbreviation);
         return this;
     }
 

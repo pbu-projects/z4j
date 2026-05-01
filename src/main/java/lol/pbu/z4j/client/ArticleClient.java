@@ -24,6 +24,7 @@ import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.ArticlesResponse;
+import lol.pbu.z4j.model.LocaleAbbreviation;
 import lol.pbu.z4j.model.SortArticleBy;
 import lol.pbu.z4j.model.SortOrder;
 import reactor.core.publisher.Mono;
@@ -44,17 +45,17 @@ public interface ArticleClient {
     /**
      * <h1>{@summary List Articles}</h1>
      *
-     * @param locale     The locale in which the article is displayed. (must be lowercase, even if zendesk returns a mixed case response) (required)
-     * @param sortBy     Sorts the articles by one of the accepted values (optional)
-     * @param sortOrder  Selects the order of the results. (optional)
-     * @param startTime  You can use the incremental article endpoint to list all the articles that were updated since a certain date and time.
-     *                   This time is given as a <a href='https://www.epochconverter.com/'>Unix epoch timeStamp</a>  (optional)
-     * @param labelNames Only articles that have all the labels are returned. Multiple labels can be passed in a comma-delimited string (optional)
+     * @param localeAbbreviation The locale in which the article is displayed. (must be lowercase, even if zendesk returns a mixed case response) (required)
+     * @param sortBy             Sorts the articles by one of the accepted values (optional)
+     * @param sortOrder          Selects the order of the results. (optional)
+     * @param startTime          You can use the incremental article endpoint to list all the articles that were updated since a certain date and time.
+     *                           This time is given as a <a href='https://www.epochconverter.com/'>Unix epoch timeStamp</a>  (optional)
+     * @param labelNames         Only articles that have all the labels are returned. Multiple labels can be passed in a comma-delimited string (optional)
      * @return OK Response (status code 200)
      */
     @Get("/api/v2/help_center/{locale}/articles")
     Mono<@Valid ArticlesResponse> listArticles(
-            @PathVariable("locale") @NotNull String locale,
+            @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
             @QueryValue("sort_by") @Nullable SortArticleBy sortBy,
             @QueryValue("sort_order") @Nullable SortOrder sortOrder,
             @QueryValue("start_time") @Nullable Long startTime,

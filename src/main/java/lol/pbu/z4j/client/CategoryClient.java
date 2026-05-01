@@ -56,13 +56,13 @@ public interface CategoryClient {
      *
      * NOTE: pagination is not currently supported
      *
-     * @param locale                The in which the item is displayed. (must be lowercase, even if returned from zendesk as mixed case) (required)
+     * @param localeAbbreviation                The in which the item is displayed. (must be lowercase, even if returned from zendesk as mixed case) (required)
      * @param createCategoryRequest The locale can be omitted from the createCategoryRequest. (required)
      * @return Created response (status code 201)
      */
     @Post("/api/v2/help_center/{locale}/categories")
     Mono<@Valid CategoryResponse> createCategory(
-            @PathVariable("locale") @NotNull String locale,
+            @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
             @Body @NotNull @Valid CreateCategoryRequest createCategoryRequest
     );
 
@@ -85,12 +85,12 @@ public interface CategoryClient {
      * <p><strong>WARNING: Every section and all articles in the category will also be deleted.</strong></p>
      * <h4>Allowed for Help Center managers</h4>
      *
-     * @param locale     The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case) (required)
+     * @param localeAbbreviation     The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case) (required)
      * @param categoryId The unique ID of the category (required)
      * @return No content (status code 204)
      */
     @Delete("/api/v2/help_center/{locale}/categories/{category_id}")
-    Mono<Void> deleteCategory(@PathVariable("locale") @NotNull String locale, @PathVariable("category_id") @NotNull Long categoryId);
+    Mono<Void> deleteCategory(@PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation, @PathVariable("category_id") @NotNull Long categoryId);
 
     /**
      * <h1>{@summary Delete Category}</h1>
@@ -109,14 +109,14 @@ public interface CategoryClient {
      * <p>Translations are embedded within the category because they're not shared between resources.</p>
      * <h4>Allowed for Anonymous users</h4>
      *
-     * @param locale    The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case) (required)
+     * @param localeAbbreviation    The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case) (required)
      * @param sortBy    {@link SortCategoryBy}  (optional)
      * @param sortOrder {@link SortOrder}  (optional)
      * @return OK (status code 200)
      */
     @Get("/api/v2/help_center/{locale}/categories")
     Mono<@Valid CategoriesResponse> listCategories(
-            @PathVariable("locale") @NotNull String locale,
+            @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
             @QueryValue("sort_by") @Nullable SortCategoryBy sortBy,
             @QueryValue("sort_order") @Nullable SortOrder sortOrder
     );
@@ -147,7 +147,7 @@ public interface CategoryClient {
      */
     @Get("/api/v2/help_center/{locale}/categories/{category_id}")
     Mono<@Valid CategoryResponse> showCategory(
-            @PathVariable("locale") @NotNull String locale,
+            @PathVariable("locale") @NotNull LocaleAbbreviation locale,
             @PathVariable("category_id") @NotNull Long categoryId
     );
 
@@ -166,14 +166,14 @@ public interface CategoryClient {
      * <p>This only updates category-level metadata such as the sorting position. This doesn't update category translations.</p>
      * <h4>Allowed for Help Center managers</h4>
      *
-     * @param locale                The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case) (required)
+     * @param localeAbbreviation                The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case) (required)
      * @param categoryId            The unique ID of the category (required)
      * @param createCategoryRequest {@link CreateCategoryRequest} (required)
      * @return OK Response (status code 200)
      */
     @Put("/api/v2/help_center/{locale}/categories/{category_id}")
     Mono<@Valid CategoryResponse> updateCategory(
-            @PathVariable("locale") @NotNull String locale,
+            @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
             @PathVariable("category_id") @NotNull Long categoryId,
             @Body @NotNull @Valid CreateCategoryRequest createCategoryRequest
     );

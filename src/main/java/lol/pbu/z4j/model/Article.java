@@ -102,7 +102,7 @@ public class Article implements SearchResultsInner {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_LOCALE)
-    private String locale;
+    private LocaleAbbreviation localeAbbreviation;
 
     /**
      * The id of the permission group which defines who can edit and publish this article
@@ -191,7 +191,7 @@ public class Article implements SearchResultsInner {
     private Long id;
 
     /**
-     * An array of label names associated with this article. By default no label names are used. Only available on certain plans
+     * An array of label names associated with this article. By default, no label names are used. Only available on certain plans
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_LABEL_NAMES)
@@ -294,11 +294,6 @@ public class Article implements SearchResultsInner {
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private Long voteSum;
 
-    public Article(String locale, Long permissionGroupId, String title) {
-        this.locale = locale;
-        this.permissionGroupId = permissionGroupId;
-        this.title = title;
-    }
 
     /**
      * Add an item to the contentTagIds property in a chainable fashion.

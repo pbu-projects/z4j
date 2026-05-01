@@ -90,7 +90,7 @@ public interface TicketClient {
      * @return Success response (status code 200)
      */
     @Get("/api/v2/ticket_fields")
-    Mono<@Valid TicketFieldsResponse> listTicketFields(@QueryValue("locale") @Nullable String locale, @QueryValue("creator") @Nullable Boolean creator);
+    Mono<@Valid TicketFieldsResponse> listTicketFields(@QueryValue("locale") @Nullable LocaleAbbreviation localeAbbreviation, @QueryValue("creator") @Nullable Boolean creator);
 
     /**
      * <h1>{@summary List Tickets}</h1>

@@ -77,7 +77,7 @@ public class Translation {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_LOCALE)
-    private String locale;
+    private LocaleAbbreviation localeAbbreviation;
 
     /**
      * The title of the translation
@@ -182,8 +182,8 @@ public class Translation {
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private String url;
 
-    public Translation(String locale, String title) {
-        this.locale = locale;
+    public Translation(LocaleAbbreviation localeAbbreviation, String title) {
+        this.localeAbbreviation = localeAbbreviation;
         this.title = title;
     }
 

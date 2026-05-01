@@ -86,7 +86,7 @@ public class Comment {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_LOCALE)
-    private String locale;
+    private LocaleAbbreviation localeAbbreviation;
 
     /**
      * The id of the author of this comment. Writable on create by Help Center managers. See <a href=\"#create-comment\">Create Comment</a>
@@ -121,7 +121,10 @@ public class Comment {
     private Long id;
 
     /**
-     * The user id of whoever performed the most recent (if any) non-author edit. A non-author edit consists of an edit make by a user other than the author that creates or updates the <code>body</code> or <code>author_id</code>. Note that only edits made after May 17, 2021 will be reflected in this field. If no non-author edits have occured since May 17, 2021, then this field will be <code>null</code>.
+     * <h4>The user id of whoever performed the most recent (if any) non-author edit.</h4> A non-author edit consists of
+     * an edit make by a user other than the author that creates or updates the <code>body</code> or
+     * <code>author_id</code>. Note that only edits made after May 17, 2021, will be reflected in this field.
+     * If no non-author edits have occurred since May 17, 2021, then this field will be<code>null</code>.
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_NON_AUTHOR_EDITOR_ID)
@@ -183,10 +186,5 @@ public class Comment {
     @JsonProperty(JSON_PROPERTY_VOTE_SUM)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private Long voteSum;
-
-    public Comment(String body, String locale) {
-        this.body = body;
-        this.locale = locale;
-    }
 
 }

@@ -18,6 +18,7 @@ package lol.pbu.z4j.client
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.model.ArticlesResponse
+import lol.pbu.z4j.model.LocaleAbbreviation
 import lol.pbu.z4j.model.SortArticleBy
 import lol.pbu.z4j.model.SortOrder
 import reactor.core.publisher.Mono
@@ -30,19 +31,20 @@ class ArticleClientSpec extends Z4jSpec {
     ArticleClient adminArticleClient, agentArticleClient, userArticleClient
 
     @Shared
-    List<String> allLocales
+    List<LocaleAbbreviation> allLocales
 
     def setupSpec() {
         adminArticleClient = adminCtx.getBean(ArticleClient.class)
         agentArticleClient = agentCtx.getBean(ArticleClient.class)
         userArticleClient = userCtx.getBean(ArticleClient.class)
-        allLocales = userCtx.getBean(LocaleClient.class).listLocales().block().locales.collect { it.localeName.toLowerCase() }
+        allLocales = userCtx.getBean(LocaleClient.class).listLocales().block().locales.collect { it.localeAbbreviation }
     }
 
-    def "can use ListArticles for other tests using the '#locale' locale"(ArticleClient articleClient, String locale, SortArticleBy sortBy, SortOrder sortOrder, Long startTime, String labelNames) {
+    def "can use ListArticles for other tests using the '#locale' locale"(
+            ArticleClient articleClient, LocaleAbbreviation localeAbbreviation, SortArticleBy sortBy, SortOrder sortOrder, Long startTime, String labelNames) {
         // https://github.com/PeanutButter-Unicorn/z4j/issues/31
         when: "query articles list for the '#locale' locale"
-        Mono<ArticlesResponse> response = articleClient.listArticles(locale, sortBy, sortOrder, startTime, labelNames)
+        Mono<ArticlesResponse> response = articleClient.listArticles(localeAbbreviation, sortBy, sortOrder, startTime, labelNames)
 
         then:
         ArticlesResponse articlesResponse = response.block()
@@ -54,7 +56,7 @@ class ArticleClientSpec extends Z4jSpec {
         }
 
         where:
-        [articleClient, locale, sortBy, sortOrder, startTime, labelNames] << [
+        [articleClient, localeAbbreviation, sortBy, sortOrder, startTime, labelNames] << [
                 [adminArticleClient, agentArticleClient, userArticleClient],
                 allLocales,
                 [SortArticleBy.values(), null].flatten(),

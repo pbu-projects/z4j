@@ -25,13 +25,11 @@ class SearchSpec extends Z4jSpec {
         given:
         // SearchResultsInner is an interface, so we use a concrete implementation.
         // Assuming 'Article' is one such implementation.
-        def article1 = new Article(faker.locality().toString(),
-                faker.number().randomNumber(),
-                faker.book().title())
+        def article1 = new Article().setLocaleAbbreviation(LocaleAbbreviation.BULGARIAN)
+                .setPermissionGroupId(faker.number().randomNumber()).setTitle(faker.book().author())
 
-        def article2 = new Article(faker.locality().toString(),
-                faker.number().randomNumber(),
-                faker.book().title())
+        def article2 = new Article().setLocaleAbbreviation(LocaleAbbreviation.GERMAN)
+                .setPermissionGroupId(faker.number().randomNumber()).setTitle(faker.book().author())
 
         List<SearchResultsInner> searchResults = [article1, article2]
 
@@ -46,16 +44,18 @@ class SearchSpec extends Z4jSpec {
     @Unroll
     def "should add item to results"() {
         given:
-        def initialArticle = new Article(faker.locality().toString(),
-                faker.number().randomNumber(),
-                faker.book().title())
+        def initialArticle = new Article()
+                .setLocaleAbbreviation(LocaleAbbreviation.JAPANESE)
+                .setId(faker.number().randomNumber())
+                .setTitle(faker.book().title())
 
         List<SearchResultsInner> initialResults = [initialArticle]
         def search = new Search(initialResults)
 
-        Article newResult = new Article(faker.locality().toString(),
-                faker.number().randomNumber(),
-                faker.book().title())
+        Article newResult = new Article()
+                .setLocaleAbbreviation(LocaleAbbreviation.JAPANESE)
+                .setId(faker.number().randomNumber())
+                .setTitle(faker.book().title())
 
         when:
         def returnedSearch = search.addResultsItem(newResult)

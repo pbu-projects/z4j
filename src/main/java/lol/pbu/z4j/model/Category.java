@@ -113,7 +113,7 @@ public class Category {
     @Nullable
     @JsonProperty(JSON_PROPERTY_LOCALE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String locale;
+    private LocaleAbbreviation localeAbbreviation;
 
     /**
      * Whether the category is out of date

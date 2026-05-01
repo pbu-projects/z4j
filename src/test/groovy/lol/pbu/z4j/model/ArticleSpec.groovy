@@ -23,9 +23,9 @@ class ArticleSpec extends Z4jSpec {
     @Unroll
     def "should add #propertyName via #methodName and assign it the value of #property"() {
         given:
-        def article = new Article(faker.locality().toString(),
-                faker.number().randomNumber(),
-                faker.book().title())
+        def article = new Article().setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                .setPermissionGroupId(faker.number().randomNumber())
+                .setTitle(faker.book().title())
         article."$propertyName" == null
 
         when:
@@ -43,11 +43,12 @@ class ArticleSpec extends Z4jSpec {
     }
 
     @Unroll
-    def "add #property to #propertyName via #methodName. Property #propertyName already contains #existingProperty"() {
+    def "add #property to #propertyName via #methodName. Property #propertyName already contains #existingProperty"(
+            String propertyName, String methodName, String property) {
         given:
-        def article = new Article(faker.locality().toString(),
-                faker.number().randomNumber(),
-                faker.book().title())
+        def article = new Article().setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                .setPermissionGroupId(faker.number().randomNumber())
+                .setTitle(faker.book().title())
         article."$propertyName" = existingProperty.clone()
 
         when:

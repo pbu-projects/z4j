@@ -33,28 +33,28 @@ class CategoryClientSpec extends Z4jSpec {
     List<UserSegment> userSegments
 
     @Shared
-    List<String> allLocales
+    List<LocaleAbbreviation> allLocales
 
     def setupSpec() {
         adminCategoryClient = adminCtx.getBean(CategoryClient.class)
         agentCategoryClient = agentCtx.getBean(CategoryClient.class)
         userCategoryClient = userCtx.getBean(CategoryClient.class)
-        allLocales = adminCtx.getBean(LocaleClient.class).listLocales().block().locales.collect { it.localeName.toLowerCase() }
+        allLocales = adminCtx.getBean(LocaleClient.class).listLocales().block().locales.collect { it.localeAbbreviation }
         userSegments = adminCtx.getBean(UserSegmentClient.class).listUserSegments(null).block().getUserSegments()
         assert userSegments.size() >= 2
         // built in segments should be at least 2, this is here to just double check this doesn't change
     }
 
     def "can use ListArticles using the '#locale' locale for the #userType user type"(
-            CategoryClient categoryClient, String userType, String locale, SortCategoryBy sortBy, SortOrder sortOrder) {
+            CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation, SortCategoryBy sortBy, SortOrder sortOrder) {
         when: "query Categories list for the '#locale' locale"
-        categoryClient.listCategories(locale, sortBy, sortOrder).block()
+        categoryClient.listCategories(localeAbbreviation, sortBy, sortOrder).block()
 
         then:
         noExceptionThrown()
 
         where:
-        [[categoryClient, userType], locale, sortBy, sortOrder, startTime, labelNames] << [
+        [[categoryClient, userType], localeAbbreviation, sortBy, sortOrder, startTime, labelNames] << [
                 [[adminCategoryClient, "admin"], [agentCategoryClient, "agent"], [userCategoryClient, "user"]],
                 allLocales,
                 [SortCategoryBy.values(), null].flatten(),
@@ -76,7 +76,7 @@ class CategoryClientSpec extends Z4jSpec {
         ].combinations()
     }
 
-    def "can use CreateCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, String locale) {
+    def "can use CreateCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         String categoryName = faker.animal().name()
@@ -85,19 +85,19 @@ class CategoryClientSpec extends Z4jSpec {
         createCategoryRequest.setCategory(category)
 
         when: "category name to be created is #categoryName"
-        CategoryResponse response = categoryClient.createCategory(locale, createCategoryRequest).block()
+        CategoryResponse response = categoryClient.createCategory(localeAbbreviation, createCategoryRequest).block()
 
         then:
         noExceptionThrown()
 
         cleanup: "deleting #categoryName from the #locale locale"
-        categoryClient.deleteCategory(locale, response.getCategory().getId())
+        categoryClient.deleteCategory(localeAbbreviation, response.getCategory().getId())
 
         where:
-        [[categoryClient, userType], locale] << [[[adminCategoryClient, "admin"]], allLocales].combinations()
+        [[categoryClient, userType], localeAbbreviation] << [[[adminCategoryClient, "admin"]], allLocales].combinations()
     }
 
-    def "cannot use CreateCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, String locale) {
+    def "cannot use CreateCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         String categoryName = faker.animal().name()
@@ -106,7 +106,7 @@ class CategoryClientSpec extends Z4jSpec {
         createCategoryRequest.setCategory(category)
 
         when: "category name to be created is #categoryName"
-        CategoryResponse response = categoryClient.createCategory(locale, createCategoryRequest).block()
+        CategoryResponse response = categoryClient.createCategory(localeAbbreviation, createCategoryRequest).block()
 
         then:
         HttpClientResponseException error = thrown(HttpClientResponseException)
@@ -116,44 +116,44 @@ class CategoryClientSpec extends Z4jSpec {
 
         cleanup: "deleting #categoryName from the #locale locale"
         try {
-            adminCategoryClient.deleteCategory(locale, response.getCategory().getId())
+            adminCategoryClient.deleteCategory(localeAbbreviation, response.getCategory().getId())
         } catch (NullPointerException ignored) {
         }
 
         where:
-        [[categoryClient, userType], locale] << [[[userCategoryClient, "user"], [agentCategoryClient, "agent"]], allLocales].combinations()
+        [[categoryClient, userType], localeAbbreviation] << [[[userCategoryClient, "user"], [agentCategoryClient, "agent"]], allLocales].combinations()
     }
 
-    def "can use DeleteCategory as an #userType for the '#locale"(CategoryClient categoryClient, String userType, String locale) {
+    def "can use DeleteCategory as an #userType for the '#locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         String categoryName = faker.bluey().quote()
         Category category = new Category(categoryName)
         category.setDescription(faker.lordOfTheRings().location())
         createCategoryRequest.setCategory(category)
-        CategoryResponse response = categoryClient.createCategory(locale, createCategoryRequest).block()
+        CategoryResponse response = categoryClient.createCategory(localeAbbreviation, createCategoryRequest).block()
 
         when:
-        categoryClient.deleteCategory(locale, response.getCategory().getId())
+        categoryClient.deleteCategory(localeAbbreviation, response.getCategory().getId())
 
         then:
         noExceptionThrown()
 
         where:
-        [[categoryClient, userType], locale] << [[[adminCategoryClient, "admin"]], allLocales].combinations()
+        [[categoryClient, userType], localeAbbreviation] << [[[adminCategoryClient, "admin"]], allLocales].combinations()
     }
 
-    def "cannot use DeleteCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, String locale) {
+    def "cannot use DeleteCategory as an #userType for the '#locale' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation) {
         given:
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         String categoryName = faker.bluey().quote() + " " + UUID.randomUUID().toString()
         Category category = new Category(categoryName)
         category.setDescription(faker.lordOfTheRings().location())
         createCategoryRequest.setCategory(category)
-        CategoryResponse response = adminCategoryClient.createCategory(locale, createCategoryRequest).block()
+        CategoryResponse response = adminCategoryClient.createCategory(localeAbbreviation, createCategoryRequest).block()
 
         when:
-        categoryClient.deleteCategory(locale, response.getCategory().getId())
+        categoryClient.deleteCategory(localeAbbreviation, response.getCategory().getId())
 
         then:
         noExceptionThrown() // this shouldn't be allowed!
@@ -163,12 +163,12 @@ class CategoryClientSpec extends Z4jSpec {
 
         cleanup:
         try {
-            adminCategoryClient.deleteCategory(locale, response.getCategory().getId())
+            adminCategoryClient.deleteCategory(localeAbbreviation, response.getCategory().getId())
         } catch (NullPointerException ignored) {
         }
 
         where:
-        [[categoryClient, userType], locale] << [[[userCategoryClient, "user"], [agentCategoryClient, "agent"]], allLocales].combinations()
+        [[categoryClient, userType], localeAbbreviation] << [[[userCategoryClient, "user"], [agentCategoryClient, "agent"]], allLocales].combinations()
     }
 }
 

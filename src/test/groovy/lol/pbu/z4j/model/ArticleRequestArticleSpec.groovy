@@ -23,16 +23,16 @@ class ArticleRequestArticleSpec extends Z4jSpec {
     @Unroll
     def "should create ArticleRequestArticle with correct properties"() {
         given:
-        def locale = faker.nation().language()
+        def locale = LocaleAbbreviation.SIMPLIFIED_CHINESE
         def permissionGroupId = faker.number().randomNumber()
         def title = faker.book().title()
         def userSegmentId = faker.number().randomNumber()
 
         when:
-        def articleRequestArticle = new ArticleRequestArticle(locale, permissionGroupId, title, userSegmentId)
+        def articleRequestArticle = new ArticleRequestArticle(locale, permissionGroupId, title, userSegmentId, faker.lorem().sentence())
 
         then:
-        articleRequestArticle.locale == locale
+        articleRequestArticle.localeAbbreviation == locale
         articleRequestArticle.permissionGroupId == permissionGroupId
         articleRequestArticle.title == title
         articleRequestArticle.userSegmentId == userSegmentId

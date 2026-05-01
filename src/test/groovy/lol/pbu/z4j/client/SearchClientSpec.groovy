@@ -87,7 +87,8 @@ class SearchClientSpec extends Z4jSpec {
     }
 
     @SuppressWarnings("GroovyAssignabilityCheck")
-    void "an #clientName can call export method with pageSize: #pageSize, pageAfter: #pageAfter, filterType: #filterType and include: #include"(String clientName, SearchClient client, int pageSize, String pageAfter, SearchExportType filterType, String include) {
+    void "an #clientName can call export method with pageSize: #pageSize, pageAfter: #pageAfter, filterType: #filterType and include: #include"(
+            String clientName, SearchClient client, int pageSize, String pageAfter, SearchExportType filterType, String include) {
         when:
         client.export(faker.bluey().quote(), pageSize, pageAfter, filterType, include).block()
 

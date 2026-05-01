@@ -24,10 +24,11 @@ class ArticleRequestSpec extends Z4jSpec {
     def "should create ArticleRequest with correct properties"() {
         given:
         def articleRequestArticle = new ArticleRequestArticle(
+                LocaleAbbreviation.ARABIC,
+                faker.number().randomNumber(),
                 faker.book().title(),
                 faker.number().randomNumber(),
-                faker.lorem().paragraph(),
-                faker.number().randomNumber()
+                faker.lorem().paragraph()
         )
 
         when:

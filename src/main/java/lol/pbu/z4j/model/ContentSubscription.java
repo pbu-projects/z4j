@@ -67,7 +67,7 @@ public class ContentSubscription {
     @Nullable
     @JsonProperty(JSON_PROPERTY_LOCALE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String locale;
+    private LocaleAbbreviation localeAbbreviation;
 
     /**
      * The id of the subscribed item

@@ -181,7 +181,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "can call listTicketFields when using a(n) #clientType client and #creator flag"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored, Boolean creator, Locale locale) {
         when:
-        client.listTicketFields(locale.getLocaleName(), creator).block()
+        client.listTicketFields(locale.getLocaleAbbreviation(), creator).block()
 
         then:
         noExceptionThrown()
@@ -194,7 +194,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "calling listTicketFields when using a(n) #clientType client and #creator flag fails"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored, Boolean creator, Locale locale) {
         when:
-        client.listTicketFields(locale.getLocaleName(), creator).block()
+        client.listTicketFields(locale.getLocaleAbbreviation(), creator).block()
 
         then:
         thrown(HttpClientException)
