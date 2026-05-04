@@ -174,7 +174,7 @@ public class TicketComment {
     @Valid
     @JsonProperty(JSON_PROPERTY_VIA)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private TicketAuditVia via;
+    private TicketVia via;
 
     /**
      * Add an item to the uploads property in a chainable fashion.
