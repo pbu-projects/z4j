@@ -23,7 +23,7 @@ import spock.lang.Shared
 class TicketClientSpec extends Z4jSpec {
 
     @Shared
-    TicketClient ticketsAgentClient, ticketsAdminClient, ticketsUserClient, ticketBadEmailClient, ticketBadUrlClient
+    TicketClient ticketsAgentClient, ticketsUserClient, ticketBadEmailClient, ticketBadUrlClient
 
     @Shared
     List<Ticket> tickets
@@ -35,7 +35,7 @@ class TicketClientSpec extends Z4jSpec {
         ticketBadEmailClient = badEmailCtx.getBean(TicketClient.class)
         ticketBadUrlClient = badUrlCtx.getBean(TicketClient.class)
         ticketsAgentClient = agentCtx.getBean(TicketClient.class)
-        ticketsAdminClient = adminCtx.getBean(TicketClient.class)
+        ticketsAdminClient = ticketsAdminClient ?: adminCtx.getBean(TicketClient.class)
         ticketsUserClient = userCtx.getBean(TicketClient.class)
         tickets = ticketsAgentClient.listTickets(null).block().getTickets()
         clientTestMatrix = [[client: ticketsAgentClient, clientType: "Agent", shouldSucceed: true, expectedTitle: "should"],

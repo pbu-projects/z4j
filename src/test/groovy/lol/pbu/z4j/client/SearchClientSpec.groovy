@@ -34,6 +34,8 @@ class SearchClientSpec extends Z4jSpec {
         userSearchClient = userCtx.getBean(SearchClient.class)
     }
 
+    /* ---------- list() tests --------------- */
+
     @SuppressWarnings("GroovyAssignabilityCheck")
     @Unroll("an #clientName user can run the list method with sortby: #sortBy, sortOrder: #sortOrder and include: #include")
     void "can run the list method"(String clientName, SearchClient client, SortBy sortBy, SortOrder sortOrder, String include) {
@@ -49,18 +51,6 @@ class SearchClientSpec extends Z4jSpec {
                                                                [SortOrder.values(), null].flatten(),
                                                                [null, faker.cat().name()]].combinations()
     }
-
-    void "an #clientName user can run the count method"(String clientName, SearchClient client) {
-        when:
-        client.count(faker.bluey().quote()).block()
-
-        then:
-        noExceptionThrown()
-
-        where:
-        [client, clientName] << [[adminSearchClient, "admin"], [agentSearchClient, "agent"]]
-    }
-
 
     @SuppressWarnings("GroovyAssignabilityCheck")
     @Unroll("an #clientName user can paginate the list method with sortby: #sortBy, sortOrder: #sortOrder and include: #include")
@@ -116,6 +106,20 @@ class SearchClientSpec extends Z4jSpec {
                                                  [null, faker.cat().name()]].combinations()
     }
 
+    /* ---------- count() tests --------------- */
+
+    void "an #clientName user can run the count method"(String clientName, SearchClient client) {
+        when:
+        client.count(faker.bluey().quote()).block()
+
+        then:
+        noExceptionThrown()
+
+        where:
+        [client, clientName] << [[adminSearchClient, "admin"], [agentSearchClient, "agent"]]
+    }
+
+
     void "a normal user cannot run the count method"(SearchClient client) {
         when:
         client.count(faker.bluey().quote()).block()
@@ -128,9 +132,14 @@ class SearchClientSpec extends Z4jSpec {
         userSearchClient | _
     }
 
+    /* ---------- export() tests --------------- */
+
     @SuppressWarnings("GroovyAssignabilityCheck")
     void "an #clientName can call export method with pageSize: #pageSize, pageAfter: #pageAfter, filterType: #filterType and include: #include"(
             String clientName, SearchClient client, int pageSize, String pageAfter, SearchExportType filterType, String include) {
+        given:
+        client.count("type:ticket").block()
+
         when:
         client.export(faker.bluey().quote(), pageSize, pageAfter, filterType, include).block()
 
