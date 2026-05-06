@@ -119,11 +119,10 @@ public class TicketField {
     private String title;
 
     /**
-     * System or custom field type. Editable for custom field types and only on creation. See <a href=\"#create-ticket-field\">Create Ticket Field</a>
+     * System or custom field type. Editable for custom field types and only on creation. See <a href="https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_fields/#create-ticket-field">Create Ticket Field</a>
      */
-    @NotNull
     @JsonProperty(JSON_PROPERTY_TYPE)
-    private String type;
+    private TicketType type;
 
     /**
      * Whether this field is available
@@ -182,7 +181,7 @@ public class TicketField {
     private Long creatorUserId;
 
     /**
-     * Required and presented for a custom ticket field of type \"multiselect\" or \"tagger\"
+     * Required and presented for a custom ticket field of type {@code multiselect} or {@code tagger}
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_FIELD_OPTIONS)
@@ -190,7 +189,7 @@ public class TicketField {
     private List<@Valid CustomFieldOption> customFieldOptions;
 
     /**
-     * List of customized ticket statuses. Only presented for a system ticket field of type \"custom_status\"
+     * List of customized ticket statuses. Only presented for a system ticket field of type {@code custom_status}
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_STATUSES)
@@ -214,12 +213,12 @@ public class TicketField {
     private Boolean editableInPortal;
 
     /**
-     * Automatically assigned when created
+     * Automatically assigned when created. {@code id} of this ticket object.
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
+    private Long ticketId;
 
     /**
      * The relative position of the ticket field on a ticket. Note that for accounts with ticket forms, positions are controlled by the different forms
@@ -230,7 +229,7 @@ public class TicketField {
     private Integer position;
 
     /**
-     * The dynamic content placeholder if present, or the <code>description</code> value if not. See <a href=\"/api-reference/ticketing/ticket-management/dynamic_content/\">Dynamic Content</a>
+     * The dynamic content placeholder if present, or the <code>description</code> value if not. See <a href="https://developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_RAW_DESCRIPTION)
@@ -238,7 +237,7 @@ public class TicketField {
     private String rawDescription;
 
     /**
-     * The dynamic content placeholder if present, or the <code>title</code> value if not. See <a href=\"/api-reference/ticketing/ticket-management/dynamic_content/\">Dynamic Content</a>
+     * The dynamic content placeholder if present, or the <code>title</code> value if not. See <a href="https://developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_RAW_TITLE)
@@ -246,7 +245,7 @@ public class TicketField {
     private String rawTitle;
 
     /**
-     * The dynamic content placeholder if present, or the \"title_in_portal\" value if not. See <a href=\"/api-reference/ticketing/ticket-management/dynamic_content/\">Dynamic Content</a>
+     * The dynamic content placeholder if present, or the {@code title_in_portal} value if not. See <a href="https://developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_RAW_TITLE_IN_PORTAL)
@@ -254,7 +253,7 @@ public class TicketField {
     private String rawTitleInPortal;
 
     /**
-     * For \"regexp\" fields only. The validation pattern for a field value to be deemed valid
+     * For {@code regexp} fields only. The validation pattern for a field value to be deemed valid
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_REGEXP_FOR_VALIDATION)
@@ -270,7 +269,7 @@ public class TicketField {
     private Object relationshipFilter;
 
     /**
-     * A representation of what type of object the field references. Options are \"zen:user\", \"zen:organization\", \"zen:ticket\", or \"zen:custom_object:{key}\" where key is a custom object key. For example \"zen:custom_object:apartment\".
+     * A representation of what type of object the field references. Options are {@code zen:user}, {@code zen:organization}, {@code zen:ticket}, or {@code zen:custom_object:{key}} where key is a custom object key. For example {@code zen:custom_object:apartment}.
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_RELATIONSHIP_TARGET_TYPE)
@@ -302,7 +301,7 @@ public class TicketField {
     private Boolean requiredInPortal;
 
     /**
-     * For system ticket fields of type \"priority\" and \"status\". Defaults to 0. A \"priority\" sub type of 1 removes the \"Low\" and \"Urgent\" options. A \"status\" sub type of 1 adds the \"On-Hold\" option
+     * For system ticket fields of type {@code priority} and {@code status}. Defaults to 0. A {@code priority} sub type of 1 removes the {@code Low} and {@code Urgent} options. A {@code status} sub type of 1 adds the {@code On-Hold} option
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_SUB_TYPE_ID)
@@ -310,7 +309,7 @@ public class TicketField {
     private Integer subTypeId;
 
     /**
-     * Presented for a system ticket field of type \"tickettype\", \"priority\" or \"status\"
+     * Presented for a system ticket field of type {@code tickettype}, {@code priority} or {@code status}
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_SYSTEM_FIELD_OPTIONS)
@@ -318,7 +317,7 @@ public class TicketField {
     private List<@Valid SystemFieldOptionObject> systemFieldOptions;
 
     /**
-     * For \"checkbox\" fields only. A tag added to tickets when the checkbox field is selected
+     * For {@code checkbox} fields only. A tag added to tickets when the checkbox field is selected
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_TAG)
@@ -357,7 +356,7 @@ public class TicketField {
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private Boolean visibleInPortal;
 
-    public TicketField(String title, String type) {
+    public TicketField(String title, TicketType type) {
         this.title = title;
         this.type = type;
     }
