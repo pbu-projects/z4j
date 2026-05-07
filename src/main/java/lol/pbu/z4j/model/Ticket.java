@@ -22,6 +22,7 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
@@ -38,6 +39,7 @@ import java.util.Map;
  * @since 0.1.1
  */
 @Accessors(chain = true)
+@Data
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @JsonPropertyOrder({
