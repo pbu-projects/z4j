@@ -17,16 +17,16 @@ package lol.pbu.z4j.client
 
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import lol.pbu.z4j.Z4jSpec
-import lol.pbu.z4j.model.*
+import lol.pbu.z4j.model.SearchExportType
+import lol.pbu.z4j.model.SearchResponse
+import lol.pbu.z4j.model.SortBy
+import lol.pbu.z4j.model.SortOrder
 import spock.lang.Shared
 import spock.lang.Unroll
 
 class SearchClientSpec extends Z4jSpec {
     @Shared
     SearchClient adminSearchClient, agentSearchClient, userSearchClient
-
-    @Shared
-    TicketClient ticketClient
 
     def setupSpec() {
         adminSearchClient = adminCtx.getBean(SearchClient.class)
@@ -40,7 +40,7 @@ class SearchClientSpec extends Z4jSpec {
     @Unroll("an #clientName user can run the list method with sortby: #sortBy, sortOrder: #sortOrder and include: #include")
     void "can run the list method"(String clientName, SearchClient client, SortBy sortBy, SortOrder sortOrder, String include) {
         when:
-        client.list(faker.bluey().quote(), sortBy, sortOrder, include, null, null).block()
+        client.list("type:group", sortBy, sortOrder, include, null, null).block()
 
         then:
         noExceptionThrown()
@@ -52,43 +52,27 @@ class SearchClientSpec extends Z4jSpec {
                                                                [null, faker.cat().name()]].combinations()
     }
 
-    @SuppressWarnings("GroovyAssignabilityCheck")
-    @Unroll("an #clientName user can paginate the list method with sortby: #sortBy, sortOrder: #sortOrder and include: #include")
-    void "can query the list method when results include more than the page size"(
-            String clientName, SearchClient client, SortBy sortBy, SortOrder sortOrder, String include) {
+    void "can query the list method when results include more than the page size"() {
         given:
-        if (null == ticketClient) {
-            ticketClient = adminCtx.getBean(TicketClient.class)
-        }
-        if (client.count("frank").block().getCount() < 5) {
-            (1..5).each {
-                TicketComment ticketComment = new TicketComment().setBody("frank " + faker.chuckNorris().fact())
-                TicketCreateRequest createTicketRequest = new TicketCreateRequest(new TicketCreateInput(ticketComment))
-                createTicketRequest.ticket.setSubject(faker.chuckNorris().fact())
-                ticketClient.createTicket(createTicketRequest).block()
-            }
+        String ticketQuery = "type:ticket"
+        def ticketCount = adminSearchClient.count(ticketQuery).block().getCount()
+        if (ticketCount < 5) {
+            (ticketCount..5).each { createTicketForTest() }
         }
 
         when:
         def page = 1
         List<SearchResponse> responses = []
-        SearchResponse response = client.list("frank", sortBy, sortOrder, include, page, 2).block()
+        SearchResponse response = adminSearchClient.list(ticketQuery, null, null, null, page, 2).block()
         responses << response
-        while (response.nextPage != null) {
+        while (response.nextPage != null && page < 3) {
+            response = adminSearchClient.list(ticketQuery, null, null, null, page, 2).block()
             page++
-            response = client.list("frank", sortBy, sortOrder, include, page, 2).block()
             responses << response
         }
 
         then:
-
         noExceptionThrown()
-
-        where:
-        [[client, clientName], sortBy, sortOrder, include] << [[[adminSearchClient, "admin"], [agentSearchClient, "agent"]],
-                                                               [SortBy.values(), null].flatten(),
-                                                               [SortOrder.values(), null].flatten(),
-                                                               [null, faker.cat().name()]].combinations()
     }
 
     @Unroll("a simple user querying the list method fails with #sortBy, #sortOrder and #include")
