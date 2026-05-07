@@ -23,10 +23,7 @@ import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
-import lol.pbu.z4j.model.SearchExportType;
-import lol.pbu.z4j.model.SearchResponse;
-import lol.pbu.z4j.model.SortBy;
-import lol.pbu.z4j.model.SortOrder;
+import lol.pbu.z4j.model.*;
 import reactor.core.publisher.Mono;
 
 /**
@@ -95,12 +92,12 @@ public interface SearchClient {
      * or Error response (status code 400)
      */
     @Get("/api/v2/search/export")
-    Mono<@Valid SearchResponse> export(
-            @QueryValue("query") @NotNull String query,
-            @QueryValue("page[size]") @NotNull @Max(1000) Integer pageSize,
-            @QueryValue("page[after]") @NotNull String pageAfter,
+    Mono<@Valid ExportResponse<Exportable>> export(
+            @NotNull String query,
+            @QueryValue("page[size]") @Nullable @Max(1000) Integer pageSize,
+            @QueryValue("page[after]") @Nullable String pageAfter,
             @QueryValue("filter[type]") @NotNull SearchExportType filterType,
-            @QueryValue("include") @Nullable String include
+            @Nullable String include
     );
 
     /**
