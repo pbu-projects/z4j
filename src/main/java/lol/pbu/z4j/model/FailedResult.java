@@ -7,14 +7,14 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 @Data
-@EqualsAndHashCode
 @Accessors(chain = true)
+@EqualsAndHashCode(callSuper = true)
 @Serdeable
-public class Meta {
-    @JsonProperty("has_more")
-    private Boolean hasMore;
-    @JsonProperty("after_cursor")
-    private String afterCursor;
-    @JsonProperty("before_cursor")
-    private String beforeCursor;
+public class FailedResult extends JobStatus {
+    private String action;
+    private String details;
+    private String error;
+    @JsonProperty("id")
+    private Integer failedResultID;
+    private Boolean success;
 }

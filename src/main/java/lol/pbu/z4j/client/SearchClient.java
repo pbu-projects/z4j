@@ -92,12 +92,12 @@ public interface SearchClient {
      * or Error response (status code 400)
      */
     @Get("/api/v2/search/export")
-    Mono<@Valid ExportResponse<Exportable>> export(
-            @NotNull String query,
+    Mono<@Valid ExportResponse<?>> export(
+            @QueryValue("query") @NotNull String query,
             @QueryValue("page[size]") @Nullable @Max(1000) Integer pageSize,
             @QueryValue("page[after]") @Nullable String pageAfter,
             @QueryValue("filter[type]") @NotNull SearchExportType filterType,
-            @Nullable String include
+            @QueryValue("include") @Nullable String include
     );
 
     /**

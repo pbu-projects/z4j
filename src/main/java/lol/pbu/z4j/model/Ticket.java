@@ -22,8 +22,8 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.time.ZonedDateTime;
@@ -39,7 +39,7 @@ import java.util.Map;
  */
 @Accessors(chain = true)
 @EqualsAndHashCode
-@Data
+@RequiredArgsConstructor
 @JsonPropertyOrder({
         Ticket.JSON_PROPERTY_REQUESTER_ID,
         Ticket.JSON_PROPERTY_ALLOW_ATTACHMENTS,

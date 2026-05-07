@@ -1,0 +1,49 @@
+/*
+ * Copyright 2026 Peanut Butter Unicorn, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package lol.pbu.z4j.model;
+
+import io.micronaut.serde.annotation.Serdeable;
+import lombok.*;
+import lombok.experimental.Accessors;
+
+@Getter
+@Setter
+@Accessors(chain = true)
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@Serdeable
+public class UpdateResourceResult extends JobStatus {
+    /**
+     * the action the job attempted ({@code "action": "update"})
+     */
+    private String action;
+
+    /**
+     * the id of the resource the job attempted to update
+     */
+    private Integer id;
+
+    /**
+     * the status ({@code "status": "Updated"})
+     */
+    private String status;
+
+    /**
+     * whether the action was successful or not ({@code "success": true})
+     */
+    private boolean success;
+}

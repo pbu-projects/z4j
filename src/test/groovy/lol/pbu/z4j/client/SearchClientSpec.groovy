@@ -17,10 +17,7 @@ package lol.pbu.z4j.client
 
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import lol.pbu.z4j.Z4jSpec
-import lol.pbu.z4j.model.SearchExportType
-import lol.pbu.z4j.model.SearchResponse
-import lol.pbu.z4j.model.SortBy
-import lol.pbu.z4j.model.SortOrder
+import lol.pbu.z4j.model.*
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -119,22 +116,26 @@ class SearchClientSpec extends Z4jSpec {
     /* ---------- export() tests --------------- */
 
     @SuppressWarnings("GroovyAssignabilityCheck")
-    void "an #clientName can call export method with pageSize: #pageSize, pageAfter: #pageAfter, filterType: #filterType and include: #include"(
-            String clientName, SearchClient client, int pageSize, String pageAfter, SearchExportType filterType, String include) {
+    void "an #clientName can call export method with pageSize: #pageSize, filterType: #filterType and include: #include"(
+            String clientName, SearchClient client, int pageSize, SearchExportType filterType, String include) {
         given:
-        client.count("type:ticket").block()
+        client.count("type: $filterType").block()
 
         when:
-        client.export(faker.bluey().quote(), pageSize, pageAfter, filterType, include).block()
+        ExportResponse<? extends Exportable> response = client.export("type: $filterType", pageSize, null, filterType, include).block()
+
+        and:
+        if (response.getLinks().getNext() != null) {
+            client.export("type: $filterType", pageSize, response.getMeta().getAfterCursor(), filterType, include).block()
+        }
 
         then:
         noExceptionThrown()
 
         where:
-        [[client, clientName], pageSize, pageAfter, filterType, include] << [[[adminSearchClient, "admin"], [agentSearchClient, "agent"]],
-                                                                             [100],
-                                                                             [faker.internet().uuid()],
-                                                                             SearchExportType.values(),
-                                                                             ["organizations"]].combinations()
+        [[client, clientName], pageSize, filterType, include] << [[[adminSearchClient, "admin"], [agentSearchClient, "agent"]],
+                                                                  [100],
+                                                                  SearchExportType.values(),
+                                                                  ["organizations"]].combinations()
     }
 }
