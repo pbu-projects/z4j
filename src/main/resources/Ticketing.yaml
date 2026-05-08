@@ -5969,7 +5969,7 @@ paths:
           maximum: 1000
       - name: filter[exclude_deleted]
         in: query
-        description: If true, exclude deleted records from the export
+        description: If true, exclude deleted records from the exportTicket
         schema:
           type: boolean
           default: false
@@ -5979,7 +5979,7 @@ paths:
         - Custom Object Records
         - Incremental Export
       summary: Incremental Custom Object Record Export, Cursor Based
-      description: "Returns the custom object records that changed since the start time. This endpoint supports \ncursor-based incremental exports for custom object records.\n\nThis endpoint only supports cursor-based pagination and does not support offset-based pagination.\nCursor-based exports provide more consistent performance and response body sizes. For more information, \nsee [Cursor-based incremental exports](/documentation/ticketing/managing-tickets/using-the-incremental-export-api#cursor-based-incremental-exports) in [Using the Incremental Exports API](/documentation/ticketing/managing-tickets/using-the-incremental-export-api).\n\n#### Allowed For\n\n* Admins\n* Agents with custom object read permissions\n\n#### Rate Limiting\n\nYou can make up to 10 requests per minute to this endpoint.\n\n#### Notes\n\n- `start_time` is only required for the initial request for the pages in the record set, then `cursor` is required for all subsequent requests\n- The `start_time` must be more than 60 seconds ago\n- Deleted records will have their field values replaced with \"[DELETED]\" unless excluded via filter\n- Photo fields are excluded from incremental export responses\n"
+      description: "Returns the custom object records that changed since the start time. This endpoint supports \ncursor-based incremental exports for custom object records.\n\nThis endpoint only supports cursor-based pagination and does not support offset-based pagination.\nCursor-based exports provide more consistent performance and response body sizes. For more information, \nsee [Cursor-based incremental exports](/documentation/ticketing/managing-tickets/using-the-incremental-exportTicket-api#cursor-based-incremental-exports) in [Using the Incremental Exports API](/documentation/ticketing/managing-tickets/using-the-incremental-exportTicket-api).\n\n#### Allowed For\n\n* Admins\n* Agents with custom object read permissions\n\n#### Rate Limiting\n\nYou can make up to 10 requests per minute to this endpoint.\n\n#### Notes\n\n- `start_time` is only required for the initial request for the pages in the record set, then `cursor` is required for all subsequent requests\n- The `start_time` must be more than 60 seconds ago\n- Deleted records will have their field values replaced with \"[DELETED]\" unless excluded via filter\n- Photo fields are excluded from incremental exportTicket responses\n"
       responses:
         "200":
           description: Success response
@@ -11371,7 +11371,7 @@ paths:
             type: string
         - name: filter[type]
           in: query
-          description: The object type returned by the export query. Can be `ticket`, `organization`, `user`, or `group`.
+          description: The object type returned by the exportTicket query. Can be `ticket`, `organization`, `user`, or `group`.
           schema:
             type: string
         - $ref: '#/components/parameters/SearchInclude'
@@ -23952,7 +23952,7 @@ components:
           description: 'Allowed values: "edit", "full", "none", "readonly"'
         export_views:
           type: boolean
-          description: Whether or not the agent can export views
+          description: Whether or not the agent can exportTicket views
         forum_access:
           type: string
           description: 'The kind of access the agent has to Guide. Allowed values: "edit-topics", "full", "readonly"'
@@ -25301,19 +25301,19 @@ components:
                 readOnly: true
         filter:
           type: object
-          description: Applied filters for the export
+          description: Applied filters for the exportTicket
           properties:
             exclude_deleted:
               type: boolean
-              description: Whether deleted records were excluded from the export
+              description: Whether deleted records were excluded from the exportTicket
           nullable: true
         meta:
           type: object
-          description: Metadata about the export operation
+          description: Metadata about the exportTicket operation
           properties:
             has_more:
               type: boolean
-              description: Indicates whether there are more records to export after this page
+              description: Indicates whether there are more records to exportTicket after this page
       example:
         after_cursor: MTU3NjYxMzUzOS4wfHw0Njd8
         after_url: https://company.zendesk.com/api/v2/incremental/custom_objects/my_object/cursor?cursor=MTU3NjYxMzUzOS4wfHw0Njd8
@@ -28270,7 +28270,7 @@ components:
               readOnly: true
         meta:
           type: object
-          description: Metadata for the export query response.
+          description: Metadata for the exportTicket query response.
           properties:
             after_cursor:
               type: string
@@ -31633,7 +31633,7 @@ components:
         updated_at:
           type: string
           format: date-time
-          description: When this record last got updated. It is updated only if the update generates a [ticket event](#incremental-ticket-event-export)
+          description: When this record last got updated. It is updated only if the update generates a [ticket event](#incremental-ticket-event-exportTicket)
           readOnly: true
         updated_stamp:
           type: string
@@ -34824,7 +34824,7 @@ components:
     IncrementalResource:
       name: incremental_resource
       in: path
-      description: The resource requested for incremental sample export
+      description: The resource requested for incremental sample exportTicket
       required: true
       schema:
         type: string
@@ -34848,7 +34848,7 @@ components:
     IncrementalUnixTime:
       name: start_time
       in: query
-      description: The time to start the incremental export from. Must be at least one minute in the past. Data isn't provided for the most recent minute
+      description: The time to start the incremental exportTicket from. Must be at least one minute in the past. Data isn't provided for the most recent minute
       required: true
       schema:
         type: integer
@@ -35111,7 +35111,7 @@ components:
     OptionalIncrementalUnixTime:
       name: start_time
       in: query
-      description: The time to start the incremental export from. Must be at least one minute in the past. Data isn't provided for the most recent minute. Required on the initial export request; not required on subsequent cursor-based pagination requests
+      description: The time to start the incremental exportTicket from. Must be at least one minute in the past. Data isn't provided for the most recent minute. Required on the initial exportTicket request; not required on subsequent cursor-based pagination requests
       schema:
         type: integer
       example: 1332034771
@@ -38940,7 +38940,7 @@ components:
         is_valid: false
         reason: google.com
     IncrementalCustomObjectRecordsResponseExample:
-      summary: Successful incremental export of custom object records
+      summary: Successful incremental exportTicket of custom object records
       description: Example response showing custom object records that have changed since the start time
       value:
         after_cursor: MTU3NjYxMzUzOS4wfHw0Njd8

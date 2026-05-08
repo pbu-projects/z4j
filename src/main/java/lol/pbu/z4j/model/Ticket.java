@@ -22,10 +22,9 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.time.ZonedDateTime;
@@ -40,10 +39,9 @@ import java.util.Map;
  * @since 0.1.1
  */
 @Accessors(chain = true)
+@Data
 @EqualsAndHashCode
-@ToString
-@Getter
-@Setter
+@RequiredArgsConstructor
 @JsonPropertyOrder({
         Ticket.JSON_PROPERTY_REQUESTER_ID,
         Ticket.JSON_PROPERTY_ALLOW_ATTACHMENTS,
@@ -100,7 +98,7 @@ import java.util.Map;
         Ticket.JSON_PROPERTY_VOICE_COMMENT,
 })
 @Serdeable
-public class Ticket {
+public class Ticket implements Exportable {
 
     public static final String JSON_PROPERTY_REQUESTER_ID = "requester_id";
     public static final String JSON_PROPERTY_ALLOW_ATTACHMENTS = "allow_attachments";
@@ -515,7 +513,7 @@ public class Ticket {
     private TicketType type;
 
     /**
-     * When this record last got updated. It is updated only if the update generates a <a href=\"#incremental-ticket-event-export\">ticket event</a>
+     * When this record last got updated. It is updated only if the update generates a <a href=\"#incremental-ticket-event-exportTicket\">ticket event</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_UPDATED_AT)

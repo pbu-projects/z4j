@@ -19,7 +19,8 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.client.LocaleClient
-import lol.pbu.z4j.model.Locale
+import lol.pbu.z4j.client.TicketClient
+import lol.pbu.z4j.model.*
 import net.datafaker.Faker
 import spock.lang.Shared
 import spock.lang.Specification
@@ -30,6 +31,9 @@ class Z4jSpec extends Specification {
 
     @Shared
     ApplicationContext adminCtx, agentCtx, userCtx, badTokenCtx, badEmailCtx, badUrlCtx
+
+    @Shared
+    TicketClient ticketsAdminClient
 
     @Shared
     List<Locale> accountLocales
@@ -55,6 +59,15 @@ class Z4jSpec extends Specification {
         badTokenCtx?.stop()
         badEmailCtx?.stop()
         badUrlCtx?.stop()
+    }
+
+    TicketResponse createTicketForTest() {
+        ticketsAdminClient = ticketsAdminClient ?: adminCtx.getBean(TicketClient.class)
+        TicketComment ticketComment = new TicketComment().setBody(faker.chuckNorris().fact())
+        TicketCreateInput createTicketInput = new TicketCreateInput(ticketComment)
+        createTicketInput.setRawSubject(faker.chuckNorris().fact())
+        TicketCreateRequest createTicketRequest = new TicketCreateRequest(createTicketInput)
+        return ticketsAdminClient.createTicket(createTicketRequest).block()
     }
 
     static ApplicationContext getCtx(String authUser) {

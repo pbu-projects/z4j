@@ -59,6 +59,9 @@ public enum LocaleAbbreviation {
     @JsonProperty("en-us")
     ENGLISH_UNITED_STATES("en-us"),
 
+    @JsonProperty("en-vn")
+    ENGLISH_VIETNAM("en-vn"),
+
     @JsonProperty("fa-af")
     DARI_PERSIAN_AFGHANISTAN("fa-af"),
 
@@ -110,6 +113,9 @@ public enum LocaleAbbreviation {
     @JsonProperty("pl")
     POLISH("pl"),
 
+    @JsonProperty("pt")
+    PORTUGUESE("pt"),
+
     @JsonProperty("ro")
     ROMANIAN("ro"),
 
@@ -140,8 +146,14 @@ public enum LocaleAbbreviation {
     @JsonProperty("uk")
     UKRAINIAN("uk"),
 
+    @JsonProperty("vi-vn")
+    VIETNAMESE_VIETNAM("vi-vn"),
+
     @JsonProperty("vi")
     VIETNAMESE("vi"),
+
+    @JsonProperty("zu-za")
+    ZULU_SOUTH_AFRICA("zu-za"),
     ;
 
     public static final Map<String, LocaleAbbreviation> VALUE_MAPPING = Map.copyOf(Arrays.stream(values())

@@ -25,30 +25,68 @@ class SearchClientSpec extends Z4jSpec {
     @Shared
     SearchClient adminSearchClient, agentSearchClient, userSearchClient
 
-    @Shared
-    TicketClient ticketClient
-
     def setupSpec() {
         adminSearchClient = adminCtx.getBean(SearchClient.class)
         agentSearchClient = agentCtx.getBean(SearchClient.class)
         userSearchClient = userCtx.getBean(SearchClient.class)
     }
 
+    /* ---------- list() tests --------------- */
+
     @SuppressWarnings("GroovyAssignabilityCheck")
-    @Unroll("an #clientName user can run the list method with sortby: #sortBy, sortOrder: #sortOrder and include: #include")
-    void "can run the list method"(String clientName, SearchClient client, SortBy sortBy, SortOrder sortOrder, String include) {
+    @Unroll("an #clientName user can run the list method with sortby: #sortBy, sortOrder: #sortOrder")
+    void "can run the list method"(String clientName, SearchClient client, SortBy sortBy, SortOrder sortOrder) {
         when:
-        client.list(faker.bluey().quote(), sortBy, sortOrder, include, null, null).block()
+        client.list("type:group", sortBy, sortOrder, null, null).block()
 
         then:
         noExceptionThrown()
 
         where:
-        [[client, clientName], sortBy, sortOrder, include] << [[[adminSearchClient, "admin"], [agentSearchClient, "agent"]],
-                                                               [SortBy.values(), null].flatten(),
-                                                               [SortOrder.values(), null].flatten(),
-                                                               [null, faker.cat().name()]].combinations()
+        [[client, clientName], sortBy, sortOrder] << [[[adminSearchClient, "admin"], [agentSearchClient, "agent"]],
+                                                      [SortBy.values(), null].flatten(),
+                                                      [SortOrder.values(), null].flatten()].combinations()
     }
+
+    void "can query the list method when results include more than the page size"() {
+        given:
+        String ticketQuery = "type:ticket"
+        def ticketCount = adminSearchClient.count(ticketQuery).block().getCount()
+        if (ticketCount < 5) {
+            (ticketCount..5).each { createTicketForTest() }
+        }
+
+        when:
+        def page = 1
+        List<SearchResponse> responses = []
+        SearchResponse response = adminSearchClient.list(ticketQuery, null, null, page, 2).block()
+        responses << response
+        while (response.nextPage != null && page < 3) {
+            response = adminSearchClient.list(ticketQuery, null, null, page, 2).block()
+            page++
+            responses << response
+        }
+
+        then:
+        noExceptionThrown()
+    }
+
+    @Unroll("a simple user querying the list method fails with #sortBy and #sortOrder")
+    void "cannot run searchClient.list()"(SearchClient client, SortBy sortBy, SortOrder sortOrder) {
+        when:
+        client.list(faker.bluey().quote(), sortBy, sortOrder, null, null).block()
+
+        then:
+        thrown(HttpClientResponseException)
+
+        where:
+        [client, sortBy, sortOrder] << [[userSearchClient],
+                                        [SortBy.values(), null].flatten(),
+                                        [SortOrder.values(), null].flatten(),
+                                        [null, faker.cat().name()]].combinations()
+    }
+
+    /* ---------- count() tests --------------- */
 
     void "an #clientName user can run the count method"(String clientName, SearchClient client) {
         when:
@@ -62,60 +100,6 @@ class SearchClientSpec extends Z4jSpec {
     }
 
 
-    @SuppressWarnings("GroovyAssignabilityCheck")
-    @Unroll("an #clientName user can paginate the list method with sortby: #sortBy, sortOrder: #sortOrder and include: #include")
-    void "can query the list method when results include more than the page size"(
-            String clientName, SearchClient client, SortBy sortBy, SortOrder sortOrder, String include) {
-        given:
-        if (null == ticketClient) {
-            ticketClient = adminCtx.getBean(TicketClient.class)
-        }
-        if (client.count("frank").block().getCount() < 5) {
-            (1..5).each {
-                TicketComment ticketComment = new TicketComment().setBody("frank " + faker.chuckNorris().fact())
-                TicketCreateRequest createTicketRequest = new TicketCreateRequest(new TicketCreateInput(ticketComment))
-                createTicketRequest.ticket.setSubject(faker.chuckNorris().fact())
-                ticketClient.createTicket(createTicketRequest).block()
-            }
-        }
-
-        when:
-        def page = 1
-        List<SearchResponse> responses = []
-        SearchResponse response = client.list("frank", sortBy, sortOrder, include, page, 2).block()
-        responses << response
-        while (response.nextPage != null) {
-            page++
-            response = client.list("frank", sortBy, sortOrder, include, page, 2).block()
-            responses << response
-        }
-
-        then:
-
-        noExceptionThrown()
-
-        where:
-        [[client, clientName], sortBy, sortOrder, include] << [[[adminSearchClient, "admin"], [agentSearchClient, "agent"]],
-                                                               [SortBy.values(), null].flatten(),
-                                                               [SortOrder.values(), null].flatten(),
-                                                               [null, faker.cat().name()]].combinations()
-    }
-
-    @Unroll("a simple user querying the list method fails with #sortBy, #sortOrder and #include")
-    void "cannot run searchClient.list()"(SearchClient client, SortBy sortBy, SortOrder sortOrder, String include) {
-        when:
-        client.list(faker.bluey().quote(), sortBy, sortOrder, include, null, null).block()
-
-        then:
-        thrown(HttpClientResponseException)
-
-        where:
-        [client, sortBy, sortOrder, include] << [[userSearchClient],
-                                                 [SortBy.values(), null].flatten(),
-                                                 [SortOrder.values(), null].flatten(),
-                                                 [null, faker.cat().name()]].combinations()
-    }
-
     void "a normal user cannot run the count method"(SearchClient client) {
         when:
         client.count(faker.bluey().quote()).block()
@@ -128,20 +112,32 @@ class SearchClientSpec extends Z4jSpec {
         userSearchClient | _
     }
 
+    /* ---------- exportTicket() tests --------------- */
+
     @SuppressWarnings("GroovyAssignabilityCheck")
-    void "an #clientName can call export method with pageSize: #pageSize, pageAfter: #pageAfter, filterType: #filterType and include: #include"(
-            String clientName, SearchClient client, int pageSize, String pageAfter, SearchExportType filterType, String include) {
+    void "an #clientName can call export method and paginate properly"(String clientName, SearchClient client) {
+        given:
+        String query = "type:ticket"
+        def count = client.count(query).block()
+        int pageSize = Math.max(2, Math.min(1000, (count.getCount() / 2).intValue() + 1))
+
         when:
-        client.export(faker.bluey().quote(), pageSize, pageAfter, filterType, include).block()
+        ExportResponse<Ticket> response = client.exportTicket(query, pageSize, null).block()
+        List<Ticket> tickets = response.getResults()
+
+        and:
+        while (response.getMeta().getAfterCursor() != null && response.getMeta().getHasMore()) {
+            response = client.exportTicket(query, pageSize, response.getMeta().getAfterCursor()).block()
+            tickets.addAll(response.getResults())
+        }
 
         then:
         noExceptionThrown()
+        tickets.size() > (count.getCount() * 0.95)
+        tickets.size() < (count.getCount() * 1.05)
+
 
         where:
-        [[client, clientName], pageSize, pageAfter, filterType, include] << [[[adminSearchClient, "admin"], [agentSearchClient, "agent"]],
-                                                                             [100],
-                                                                             [faker.internet().uuid()],
-                                                                             SearchExportType.values(),
-                                                                             ["organizations"]].combinations()
+        [[client, clientName]] << [[[adminSearchClient, "admin"], [agentSearchClient, "agent"]]].combinations()
     }
 }

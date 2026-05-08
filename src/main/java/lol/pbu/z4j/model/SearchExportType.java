@@ -28,7 +28,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Gets or Sets SearchExportType
+ * <h1>{@summary The object type returned by the exportTicket query.</h1>
+ * Can be ticket, organization, user, or group.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
@@ -38,21 +39,16 @@ import java.util.stream.Collectors;
 @Serdeable
 public enum SearchExportType {
 
-    @JsonProperty("ticket")
-    TICKET("ticket"),
+    @JsonProperty("ticket") TICKET("ticket"),
 
-    @JsonProperty("organization")
-    ORGANIZATION("organization"),
+    @JsonProperty("organization") ORGANIZATION("organization"),
 
-    @JsonProperty("user")
-    USER("user"),
+    @JsonProperty("user") USER("user"),
 
-    @JsonProperty("group")
-    GROUP("group"),
+    @JsonProperty("group") GROUP("group"),
     ;
 
-    public static final Map<String, SearchExportType> VALUE_MAPPING = Map.copyOf(Arrays.stream(values())
-            .collect(Collectors.toMap(v -> v.value, Function.identity())));
+    public static final Map<String, SearchExportType> VALUE_MAPPING = Map.copyOf(Arrays.stream(values()).collect(Collectors.toMap(v -> v.value, Function.identity())));
 
     private final String value;
 

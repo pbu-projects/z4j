@@ -23,17 +23,15 @@ import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
-import lol.pbu.z4j.model.SearchExportType;
-import lol.pbu.z4j.model.SearchResponse;
-import lol.pbu.z4j.model.SortBy;
-import lol.pbu.z4j.model.SortOrder;
+import lol.pbu.z4j.model.*;
 import reactor.core.publisher.Mono;
 
 /**
- * <h1>{@summary Perform Searches in Zendesk.}</h1>
+ * <h1>{@summary Zendesk Search API}</h1>
+ * <p>Reactive client for performing searches in Zendesk. These methods provide low-level access to the search endpoints.</p>
  * <ul>
- *     <li>Show Search Result Counts with{@link #count}</li>
- *     <li>Export Search Results with{@link #export}</li>
+ *     <li>Show Search Result Counts with {@link #count(String)}</li>
+ *     <li>Export Search Results with {@link #exportTicket(String, Integer, String)}</li>
  *     <li>List Search Results with{@link #list}</li>
  * </ul>
  *
@@ -57,7 +55,7 @@ public interface SearchClient {
 
     /**
      * <h1>{@summary Export Search Results}</h1>
-     * <p>Exports a set of results. See <a
+     * <p>Exports a set of Tickets. See <a
      * href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query
      * syntax</a> for the syntax of the {@code query} parameter.</p> <p>Use this endpoint for search queries that will
      * return more than 1000 results. The result set is ordered only by the {@code created_at} attribute.</p> <p>The search
@@ -89,18 +87,14 @@ public interface SearchClient {
      * @param query      Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href='https://support.zendesk.com/hc/en-us/articles/203663226'>Zendesk Support search reference</a>. (required)
      * @param pageSize   The number of results shown in a page. (required)
      * @param pageAfter  The cursor token for fetching the next page of results. (required)
-     * @param filterType The object type returned by the export query. Can be `ticket`, `organization`, `user`, or `group`. (required)
-     * @param include    Sideloads to include in the response. Accepts a comma-separated list of values. The available sideloads depend on the search result types.  (optional)
      * @return Success response (status code 200)
      * or Error response (status code 400)
      */
-    @Get("/api/v2/search/export")
-    Mono<@Valid SearchResponse> export(
+    @Get("/api/v2/search/export?filter[type]=ticket")
+    Mono<@Valid ExportResponse<Ticket>> exportTicket(
             @QueryValue("query") @NotNull String query,
-            @QueryValue("page[size]") @NotNull @Max(1000) Integer pageSize,
-            @QueryValue("page[after]") @NotNull String pageAfter,
-            @QueryValue("filter[type]") @NotNull SearchExportType filterType,
-            @QueryValue("include") @Nullable String include
+            @QueryValue("page[size]") @Nullable @Max(1000) Integer pageSize,
+            @QueryValue("page[after]") @Nullable String pageAfter
     );
 
     /**
@@ -116,7 +110,6 @@ public interface SearchClient {
      * @param query     Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href='https://support.zendesk.com/hc/en-us/articles/203663226'>Zendesk Support search reference</a>. (required)
      * @param sortBy    One of {@code updated_at}, {@code created_at}, {@code priority}, {@code status}, or {@code ticket_type}. Defaults to sorting by relevance (optional)
      * @param sortOrder Defaults to descending (optional)
-     * @param include   Sideloads to include in the response. Accepts a comma-separated list of values. The available sideloads depend on the search result types.  (optional)
      * @param page      The page number to retrieve. (optional)
      * @param perPage   The count of results to include in each page. (optional)
      * @return Success response (status code 200)
@@ -127,7 +120,6 @@ public interface SearchClient {
             @QueryValue("query") @NotNull String query,
             @QueryValue("sort_by") @Nullable SortBy sortBy,
             @QueryValue("sort_order") @Nullable SortOrder sortOrder,
-            @QueryValue("include") @Nullable String include,
             @QueryValue("page") @Nullable Integer page,
             @QueryValue("per_page") @Nullable @Max(100) Integer perPage
     );
