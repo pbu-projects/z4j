@@ -28,7 +28,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * <h1>{@summary The object type returned by the export query.</h1>
+ * <h1>{@summary The object type returned by the exportTicket query.</h1>
  * Can be ticket, organization, user, or group.
  *
  * @author Jonathan-Zollinger

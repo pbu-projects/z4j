@@ -513,7 +513,7 @@ public class Ticket implements Exportable {
     private TicketType type;
 
     /**
-     * When this record last got updated. It is updated only if the update generates a <a href=\"#incremental-ticket-event-export\">ticket event</a>
+     * When this record last got updated. It is updated only if the update generates a <a href=\"#incremental-ticket-event-exportTicket\">ticket event</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_UPDATED_AT)

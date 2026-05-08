@@ -34,19 +34,18 @@ class SearchClientSpec extends Z4jSpec {
     /* ---------- list() tests --------------- */
 
     @SuppressWarnings("GroovyAssignabilityCheck")
-    @Unroll("an #clientName user can run the list method with sortby: #sortBy, sortOrder: #sortOrder and include: #include")
-    void "can run the list method"(String clientName, SearchClient client, SortBy sortBy, SortOrder sortOrder, String include) {
+    @Unroll("an #clientName user can run the list method with sortby: #sortBy, sortOrder: #sortOrder")
+    void "can run the list method"(String clientName, SearchClient client, SortBy sortBy, SortOrder sortOrder) {
         when:
-        client.list("type:group", sortBy, sortOrder, include, null, null).block()
+        client.list("type:group", sortBy, sortOrder, null, null).block()
 
         then:
         noExceptionThrown()
 
         where:
-        [[client, clientName], sortBy, sortOrder, include] << [[[adminSearchClient, "admin"], [agentSearchClient, "agent"]],
-                                                               [SortBy.values(), null].flatten(),
-                                                               [SortOrder.values(), null].flatten(),
-                                                               [null, faker.cat().name()]].combinations()
+        [[client, clientName], sortBy, sortOrder] << [[[adminSearchClient, "admin"], [agentSearchClient, "agent"]],
+                                                      [SortBy.values(), null].flatten(),
+                                                      [SortOrder.values(), null].flatten()].combinations()
     }
 
     void "can query the list method when results include more than the page size"() {
@@ -60,10 +59,10 @@ class SearchClientSpec extends Z4jSpec {
         when:
         def page = 1
         List<SearchResponse> responses = []
-        SearchResponse response = adminSearchClient.list(ticketQuery, null, null, null, page, 2).block()
+        SearchResponse response = adminSearchClient.list(ticketQuery, null, null, page, 2).block()
         responses << response
         while (response.nextPage != null && page < 3) {
-            response = adminSearchClient.list(ticketQuery, null, null, null, page, 2).block()
+            response = adminSearchClient.list(ticketQuery, null, null, page, 2).block()
             page++
             responses << response
         }
@@ -73,18 +72,18 @@ class SearchClientSpec extends Z4jSpec {
     }
 
     @Unroll("a simple user querying the list method fails with #sortBy, #sortOrder and #include")
-    void "cannot run searchClient.list()"(SearchClient client, SortBy sortBy, SortOrder sortOrder, String include) {
+    void "cannot run searchClient.list()"(SearchClient client, SortBy sortBy, SortOrder sortOrder) {
         when:
-        client.list(faker.bluey().quote(), sortBy, sortOrder, include, null, null).block()
+        client.list(faker.bluey().quote(), sortBy, sortOrder, null, null).block()
 
         then:
         thrown(HttpClientResponseException)
 
         where:
-        [client, sortBy, sortOrder, include] << [[userSearchClient],
-                                                 [SortBy.values(), null].flatten(),
-                                                 [SortOrder.values(), null].flatten(),
-                                                 [null, faker.cat().name()]].combinations()
+        [client, sortBy, sortOrder] << [[userSearchClient],
+                                        [SortBy.values(), null].flatten(),
+                                        [SortOrder.values(), null].flatten(),
+                                        [null, faker.cat().name()]].combinations()
     }
 
     /* ---------- count() tests --------------- */
@@ -113,29 +112,30 @@ class SearchClientSpec extends Z4jSpec {
         userSearchClient | _
     }
 
-    /* ---------- export() tests --------------- */
+    /* ---------- exportTicket() tests --------------- */
 
     @SuppressWarnings("GroovyAssignabilityCheck")
-    void "an #clientName can call export method with pageSize: #pageSize, filterType: #filterType and include: #include"(
-            String clientName, SearchClient client, int pageSize, SearchExportType filterType, String include) {
+    void "an #clientName can call export method and paginate properly"(String clientName, SearchClient client) {
         given:
-        client.count("type: $filterType").block()
+        String query = "type:ticket"
+        def count = client.count(query).block()
+        int pageSize = Math.max(2, Math.min(1000, (count.getCount() / 2).intValue() + 1))
 
         when:
-        ExportResponse<? extends Exportable> response = client.export("type: $filterType", pageSize, null, filterType, include).block()
+        ExportResponse<Ticket> response = client.exportTicket(query, pageSize, null).block()
+        List<Ticket> tickets = response.getResults()
 
         and:
-        if (response.getLinks().getNext() != null) {
-            client.export("type: $filterType", pageSize, response.getMeta().getAfterCursor(), filterType, include).block()
+        while (response.getMeta().getAfterCursor() != null && response.getMeta().getHasMore()) {
+            response = client.exportTicket(query, pageSize, response.getMeta().getAfterCursor()).block()
+            tickets.addAll(response.getResults())
         }
 
         then:
         noExceptionThrown()
+        tickets.size() == count.getCount()
 
         where:
-        [[client, clientName], pageSize, filterType, include] << [[[adminSearchClient, "admin"], [agentSearchClient, "agent"]],
-                                                                  [100],
-                                                                  SearchExportType.values(),
-                                                                  ["organizations"]].combinations()
+        [[client, clientName]] << [[[adminSearchClient, "admin"], [agentSearchClient, "agent"]]].combinations()
     }
 }
