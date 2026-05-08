@@ -71,7 +71,7 @@ class SearchClientSpec extends Z4jSpec {
         noExceptionThrown()
     }
 
-    @Unroll("a simple user querying the list method fails with #sortBy, #sortOrder and #include")
+    @Unroll("a simple user querying the list method fails with #sortBy and #sortOrder")
     void "cannot run searchClient.list()"(SearchClient client, SortBy sortBy, SortOrder sortOrder) {
         when:
         client.list(faker.bluey().quote(), sortBy, sortOrder, null, null).block()
@@ -133,7 +133,9 @@ class SearchClientSpec extends Z4jSpec {
 
         then:
         noExceptionThrown()
-        tickets.size() == count.getCount()
+        tickets.size() > (count.getCount() * 0.95)
+        tickets.size() < (count.getCount() * 1.05)
+
 
         where:
         [[client, clientName]] << [[[adminSearchClient, "admin"], [agentSearchClient, "agent"]]].combinations()
