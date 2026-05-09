@@ -16,6 +16,7 @@
 package lol.pbu.z4j;
 
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import lol.pbu.z4j.client.SearchClient;
 import lol.pbu.z4j.model.ExportResponse;
 import lol.pbu.z4j.model.Ticket;
@@ -30,6 +31,7 @@ import reactor.core.publisher.Mono;
  * @since 0.1.3
  */
 @Slf4j
+@Singleton
 public class SearchService {
     @Inject
     SearchClient searchClient;
