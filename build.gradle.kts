@@ -47,6 +47,17 @@ dependencies {
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
     implementation("io.micronaut.reactor:micronaut-reactor-http-client")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
+    constraints {
+        implementation("io.micronaut:micronaut-json-core:4.10.16") {
+            because("CVE-2026-33012 & CVE-2026-33013")
+        }
+        implementation("io.micronaut:micronaut-context:4.10.22") {
+            because("CVE-2026-44241")
+        }
+        implementation("org.mozilla.rhino:1.7.14.1") {
+            because("CVE-2025-66453")
+        }
+    }
     implementation("io.micronaut.validation:micronaut-validation")
     implementation("io.micronaut:micronaut-retry")
     "lombok"("org.projectlombok:lombok:${lombokVersion}")
@@ -59,6 +70,12 @@ java {
     sourceCompatibility = JavaVersion.toVersion("21") // graalvm-ce
     withSourcesJar()
     withJavadocJar()
+}
+
+configurations.all {
+    resolutionStrategy {
+        force("io.netty:netty-bom:4.2.10.Final")
+    }
 }
 
 tasks.withType<Javadoc>().configureEach {
