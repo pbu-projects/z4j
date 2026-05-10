@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Ticket
+ * Ticket object in the Zendesk Support Api
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1

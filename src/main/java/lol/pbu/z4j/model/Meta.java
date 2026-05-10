@@ -21,6 +21,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+/**
+ * Meta response found in cursor paginated responses.
+ *
+ * @author Jonathan-Zollinger
+ * @since 0.1.4
+ */
 @Data
 @EqualsAndHashCode
 @Accessors(chain = true)

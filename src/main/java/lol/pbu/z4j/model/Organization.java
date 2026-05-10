@@ -17,6 +17,9 @@ package lol.pbu.z4j.model;
 
 import io.micronaut.serde.annotation.Serdeable;
 
+/**
+ * Placeholder for organization objects
+ */
 @Serdeable
 public class Organization implements Exportable {
 }

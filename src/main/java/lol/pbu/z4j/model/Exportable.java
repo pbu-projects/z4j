@@ -17,6 +17,12 @@ package lol.pbu.z4j.model;
 
 import io.micronaut.serde.annotation.Serdeable;
 
+/**
+ * One of the zendesk objects which can be exported from /api/v2/search/export
+ *
+ * @author Jonathan-Zollinger
+ * @since 0.1.4
+ */
 @Serdeable
 public interface Exportable {
 }
