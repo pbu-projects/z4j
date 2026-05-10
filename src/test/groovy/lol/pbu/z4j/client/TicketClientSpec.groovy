@@ -123,6 +123,28 @@ class TicketClientSpec extends Z4jSpec {
         [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { !it.shouldSucceed }
     }
 
+    def "can call createManyTickets() when using a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
+        given:
+        List<TicketCreateInput> inputs = (1..3).collect {
+            new TicketCreateInput(new TicketComment().setBody(faker.chuckNorris().fact()))
+                    .setRawSubject(faker.book().title())
+        }
+        TicketsCreateRequest createTicketsRequest = new TicketsCreateRequest().setTickets(inputs)
+
+        when:
+        JobStatusResponse status = client.createManyTickets(createTicketsRequest).block()
+
+        and:
+        (status.getJobStatus() as CreateResourceResult).getId()
+
+        then:
+        noExceptionThrown()
+
+        where:
+        [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { it.shouldSucceed }
+
+    }
+
     def "calling updateTicket() succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         given:
         TicketUpdateInput ticketUpdateInput = new TicketUpdateInput()
@@ -187,9 +209,7 @@ class TicketClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         where:
-        [[client, clientType, ignored, alsoIgnored], creator, locale] << [
-                clientTestMatrix.findAll { it.shouldSucceed || it.clientType == "simple user" }, [true, false, null], accountLocales
-        ].combinations()
+        [[client, clientType, ignored, alsoIgnored], creator, locale] << [clientTestMatrix.findAll { it.shouldSucceed || it.clientType == "simple user" }, [true, false, null], accountLocales].combinations()
     }
 
     def "calling listTicketFields when using a(n) #clientType client and #creator flag fails"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored, Boolean creator, Locale locale) {
@@ -200,9 +220,6 @@ class TicketClientSpec extends Z4jSpec {
         thrown(HttpClientException)
 
         where:
-        [[client, clientType, ignored, alsoIgnored], creator, locale] << [
-                clientTestMatrix.findAll { !it.shouldSucceed && it.clientType != "simple user"}, [true, false, null], accountLocales
-        ].combinations()
+        [[client, clientType, ignored, alsoIgnored], creator, locale] << [clientTestMatrix.findAll { !it.shouldSucceed && it.clientType != "simple user" }, [true, false, null], accountLocales].combinations()
     }
 }
-

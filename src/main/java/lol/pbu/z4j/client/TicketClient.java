@@ -53,6 +53,19 @@ public interface TicketClient {
     Mono<@Valid TicketResponse> createTicket(@Body @NotNull @Valid TicketCreateRequest ticketCreateRequest);
 
     /**
+     * <h1>{@summary Create Many Tickets}</h1>
+     * Accepts an array of up to 100 ticket objects.
+     * Every ticket created with this endpoint may be affected by your business rules, which can include sending email notifications to your end users.
+     * <blockquote>NOTE: This endpoint starts a background job on the zendesk server. The returned object reports on this background job's status.</blockquote>
+     * <h4 id="allowed-for">Allowed For Agents</h4>
+     *
+     * @param ticketsCreateRequest The tickets to create (required)
+     * @return The job status (status code 200)
+     */
+    @Post("/api/v2/tickets/create_many")
+    Mono<@Valid JobStatusResponse> createManyTickets(@Body @NotNull @Valid TicketsCreateRequest ticketsCreateRequest);
+
+    /**
      * <h1>{@summary Create Custom Ticket Field}</h1>
      * See{@link TicketFieldTypeEnum} and <a href="https://support.zendesk.com/hc/articles/4408883152794">Adding custom ticket fields to your tickets and forms</a>
      <p>See <a

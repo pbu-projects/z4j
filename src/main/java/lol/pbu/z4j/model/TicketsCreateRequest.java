@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,6 +48,7 @@ public class TicketsCreateRequest {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKETS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    @Size(max = 100)
     private List<@Valid TicketCreateInput> tickets;
 
     /**
