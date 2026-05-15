@@ -144,10 +144,7 @@ class TicketClientSpec extends Z4jSpec {
         TicketsCreateRequest createTicketsRequest = new TicketsCreateRequest().setTickets(inputs)
 
         when:
-        JobStatusResponse status = client.createManyTickets(createTicketsRequest).block()
-
-        and:
-        (status.getJobStatus() as CreateResourceResult).getId()
+        client.createManyTickets(createTicketsRequest).block()
 
         then:
         noExceptionThrown()

@@ -15,9 +15,21 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.EqualsAndHashCode;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = CreateResourceResult.class, name = "create resource result"),
+        @JsonSubTypes.Type(value = FailedResult.class, name = "failed result"),
+        @JsonSubTypes.Type(value = UpdateResourceResult.class, name = "update resource result"),
+})
 @EqualsAndHashCode
 @Serdeable
 public class JobStatus {

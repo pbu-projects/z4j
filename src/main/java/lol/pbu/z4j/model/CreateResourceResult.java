@@ -15,17 +15,23 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
+/**
+ * A Job Status Response after successfully creating a resource
+ *
+ * @author KKrauss8
+ * @since 0.1.5
+ */
 @Accessors(chain = true)
-@AllArgsConstructor
-@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Setter
-@Getter
+@Data
 @Serdeable
+@JsonTypeName("create resource result")
 public class CreateResourceResult extends JobStatus {
     private Integer id;
     private Integer index;
