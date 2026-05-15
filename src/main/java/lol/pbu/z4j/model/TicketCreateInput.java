@@ -396,11 +396,11 @@ public class TicketCreateInput {
      *
      * @return The same instance of TicketCreateInput for chaining.
      */
-    public TicketCreateInput addAdditionalCollaboratorsItem(Collaborator additionalCollaboratorsItem) {
+    public TicketCreateInput addAdditionalCollaborator(Collaborator additionalCollaborator) {
         if (additionalCollaborators == null) {
             additionalCollaborators = new ArrayList<>();
         }
-        additionalCollaborators.add(additionalCollaboratorsItem);
+        additionalCollaborators.add(additionalCollaborator);
         return this;
     }
 
@@ -409,11 +409,11 @@ public class TicketCreateInput {
      *
      * @return The same instance of TicketCreateInput for chaining.
      */
-    public TicketCreateInput addAttributeValueIdsItem(Integer attributeValueIdsItem) {
+    public TicketCreateInput addAttributeValueId(Integer attributeValueId) {
         if (attributeValueIds == null) {
             attributeValueIds = new ArrayList<>();
         }
-        attributeValueIds.add(attributeValueIdsItem);
+        attributeValueIds.add(attributeValueId);
         return this;
     }
 
@@ -422,11 +422,11 @@ public class TicketCreateInput {
      *
      * @return The same instance of TicketCreateInput for chaining.
      */
-    public TicketCreateInput addCollaboratorIdsItem(Integer collaboratorIdsItem) {
+    public TicketCreateInput addCollaboratorId(Integer collaboratorId) {
         if (collaboratorIds == null) {
             collaboratorIds = new ArrayList<>();
         }
-        collaboratorIds.add(collaboratorIdsItem);
+        collaboratorIds.add(collaboratorId);
         return this;
     }
 
@@ -435,7 +435,7 @@ public class TicketCreateInput {
      *
      * @return The same instance of TicketCreateInput for chaining.
      */
-    public TicketCreateInput addCustomFieldsItem(TicketCustomFieldsInner customField) {
+    public TicketCreateInput addCustomField(TicketCustomFieldsInner customField) {
         if (customFields == null) {
             customFields = new ArrayList<>();
         }

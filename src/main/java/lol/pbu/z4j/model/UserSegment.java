@@ -165,11 +165,11 @@ public class UserSegment {
      *
      * @return The same instance of UserSegment for chaining.
      */
-    public UserSegment addAddedUserIdsItem(Long addedUserIdsItem) {
+    public UserSegment addAddedUserId(Long addedUserId) {
         if (addedUserIds == null) {
             addedUserIds = new ArrayList<>();
         }
-        addedUserIds.add(addedUserIdsItem);
+        addedUserIds.add(addedUserId);
         return this;
     }
 
@@ -178,11 +178,11 @@ public class UserSegment {
      *
      * @return The same instance of UserSegment for chaining.
      */
-    public UserSegment addGroupIdsItem(Long groupIdsItem) {
+    public UserSegment addGroupId(Long groupId) {
         if (groupIds == null) {
             groupIds = new ArrayList<>();
         }
-        groupIds.add(groupIdsItem);
+        groupIds.add(groupId);
         return this;
     }
 
@@ -191,11 +191,11 @@ public class UserSegment {
      *
      * @return The same instance of UserSegment for chaining.
      */
-    public UserSegment addOrTagsItem(String orTagsItem) {
+    public UserSegment addOrTag(String orTag) {
         if (orTags == null) {
             orTags = new ArrayList<>();
         }
-        orTags.add(orTagsItem);
+        orTags.add(orTag);
         return this;
     }
 
@@ -204,11 +204,11 @@ public class UserSegment {
      *
      * @return The same instance of UserSegment for chaining.
      */
-    public UserSegment addOrganizationIdsItem(Long organizationIdsItem) {
+    public UserSegment addOrganizationId(Long organizationId) {
         if (organizationIds == null) {
             organizationIds = new ArrayList<>();
         }
-        organizationIds.add(organizationIdsItem);
+        organizationIds.add(organizationId);
         return this;
     }
 
@@ -217,7 +217,7 @@ public class UserSegment {
      *
      * @return The same instance of UserSegment for chaining.
      */
-    public UserSegment addTagsItem(String tagsItem) {
+    public UserSegment addTag(String tagsItem) {
         if (tags == null) {
             tags = new ArrayList<>();
         }

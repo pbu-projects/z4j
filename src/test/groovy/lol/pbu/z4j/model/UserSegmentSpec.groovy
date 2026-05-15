@@ -34,12 +34,12 @@ class UserSegmentSpec extends Z4jSpec {
         userSegment."$propertyName".getAt(0) == property
 
         where:
-        propertyName      | methodName               | property
-        'addedUserIds'    | 'addAddedUserIdsItem'    | 1L
-        'groupIds'        | 'addGroupIdsItem'        | 2L
-        'orTags'          | 'addOrTagsItem'          | "or_tag1"
-        'organizationIds' | 'addOrganizationIdsItem' | 3L
-        'tags' | 'addTag' | "tag1"
+        propertyName      | methodName          | property
+        'addedUserIds'    | 'addAddedUserId'    | 1L
+        'groupIds'        | 'addGroupId'        | 2L
+        'orTags'          | 'addOrTag'          | "or_tag1"
+        'organizationIds' | 'addOrganizationId' | 3L
+        'tags'            | 'addTag'            | "tag1"
     }
 
     @Unroll
@@ -58,12 +58,12 @@ class UserSegmentSpec extends Z4jSpec {
 
 
         where:
-        propertyName      | methodName               | existingProperty | property
-        'addedUserIds'    | 'addAddedUserIdsItem'    | [10L]            | 1L
-        'groupIds'        | 'addGroupIdsItem'        | [20L]            | 2L
-        'orTags'          | 'addOrTagsItem'          | ["or_tag1"]      | "or_tag2"
-        'organizationIds' | 'addOrganizationIdsItem' | [30L]            | 3L
-        'tags' | 'addTag' | ["tag1"] | "tag2"
+        propertyName      | methodName          | existingProperty | property
+        'addedUserIds'    | 'addAddedUserId'    | [10L]            | 1L
+        'groupIds'        | 'addGroupId'        | [20L]            | 2L
+        'orTags'          | 'addOrTag'          | ["or_tag1"]      | "or_tag2"
+        'organizationIds' | 'addOrganizationId' | [30L]            | 3L
+        'tags'            | 'addTag'            | ["tag1"]         | "tag2"
     }
 }
 

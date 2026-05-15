@@ -283,7 +283,7 @@ public class TicketUpdateInput {
      *
      * @return The same instance of TicketUpdateInput for chaining.
      */
-    public TicketUpdateInput addAdditionalCollaboratorsItem(Collaborator additionalCollaboratorsItem) {
+    public TicketUpdateInput addAdditionalCollaborator(Collaborator additionalCollaboratorsItem) {
         if (additionalCollaborators == null) {
             additionalCollaborators = new ArrayList<>();
         }
@@ -296,7 +296,7 @@ public class TicketUpdateInput {
      *
      * @return The same instance of TicketUpdateInput for chaining.
      */
-    public TicketUpdateInput addAttributeValueIdsItem(Integer attributeValueIdsItem) {
+    public TicketUpdateInput addAttributeValueId(Integer attributeValueIdsItem) {
         if (attributeValueIds == null) {
             attributeValueIds = new ArrayList<>();
         }
@@ -309,7 +309,7 @@ public class TicketUpdateInput {
      *
      * @return The same instance of TicketUpdateInput for chaining.
      */
-    public TicketUpdateInput addCollaboratorIdsItem(Integer collaboratorIdsItem) {
+    public TicketUpdateInput addCollaboratorId(Integer collaboratorIdsItem) {
         if (collaboratorIds == null) {
             collaboratorIds = new ArrayList<>();
         }
@@ -322,7 +322,7 @@ public class TicketUpdateInput {
      *
      * @return The same instance of TicketUpdateInput for chaining.
      */
-    public TicketUpdateInput addCustomFieldsItem(CustomField customFieldsItem) {
+    public TicketUpdateInput addCustomField(CustomField customFieldsItem) {
         if (customFields == null) {
             customFields = new ArrayList<>();
         }
@@ -335,7 +335,7 @@ public class TicketUpdateInput {
      *
      * @return The same instance of TicketUpdateInput for chaining.
      */
-    public TicketUpdateInput addEmailCcsItem(EmailCC emailCcsItem) {
+    public TicketUpdateInput addEmailCc(EmailCC emailCcsItem) {
         if (emailCcs == null) {
             emailCcs = new ArrayList<>();
         }
@@ -348,7 +348,7 @@ public class TicketUpdateInput {
      *
      * @return The same instance of TicketUpdateInput for chaining.
      */
-    public TicketUpdateInput addFollowersItem(Follower followersItem) {
+    public TicketUpdateInput addFollower(Follower followersItem) {
         if (followers == null) {
             followers = new ArrayList<>();
         }
@@ -361,7 +361,7 @@ public class TicketUpdateInput {
      *
      * @return The same instance of TicketUpdateInput for chaining.
      */
-    public TicketUpdateInput addSharingAgreementIdsItem(Integer sharingAgreementIdsItem) {
+    public TicketUpdateInput addSharingAgreementId(Integer sharingAgreementIdsItem) {
         if (sharingAgreementIds == null) {
             sharingAgreementIds = new ArrayList<>();
         }
@@ -374,7 +374,7 @@ public class TicketUpdateInput {
      *
      * @return The same instance of TicketUpdateInput for chaining.
      */
-    public TicketUpdateInput addTagsItem(String tagsItem) {
+    public TicketUpdateInput addTag(String tagsItem) {
         if (tags == null) {
             tags = new ArrayList<>();
         }

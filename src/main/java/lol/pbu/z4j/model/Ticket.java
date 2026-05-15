@@ -575,11 +575,11 @@ public class Ticket implements Exportable {
      *
      * @return The same instance of Ticket for chaining.
      */
-    public Ticket addAttributeValueIdsItem(Long attributeValueIdsItem) {
+    public Ticket addAttributeValueId(Long attributeValueId) {
         if (attributeValueIds == null) {
             attributeValueIds = new ArrayList<>();
         }
-        attributeValueIds.add(attributeValueIdsItem);
+        attributeValueIds.add(attributeValueId);
         return this;
     }
 
@@ -588,11 +588,11 @@ public class Ticket implements Exportable {
      *
      * @return The same instance of Ticket for chaining.
      */
-    public Ticket addCollaboratorIdsItem(Long collaboratorIdsItem) {
+    public Ticket addCollaboratorId(Long collaboratorId) {
         if (collaboratorIds == null) {
             collaboratorIds = new ArrayList<>();
         }
-        collaboratorIds.add(collaboratorIdsItem);
+        collaboratorIds.add(collaboratorId);
         return this;
     }
 
@@ -601,11 +601,11 @@ public class Ticket implements Exportable {
      *
      * @return The same instance of Ticket for chaining.
      */
-    public Ticket addCollaboratorsItem(Collaborator collaboratorsItem) {
+    public Ticket addCollaborator(Collaborator collaborator) {
         if (collaborators == null) {
             collaborators = new ArrayList<>();
         }
-        collaborators.add(collaboratorsItem);
+        collaborators.add(collaborator);
         return this;
     }
 
@@ -614,11 +614,11 @@ public class Ticket implements Exportable {
      *
      * @return The same instance of Ticket for chaining.
      */
-    public Ticket addCustomFieldsItem(TicketCustomFieldsInner customFieldsItem) {
+    public Ticket addCustomField(TicketCustomFieldsInner customField) {
         if (customFields == null) {
             customFields = new ArrayList<>();
         }
-        customFields.add(customFieldsItem);
+        customFields.add(customField);
         return this;
     }
 
@@ -627,11 +627,11 @@ public class Ticket implements Exportable {
      *
      * @return The same instance of Ticket for chaining.
      */
-    public Ticket addEmailCcIdsItem(Long emailCcIdsItem) {
+    public Ticket addEmailCcId(Long emailCcId) {
         if (emailCcIds == null) {
             emailCcIds = new ArrayList<>();
         }
-        emailCcIds.add(emailCcIdsItem);
+        emailCcIds.add(emailCcId);
         return this;
     }
 
@@ -640,11 +640,11 @@ public class Ticket implements Exportable {
      *
      * @return The same instance of Ticket for chaining.
      */
-    public Ticket addFollowerIdsItem(Long followerIdsItem) {
+    public Ticket addFollowerId(Long followerId) {
         if (followerIds == null) {
             followerIds = new ArrayList<>();
         }
-        followerIds.add(followerIdsItem);
+        followerIds.add(followerId);
         return this;
     }
 
@@ -653,7 +653,7 @@ public class Ticket implements Exportable {
      *
      * @return The same instance of Ticket for chaining.
      */
-    public Ticket addMacroIdsItem(Long macroIdsItem) {
+    public Ticket addMacroId(Long macroIdsItem) {
         if (macroIds == null) {
             macroIds = new ArrayList<>();
         }
@@ -666,7 +666,7 @@ public class Ticket implements Exportable {
      *
      * @return The same instance of Ticket for chaining.
      */
-    public Ticket addSharingAgreementIdsItem(Long sharingAgreementIdsItem) {
+    public Ticket addSharingAgreementId(Long sharingAgreementIdsItem) {
         if (sharingAgreementIds == null) {
             sharingAgreementIds = new ArrayList<>();
         }
@@ -679,7 +679,7 @@ public class Ticket implements Exportable {
      *
      * @return The same instance of Ticket for chaining.
      */
-    public Ticket addTagsItem(String tagsItem) {
+    public Ticket addTag(String tagsItem) {
         if (tags == null) {
             tags = new ArrayList<>();
         }

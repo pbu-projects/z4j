@@ -48,11 +48,11 @@ class TicketSpec extends Z4jSpec {
         ticket."$propertyName".getAt(0) == property
 
         where:
-        propertyName          | methodName                   | property
-        'attributeValueIds'   | 'addAttributeValueIdsItem'   | 1L
-        'collaboratorIds'     | 'addCollaboratorIdsItem'     | 2L
+        propertyName        | methodName            | property
+        'attributeValueIds' | 'addAttributeValueId' | 1L
+        'collaboratorIds'   | 'addCollaboratorId'   | 2L
         'collaborators'       | 'addCollaborator'       | collaborator1
-        'customFields'        | 'addCustomFieldsItem'        | customField1
+        'customFields'      | 'addCustomField'      | customField1
         'emailCcIds'          | 'addEmailCcId'          | 3L
         'followerIds'         | 'addFollowerId'         | 4L
         'macroIds'            | 'addMacroId'            | 5L
@@ -76,16 +76,16 @@ class TicketSpec extends Z4jSpec {
 
 
         where:
-        propertyName          | methodName                   | existingProperty | property
-        'attributeValueIds'   | 'addAttributeValueIdsItem'   | [10L]            | 1L
-        'collaboratorIds'     | 'addCollaboratorIdsItem'     | [20L]            | 2L
-        'collaborators'       | 'addCollaborator'       | [collaborator1] | collaborator2
-        'customFields'        | 'addCustomFieldsItem'        | [customField1]   | customField2
-        'emailCcIds'          | 'addEmailCcId'          | [30L]           | 3L
-        'followerIds'         | 'addFollowerId'         | [40L]           | 4L
-        'macroIds'            | 'addMacroId'            | [50L]           | 5L
-        'sharingAgreementIds' | 'addSharingAgreementId' | [60L]           | 6L
-        'tags'                | 'addTag'                | ['existing']    | 'tag'
+        propertyName          | methodName              | existingProperty | property
+        'attributeValueIds'   | 'addAttributeValueId'   | [10L]            | 1L
+        'collaboratorIds'     | 'addCollaboratorId'     | [20L]            | 2L
+        'collaborators'       | 'addCollaborator'       | [collaborator1]  | collaborator2
+        'customFields'        | 'addCustomField'        | [customField1]   | customField2
+        'emailCcIds'          | 'addEmailCcId'          | [30L]            | 3L
+        'followerIds'         | 'addFollowerId'         | [40L]            | 4L
+        'macroIds'            | 'addMacroId'            | [50L]            | 5L
+        'sharingAgreementIds' | 'addSharingAgreementId' | [60L]            | 6L
+        'tags'                | 'addTag'                | ['existing']     | 'tag'
     }
 }
 

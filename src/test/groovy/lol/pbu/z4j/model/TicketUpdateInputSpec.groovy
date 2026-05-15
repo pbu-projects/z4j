@@ -55,15 +55,15 @@ class TicketUpdateInputSpec extends Z4jSpec {
         ticketUpdateInput."$propertyName".getAt(0) == property
 
         where:
-        propertyName              | methodName                       | property
-        'additionalCollaborators' | 'addAdditionalCollaboratorsItem' | collaborator1
-        'attributeValueIds'       | 'addAttributeValueIdsItem'       | 1
-        'collaboratorIds'         | 'addCollaboratorIdsItem'         | 2
-        'customFields'            | 'addCustomFieldsItem'            | customField1
-        'emailCcs'            | 'addEmailCc'            | emailCc1
-        'followers'           | 'addFollower'           | follower1
-        'sharingAgreementIds' | 'addSharingAgreementId' | 3
-        'tags'                | 'addTag'                | "tag1"
+        propertyName              | methodName                  | property
+        'additionalCollaborators' | 'addAdditionalCollaborator' | collaborator1
+        'attributeValueIds'       | 'addAttributeValueId'       | 1
+        'collaboratorIds'         | 'addCollaboratorId'         | 2
+        'customFields'            | 'addCustomField'            | customField1
+        'emailCcs'                | 'addEmailCc'                | emailCc1
+        'followers'               | 'addFollower'               | follower1
+        'sharingAgreementIds'     | 'addSharingAgreementId'     | 3
+        'tags'                    | 'addTag'                    | "tag1"
     }
 
     @Unroll
@@ -81,15 +81,15 @@ class TicketUpdateInputSpec extends Z4jSpec {
         ticketUpdateInput."$propertyName".contains(property)
 
         where:
-        propertyName              | methodName                       | existingProperty | property
-        'additionalCollaborators' | 'addAdditionalCollaboratorsItem' | [collaborator1]  | collaborator2
-        'attributeValueIds'       | 'addAttributeValueIdsItem'       | [10]             | 1
-        'collaboratorIds'         | 'addCollaboratorIdsItem'         | [20]             | 2
-        'customFields'            | 'addCustomFieldsItem'            | [customField1]   | customField2
-        'emailCcs'            | 'addEmailCc'            | [emailCc1]   | emailCc2
-        'followers'           | 'addFollower'           | [follower1]  | follower2
-        'sharingAgreementIds' | 'addSharingAgreementId' | [30]         | 3
-        'tags'                | 'addTag'                | ["existing"] | "tag"
+        propertyName              | methodName                  | existingProperty | property
+        'additionalCollaborators' | 'addAdditionalCollaborator' | [collaborator1]  | collaborator2
+        'attributeValueIds'       | 'addAttributeValueId'       | [10]             | 1
+        'collaboratorIds'         | 'addCollaboratorId'         | [20]             | 2
+        'customFields'            | 'addCustomField'            | [customField1]   | customField2
+        'emailCcs'                | 'addEmailCc'                | [emailCc1]       | emailCc2
+        'followers'               | 'addFollower'               | [follower1]      | follower2
+        'sharingAgreementIds'     | 'addSharingAgreementId'     | [30]             | 3
+        'tags'                    | 'addTag'                    | ["existing"]     | "tag"
     }
 }
 

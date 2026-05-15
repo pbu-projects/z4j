@@ -24,7 +24,7 @@ class TicketCreateInputSpec extends Z4jSpec {
     @Shared
     Collaborator collaborator1, collaborator2
     @Shared
-    CustomField customField1, customField2
+    TicketCustomFieldsInner customField1, customField2
     @Shared
     EmailCC emailCc1, emailCc2
     @Shared
@@ -35,8 +35,8 @@ class TicketCreateInputSpec extends Z4jSpec {
     void setupSpec() {
         collaborator1 = new Collaborator(name: faker.name().fullName(), email: faker.internet().emailAddress())
         collaborator2 = new Collaborator(name: faker.name().fullName(), email: faker.internet().emailAddress())
-        customField1 = new CustomField()
-        customField2 = new CustomField()
+        customField1 = new TicketCustomFieldBoolean()
+        customField2 = new TicketCustomFieldStringArray()
         emailCc1 = new EmailCC(userId: faker.number().randomNumber())
         emailCc2 = new EmailCC(userId: faker.number().randomNumber())
         follower1 = new Follower(userId: faker.number().randomNumber())
@@ -58,19 +58,19 @@ class TicketCreateInputSpec extends Z4jSpec {
         ticketCreateInput."$propertyName".getAt(0) == property
 
         where:
-        propertyName              | methodName                       | property
-        'additionalCollaborators' | 'addAdditionalCollaboratorsItem' | collaborator1
-        'attributeValueIds'       | 'addAttributeValueIdsItem'       | 1
-        'collaboratorIds'         | 'addCollaboratorIdsItem'         | 2
-        'customFields'            | 'addCustomFieldsItem'            | customField1
-        'emailCcs'            | 'addEmailCc'            | emailCc1
-        'followers'           | 'addFollower'           | follower1
-        'sharingAgreementIds' | 'addSharingAgreementId' | 3
-        'tags'                | 'addTag'                | "tag1"
-        'collaborators'       | 'addCollaborator'       | collaborator2
-        'emailCcIds'          | 'addEmailCcId'          | 4L
-        'followerIds'         | 'addFollowerId'         | 5L
-        'macroIds'            | 'addMacroId'            | 6L
+        propertyName              | methodName                  | property
+        'additionalCollaborators' | 'addAdditionalCollaborator' | collaborator1
+        'attributeValueIds'       | 'addAttributeValueId'       | 1
+        'collaboratorIds'         | 'addCollaboratorId'         | 2
+        'customFields'            | 'addCustomField'            | customField1
+        'emailCcs'                | 'addEmailCc'                | emailCc1
+        'followers'               | 'addFollower'               | follower1
+        'sharingAgreementIds'     | 'addSharingAgreementId'     | 3
+        'tags'                    | 'addTag'                    | "tag1"
+        'collaborators'           | 'addCollaborator'           | collaborator2
+        'emailCcIds'              | 'addEmailCcId'              | 4L
+        'followerIds'             | 'addFollowerId'             | 5L
+        'macroIds'                | 'addMacroId'                | 6L
     }
 
     @Unroll
@@ -88,19 +88,19 @@ class TicketCreateInputSpec extends Z4jSpec {
         ticketCreateInput."$propertyName".contains(property)
 
         where:
-        propertyName              | methodName                       | existingProperty | property
-        'additionalCollaborators' | 'addAdditionalCollaboratorsItem' | [collaborator1]  | collaborator2
-        'attributeValueIds'       | 'addAttributeValueIdsItem'       | [10]             | 1
-        'collaboratorIds'         | 'addCollaboratorIdsItem'         | [20]             | 2
-        'customFields'            | 'addCustomFieldsItem'            | [customField1]   | customField2
-        'emailCcs'            | 'addEmailCc'            | [emailCc1]      | emailCc2
-        'followers'           | 'addFollower'           | [follower1]     | follower2
-        'sharingAgreementIds' | 'addSharingAgreementId' | [30]            | 3
-        'tags'                | 'addTag'                | ["existing"]    | "tag"
-        'collaborators'       | 'addCollaborator'       | [collaborator2] | collaborator1
-        'emailCcIds'          | 'addEmailCcId'          | [40L]           | 4L
-        'followerIds'         | 'addFollowerId'         | [50L]           | 5L
-        'macroIds'            | 'addMacroId'            | [60L]           | 6L
+        propertyName              | methodName                  | existingProperty | property
+        'additionalCollaborators' | 'addAdditionalCollaborator' | [collaborator1]  | collaborator2
+        'attributeValueIds'       | 'addAttributeValueId'       | [10]             | 1
+        'collaboratorIds'         | 'addCollaboratorId'         | [20]             | 2
+        'customFields'            | 'addCustomField'            | [customField1]   | customField2
+        'emailCcs'                | 'addEmailCc'                | [emailCc1]       | emailCc2
+        'followers'               | 'addFollower'               | [follower1]      | follower2
+        'sharingAgreementIds'     | 'addSharingAgreementId'     | [30]             | 3
+        'tags'                    | 'addTag'                    | ["existing"]     | "tag"
+        'collaborators'           | 'addCollaborator'           | [collaborator2]  | collaborator1
+        'emailCcIds'              | 'addEmailCcId'              | [40L]            | 4L
+        'followerIds'             | 'addFollowerId'             | [50L]            | 5L
+        'macroIds'                | 'addMacroId'                | [60L]            | 6L
     }
 }
 
