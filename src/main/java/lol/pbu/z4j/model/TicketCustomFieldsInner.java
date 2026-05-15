@@ -15,9 +15,7 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.*;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.AllArgsConstructor;
@@ -39,6 +37,18 @@ import lombok.experimental.Accessors;
         TicketCustomFieldsInner.JSON_PROPERTY_ID,
         TicketCustomFieldsInner.JSON_PROPERTY_VALUE,
 })
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = TicketCustomFieldStringArray.class, name = "string[]"),
+        @JsonSubTypes.Type(value = TicketCustomFieldLong.class, name = "long"),
+        @JsonSubTypes.Type(value = TicketCustomFieldFloat.class, name = "float"),
+        @JsonSubTypes.Type(value = TicketCustomFieldString.class, name = "string"),
+        @JsonSubTypes.Type(value = TicketCustomFieldBoolean.class, name = "boolean")
+})
 @Serdeable
 public class TicketCustomFieldsInner {
 
@@ -59,6 +69,6 @@ public class TicketCustomFieldsInner {
     @Nullable
     @JsonProperty(JSON_PROPERTY_VALUE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String value;
+    private Object value;
 
 }

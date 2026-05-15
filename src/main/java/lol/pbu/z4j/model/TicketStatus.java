@@ -28,7 +28,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * The state of the ticket.  If your account has activated custom ticket statuses, this is the ticket's status category. See <a href=\"#custom-ticket-statuses\">custom ticket statuses</a>
+ * The state of the ticket.  If your account has activated custom ticket statuses, this is the ticket's status category. See  (TODO: make this href a full url path) <a href="#custom-ticket-statuses">custom ticket statuses</a>
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1

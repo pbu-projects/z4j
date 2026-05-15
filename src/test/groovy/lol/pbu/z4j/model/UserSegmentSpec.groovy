@@ -39,7 +39,7 @@ class UserSegmentSpec extends Z4jSpec {
         'groupIds'        | 'addGroupIdsItem'        | 2L
         'orTags'          | 'addOrTagsItem'          | "or_tag1"
         'organizationIds' | 'addOrganizationIdsItem' | 3L
-        'tags'            | 'addTagsItem'            | "tag1"
+        'tags' | 'addTag' | "tag1"
     }
 
     @Unroll
@@ -63,7 +63,7 @@ class UserSegmentSpec extends Z4jSpec {
         'groupIds'        | 'addGroupIdsItem'        | [20L]            | 2L
         'orTags'          | 'addOrTagsItem'          | ["or_tag1"]      | "or_tag2"
         'organizationIds' | 'addOrganizationIdsItem' | [30L]            | 3L
-        'tags'            | 'addTagsItem'            | ["tag1"]         | "tag2"
+        'tags' | 'addTag' | ["tag1"] | "tag2"
     }
 }
 

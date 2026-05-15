@@ -97,7 +97,7 @@ public class TicketUpdateInput {
     public static final String JSON_PROPERTY_UPDATED_STAMP = "updated_stamp";
 
     /**
-     * An array of numeric IDs, emails, or objects containing name and email properties. See <a href=\"developer.zendesk.com/api-reference/ticketing/tickets/tickets/#setting-collaborators\">Setting Collaborators</a>. An email notification is sent to them when the ticket is updated
+     * An array of numeric IDs, emails, or objects containing name and email properties. See <a href="https://developer.zendesk.com/api-reference/ticketing/tickets/tickets/#setting-collaborators">Setting Collaborators</a>. An email notification is sent to them when the ticket is updated
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_ADDITIONAL_COLLABORATORS)
@@ -144,7 +144,7 @@ public class TicketUpdateInput {
     private TicketComment comment;
 
     /**
-     * Custom fields for the ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-custom-field-values\">Setting custom field values</a>
+     * Custom fields for the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-custom-field-values">Setting custom field values</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_FIELDS)
@@ -152,7 +152,7 @@ public class TicketUpdateInput {
     private List<@Valid CustomField> customFields;
 
     /**
-     * The custom ticket status id of the ticket. See <a href=\"#custom-ticket-statuses\">custom ticket statuses</a>
+     * The custom ticket status id of the ticket. See  (TODO: make this href a full url path) <a href="#custom-ticket-statuses">custom ticket statuses</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS_ID)
@@ -160,7 +160,7 @@ public class TicketUpdateInput {
     private Integer customStatusId;
 
     /**
-     * If this is a ticket of type \"task\" it has a due date.  Due date format uses <a href=\"http://en.wikipedia.org/wiki/ISO_8601\">ISO 8601</a> format.
+     * If this is a ticket of type \"task\" it has a due date.  Due date format uses <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format.
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_DUE_AT)
@@ -168,7 +168,7 @@ public class TicketUpdateInput {
     private ZonedDateTime dueAt;
 
     /**
-     * An array of objects that represent agent or end users email CCs to add or delete from the ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs\">Setting email CCs</a>
+     * An array of objects that represent agent or end users email CCs to add or delete from the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs">Setting email CCs</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_EMAIL_CCS)
@@ -184,7 +184,7 @@ public class TicketUpdateInput {
     private String externalId;
 
     /**
-     * An array of objects that represent agent followers to add or delete from the ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers\">Setting followers</a>
+     * An array of objects that represent agent followers to add or delete from the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers">Setting followers</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_FOLLOWERS)
@@ -200,7 +200,7 @@ public class TicketUpdateInput {
     private Integer groupId;
 
     /**
-     * The organization of the requester. You can only specify the ID of an organization associated with the requester. See <a href=\"developer.zendesk.com/api-reference/ticketing/organizations/organization_memberships/\">Organization Memberships</a>
+     * The organization of the requester. You can only specify the ID of an organization associated with the requester. See <a href="https://developer.zendesk.com/api-reference/ticketing/organizations/organization_memberships/">Organization Memberships</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)

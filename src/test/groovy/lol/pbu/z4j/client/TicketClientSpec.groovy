@@ -29,6 +29,9 @@ class TicketClientSpec extends Z4jSpec {
     List<Ticket> tickets
 
     @Shared
+    List<TicketField> adminTicketFields
+
+    @Shared
     List<Map> clientTestMatrix
 
     void setupSpec() {
@@ -43,6 +46,7 @@ class TicketClientSpec extends Z4jSpec {
                             [client: ticketBadEmailClient, clientType: "bad email", shouldSucceed: false, expectedTitle: "should not"],
                             [client: ticketBadUrlClient, clientType: "bad url", shouldSucceed: false, expectedTitle: "should not"],
                             [client: ticketsUserClient, clientType: "simple user", shouldSucceed: false, expectedTitle: "should not"]]
+        adminTicketFields = ticketsAdminClient.listTicketFields(null, null).block().getTicketFields()
     }
 
     def "calling listTickets() succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
@@ -91,9 +95,17 @@ class TicketClientSpec extends Z4jSpec {
 
     def "Trying to create a ticket succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         given:
+        TicketField multiSelectField = adminTicketFields.find { field -> field.getType().equalsIgnoreCase("multiselect") }
+        assert multiSelectField: "No multiselect field found. Please update your sandbox to include one."
+
         TicketComment ticketComment = new TicketComment().setBody(faker.chuckNorris().fact())
         TicketCreateInput createTicketInput = new TicketCreateInput(ticketComment)
         createTicketInput.setRawSubject(faker.chuckNorris().fact())
+
+        TicketCustomFieldsInner customField = new TicketCustomFieldStringArray()
+                .setValue(multiSelectField.getCustomFieldOptions().getFirst().getValue())
+                .setId(multiSelectField.getId())
+        createTicketInput.setCustomFields([customField])
         TicketCreateRequest createTicketRequest = new TicketCreateRequest(createTicketInput)
 
         when:

@@ -119,7 +119,7 @@ public class TicketField {
     private String title;
 
     /**
-     * System or custom field type. Editable for custom field types and only on creation. See <a href=\"#create-ticket-field\">Create Ticket Field</a>
+     * System or custom field type. Editable for custom field types and only on creation. See  (TODO: make this href a full url path) <a href="#create-ticket-field">Create Ticket Field</a>
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_TYPE)
@@ -230,7 +230,7 @@ public class TicketField {
     private Integer position;
 
     /**
-     * The dynamic content placeholder if present, or the <code>description</code> value if not. See <a href=\"/api-reference/ticketing/ticket-management/dynamic_content/\">Dynamic Content</a>
+     * The dynamic content placeholder if present, or the <code>description</code> value if not. See <a href="/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_RAW_DESCRIPTION)
@@ -238,7 +238,7 @@ public class TicketField {
     private String rawDescription;
 
     /**
-     * The dynamic content placeholder if present, or the <code>title</code> value if not. See <a href=\"/api-reference/ticketing/ticket-management/dynamic_content/\">Dynamic Content</a>
+     * The dynamic content placeholder if present, or the <code>title</code> value if not. See <a href="/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_RAW_TITLE)
@@ -246,7 +246,7 @@ public class TicketField {
     private String rawTitle;
 
     /**
-     * The dynamic content placeholder if present, or the \"title_in_portal\" value if not. See <a href=\"/api-reference/ticketing/ticket-management/dynamic_content/\">Dynamic Content</a>
+     * The dynamic content placeholder if present, or the \"title_in_portal\" value if not. See <a href="/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_RAW_TITLE_IN_PORTAL)

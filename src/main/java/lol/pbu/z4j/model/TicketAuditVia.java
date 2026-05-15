@@ -28,7 +28,7 @@ import lombok.experimental.Accessors;
 import java.util.Map;
 
 /**
- * Describes how the object was created. See the <a href=\"/documentation/ticketing/reference-guides/via-object-reference\">Via object reference</a>
+ * Describes how the object was created. See the <a href="/documentation/ticketing/reference-guides/via-object-reference">Via object reference</a>
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1

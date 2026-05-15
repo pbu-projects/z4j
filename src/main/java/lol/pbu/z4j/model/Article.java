@@ -127,7 +127,7 @@ public class Article implements SearchResultsInner {
     private Long authorId;
 
     /**
-     * <p>HTML body of the article. Unsafe tags and attributes may be removed before display. For a list of safe tags and attributes,  see <a href=\"https://support.zendesk.com/hc/en-us/articles/115015895948\">Allowing unsafe HTML in Help Center articles</a> in Zendesk help</p>
+     * <p>HTML body of the article. Unsafe tags and attributes may be removed before display. For a list of safe tags and attributes,  see <a href="https://support.zendesk.com/hc/articles/115015895948">Allowing unsafe HTML in Help Center articles</a> in Zendesk help</p>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_BODY)

@@ -75,7 +75,7 @@ public class TicketComment {
     public static final String JSON_PROPERTY_VIA = "via";
 
     /**
-     * Attachments, if any. See <a href=\"developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/\">Attachment</a>
+     * Attachments, if any. See <a href="https://developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/">Attachment</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_ATTACHMENTS)
@@ -83,7 +83,7 @@ public class TicketComment {
     private List<@Valid Attachment> attachments;
 
     /**
-     * The id of the ticket audit record. See <a href=\"developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#show-audit\">Show Audit</a>
+     * The id of the ticket audit record. See <a href="https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_audits/#show-audit">Show Audit</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_AUDIT_ID)
@@ -91,7 +91,7 @@ public class TicketComment {
     private Integer auditId;
 
     /**
-     * The id of the comment author. See <a href=\"#author-id\">Author id</a>
+     * The id of the comment author. See  (TODO: make this href a full url path) <a href="#author-id">Author id</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_AUTHOR_ID)
@@ -99,7 +99,7 @@ public class TicketComment {
     private Integer authorId;
 
     /**
-     * The comment string. See <a href=\"#bodies\">Bodies</a>
+     * The comment string. See  (TODO: make this href a full url path) <a href="#bodies">Bodies</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_BODY)
@@ -115,7 +115,7 @@ public class TicketComment {
     private ZonedDateTime createdAt;
 
     /**
-     * The comment formatted as HTML. See <a href=\"#bodies\">Bodies</a>
+     * The comment formatted as HTML. See  (TODO: make this href a full url path) <a href="#bodies">Bodies</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_HTML_BODY)
@@ -131,7 +131,7 @@ public class TicketComment {
     private Integer id;
 
     /**
-     * System information (web client, IP address, etc.) and comment flags, if any. See <a href=\"#comment-flags\">Comment flags</a>
+     * System information (web client, IP address, etc.) and comment flags, if any. See  (TODO: make this href a full url path) <a href="#comment-flags">Comment flags</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_METADATA)
@@ -139,7 +139,7 @@ public class TicketComment {
     private Map<String, Object> metadata;
 
     /**
-     * The comment presented as plain text. See <a href=\"#bodies\">Bodies</a>
+     * The comment presented as plain text. See  (TODO: make this href a full url path) <a href="#bodies">Bodies</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_PLAIN_BODY)
@@ -155,7 +155,7 @@ public class TicketComment {
     private Boolean isPublic;
 
     /**
-     * `Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See <a href=\"/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets\">Adding voice comments to tickets</a>
+     * `Comment` or `VoiceComment`. The JSON object for adding voice comments to tickets is different. See <a href="/documentation/ticketing/managing-tickets/adding-voice-comments-to-tickets">Adding voice comments to tickets</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_TYPE)
@@ -163,7 +163,7 @@ public class TicketComment {
     private String type;
 
     /**
-     * List of tokens received from <a href=\"developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/#upload-files\">uploading files</a> for comment attachments. The files are attached by creating or updating tickets with the tokens. See <a href=\"developer.zendesk.com/api-reference/ticketing/tickets/tickets/#attaching-files\">Attaching files</a> in Tickets
+     * List of tokens received from <a href="https://developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/#upload-files">uploading files</a> for comment attachments. The files are attached by creating or updating tickets with the tokens. See <a href="https://developer.zendesk.com/api-reference/ticketing/tickets/tickets/#attaching-files">Attaching files</a> in Tickets
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_UPLOADS)

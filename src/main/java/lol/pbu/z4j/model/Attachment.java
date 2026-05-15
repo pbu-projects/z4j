@@ -30,7 +30,7 @@ import lombok.experimental.Accessors;
 import java.util.List;
 
 /**
- * A file represented as an <a href=\"developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/\">Attachment</a> object
+ * A file represented as an <a href="https://developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/">Attachment</a> object
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1

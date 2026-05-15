@@ -202,7 +202,7 @@ public class Ticket implements Exportable {
     private List<@NotNull Long> attributeValueIds;
 
     /**
-     * The id of the brand this ticket is associated with. See <a href=\"https://support.zendesk.com/hc/en-us/articles/4408829476378\">Setting up multiple brands</a>
+     * The id of the brand this ticket is associated with. See <a href="https://support.zendesk.com/hc/articles/4408829476378">Setting up multiple brands</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_BRAND_ID)
@@ -218,7 +218,7 @@ public class Ticket implements Exportable {
     private List<@NotNull Long> collaboratorIds;
 
     /**
-     * POST requests only. Users to add as cc's when creating a ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-collaborators\">Setting Collaborators</a>
+     * POST requests only. Users to add as cc's when creating a ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-collaborators">Setting Collaborators</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_COLLABORATORS)
@@ -226,7 +226,7 @@ public class Ticket implements Exportable {
     private List<@Valid Collaborator> collaborators;
 
     /**
-     * Write only. An object that adds a comment to the ticket. See <a href=\"developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/\">Ticket comments</a>. To include an attachment with the comment, see <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#attaching-files\">Attaching files</a>. A ticket can contain up to 5000 comments in total, including both public and private comments. Once this limit is reached, any additional attempts to add comments results in a 422 error. The ticket can still be updated in other ways, provided that no new comments are added.
+     * Write only. An object that adds a comment to the ticket. See <a href="https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/">Ticket comments</a>. To include an attachment with the comment, see <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#attaching-files">Attaching files</a>. A ticket can contain up to 5000 comments in total, including both public and private comments. Once this limit is reached, any additional attempts to add comments results in a 422 error. The ticket can still be updated in other ways, provided that no new comments are added.
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_COMMENT)
@@ -242,7 +242,7 @@ public class Ticket implements Exportable {
     private ZonedDateTime createdAt;
 
     /**
-     * Custom fields for the ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-custom-field-values\">Setting custom field values</a>
+     * Custom fields for the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-custom-field-values">Setting custom field values</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_FIELDS)
@@ -250,7 +250,7 @@ public class Ticket implements Exportable {
     private List<@Valid TicketCustomFieldsInner> customFields;
 
     /**
-     * The custom ticket status id of the ticket. See <a href=\"#custom-ticket-statuses\">custom ticket statuses</a>
+     * The custom ticket status id of the ticket. See  (TODO: make this href a full url path) <a href="#custom-ticket-statuses">custom ticket statuses</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS_ID)
@@ -258,7 +258,7 @@ public class Ticket implements Exportable {
     private Long customStatusId;
 
     /**
-     * Read-only first comment on the ticket. When <a href=\"#create-ticket\">creating a ticket</a>, use <code>comment</code> to set the description. See <a href=\"#description-and-first-comment\">Description and first comment</a>
+     * Read-only first comment on the ticket. When  (TODO: make this href a full url path) <a href="#create-ticket">creating a ticket</a>, use <code>comment</code> to set the description. See  (TODO: make this href a full url path) <a href="#description-and-first-comment">Description and first comment</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_DESCRIPTION)
@@ -266,7 +266,7 @@ public class Ticket implements Exportable {
     private String description;
 
     /**
-     * If this is a ticket of type \"task\" it has a due date.  Due date format uses <a href=\"http://en.wikipedia.org/wiki/ISO_8601\">ISO 8601</a> format
+     * If this is a ticket of type \"task\" it has a due date.  Due date format uses <a href="http://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_DUE_AT)
@@ -274,7 +274,7 @@ public class Ticket implements Exportable {
     private ZonedDateTime dueAt;
 
     /**
-     * The ids of agents or end users currently CC'ed on the ticket. Ignored when <a href=\"https://support.zendesk.com/hc/en-us/articles/360020585233\">CCs and followers</a> is not enabled
+     * The ids of agents or end users currently CC'ed on the ticket. Ignored when <a href="https://support.zendesk.com/hc/articles/360020585233">CCs and followers</a> is not enabled
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_EMAIL_CC_IDS)
@@ -282,7 +282,7 @@ public class Ticket implements Exportable {
     private List<@NotNull Long> emailCcIds;
 
     /**
-     * Write only. An array of objects that represents agent or end users email CCs to add or delete from the ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs\">Setting email CCs</a>. Ignored when <a href=\"https://support.zendesk.com/hc/en-us/articles/360020585233\">CCs and followers</a> is not enabled
+     * Write only. An array of objects that represents agent or end users email CCs to add or delete from the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs">Setting email CCs</a>. Ignored when <a href="https://support.zendesk.com/hc/articles/360020585233">CCs and followers</a> is not enabled
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_EMAIL_CCS)
@@ -298,7 +298,7 @@ public class Ticket implements Exportable {
     private String externalId;
 
     /**
-     * The ids of agents currently following the ticket. Ignored when <a href=\"https://support.zendesk.com/hc/en-us/articles/360020585233\">CCs and followers</a> is not enabled
+     * The ids of agents currently following the ticket. Ignored when <a href="https://support.zendesk.com/hc/articles/360020585233">CCs and followers</a> is not enabled
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_FOLLOWER_IDS)
@@ -306,7 +306,7 @@ public class Ticket implements Exportable {
     private List<@NotNull Long> followerIds;
 
     /**
-     * Write only. An array of objects that represents agent followers to add or delete from the ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers\">Setting followers</a>. Ignored when <a href=\"https://support.zendesk.com/hc/en-us/articles/360020585233\">CCs and followers</a> is not enabled
+     * Write only. An array of objects that represents agent followers to add or delete from the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers">Setting followers</a>. Ignored when <a href="https://support.zendesk.com/hc/articles/360020585233">CCs and followers</a> is not enabled
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_FOLLOWERS)
@@ -330,7 +330,7 @@ public class Ticket implements Exportable {
     private Long forumTopicId;
 
     /**
-     * If true, the ticket's <a href=\"/documentation/ticketing/reference-guides/via-object-reference/\">via type</a> is a messaging channel.
+     * If true, the ticket's <a href="/documentation/ticketing/reference-guides/via-object-reference/">via type</a> is a messaging channel.
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_FROM_MESSAGING_CHANNEL)
@@ -394,7 +394,7 @@ public class Ticket implements Exportable {
     private List<@NotNull Long> macroIds;
 
     /**
-     * Write only. Metadata for the audit. In the <code>audit</code> object, the data is specified in the <code>custom</code> property of the <code>metadata</code> object. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-metadata\">Setting Metadata</a>
+     * Write only. Metadata for the audit. In the <code>audit</code> object, the data is specified in the <code>custom</code> property of the <code>metadata</code> object. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-metadata">Setting Metadata</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_METADATA)
@@ -402,7 +402,7 @@ public class Ticket implements Exportable {
     private Object metadata;
 
     /**
-     * The organization of the requester. You can only specify the ID of an organization associated with the requester. See <a href=\"developer.zendesk.com/api-reference/ticketing/organizations/organization_memberships/\">Organization Memberships</a>
+     * The organization of the requester. You can only specify the ID of an organization associated with the requester. See <a href="https://developer.zendesk.com/api-reference/ticketing/organizations/organization_memberships/">Organization Memberships</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
@@ -423,7 +423,7 @@ public class Ticket implements Exportable {
     private Long problemId;
 
     /**
-     * The dynamic content placeholder, if present, or the \"subject\" value, if not. See <a href=\"developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/\">Dynamic Content Items</a>
+     * The dynamic content placeholder, if present, or the \"subject\" value, if not. See <a href="https://developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content Items</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_RAW_SUBJECT)
@@ -439,7 +439,7 @@ public class Ticket implements Exportable {
     private String recipient;
 
     /**
-     * Write only. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#creating-a-ticket-with-a-new-requester\">Creating a ticket with a new requester</a>
+     * Write only. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#creating-a-ticket-with-a-new-requester">Creating a ticket with a new requester</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_REQUESTER)
@@ -447,7 +447,7 @@ public class Ticket implements Exportable {
     private Object requester;
 
     /**
-     * Write only. Optional boolean. When true and an <code>update_stamp</code> date is included, protects against ticket update collisions and returns a message to let you know if one occurs. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#protecting-against-ticket-update-collisions\">Protecting against ticket update collisions</a>. A value of false has the same effect as true. Omit the property to force the updates to not be safe
+     * Write only. Optional boolean. When true and an <code>update_stamp</code> date is included, protects against ticket update collisions and returns a message to let you know if one occurs. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#protecting-against-ticket-update-collisions">Protecting against ticket update collisions</a>. A value of false has the same effect as true. Omit the property to force the updates to not be safe
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_SAFE_UPDATE)
@@ -476,7 +476,7 @@ public class Ticket implements Exportable {
     private TicketStatus status;
 
     /**
-     * The value of the subject field for this ticket. See <a href=\"developer.zendesk.com/api-reference/ticketing/tickets/tickets/#subject\">Subject</a>
+     * The value of the subject field for this ticket. See <a href="https://developer.zendesk.com/api-reference/ticketing/tickets/tickets/#subject">Subject</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_SUBJECT)
@@ -492,7 +492,7 @@ public class Ticket implements Exportable {
     private Long submitterId;
 
     /**
-     * The array of tags applied to this ticket. Unless otherwise specified, the <a href=\"developer.zendesk.com/api-reference/ticketing/ticket-management/tags/#set-tags\">set tag</a> behavior is used, which overwrites and replaces existing tags
+     * The array of tags applied to this ticket. Unless otherwise specified, the <a href="https://developer.zendesk.com/api-reference/ticketing/ticket-management/tags/#set-tags">set tag</a> behavior is used, which overwrites and replaces existing tags
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_TAGS)
@@ -513,7 +513,7 @@ public class Ticket implements Exportable {
     private TicketType type;
 
     /**
-     * When this record last got updated. It is updated only if the update generates a <a href=\"#incremental-ticket-event-exportTicket\">ticket event</a>
+     * When this record last got updated. It is updated only if the update generates a  (TODO: make this href a full url path) <a href="#incremental-ticket-event-exportTicket">ticket event</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_UPDATED_AT)
@@ -543,7 +543,7 @@ public class Ticket implements Exportable {
     private TicketVia via;
 
     /**
-     * POST requests only. The id of a closed ticket when creating a follow-up ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets#creating-a-follow-up-ticket\">Creating a follow-up ticket</a>
+     * POST requests only. The id of a closed ticket when creating a follow-up ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#creating-a-follow-up-ticket">Creating a follow-up ticket</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_VIA_FOLLOWUP_SOURCE_ID)
@@ -551,7 +551,7 @@ public class Ticket implements Exportable {
     private Long viaFollowupSourceId;
 
     /**
-     * Write only. For more information, see the <a href=\"/documentation/ticketing/reference-guides/via-object-reference/\">Via object reference</a>
+     * Write only. For more information, see the <a href="/documentation/ticketing/reference-guides/via-object-reference/">Via object reference</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_VIA_ID)
@@ -559,7 +559,7 @@ public class Ticket implements Exportable {
     private Long viaId;
 
     /**
-     * Write only. See <a href=\"developer.zendesk.com/api-reference/voice/talk-partner-edition-api/reference/#creating-voicemail-tickets\">Creating voicemail ticket</a>
+     * Write only. See <a href="https://developer.zendesk.com/api-reference/voice/talk-partner-edition-api/reference/#creating-voicemail-tickets">Creating voicemail ticket</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_VOICE_COMMENT)

@@ -51,13 +51,13 @@ class TicketSpec extends Z4jSpec {
         propertyName          | methodName                   | property
         'attributeValueIds'   | 'addAttributeValueIdsItem'   | 1L
         'collaboratorIds'     | 'addCollaboratorIdsItem'     | 2L
-        'collaborators'       | 'addCollaboratorsItem'       | collaborator1
+        'collaborators'       | 'addCollaborator'       | collaborator1
         'customFields'        | 'addCustomFieldsItem'        | customField1
-        'emailCcIds'          | 'addEmailCcIdsItem'          | 3L
-        'followerIds'         | 'addFollowerIdsItem'         | 4L
-        'macroIds'            | 'addMacroIdsItem'            | 5L
-        'sharingAgreementIds' | 'addSharingAgreementIdsItem' | 6L
-        'tags'                | 'addTagsItem'                | 'tag'
+        'emailCcIds'          | 'addEmailCcId'          | 3L
+        'followerIds'         | 'addFollowerId'         | 4L
+        'macroIds'            | 'addMacroId'            | 5L
+        'sharingAgreementIds' | 'addSharingAgreementId' | 6L
+        'tags'                | 'addTag'                | 'tag'
     }
 
     @Unroll
@@ -79,13 +79,13 @@ class TicketSpec extends Z4jSpec {
         propertyName          | methodName                   | existingProperty | property
         'attributeValueIds'   | 'addAttributeValueIdsItem'   | [10L]            | 1L
         'collaboratorIds'     | 'addCollaboratorIdsItem'     | [20L]            | 2L
-        'collaborators'       | 'addCollaboratorsItem'       | [collaborator1]  | collaborator2
+        'collaborators'       | 'addCollaborator'       | [collaborator1] | collaborator2
         'customFields'        | 'addCustomFieldsItem'        | [customField1]   | customField2
-        'emailCcIds'          | 'addEmailCcIdsItem'          | [30L]            | 3L
-        'followerIds'         | 'addFollowerIdsItem'         | [40L]            | 4L
-        'macroIds'            | 'addMacroIdsItem'            | [50L]            | 5L
-        'sharingAgreementIds' | 'addSharingAgreementIdsItem' | [60L]            | 6L
-        'tags'                | 'addTagsItem'                | ['existing']     | 'tag'
+        'emailCcIds'          | 'addEmailCcId'          | [30L]           | 3L
+        'followerIds'         | 'addFollowerId'         | [40L]           | 4L
+        'macroIds'            | 'addMacroId'            | [50L]           | 5L
+        'sharingAgreementIds' | 'addSharingAgreementId' | [60L]           | 6L
+        'tags'                | 'addTag'                | ['existing']    | 'tag'
     }
 }
 

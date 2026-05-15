@@ -46,7 +46,7 @@ public interface SearchClient {
      * <h1>{@summary Show Search Results Count}</h1>
      * Returns the number of items matching the query rather than returning the items. The search string works the same as a regular search. <h4>Allowed For Agents</h4>
      *
-     * @param query Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href='https://support.zendesk.com/hc/en-us/articles/203663226'>Zendesk Support search reference</a>. (required)
+     * @param query Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href='https://support.zendesk.com/hc/articles/203663226'>Zendesk Support search reference</a>. (required)
      * @return Success response (status code 200)
      * or Error response (status code 400)
      */
@@ -84,7 +84,7 @@ public interface SearchClient {
      *     The limit also counts towards the global API rate
      *     limit.</p>
      *
-     * @param query      Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href='https://support.zendesk.com/hc/en-us/articles/203663226'>Zendesk Support search reference</a>. (required)
+     * @param query      Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href='https://support.zendesk.com/hc/articles/203663226'>Zendesk Support search reference</a>. (required)
      * @param pageSize   The number of results shown in a page. (required)
      * @param pageAfter  The cursor token for fetching the next page of results. (required)
      * @return Success response (status code 200)
@@ -107,7 +107,7 @@ public interface SearchClient {
      * limit. See <a href='https://developer.zendesk.com/api-reference/ticketing/introduction/#limits'>Limits</a>.</p><h4>
      * Allowed For Agents</h4>
      *
-     * @param query     Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href='https://support.zendesk.com/hc/en-us/articles/203663226'>Zendesk Support search reference</a>. (required)
+     * @param query     Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href='https://support.zendesk.com/hc/articles/203663226'>Zendesk Support search reference</a>. (required)
      * @param sortBy    One of {@code updated_at}, {@code created_at}, {@code priority}, {@code status}, or {@code ticket_type}. Defaults to sorting by relevance (optional)
      * @param sortOrder Defaults to descending (optional)
      * @param page      The page number to retrieve. (optional)

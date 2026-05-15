@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 /**
  * <h4>All available custom field types.</h4>
  * Create a new Ticket Field with {@link TicketClient#createTicketField} ()}
- * See <a href="https://support.zendesk.com/hc/en-us/articles/4408883152794-Adding-custom-ticket-fields-to-your-tickets-and-forms">Zendesk KB</a> for more info
+ * See <a href="https://support.zendesk.com/hc/articles/4408883152794-Adding-custom-ticket-fields-to-your-tickets-and-forms">Zendesk KB</a> for more info
  *
  * <ul>
  *     <li>{@link #TEXT} - Add a few words</li>

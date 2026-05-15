@@ -60,10 +60,10 @@ class TicketUpdateInputSpec extends Z4jSpec {
         'attributeValueIds'       | 'addAttributeValueIdsItem'       | 1
         'collaboratorIds'         | 'addCollaboratorIdsItem'         | 2
         'customFields'            | 'addCustomFieldsItem'            | customField1
-        'emailCcs'                | 'addEmailCcsItem'                | emailCc1
-        'followers'               | 'addFollowersItem'               | follower1
-        'sharingAgreementIds'     | 'addSharingAgreementIdsItem'     | 3
-        'tags'                    | 'addTagsItem'                    | "tag1"
+        'emailCcs'            | 'addEmailCc'            | emailCc1
+        'followers'           | 'addFollower'           | follower1
+        'sharingAgreementIds' | 'addSharingAgreementId' | 3
+        'tags'                | 'addTag'                | "tag1"
     }
 
     @Unroll
@@ -86,10 +86,10 @@ class TicketUpdateInputSpec extends Z4jSpec {
         'attributeValueIds'       | 'addAttributeValueIdsItem'       | [10]             | 1
         'collaboratorIds'         | 'addCollaboratorIdsItem'         | [20]             | 2
         'customFields'            | 'addCustomFieldsItem'            | [customField1]   | customField2
-        'emailCcs'                | 'addEmailCcsItem'                | [emailCc1]       | emailCc2
-        'followers'               | 'addFollowersItem'               | [follower1]      | follower2
-        'sharingAgreementIds'     | 'addSharingAgreementIdsItem'     | [30]             | 3
-        'tags'                    | 'addTagsItem'                    | ["existing"]     | "tag"
+        'emailCcs'            | 'addEmailCc'            | [emailCc1]   | emailCc2
+        'followers'           | 'addFollower'           | [follower1]  | follower2
+        'sharingAgreementIds' | 'addSharingAgreementId' | [30]         | 3
+        'tags'                | 'addTag'                | ["existing"] | "tag"
     }
 }
 

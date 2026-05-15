@@ -110,7 +110,7 @@ public class ContentSubscription {
     private Boolean includeComments;
 
     /**
-     * Used only for <a href=\"#create-section-subscription\">Create Section Subscription</a> and <a href=\"#create-article-subscription\">Create Article Subscription</a>, where it's mandatory. Selects the locale of the content to be subscribed
+     * Used only for  (TODO: make this href a full url path) <a href="#create-section-subscription">Create Section Subscription</a> and  (TODO: make this href a full url path) <a href="#create-article-subscription">Create Article Subscription</a>, where it's mandatory. Selects the locale of the content to be subscribed
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_SOURCE_LOCALE)

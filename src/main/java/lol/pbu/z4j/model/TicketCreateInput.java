@@ -126,7 +126,7 @@ public class TicketCreateInput {
     private TicketComment comment;
 
     /**
-     * An array of numeric IDs, emails, or objects containing name and email properties. See <a href=\"developer.zendesk.com/api-reference/ticketing/tickets/tickets/#setting-collaborators\">Setting Collaborators</a>. An email notification is sent to them when the ticket is updated
+     * An array of numeric IDs, emails, or objects containing name and email properties. See <a href="https://developer.zendesk.com/api-reference/ticketing/tickets/tickets/#setting-collaborators">Setting Collaborators</a>. An email notification is sent to them when the ticket is updated
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_ADDITIONAL_COLLABORATORS)
@@ -167,15 +167,15 @@ public class TicketCreateInput {
     private List<@NotNull Integer> collaboratorIds;
 
     /**
-     * Custom fields for the ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-custom-field-values\">Setting custom field values</a>
+     * Custom fields for the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-custom-field-values">Setting custom field values</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_FIELDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid CustomField> customFields;
+    private List<@Valid TicketCustomFieldsInner> customFields;
 
     /**
-     * The custom ticket status id of the ticket. See <a href=\"#custom-ticket-statuses\">custom ticket statuses</a>
+     * The custom ticket status id of the ticket. See  (TODO: make this href a full url path) <a href="#custom-ticket-statuses">custom ticket statuses</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS_ID)
@@ -183,7 +183,7 @@ public class TicketCreateInput {
     private Integer customStatusId;
 
     /**
-     * If this is a ticket of type \"task\" it has a due date.  Due date format uses <a href=\"http://en.wikipedia.org/wiki/ISO_8601\">ISO 8601</a> format.
+     * If this is a ticket of type \"task\" it has a due date.  Due date format uses <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601</a> format.
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_DUE_AT)
@@ -191,7 +191,7 @@ public class TicketCreateInput {
     private ZonedDateTime dueAt;
 
     /**
-     * An array of objects that represent agent or end users email CCs to add or delete from the ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs\">Setting email CCs</a>
+     * An array of objects that represent agent or end users email CCs to add or delete from the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs">Setting email CCs</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_EMAIL_CCS)
@@ -207,7 +207,7 @@ public class TicketCreateInput {
     private String externalId;
 
     /**
-     * An array of objects that represent agent followers to add or delete from the ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers\">Setting followers</a>
+     * An array of objects that represent agent followers to add or delete from the ticket. See <a href="/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers">Setting followers</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_FOLLOWERS)
@@ -223,7 +223,7 @@ public class TicketCreateInput {
     private Integer groupId;
 
     /**
-     * The organization of the requester. You can only specify the ID of an organization associated with the requester. See <a href=\"developer.zendesk.com/api-reference/ticketing/organizations/organization_memberships/\">Organization Memberships</a>
+     * The organization of the requester. You can only specify the ID of an organization associated with the requester. See <a href="https://developer.zendesk.com/api-reference/ticketing/organizations/organization_memberships/">Organization Memberships</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
@@ -236,7 +236,7 @@ public class TicketCreateInput {
     private TicketUpdateInputPriority priority;
 
     /**
-     * For tickets of type \"incident\", the ID of the problem the incident is linked to
+     * For tickets of type{@code incident}, the ID of the problem the incident is linked to
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_PROBLEM_ID)
@@ -310,7 +310,7 @@ public class TicketCreateInput {
     private Long brandId;
 
     /**
-     * POST requests only. Users to add as cc's when creating a ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-collaborators\">Setting Collaborators</a>
+     * POST requests only. Users to add as cc's when creating a ticket. See <a href="https://developer.zendesk.com/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-collaborators">Setting Collaborators</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_COLLABORATORS)
@@ -318,7 +318,7 @@ public class TicketCreateInput {
     private List<@Valid Collaborator> collaborators;
 
     /**
-     * The ids of agents or end users currently CC'ed on the ticket. See <a href=\"https://support.zendesk.com/hc/en-us/articles/360020585233\">CCs and followers resources</a> in the Support Help Center
+     * The ids of agents or end users currently CC'ed on the ticket. See <a href="https://support.zendesk.com/hc/articles/360020585233">CCs and followers resources</a> in the Support Help Center
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_EMAIL_CC_IDS)
@@ -326,7 +326,7 @@ public class TicketCreateInput {
     private List<@NotNull Long> emailCcIds;
 
     /**
-     * The ids of agents currently following the ticket. See <a href=\"https://support.zendesk.com/hc/en-us/articles/360020585233\">CCs and followers resources</a>
+     * The ids of agents currently following the ticket. See <a href="https://support.zendesk.com/hc/articles/360020585233">CCs and followers resources</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_FOLLOWER_IDS)
@@ -342,7 +342,7 @@ public class TicketCreateInput {
     private List<@NotNull Long> macroIds;
 
     /**
-     * The dynamic content placeholder, if present, or the \"subject\" value, if not. See <a href=\"developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/\">Dynamic Content Items</a>
+     * The dynamic content placeholder, if present, or the \"subject\" value, if not. See <a href="https://developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/">Dynamic Content Items</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_RAW_SUBJECT)
@@ -380,7 +380,7 @@ public class TicketCreateInput {
     private Via via;
 
     /**
-     * POST requests only. The id of a closed ticket when creating a follow-up ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets#creating-a-follow-up-ticket\">Creating a follow-up ticket</a>
+     * POST requests only. The id of a closed ticket when creating a follow-up ticket. See <a href="https://developer.zendesk.com/documentation/ticketing/managing-tickets/creating-and-updating-tickets#creating-a-follow-up-ticket">Creating a follow-up ticket</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_VIA_FOLLOWUP_SOURCE_ID)
@@ -435,11 +435,11 @@ public class TicketCreateInput {
      *
      * @return The same instance of TicketCreateInput for chaining.
      */
-    public TicketCreateInput addCustomFieldsItem(CustomField customFieldsItem) {
+    public TicketCreateInput addCustomFieldsItem(TicketCustomFieldsInner customField) {
         if (customFields == null) {
             customFields = new ArrayList<>();
         }
-        customFields.add(customFieldsItem);
+        customFields.add(customField);
         return this;
     }
 
@@ -448,7 +448,7 @@ public class TicketCreateInput {
      *
      * @return The same instance of TicketCreateInput for chaining.
      */
-    public TicketCreateInput addEmailCcsItem(EmailCC emailCcsItem) {
+    public TicketCreateInput addEmailCc(EmailCC emailCcsItem) {
         if (emailCcs == null) {
             emailCcs = new ArrayList<>();
         }
@@ -461,11 +461,11 @@ public class TicketCreateInput {
      *
      * @return The same instance of TicketCreateInput for chaining.
      */
-    public TicketCreateInput addFollowersItem(Follower followersItem) {
+    public TicketCreateInput addFollower(Follower follower) {
         if (followers == null) {
             followers = new ArrayList<>();
         }
-        followers.add(followersItem);
+        followers.add(follower);
         return this;
     }
 
@@ -474,11 +474,11 @@ public class TicketCreateInput {
      *
      * @return The same instance of TicketCreateInput for chaining.
      */
-    public TicketCreateInput addSharingAgreementIdsItem(Integer sharingAgreementIdsItem) {
+    public TicketCreateInput addSharingAgreementId(Integer sharingAgreementId) {
         if (sharingAgreementIds == null) {
             sharingAgreementIds = new ArrayList<>();
         }
-        sharingAgreementIds.add(sharingAgreementIdsItem);
+        sharingAgreementIds.add(sharingAgreementId);
         return this;
     }
 
@@ -487,11 +487,11 @@ public class TicketCreateInput {
      *
      * @return The same instance of TicketCreateInput for chaining.
      */
-    public TicketCreateInput addTagsItem(String tagsItem) {
+    public TicketCreateInput addTag(String tag) {
         if (tags == null) {
             tags = new ArrayList<>();
         }
-        tags.add(tagsItem);
+        tags.add(tag);
         return this;
     }
 
@@ -500,11 +500,11 @@ public class TicketCreateInput {
      *
      * @return The same instance of TicketCreateInput for chaining.
      */
-    public TicketCreateInput addCollaboratorsItem(Collaborator collaboratorsItem) {
+    public TicketCreateInput addCollaborator(Collaborator collaborator) {
         if (collaborators == null) {
             collaborators = new ArrayList<>();
         }
-        collaborators.add(collaboratorsItem);
+        collaborators.add(collaborator);
         return this;
     }
 
@@ -513,11 +513,11 @@ public class TicketCreateInput {
      *
      * @return The same instance of TicketCreateInput for chaining.
      */
-    public TicketCreateInput addEmailCcIdsItem(Long emailCcIdsItem) {
+    public TicketCreateInput addEmailCcId(Long emailCcId) {
         if (emailCcIds == null) {
             emailCcIds = new ArrayList<>();
         }
-        emailCcIds.add(emailCcIdsItem);
+        emailCcIds.add(emailCcId);
         return this;
     }
 
@@ -526,11 +526,11 @@ public class TicketCreateInput {
      *
      * @return The same instance of TicketCreateInput for chaining.
      */
-    public TicketCreateInput addFollowerIdsItem(Long followerIdsItem) {
+    public TicketCreateInput addFollowerId(Long followerId) {
         if (followerIds == null) {
             followerIds = new ArrayList<>();
         }
-        followerIds.add(followerIdsItem);
+        followerIds.add(followerId);
         return this;
     }
 
@@ -539,11 +539,11 @@ public class TicketCreateInput {
      *
      * @return The same instance of TicketCreateInput for chaining.
      */
-    public TicketCreateInput addMacroIdsItem(Long macroIdsItem) {
+    public TicketCreateInput addMacroId(Long macroId) {
         if (macroIds == null) {
             macroIds = new ArrayList<>();
         }
-        macroIds.add(macroIdsItem);
+        macroIds.add(macroId);
         return this;
     }
 

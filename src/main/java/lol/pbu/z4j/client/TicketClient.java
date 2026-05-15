@@ -69,7 +69,7 @@ public interface TicketClient {
      * <h1>{@summary Create Custom Ticket Field}</h1>
      * See{@link TicketFieldTypeEnum} and <a href="https://support.zendesk.com/hc/articles/4408883152794">Adding custom ticket fields to your tickets and forms</a>
      <p>See <a
-     *         href='https://support.zendesk.com/hc/en-us/articles/203661866'>About custom field types</a> in the Zendesk Help
+     *         href='https://support.zendesk.com/hc/articles/203661866'>About custom field types</a> in the Zendesk Help
      *     Center.</p> <h4 id=\"allowed-for'>Allowed For</h4>
      * <ul>
      *     <li>Admins</li>

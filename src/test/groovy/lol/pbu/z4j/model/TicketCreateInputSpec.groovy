@@ -63,14 +63,14 @@ class TicketCreateInputSpec extends Z4jSpec {
         'attributeValueIds'       | 'addAttributeValueIdsItem'       | 1
         'collaboratorIds'         | 'addCollaboratorIdsItem'         | 2
         'customFields'            | 'addCustomFieldsItem'            | customField1
-        'emailCcs'                | 'addEmailCcsItem'                | emailCc1
-        'followers'               | 'addFollowersItem'               | follower1
-        'sharingAgreementIds'     | 'addSharingAgreementIdsItem'     | 3
-        'tags'                    | 'addTagsItem'                    | "tag1"
-        'collaborators'           | 'addCollaboratorsItem'           | collaborator2
-        'emailCcIds'              | 'addEmailCcIdsItem'              | 4L
-        'followerIds'             | 'addFollowerIdsItem'             | 5L
-        'macroIds'                | 'addMacroIdsItem'                | 6L
+        'emailCcs'            | 'addEmailCc'            | emailCc1
+        'followers'           | 'addFollower'           | follower1
+        'sharingAgreementIds' | 'addSharingAgreementId' | 3
+        'tags'                | 'addTag'                | "tag1"
+        'collaborators'       | 'addCollaborator'       | collaborator2
+        'emailCcIds'          | 'addEmailCcId'          | 4L
+        'followerIds'         | 'addFollowerId'         | 5L
+        'macroIds'            | 'addMacroId'            | 6L
     }
 
     @Unroll
@@ -93,14 +93,14 @@ class TicketCreateInputSpec extends Z4jSpec {
         'attributeValueIds'       | 'addAttributeValueIdsItem'       | [10]             | 1
         'collaboratorIds'         | 'addCollaboratorIdsItem'         | [20]             | 2
         'customFields'            | 'addCustomFieldsItem'            | [customField1]   | customField2
-        'emailCcs'                | 'addEmailCcsItem'                | [emailCc1]       | emailCc2
-        'followers'               | 'addFollowersItem'               | [follower1]      | follower2
-        'sharingAgreementIds'     | 'addSharingAgreementIdsItem'     | [30]             | 3
-        'tags'                    | 'addTagsItem'                    | ["existing"]     | "tag"
-        'collaborators'           | 'addCollaboratorsItem'           | [collaborator2]  | collaborator1
-        'emailCcIds'              | 'addEmailCcIdsItem'              | [40L]            | 4L
-        'followerIds'             | 'addFollowerIdsItem'             | [50L]            | 5L
-        'macroIds'                | 'addMacroIdsItem'                | [60L]            | 6L
+        'emailCcs'            | 'addEmailCc'            | [emailCc1]      | emailCc2
+        'followers'           | 'addFollower'           | [follower1]     | follower2
+        'sharingAgreementIds' | 'addSharingAgreementId' | [30]            | 3
+        'tags'                | 'addTag'                | ["existing"]    | "tag"
+        'collaborators'       | 'addCollaborator'       | [collaborator2] | collaborator1
+        'emailCcIds'          | 'addEmailCcId'          | [40L]           | 4L
+        'followerIds'         | 'addFollowerId'         | [50L]           | 5L
+        'macroIds'            | 'addMacroId'            | [60L]           | 6L
     }
 }
 

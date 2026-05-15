@@ -76,7 +76,7 @@ public class AttachmentBase {
     private String contentType;
 
     /**
-     * A full URL where the attachment image file can be downloaded. The file may be hosted externally so take care not to inadvertently send Zendesk authentication credentials. See <a href=\"/documentation/ticketing/managing-tickets/working-with-url-properties\">Working with url properties</a>
+     * A full URL where the attachment image file can be downloaded. The file may be hosted externally so take care not to inadvertently send Zendesk authentication credentials. See <a href="/documentation/ticketing/managing-tickets/working-with-url-properties">Working with url properties</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_CONTENT_URL)

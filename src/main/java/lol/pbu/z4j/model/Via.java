@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
- * An object explaining how the ticket was created. See the <a href=\"/documentation/ticketing/reference-guides/via-object-reference\">Via object reference</a>
+ * An object explaining how the ticket was created. See the <a href="/documentation/ticketing/reference-guides/via-object-reference">Via object reference</a>
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1

@@ -29,7 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * For more information, see the <a href=\"/documentation/ticketing/reference-guides/via-object-reference\">Via object reference</a>
+ * For more information, see the <a href="/documentation/ticketing/reference-guides/via-object-reference">Via object reference</a>
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1

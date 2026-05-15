@@ -48,7 +48,7 @@ public class CommentBase {
     public static final String JSON_PROPERTY_VOTE_SUM = "vote_sum";
 
     /**
-     * The comment made by the author. See <a href=\"#user-content\">User content</a>
+     * The comment made by the author. See  (TODO: make this href a full url path) <a href="#user-content">User content</a>
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_BODY)
@@ -62,7 +62,7 @@ public class CommentBase {
     private LocaleAbbreviation localeAbbreviation;
 
     /**
-     * The id of the author of this comment. Writable on create by Help Center managers. See <a href=\"#create-comment\">Create Comment</a>
+     * The id of the author of this comment. Writable on create by Help Center managers. See  (TODO: make this href a full url path) <a href="#create-comment">Create Comment</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_AUTHOR_ID)
@@ -70,7 +70,7 @@ public class CommentBase {
     private Long authorId;
 
     /**
-     * The time the comment was created. Writable on create by Help Center managers. See <a href=\"#create-comment\">Create Comment</a>
+     * The time the comment was created. Writable on create by Help Center managers. See  (TODO: make this href a full url path) <a href="#create-comment">Create Comment</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_CREATED_AT)

@@ -96,7 +96,7 @@ public class Post {
     private String title;
 
     /**
-     * The id of the author of the post. *Writable on create by Help Center managers -- see <a href=\"#create-post\">Create Post</a>
+     * The id of the author of the post. *Writable on create by Help Center managers -- see  (TODO: make this href a full url path) <a href="#create-post">Create Post</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_AUTHOR_ID)
@@ -128,7 +128,7 @@ public class Post {
     private List<@NotNull Long> contentTagIds;
 
     /**
-     * When the post was created. Writable on create by Help Center managers -- see <a href=\"#create-post\">Create Post</a>
+     * When the post was created. Writable on create by Help Center managers -- see  (TODO: make this href a full url path) <a href="#create-post">Create Post</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_CREATED_AT)
@@ -136,7 +136,7 @@ public class Post {
     private ZonedDateTime createdAt;
 
     /**
-     * The details of the post made by the author. See <a href=\"#user-content\">User content</a>
+     * The details of the post made by the author. See  (TODO: make this href a full url path) <a href="#user-content">User content</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_DETAILS)
