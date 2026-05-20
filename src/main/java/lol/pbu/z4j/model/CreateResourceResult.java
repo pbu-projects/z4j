@@ -15,7 +15,6 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,8 +30,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Serdeable
-@JsonTypeName("create resource result")
 public class CreateResourceResult extends JobStatus {
-    private Integer id;
+    private String id;
     private Integer index;
 }

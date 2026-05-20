@@ -15,19 +15,17 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
-@Getter
-@Accessors(chain = true)
-@AllArgsConstructor
-@NoArgsConstructor
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.DEDUCTION
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = SuccessfulResult.class),
+        @JsonSubTypes.Type(value = ErroneousResult.class)
+})
 @Serdeable
-public class JobStatusResponse {
-    @JsonProperty("job_status")
-    private JobStatus jobStatus;
+public abstract class Result {
 }

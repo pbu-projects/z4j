@@ -18,19 +18,34 @@ package lol.pbu.z4j.model;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.micronaut.serde.annotation.Serdeable;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
+
+import java.util.List;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
-        property = "type"
+        property = "status",
+        visible = true
 )
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = CreateResourceResult.class, name = "create resource result"),
-        @JsonSubTypes.Type(value = FailedResult.class, name = "failed result"),
-        @JsonSubTypes.Type(value = UpdateResourceResult.class, name = "update resource result"),
+        @JsonSubTypes.Type(value = CreateResourceResult.class, name = "completed"),
+        @JsonSubTypes.Type(value = FailedResult.class, name = "failed"),
+        @JsonSubTypes.Type(value = UpdateResourceResult.class, name = "completed"),
 })
 @EqualsAndHashCode
+@Data
+@Accessors(chain = true)
 @Serdeable
 public class JobStatus {
+    private String id;
+    private String url;
+    private Integer total;
+    private Integer progress;
+    private String status;
+    private String message;
+    private List<Result> results;
+
 }

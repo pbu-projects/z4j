@@ -22,12 +22,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 @Getter
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Serdeable
-public class JobStatusResponse {
-    @JsonProperty("job_status")
-    private JobStatus jobStatus;
+public class JobStatusesResponse {
+    @JsonProperty("job_statuses")
+    private List<JobStatus> jobStatuses;
+    private Meta meta;
+    private Links links;
 }

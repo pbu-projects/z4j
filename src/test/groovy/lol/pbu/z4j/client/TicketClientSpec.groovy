@@ -15,11 +15,13 @@
  */
 package lol.pbu.z4j.client
 
+import groovy.util.logging.Slf4j
 import io.micronaut.http.client.exceptions.HttpClientException
 import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.model.*
 import spock.lang.Shared
 
+@Slf4j
 class TicketClientSpec extends Z4jSpec {
 
     @Shared
@@ -144,7 +146,17 @@ class TicketClientSpec extends Z4jSpec {
         TicketsCreateRequest createTicketsRequest = new TicketsCreateRequest().setTickets(inputs)
 
         when:
-        client.createManyTickets(createTicketsRequest).block()
+        log.debug("creating tickets in {}", getSpecificationContext().getCurrentIteration().getDisplayName())
+        JobStatusResponse jobResponse = client.createManyTickets(createTicketsRequest).block()
+        String jobId = jobResponse.getJobStatus().getId()
+
+        JobStatus currentStatus = jobResponse.getJobStatus()
+        while (currentStatus.getStatus() != "completed" && currentStatus.getStatus() != "failed") {
+            sleep(1000)
+            currentStatus = client.getJobStatus(jobId).block()
+            // Validate serialization/integrity by checking a field
+            assert currentStatus.getId() == jobId
+        }
 
         then:
         noExceptionThrown()

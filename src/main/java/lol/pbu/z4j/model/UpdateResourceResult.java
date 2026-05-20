@@ -15,7 +15,6 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,7 +24,6 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 @Serdeable
-@JsonTypeName("update resource result")
 public class UpdateResourceResult extends JobStatus {
     /**
      * the action the job attempted ({@code "action": "update"})
@@ -35,7 +33,7 @@ public class UpdateResourceResult extends JobStatus {
     /**
      * the id of the resource the job attempted to update
      */
-    private Integer id;
+    private String id;
 
     /**
      * the status ({@code "status": "Updated"})

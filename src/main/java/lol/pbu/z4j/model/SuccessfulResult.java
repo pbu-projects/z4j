@@ -15,7 +15,6 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +26,12 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Serdeable
-public class JobStatusResponse {
-    @JsonProperty("job_status")
-    private JobStatus jobStatus;
+public class SuccessfulResult extends Result {
+
+    private Long id;
+    private Integer index;
+    private String status;
+    private boolean success;
+    private String action;
+
 }
