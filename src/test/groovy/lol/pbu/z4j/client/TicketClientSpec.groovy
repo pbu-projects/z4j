@@ -204,5 +204,53 @@ class TicketClientSpec extends Z4jSpec {
                 clientTestMatrix.findAll { !it.shouldSucceed && it.clientType != "simple user"}, [true, false, null], accountLocales
         ].combinations()
     }
-}
 
+    def "can paginate listTicketFields with cursor pagination"() {
+        given:
+        LocaleAbbreviation locale = accountLocales.first().getLocaleAbbreviation()
+        ensureMoreThan100TicketFields(locale)
+
+        when:
+        TicketFieldsResponse page = ticketsAdminClient.listTicketFields(locale, null, null, 100).block()
+        List<TicketField> allFields = []
+        while (page != null) {
+            if (page.getTicketFields() != null) {
+                allFields.addAll(page.getTicketFields())
+            }
+            if (!(page.getMeta()?.getHasMore()) || page.getMeta()?.getAfterCursor() == null) {
+                break
+            }
+            page = ticketsAdminClient.listTicketFields(locale, null, page.getMeta().getAfterCursor(), 100).block()
+        }
+
+        then:
+        allFields.size() > 100
+        allFields*.id.toSet().size() == allFields.size()
+    }
+
+    private void ensureMoreThan100TicketFields(LocaleAbbreviation locale) {
+        TicketFieldsResponse firstPage = ticketsAdminClient.listTicketFields(locale, null, null, 100).block()
+        if (firstPage.getMeta()?.getHasMore()) {
+            return
+        }
+
+        int needed = Math.max(0, 101 - (firstPage.getTicketFields()?.size() ?: 0))
+        (1..needed).each {
+            String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
+            TicketField field = new TicketField()
+                    .setTitle("z4j-cursor-fixture-${entropy}")
+                    .setType(TicketFieldTypeEnum.TEXT.getValue())
+            ticketsAdminClient.createTicketField(new TicketFieldCreateRequest(field)).block()
+        }
+
+        int maxAttempts = 10
+        for (int i = 0; i < maxAttempts; i++) {
+            TicketFieldsResponse refreshed = ticketsAdminClient.listTicketFields(locale, null, null, 100).block()
+            if (refreshed.getMeta()?.getHasMore()) {
+                return
+            }
+            sleep(2000)
+        }
+        throw new IllegalStateException("Ticket field fixture setup did not become visible in time. Please rerun or pre-seed your sandbox.")
+    }
+}
