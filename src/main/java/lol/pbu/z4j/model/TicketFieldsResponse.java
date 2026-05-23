@@ -38,16 +38,32 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@JsonPropertyOrder(TicketFieldsResponse.JSON_PROPERTY_TICKET_FIELDS)
+@JsonPropertyOrder({
+        TicketFieldsResponse.JSON_PROPERTY_TICKET_FIELDS,
+        TicketFieldsResponse.JSON_PROPERTY_META,
+        TicketFieldsResponse.JSON_PROPERTY_LINKS
+})
 @Serdeable
 public class TicketFieldsResponse {
 
     public static final String JSON_PROPERTY_TICKET_FIELDS = "ticket_fields";
+    public static final String JSON_PROPERTY_META = "meta";
+    public static final String JSON_PROPERTY_LINKS = "links";
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_FIELDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private List<@Valid TicketField> ticketFields;
+
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_META)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Meta meta;
+
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_LINKS)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Links links;
 
     /**
      * Add an item to the ticketFields property in a chainable fashion.

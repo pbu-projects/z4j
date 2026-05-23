@@ -21,6 +21,7 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.*;
 import reactor.core.publisher.Mono;
@@ -87,10 +88,21 @@ public interface TicketClient {
      *
      * @param localeAbbreviation  Forces the {@code titleInPortal} property to return a dynamic content variant for the specified locale. Only accepts {@link LocaleClient#listLocales() active locale ids}.  (optional)
      * @param creator Includes the {@code creatorUserId} and {@code creatorAppName} properties in the response. If the ticket field is created  by an app, {@code creatorAppName} is the name of the app and {@code creatorUserId} is {@code -1}. If the ticket field  is not created by an app, {@code creatorAppName} is null.  (optional)
+     * @param pageAfter Cursor token used to fetch the next page when cursor pagination is active (optional)
+     * @param pageSize  Number of results per page. Required to activate cursor pagination. Max 100. (optional)
      * @return Success response (status code 200)
      */
+    default Mono<@Valid TicketFieldsResponse> listTicketFields(@QueryValue("locale") @Nullable LocaleAbbreviation localeAbbreviation, @QueryValue("creator") @Nullable Boolean creator) {
+        return listTicketFields(localeAbbreviation, creator, null, null);
+    }
+
     @Get("/api/v2/ticket_fields")
-    Mono<@Valid TicketFieldsResponse> listTicketFields(@QueryValue("locale") @Nullable LocaleAbbreviation localeAbbreviation, @QueryValue("creator") @Nullable Boolean creator);
+    Mono<@Valid TicketFieldsResponse> listTicketFields(
+            @QueryValue("locale") @Nullable LocaleAbbreviation localeAbbreviation,
+            @QueryValue("creator") @Nullable Boolean creator,
+            @QueryValue("page[after]") @Nullable String pageAfter,
+            @QueryValue("page[size]") @Nullable @Max(100) Integer pageSize
+    );
 
     /**
      * <h1>{@summary List Tickets}</h1>

@@ -122,6 +122,16 @@ After setting up your [users] and token, export the following environment variab
 
 To ensure tests run correctly, your Zendesk instance must be configured with the following custom ticket fields. You can create these under **Admin Center -> Objects and rules -> Tickets -> Fields**.
 
+For cursor-pagination test coverage on `GET /api/v2/ticket_fields`, we also recommend having more than 100 total ticket fields in your sandbox.
+You can pre-seed this with:
+
+```shell
+chmod +x ./setup_ticket_field_pagination_fixture.sh
+./setup_ticket_field_pagination_fixture.sh 110
+```
+
+The script uses `Z4J_URL`, `Z4J_TOKEN`, and `Z4J_ADMIN_EMAIL` from your environment and creates additional text fields only when needed.
+
 ---
 
 #### 1. Topic
