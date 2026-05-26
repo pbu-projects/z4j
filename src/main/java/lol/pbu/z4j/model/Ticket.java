@@ -40,8 +40,8 @@ import java.util.Map;
  * @since 0.1.1
  */
 @Accessors(chain = true)
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Getter
 @Setter
 @JsonPropertyOrder({
@@ -100,26 +100,21 @@ import java.util.Map;
         Ticket.JSON_PROPERTY_VOICE_COMMENT,
 })
 @Serdeable
-public class Ticket {
+public class Ticket extends TicketShared {
 
     public static final String JSON_PROPERTY_REQUESTER_ID = "requester_id";
     public static final String JSON_PROPERTY_ALLOW_ATTACHMENTS = "allow_attachments";
     public static final String JSON_PROPERTY_ALLOW_CHANNELBACK = "allow_channelback";
-    public static final String JSON_PROPERTY_ASSIGNEE_EMAIL = "assignee_email";
     public static final String JSON_PROPERTY_ASSIGNEE_ID = "assignee_id";
     public static final String JSON_PROPERTY_ATTRIBUTE_VALUE_IDS = "attribute_value_ids";
-    public static final String JSON_PROPERTY_BRAND_ID = "brand_id";
     public static final String JSON_PROPERTY_COLLABORATOR_IDS = "collaborator_ids";
-    public static final String JSON_PROPERTY_COLLABORATORS = "collaborators";
     public static final String JSON_PROPERTY_COMMENT = "comment";
     public static final String JSON_PROPERTY_CREATED_AT = "created_at";
     public static final String JSON_PROPERTY_CUSTOM_FIELDS = "custom_fields";
     public static final String JSON_PROPERTY_CUSTOM_STATUS_ID = "custom_status_id";
     public static final String JSON_PROPERTY_DESCRIPTION = "description";
-    public static final String JSON_PROPERTY_DUE_AT = "due_at";
     public static final String JSON_PROPERTY_EMAIL_CC_IDS = "email_cc_ids";
     public static final String JSON_PROPERTY_EMAIL_CCS = "email_ccs";
-    public static final String JSON_PROPERTY_EXTERNAL_ID = "external_id";
     public static final String JSON_PROPERTY_FOLLOWER_IDS = "follower_ids";
     public static final String JSON_PROPERTY_FOLLOWERS = "followers";
     public static final String JSON_PROPERTY_FOLLOWUP_IDS = "followup_ids";
@@ -136,23 +131,15 @@ public class Ticket {
     public static final String JSON_PROPERTY_ORGANIZATION_ID = "organization_id";
     public static final String JSON_PROPERTY_PRIORITY = "priority";
     public static final String JSON_PROPERTY_PROBLEM_ID = "problem_id";
-    public static final String JSON_PROPERTY_RAW_SUBJECT = "raw_subject";
-    public static final String JSON_PROPERTY_RECIPIENT = "recipient";
     public static final String JSON_PROPERTY_REQUESTER = "requester";
-    public static final String JSON_PROPERTY_SAFE_UPDATE = "safe_update";
     public static final String JSON_PROPERTY_SATISFACTION_RATING = "satisfaction_rating";
     public static final String JSON_PROPERTY_SHARING_AGREEMENT_IDS = "sharing_agreement_ids";
     public static final String JSON_PROPERTY_STATUS = "status";
-    public static final String JSON_PROPERTY_SUBJECT = "subject";
-    public static final String JSON_PROPERTY_SUBMITTER_ID = "submitter_id";
     public static final String JSON_PROPERTY_TAGS = "tags";
-    public static final String JSON_PROPERTY_TICKET_FORM_ID = "ticket_form_id";
-    public static final String JSON_PROPERTY_TYPE = "type";
     public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
     public static final String JSON_PROPERTY_UPDATED_STAMP = "updated_stamp";
     public static final String JSON_PROPERTY_URL = "url";
     public static final String JSON_PROPERTY_VIA = "via";
-    public static final String JSON_PROPERTY_VIA_FOLLOWUP_SOURCE_ID = "via_followup_source_id";
     public static final String JSON_PROPERTY_VIA_ID = "via_id";
     public static final String JSON_PROPERTY_VOICE_COMMENT = "voice_comment";
 
@@ -180,14 +167,6 @@ public class Ticket {
     private Boolean allowChannelback;
 
     /**
-     * Write only. The email address of the agent to assign the ticket to
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ASSIGNEE_EMAIL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String assigneeEmail;
-
-    /**
      * The agent currently assigned to the ticket
      */
     @Nullable
@@ -204,28 +183,12 @@ public class Ticket {
     private List<@NotNull Long> attributeValueIds;
 
     /**
-     * The id of the brand this ticket is associated with. See <a href=\"https://support.zendesk.com/hc/en-us/articles/4408829476378\">Setting up multiple brands</a>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_BRAND_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long brandId;
-
-    /**
      * The ids of users currently CC'ed on the ticket
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_COLLABORATOR_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private List<@NotNull Long> collaboratorIds;
-
-    /**
-     * POST requests only. Users to add as cc's when creating a ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-collaborators\">Setting Collaborators</a>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_COLLABORATORS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid Collaborator> collaborators;
 
     /**
      * Write only. An object that adds a comment to the ticket. See <a href=\"developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/\">Ticket comments</a>. To include an attachment with the comment, see <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#attaching-files\">Attaching files</a>. A ticket can contain up to 5000 comments in total, including both public and private comments. Once this limit is reached, any additional attempts to add comments results in a 422 error. The ticket can still be updated in other ways, provided that no new comments are added.
@@ -268,14 +231,6 @@ public class Ticket {
     private String description;
 
     /**
-     * If this is a ticket of type \"task\" it has a due date.  Due date format uses <a href=\"http://en.wikipedia.org/wiki/ISO_8601\">ISO 8601</a> format
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DUE_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ZonedDateTime dueAt;
-
-    /**
      * The ids of agents or end users currently CC'ed on the ticket. Ignored when <a href=\"https://support.zendesk.com/hc/en-us/articles/360020585233\">CCs and followers</a> is not enabled
      */
     @Nullable
@@ -290,14 +245,6 @@ public class Ticket {
     @JsonProperty(JSON_PROPERTY_EMAIL_CCS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private Object emailCcs;
-
-    /**
-     * An id you can use to link Zendesk Support tickets to local records
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_EXTERNAL_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String externalId;
 
     /**
      * The ids of agents currently following the ticket. Ignored when <a href=\"https://support.zendesk.com/hc/en-us/articles/360020585233\">CCs and followers</a> is not enabled
@@ -425,36 +372,12 @@ public class Ticket {
     private Long problemId;
 
     /**
-     * The dynamic content placeholder, if present, or the \"subject\" value, if not. See <a href=\"developer.zendesk.com/api-reference/ticketing/ticket-management/dynamic_content/\">Dynamic Content Items</a>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_RAW_SUBJECT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String rawSubject;
-
-    /**
-     * The original recipient e-mail address of the ticket. Notification emails for the ticket are sent from this address
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_RECIPIENT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String recipient;
-
-    /**
      * Write only. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#creating-a-ticket-with-a-new-requester\">Creating a ticket with a new requester</a>
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_REQUESTER)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private Object requester;
-
-    /**
-     * Write only. Optional boolean. When true and an <code>update_stamp</code> date is included, protects against ticket update collisions and returns a message to let you know if one occurs. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#protecting-against-ticket-update-collisions\">Protecting against ticket update collisions</a>. A value of false has the same effect as true. Omit the property to force the updates to not be safe
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SAFE_UPDATE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean safeUpdate;
 
     /**
      * The satisfaction rating of the ticket, if it exists, or the state of satisfaction, \"offered\" or \"unoffered\". The value is null for plan types that don't support CSAT
@@ -478,41 +401,12 @@ public class Ticket {
     private TicketStatus status;
 
     /**
-     * The value of the subject field for this ticket. See <a href=\"developer.zendesk.com/api-reference/ticketing/tickets/tickets/#subject\">Subject</a>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SUBJECT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String subject;
-
-    /**
-     * The user who submitted the ticket. The submitter always becomes the author of the first comment on the ticket
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SUBMITTER_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long submitterId;
-
-    /**
      * The array of tags applied to this ticket. Unless otherwise specified, the <a href=\"developer.zendesk.com/api-reference/ticketing/ticket-management/tags/#set-tags\">set tag</a> behavior is used, which overwrites and replaces existing tags
      */
     @Nullable
     @JsonProperty(JSON_PROPERTY_TAGS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private List<@NotNull String> tags;
-
-    /**
-     * Enterprise only. The id of the ticket form to render for the ticket
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TICKET_FORM_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long ticketFormId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TYPE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private TicketType type;
 
     /**
      * When this record last got updated. It is updated only if the update generates a <a href=\"#incremental-ticket-event-export\">ticket event</a>
@@ -543,14 +437,6 @@ public class Ticket {
     @JsonProperty(JSON_PROPERTY_VIA)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private TicketVia via;
-
-    /**
-     * POST requests only. The id of a closed ticket when creating a follow-up ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets#creating-a-follow-up-ticket\">Creating a follow-up ticket</a>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_VIA_FOLLOWUP_SOURCE_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long viaFollowupSourceId;
 
     /**
      * Write only. For more information, see the <a href=\"/documentation/ticketing/reference-guides/via-object-reference/\">Via object reference</a>
@@ -595,19 +481,6 @@ public class Ticket {
             collaboratorIds = new ArrayList<>();
         }
         collaboratorIds.add(collaboratorIdsItem);
-        return this;
-    }
-
-    /**
-     * Add an item to the collaborators property in a chainable fashion.
-     *
-     * @return The same instance of Ticket for chaining.
-     */
-    public Ticket addCollaboratorsItem(Collaborator collaboratorsItem) {
-        if (collaborators == null) {
-            collaborators = new ArrayList<>();
-        }
-        collaborators.add(collaboratorsItem);
         return this;
     }
 
