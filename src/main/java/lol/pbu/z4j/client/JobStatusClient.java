@@ -6,7 +6,7 @@ import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.client.annotation.Client;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
-import lol.pbu.z4j.model.JobStatus;
+import lol.pbu.z4j.model.JobStatusResponse;
 import lol.pbu.z4j.model.JobStatusesResponse;
 import reactor.core.publisher.Mono;
 
@@ -43,5 +43,5 @@ public interface JobStatusClient {
      * @return 200 response (status code 200)
      */
     @Get("api/v2/job_statuses/{jobId}")
-    Mono<JobStatus> getJobStatus(@NotNull String jobId);
+    Mono<JobStatusResponse> getJobStatus(@NotNull String jobId);
 }

@@ -15,16 +15,24 @@
  */
 package lol.pbu.z4j
 
+import groovy.util.logging.Slf4j
 import io.micronaut.context.ApplicationContext
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
+import lol.pbu.z4j.client.JobStatusClient
 import lol.pbu.z4j.client.LocaleClient
+import lol.pbu.z4j.client.SearchClient
 import lol.pbu.z4j.client.TicketClient
 import lol.pbu.z4j.model.*
 import net.datafaker.Faker
 import spock.lang.Shared
 import spock.lang.Specification
 
+import java.time.Duration
+
+@Slf4j
 @MicronautTest
 @SuppressWarnings("GroovyAssignabilityCheck")
 class Z4jSpec extends Specification {
@@ -33,10 +41,19 @@ class Z4jSpec extends Specification {
     ApplicationContext adminCtx, agentCtx, userCtx, badTokenCtx, badEmailCtx, badUrlCtx
 
     @Shared
+    SearchClient adminSearchClient
+
+    @Shared
+    JobStatusClient jobStatusClient
+
+    @Shared
     TicketClient ticketsAdminClient
 
     @Shared
     List<Locale> accountLocales
+
+    @Shared
+    List<TicketField> ticketFields
 
     @Shared
     Faker faker
@@ -94,10 +111,40 @@ class Z4jSpec extends Specification {
             }
         }
         properties = ["micronaut.http.services.zendesk.email": System.getenv(authUser),
-         "micronaut.http.services.zendesk.url"  : System.getenv("Z4J_URL"),
-         "micronaut.http.services.zendesk.token": System.getenv("Z4J_TOKEN")
+                      "micronaut.http.services.zendesk.url"  : System.getenv("Z4J_URL"),
+                      "micronaut.http.services.zendesk.token": System.getenv("Z4J_TOKEN")
         ] + properties
         ApplicationContext.builder(EmbeddedServer).properties(properties).build().start()
     }
-}
 
+    /**
+     * Recursively creates batches of tickets to populate the Zendesk instance with data.
+     * This is useful for testing Job Statuses or Search functionality where multiple
+     * records are required. It polls the Job Status API until the batch is completed.
+     *
+     * @param jobs The number of batches (3 tickets per batch unless otherwise specified) to create.
+     */
+    void createTicketsForTests(int jobs, @Min(2) @Max(100) int batchSize = 3) {
+        if (jobs <= 0) {
+            return
+        }
+        log.debug("creating tickets in {}", getSpecificationContext().getCurrentIteration().getDisplayName())
+        ticketsAdminClient = ticketsAdminClient ?: adminCtx.getBean(TicketClient.class)
+        JobStatusResponse jobResponse = ticketsAdminClient.createManyTickets(getTicketInputs(batchSize)).block()
+        jobStatusClient = jobStatusClient ?: adminCtx.getBean(JobStatusClient.class)
+        jobStatusClient.getJobStatus(jobResponse.getJobStatus().getId())
+                .map(JobStatusResponse::getJobStatus)
+                .filter { it.getStatus() == "completed" }
+                .repeatWhenEmpty { it.delayElements(Duration.ofMillis(500)).take(10) }
+                .block()
+        createTicketsForTests(jobs - 1)
+    }
+
+    TicketsCreateRequest getTicketInputs(@Min(2) @Max(100) int batchSize) {
+        List<TicketCreateInput> inputs = (1..batchSize).collect {
+            new TicketCreateInput(new TicketComment().setBody(faker.chuckNorris().fact()))
+                    .setRawSubject(faker.book().title())
+        }
+        return new TicketsCreateRequest().setTickets(inputs)
+    }
+}

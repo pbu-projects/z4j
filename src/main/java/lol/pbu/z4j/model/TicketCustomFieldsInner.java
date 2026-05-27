@@ -18,9 +18,9 @@ package lol.pbu.z4j.model;
 import com.fasterxml.jackson.annotation.*;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
@@ -31,8 +31,6 @@ import lombok.experimental.Accessors;
  */
 @Accessors(chain = true)
 @NoArgsConstructor
-@AllArgsConstructor
-@Data
 @JsonPropertyOrder({
         TicketCustomFieldsInner.JSON_PROPERTY_ID,
         TicketCustomFieldsInner.JSON_PROPERTY_VALUE,
@@ -50,7 +48,7 @@ import lombok.experimental.Accessors;
         @JsonSubTypes.Type(value = TicketCustomFieldBoolean.class, name = "boolean")
 })
 @Serdeable
-public class TicketCustomFieldsInner {
+public abstract class TicketCustomFieldsInner {
 
     public static final String JSON_PROPERTY_ID = "id";
     public static final String JSON_PROPERTY_VALUE = "value";
@@ -61,14 +59,15 @@ public class TicketCustomFieldsInner {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    @Getter
+    @Setter
     private Long id;
 
-    /**
-     * The value of the custom field
-     */
     @Nullable
     @JsonProperty(JSON_PROPERTY_VALUE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Object value;
+    public abstract Object getValue();
 
+    @JsonProperty(JSON_PROPERTY_VALUE)
+    public abstract void setValue(Object value);
 }

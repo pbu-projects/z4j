@@ -28,10 +28,10 @@ class TicketClientSpec extends Z4jSpec {
     TicketClient ticketsAgentClient, ticketsUserClient, ticketBadEmailClient, ticketBadUrlClient
 
     @Shared
-    List<Ticket> tickets
+    JobStatusClient jobStatusClient
 
     @Shared
-    List<TicketField> adminTicketFields
+    List<Ticket> tickets
 
     @Shared
     List<Map> clientTestMatrix
@@ -48,7 +48,7 @@ class TicketClientSpec extends Z4jSpec {
                             [client: ticketBadEmailClient, clientType: "bad email", shouldSucceed: false, expectedTitle: "should not"],
                             [client: ticketBadUrlClient, clientType: "bad url", shouldSucceed: false, expectedTitle: "should not"],
                             [client: ticketsUserClient, clientType: "simple user", shouldSucceed: false, expectedTitle: "should not"]]
-        adminTicketFields = ticketsAdminClient.listTicketFields(null, null).block().getTicketFields()
+        ticketFields = ticketFields ?: ticketsAdminClient.listTicketFields(null, null).block().getTicketFields()
     }
 
     def "calling listTickets() succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
@@ -97,24 +97,29 @@ class TicketClientSpec extends Z4jSpec {
 
     def "Trying to create a ticket succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         given:
-        TicketField multiSelectField = adminTicketFields.find { field -> field.getType().equalsIgnoreCase("multiselect") }
+        TicketField multiSelectField = ticketFields.find { field -> field.getType().equalsIgnoreCase("multiselect") }
         assert multiSelectField: "No multiselect field found. Please update your sandbox to include one."
 
         TicketComment ticketComment = new TicketComment().setBody(faker.chuckNorris().fact())
         TicketCreateInput createTicketInput = new TicketCreateInput(ticketComment)
         createTicketInput.setRawSubject(faker.chuckNorris().fact())
 
-        TicketCustomFieldsInner customField = new TicketCustomFieldStringArray()
+        TicketCustomFieldStringArray customField = new TicketCustomFieldStringArray()
                 .setValue(multiSelectField.getCustomFieldOptions().getFirst().getValue())
                 .setId(multiSelectField.getId())
         createTicketInput.setCustomFields([customField])
         TicketCreateRequest createTicketRequest = new TicketCreateRequest(createTicketInput)
 
         when:
-        client.createTicket(createTicketRequest).block()
+        TicketResponse response = client.createTicket(createTicketRequest).block()
 
         then:
         noExceptionThrown()
+
+        and:
+        log.debug("response from createTicket: {}", response)
+        TicketCustomFieldsInner resultField = response.getTicket().getCustomFields().find { it.id == multiSelectField.id }
+        resultField.value == [multiSelectField.getCustomFieldOptions().getFirst().getValue()]
 
         where:
         [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { it.shouldSucceed }
@@ -139,11 +144,10 @@ class TicketClientSpec extends Z4jSpec {
 
     def "can call createManyTickets() when using a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         given:
-        List<TicketCreateInput> inputs = (1..3).collect {
-            new TicketCreateInput(new TicketComment().setBody(faker.chuckNorris().fact()))
-                    .setRawSubject(faker.book().title())
-        }
-        TicketsCreateRequest createTicketsRequest = new TicketsCreateRequest().setTickets(inputs)
+        jobStatusClient = jobStatusClient ?: adminCtx.getBean(JobStatusClient.class)
+        TicketsCreateRequest inputs = getTicketInputs(10)
+
+        inputs.getTickets().getFirst().setCustomFields()
 
         when:
         log.debug("creating tickets in {}", getSpecificationContext().getCurrentIteration().getDisplayName())
@@ -153,13 +157,14 @@ class TicketClientSpec extends Z4jSpec {
         JobStatus currentStatus = jobResponse.getJobStatus()
         while (currentStatus.getStatus() != "completed" && currentStatus.getStatus() != "failed") {
             sleep(1000)
-            currentStatus = client.getJobStatus(jobId).block()
-            // Validate serialization/integrity by checking a field
-            assert currentStatus.getId() == jobId
+            currentStatus = jobStatusClient.getJobStatus(jobId).block().getJobStatus()
         }
 
         then:
         noExceptionThrown()
+
+        and:
+        currentStatus.getStatus().equalsIgnoreCase("completed")
 
         where:
         [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { it.shouldSucceed }
@@ -243,4 +248,5 @@ class TicketClientSpec extends Z4jSpec {
         where:
         [[client, clientType, ignored, alsoIgnored], creator, locale] << [clientTestMatrix.findAll { !it.shouldSucceed && it.clientType != "simple user" }, [true, false, null], accountLocales].combinations()
     }
+
 }

@@ -23,10 +23,10 @@ import spock.lang.Unroll
 
 class SearchClientSpec extends Z4jSpec {
     @Shared
-    SearchClient adminSearchClient, agentSearchClient, userSearchClient
+    SearchClient agentSearchClient, userSearchClient
 
     def setupSpec() {
-        adminSearchClient = adminCtx.getBean(SearchClient.class)
+        adminSearchClient = adminSearchClient ?: adminCtx.getBean(SearchClient.class)
         agentSearchClient = agentCtx.getBean(SearchClient.class)
         userSearchClient = userCtx.getBean(SearchClient.class)
     }
@@ -53,7 +53,7 @@ class SearchClientSpec extends Z4jSpec {
         String ticketQuery = "type:ticket"
         def ticketCount = adminSearchClient.count(ticketQuery).block().getCount()
         if (ticketCount < 5) {
-            (ticketCount..5).each { createTicketForTest() }
+            createTicketsForTests(2, 3)
         }
 
         when:
