@@ -15,59 +15,33 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.*;
-import io.micronaut.core.annotation.Nullable;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 
 /**
- * TicketCustomFieldsInner
+ * This interface exists to facilitate Jackson's deserialization of implementing classes.
+ * <ul>
+ * <li> {@link TicketCustomFieldBoolean} </li>
+ * <li> {@link TicketCustomFieldFloat} </li>
+ * <li> {@link TicketCustomFieldLong} </li>
+ * <li> {@link TicketCustomFieldsInner} </li>
+ * <li> {@link TicketCustomFieldString} </li>
+ * <li> {@link TicketCustomFieldStringArray} </li>
+ * </ul>
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@JsonPropertyOrder({
-        TicketCustomFieldsInner.JSON_PROPERTY_ID,
-        TicketCustomFieldsInner.JSON_PROPERTY_VALUE,
-})
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "type"
-)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = TicketCustomFieldStringArray.class, name = "string[]"),
-        @JsonSubTypes.Type(value = TicketCustomFieldLong.class, name = "long"),
-        @JsonSubTypes.Type(value = TicketCustomFieldFloat.class, name = "float"),
-        @JsonSubTypes.Type(value = TicketCustomFieldString.class, name = "string"),
-        @JsonSubTypes.Type(value = TicketCustomFieldBoolean.class, name = "boolean")
-})
 @Serdeable
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = TicketCustomFieldBoolean.class, name = "boolean"),
+        @JsonSubTypes.Type(value = TicketCustomFieldFloat.class, name = "float"),
+        @JsonSubTypes.Type(value = TicketCustomFieldLong.class, name = "long"),
+        @JsonSubTypes.Type(value = TicketCustomFieldString.class, name = "string"),
+        @JsonSubTypes.Type(value = TicketCustomFieldStringArray.class, name = "string_array")
+})
 public abstract class TicketCustomFieldsInner {
 
-    public static final String JSON_PROPERTY_ID = "id";
-    public static final String JSON_PROPERTY_VALUE = "value";
-
-    /**
-     * The id of the custom field
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    @Getter
-    @Setter
-    private Long id;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_VALUE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    public abstract Object getValue();
-
-    @JsonProperty(JSON_PROPERTY_VALUE)
-    public abstract void setValue(Object value);
 }
