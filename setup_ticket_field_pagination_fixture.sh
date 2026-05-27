@@ -23,7 +23,7 @@ fi
 
 auth_user="${Z4J_ADMIN_EMAIL}/token"
 base_url="${Z4J_URL%/}"
-list_url="${base_url}/api/v2/ticket_fields?page[size]=100"
+list_url="${base_url}/api/v2/ticket_fields?page%5Bsize%5D=100"
 
 echo "Checking current ticket field count using cursor pagination..."
 
