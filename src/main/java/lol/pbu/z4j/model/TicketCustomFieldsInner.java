@@ -15,8 +15,6 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.micronaut.serde.annotation.Serdeable;
 
 /**
@@ -33,15 +31,8 @@ import io.micronaut.serde.annotation.Serdeable;
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Serdeable
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = TicketCustomFieldBoolean.class, name = "boolean"),
-        @JsonSubTypes.Type(value = TicketCustomFieldFloat.class, name = "float"),
-        @JsonSubTypes.Type(value = TicketCustomFieldLong.class, name = "long"),
-        @JsonSubTypes.Type(value = TicketCustomFieldString.class, name = "string"),
-        @JsonSubTypes.Type(value = TicketCustomFieldStringArray.class, name = "string_array")
-})
+@Serdeable.Serializable(using = TicketCustomFieldsInnerSerde.class)
+@Serdeable.Deserializable(using = TicketCustomFieldsInnerSerde.class)
 public abstract class TicketCustomFieldsInner {
 
 }
