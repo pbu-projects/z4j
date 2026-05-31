@@ -247,7 +247,7 @@ public class Ticket implements Exportable {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_FIELDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid TicketCustomFieldsInner> customFields;
+    private List<@Valid TicketCustomField<?>> customFields;
 
     /**
      * The custom ticket status id of the ticket. See  (TODO: make this href a full url path) <a href="#custom-ticket-statuses">custom ticket statuses</a>
@@ -614,7 +614,7 @@ public class Ticket implements Exportable {
      *
      * @return The same instance of Ticket for chaining.
      */
-    public Ticket addCustomField(TicketCustomFieldsInner customField) {
+    public Ticket addCustomField(TicketCustomField<?> customField) {
         if (customFields == null) {
             customFields = new ArrayList<>();
         }

@@ -28,9 +28,6 @@ class TicketClientSpec extends Z4jSpec {
     TicketClient ticketsAgentClient, ticketsUserClient, ticketBadEmailClient, ticketBadUrlClient
 
     @Shared
-    JobStatusClient jobStatusClient
-
-    @Shared
     List<Ticket> tickets
 
     @Shared
@@ -104,7 +101,7 @@ class TicketClientSpec extends Z4jSpec {
         TicketCreateInput createTicketInput = new TicketCreateInput(ticketComment)
         createTicketInput.setRawSubject(faker.chuckNorris().fact())
 
-        TicketCustomFieldStringArray customField = new TicketCustomFieldStringArray()
+        TicketCustomField<?> customField = new TicketCustomField<>()
                 .setValue(multiSelectField.getCustomFieldOptions().getFirst().getValue())
                 .setId(multiSelectField.getId())
         createTicketInput.setCustomFields([customField])
@@ -118,7 +115,7 @@ class TicketClientSpec extends Z4jSpec {
 
         and:
         log.debug("response from createTicket: {}", response)
-        TicketCustomFieldsInner resultField = response.getTicket().getCustomFields().find { it.id == multiSelectField.id }
+        TicketCustomField<?> resultField = response.getTicket().getCustomFields().find { it.id == multiSelectField.id }
         resultField.value == [multiSelectField.getCustomFieldOptions().getFirst().getValue()]
 
         where:

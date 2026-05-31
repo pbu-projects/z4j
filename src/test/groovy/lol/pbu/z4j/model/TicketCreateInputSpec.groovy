@@ -24,7 +24,7 @@ class TicketCreateInputSpec extends Z4jSpec {
     @Shared
     Collaborator collaborator1, collaborator2
     @Shared
-    TicketCustomFieldsInner customField1, customField2
+    TicketCustomField<?> customField1, customField2
     @Shared
     EmailCC emailCc1, emailCc2
     @Shared
@@ -35,8 +35,8 @@ class TicketCreateInputSpec extends Z4jSpec {
     void setupSpec() {
         collaborator1 = new Collaborator(name: faker.name().fullName(), email: faker.internet().emailAddress())
         collaborator2 = new Collaborator(name: faker.name().fullName(), email: faker.internet().emailAddress())
-        customField1 = new TicketCustomFieldBoolean()
-        customField2 = new TicketCustomFieldStringArray()
+        customField1 = new TicketCustomField<>().setValue(true)
+        customField2 = new TicketCustomField<>().setValue(List.of("eggs", "spam"))
         emailCc1 = new EmailCC(userId: faker.number().randomNumber())
         emailCc2 = new EmailCC(userId: faker.number().randomNumber())
         follower1 = new Follower(userId: faker.number().randomNumber())
