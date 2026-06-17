@@ -25,13 +25,13 @@ class TicketSpec extends Z4jSpec {
     Collaborator collaborator1, collaborator2
 
     @Shared
-    TicketCustomFieldsInner customField1, customField2
+    TicketCustomField customField1, customField2
 
     void setupSpec() {
         collaborator1 = new Collaborator(name: faker.name().fullName(), email: faker.internet().emailAddress())
         collaborator2 = new Collaborator(name: faker.name().fullName(), email: faker.internet().emailAddress())
-        customField1 = new TicketCustomFieldsInner(id: faker.number().randomNumber())
-        customField2 = new TicketCustomFieldsInner(id: faker.number().randomNumber())
+        customField1 = new TicketCustomField.Text(faker.number().randomNumber(), faker.lorem().word())
+        customField2 = new TicketCustomField.Text(faker.number().randomNumber(), faker.lorem().word())
     }
 
     @Unroll

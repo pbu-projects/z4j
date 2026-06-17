@@ -172,7 +172,7 @@ public class TicketCreateInput {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_FIELDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid CustomField> customFields;
+    private List<@Valid TicketCustomField> customFields;
 
     /**
      * The custom ticket status id of the ticket. See <a href=\"#custom-ticket-statuses\">custom ticket statuses</a>
@@ -435,7 +435,7 @@ public class TicketCreateInput {
      *
      * @return The same instance of TicketCreateInput for chaining.
      */
-    public TicketCreateInput addCustomFieldsItem(CustomField customFieldsItem) {
+    public TicketCreateInput addCustomFieldsItem(TicketCustomField customFieldsItem) {
         if (customFields == null) {
             customFields = new ArrayList<>();
         }
