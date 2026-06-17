@@ -24,7 +24,7 @@ class TicketUpdateInputSpec extends Z4jSpec {
     @Shared
     Collaborator collaborator1, collaborator2
     @Shared
-    CustomField customField1, customField2
+    TicketCustomField customField1, customField2
     @Shared
     EmailCC emailCc1, emailCc2
     @Shared
@@ -33,8 +33,8 @@ class TicketUpdateInputSpec extends Z4jSpec {
     void setupSpec() {
         collaborator1 = new Collaborator(name: faker.name().fullName(), email: faker.internet().emailAddress())
         collaborator2 = new Collaborator(name: faker.name().fullName(), email: faker.internet().emailAddress())
-        customField1 = new CustomField()
-        customField2 = new CustomField()
+        customField1 = new TicketCustomField.Text(faker.number().randomNumber(), faker.lorem().word())
+        customField2 = new TicketCustomField.Text(faker.number().randomNumber(), faker.lorem().word())
         emailCc1 = new EmailCC(userId: faker.number().randomNumber())
         emailCc2 = new EmailCC(userId: faker.number().randomNumber())
         follower1 = new Follower(userId: faker.number().randomNumber())
