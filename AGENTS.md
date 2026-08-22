@@ -18,7 +18,7 @@ Welcome to `z4j`! This document establishes baseline context, coding standards, 
 
 ---
 
-## 2. Testing Standards
+## 2. Testing Standards & Conventions
 
 > [!IMPORTANT]
 > **No Mocking Policy for Sandbox-Testable Functionality**
@@ -26,9 +26,41 @@ Welcome to `z4j`! This document establishes baseline context, coding standards, 
 > - All integration tests must validate real behavior against a live Zendesk instance to ensure actual Zendesk API compliance.
 > - Mocking is strictly restricted to isolated unit logic that has no remote dependency or sandbox equivalent.
 
-- **Test Framework**: Spock 2 specifications written in Groovy under [`src/test/groovy`](file:///home/jimmy/git/pbu/z4j/src/test/groovy).
-- **Test Data**: Use [DataFaker](file:///home/jimmy/git/pbu/z4j/build.gradle.kts#L65) (`net.datafaker:datafaker`) for dynamic test payload generation instead of static hardcoded values.
-- **Environment Prerequisites**: Tests rely on environment configuration (e.g. `.env`) and pre-configured Zendesk roles (Admin, Agent, End-user). Refer to [`CONTRIBUTING.md`](file:///home/jimmy/git/pbu/z4j/CONTRIBUTING.md#L36) for setup details.
+### A. Test Base Class & Context Hierarchy
+- All integration tests MUST extend [`Z4jSpec`](file:///home/jimmy/git/pbu/z4j/src/test/groovy/lol/pbu/z4j/Z4jSpec.groovy).
+- `Z4jSpec` manages shared Micronaut `ApplicationContext` instances for different user roles and error cases:
+  - `adminCtx`: Authenticated using `Z4J_ADMIN_EMAIL` & `Z4J_TOKEN`
+  - `agentCtx`: Authenticated using `Z4J_AGENT_EMAIL`
+  - `userCtx`: Authenticated using `Z4J_END_USER_EMAIL`
+  - `badTokenCtx`, `badEmailCtx`, `badUrlCtx`: Pre-configured contexts with invalid credentials for negative testing.
+- `getCtx()` enforces environment validation (e.g., ensuring `Z4J_URL` is set and throwing `IllegalStateException` if `MICRONAUT_HTTP_SERVICES_ZENDESK_*` is pre-set).
+- `cleanupSpec()` automatically stops all running contexts.
+
+### B. Matrix Testing & Groovy Combinations
+- Use matrix structures like `clientTestMatrix` (defining maps of `client`, `clientType`, `shouldSucceed`) to test positive and negative paths across user roles in single feature methods.
+- Use Groovy's `combinations()` in Spock `where:` blocks to generate Cartesian product permutations (e.g., `[[client, clientType], localeAbbreviation, sortBy, sortOrder].combinations()`).
+
+### C. Dynamic Test Data Generation
+- Do NOT hardcode static strings or IDs in tests.
+- Use the inherited `@Shared Faker faker` instance from `Z4jSpec` (e.g., `faker.chuckNorris().fact()`, `faker.animal().name()`, `faker.movie().name()`).
+- Append UUID entropy (e.g., `UUID.randomUUID().toString()`) when creating unique titles/names to avoid collisions in the live sandbox.
+
+### D. Sandbox Resource Lifecycle & Cleanup
+- Any test that creates resources on the live Zendesk sandbox (categories, user segments, tickets, ticket fields) MUST clean them up in Spock's `cleanup:` block.
+- Use defensive cleanup (e.g. `try ... catch (NullPointerException ignored)`) so test cleanup does not fail if creation was unsuccessful.
+
+### E. Self-Healing Fixtures & Polling
+- If a test requires specific pre-existing sandbox state (e.g., >100 ticket fields for cursor pagination tests), check for required data, programmatically create missing items, and poll with retry delays (`sleep(2000)`) to account for Zendesk's eventual consistency index.
+
+### F. Reactive Blocking & Assertion Discipline
+- Client methods return Reactor `Mono<T>`; tests call `.block()` synchronously.
+- Use `noExceptionThrown()` for positive assertions.
+- Use `thrown(HttpClientException)` or `thrown(HttpClientResponseException)` with HTTP status checks (e.g., `error.getStatus() == FORBIDDEN`) for negative assertions.
+- Keep Zendesk backend validation out of scope—focus strictly on client invocation and model deserialization without runtime errors.
+
+### G. BDD Method Naming & Block Annotations
+- Use descriptive Spock method names with parameter placeholders (e.g., `"can use CreateCategory as an #userType for the '#localeAbbreviation' locale"`).
+- Include narrative string comments on Spock blocks (`given: "..."`, `when: "..."`, `then: "..."`, `cleanup: "..."`).
 
 ---
 
