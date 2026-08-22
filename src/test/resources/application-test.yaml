@@ -1,0 +1,14 @@
+micronaut:
+  http:
+    services:
+      zendesk:
+        url: "https://test-subdomain.zendesk.com"
+        email: "test@example.com"
+        token: "test-token"
+      zendesk-sandbox:
+        url: "https://test-subdomain.sandbox.zendesk.com"
+        email: "test-sandbox@example.com"
+        token: "test-sandbox-token"
+logger:
+  levels:
+    io.micronaut.http.client: TRACE
