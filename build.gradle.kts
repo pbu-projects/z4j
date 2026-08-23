@@ -63,6 +63,7 @@ dependencies {
     "lombok"("org.projectlombok:lombok:${lombokVersion}")
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("net.datafaker:datafaker:$dataFakerVersion")
+    testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml")
     testImplementation("ch.qos.logback:logback-classic")
 }
 
@@ -112,6 +113,14 @@ tasks.test {
 
 tasks.check {
     dependsOn(tasks.jacocoTestReport)
+}
+
+val generateTestFixtures by tasks.registering(JavaExec::class) {
+    group = "verification"
+    description = "Generates static test data fixtures (YAML files) using DataFaker."
+    dependsOn(tasks.compileTestGroovy)
+    mainClass.set("lol.pbu.z4j.fixture.FixtureGenerator")
+    classpath = sourceSets["test"].runtimeClasspath
 }
 
 tasks.withType<Test> {
