@@ -40,9 +40,10 @@ Welcome to `z4j`! This document establishes baseline context, coding standards, 
 - Use matrix structures like `clientTestMatrix` (defining maps of `client`, `clientType`, `shouldSucceed`) to test positive and negative paths across user roles in single feature methods.
 - Use Groovy's `combinations()` in Spock `where:` blocks to generate Cartesian product permutations (e.g., `[[client, clientType], localeAbbreviation, sortBy, sortOrder].combinations()`).
 
-### C. Dynamic Test Data Generation
-- Do NOT hardcode static strings or IDs in tests.
-- Use the inherited `@Shared Faker faker` instance from `Z4jSpec` (e.g., `faker.chuckNorris().fact()`, `faker.animal().name()`, `faker.movie().name()`).
+### C. Pre-Generated Test Data Fixtures
+- Test data matrices and realistic payload values (names, descriptions, quotes) are pre-generated using DataFaker via the custom Gradle task `./gradlew generateTestFixtures`.
+- The generated fixtures are stored in committed YAML files located under [`src/test/resources/fixtures/`](file:///home/jimmy/git/pbu/z4j/src/test/resources/fixtures/) (`category_fixtures.yaml`, `user_segment_fixtures.yaml`, `ticket_fixtures.yaml`, `article_fixtures.yaml`).
+- Spock test specifications parse these static YAML fixtures (e.g. via SnakeYAML `new Yaml().load(...)`) to eliminate heavy runtime memory consumption from dynamic `faker` calls during test execution.
 - Append UUID entropy (e.g., `UUID.randomUUID().toString()`) when creating unique titles/names to avoid collisions in the live sandbox.
 
 ### D. Sandbox Resource Lifecycle & Cleanup
