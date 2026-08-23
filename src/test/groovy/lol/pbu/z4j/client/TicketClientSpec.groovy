@@ -17,6 +17,9 @@ package lol.pbu.z4j.client
 
 import io.micronaut.http.client.exceptions.HttpClientException
 import lol.pbu.z4j.Z4jSpec
+import lol.pbu.z4j.fixture.FixtureLoader
+import lol.pbu.z4j.fixture.TicketFixtures
+import lol.pbu.z4j.fixture.TicketItem
 import lol.pbu.z4j.model.*
 import spock.lang.Shared
 
@@ -31,6 +34,9 @@ class TicketClientSpec extends Z4jSpec {
     @Shared
     List<Map> clientTestMatrix
 
+    @Shared
+    TicketFixtures ticketFixtures
+
     void setupSpec() {
         ticketBadEmailClient = badEmailCtx.getBean(TicketClient.class)
         ticketBadUrlClient = badUrlCtx.getBean(TicketClient.class)
@@ -38,6 +44,7 @@ class TicketClientSpec extends Z4jSpec {
         ticketsAdminClient = ticketsAdminClient ?: adminCtx.getBean(TicketClient.class)
         ticketsUserClient = userCtx.getBean(TicketClient.class)
         tickets = ticketsAgentClient.listTickets(null).block().getTickets()
+        ticketFixtures = FixtureLoader.loadFixture("/fixtures/ticket_fixtures.yaml", TicketFixtures.class)
         clientTestMatrix = [[client: ticketsAgentClient, clientType: "Agent", shouldSucceed: true, expectedTitle: "should"],
                             [client: ticketsAdminClient, clientType: "Admin", shouldSucceed: true, expectedTitle: "should"],
                             [client: ticketBadEmailClient, clientType: "bad email", shouldSucceed: false, expectedTitle: "should not"],
@@ -91,9 +98,10 @@ class TicketClientSpec extends Z4jSpec {
 
     def "Trying to create a ticket succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         given:
-        TicketComment ticketComment = new TicketComment().setBody(faker.chuckNorris().fact())
+        TicketItem sampleData = ticketFixtures.getTicketData().first()
+        TicketComment ticketComment = new TicketComment().setBody(sampleData.getComment())
         TicketCreateInput createTicketInput = new TicketCreateInput(ticketComment)
-        createTicketInput.setRawSubject(faker.chuckNorris().fact())
+        createTicketInput.setRawSubject(sampleData.getSubject())
         TicketCreateRequest createTicketRequest = new TicketCreateRequest(createTicketInput)
 
         when:
@@ -108,9 +116,10 @@ class TicketClientSpec extends Z4jSpec {
 
     def "Trying to create a ticket fails when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         given:
-        TicketComment ticketComment = new TicketComment().setBody(faker.chuckNorris().fact())
+        TicketItem sampleData = ticketFixtures.getTicketData().first()
+        TicketComment ticketComment = new TicketComment().setBody(sampleData.getComment())
         TicketCreateInput createTicketInput = new TicketCreateInput(ticketComment)
-        createTicketInput.setRawSubject(faker.chuckNorris().fact())
+        createTicketInput.setRawSubject(sampleData.getSubject())
         TicketCreateRequest createTicketRequest = new TicketCreateRequest(createTicketInput)
 
         when:
@@ -125,8 +134,9 @@ class TicketClientSpec extends Z4jSpec {
 
     def "calling updateTicket() succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         given:
+        TicketItem sampleData = ticketFixtures.getTicketData().first()
         TicketUpdateInput ticketUpdateInput = new TicketUpdateInput()
-                .setComment(new TicketComment().setBody(faker.hitchhikersGuideToTheGalaxy().marvinQuote().toString()))
+                .setComment(new TicketComment().setBody(sampleData.getUpdateComment()))
         TicketUpdateRequest ticketUpdateRequest = new TicketUpdateRequest().setTicket(ticketUpdateInput)
 
 
@@ -142,13 +152,15 @@ class TicketClientSpec extends Z4jSpec {
 
     def "calling updateTicket() fails when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         given:
+        TicketItem sampleData = ticketFixtures.getTicketData().first()
         TicketUpdateInput ticketUpdateInput = new TicketUpdateInput()
-                .setComment(new TicketComment().setBody(faker.hitchhikersGuideToTheGalaxy().marvinQuote().toString()))
+                .setComment(new TicketComment().setBody(sampleData.getUpdateComment()))
         TicketUpdateRequest ticketUpdateRequest = new TicketUpdateRequest().setTicket(ticketUpdateInput)
 
 
         when:
         client.updateTicket(tickets.first.getId(), ticketUpdateRequest).block()
+
 
         then:
         thrown(HttpClientException)
@@ -156,6 +168,7 @@ class TicketClientSpec extends Z4jSpec {
         where:
         [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { !it.shouldSucceed }
     }
+
 
     def "calling countTickets() succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         when:
