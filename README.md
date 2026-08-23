@@ -16,7 +16,7 @@ A zippy Zendesk client built for heavy lifting, z4j pairs Micronaut’s lightnin
 
 | Gradle Kotlin                                  | Gradle                                        |
 |:-----------------------------------------------|:----------------------------------------------|
-| <pre>implementation("lol.pbu:z4j:0.1.5")</pre> | <pre>implementation 'lol.pbu:z4j:0.1.5'</pre> |
+| <pre>implementation("lol.pbu:z4j:0.2.1")</pre> | <pre>implementation 'lol.pbu:z4j:0.2.1'</pre> |
 
 **Maven**
 
@@ -24,7 +24,7 @@ A zippy Zendesk client built for heavy lifting, z4j pairs Micronaut’s lightnin
 <dependency>
 	<groupId>lol.pbu</groupId>
 	<artifactId>z4j</artifactId>
-	<version>0.1.5</version>
+	<version>0.2.1</version>
 </dependency>
 ```
 
