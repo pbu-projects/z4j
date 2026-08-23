@@ -6,17 +6,16 @@ Welcome to `z4j`! This document establishes baseline context, coding standards, 
 
 ## 1. Project Overview & Architecture
 
-- **Description**: `z4j` is an open-source Java 21 client for the Zendesk API.
+- **Description**: `z4j` is an open-source Java 25 client for the Zendesk API.
 - **Tech Stack**:
-  - **Language**: Java 21 (GraalVM CE) for main source code, Groovy for Spock 2 test specifications.
-  - **Framework**: Micronaut 4 (`io.micronaut.library`).
+  - **Language**: Java 25 (GraalVM CE) for main source code, Groovy for Spock 2 test specifications.
+  - **Framework**: Micronaut 5 (`io.micronaut.library`).
   - **Build Tool**: Gradle (via `./gradlew` wrapper).
-  - **API Definition**: OpenAPI Spec 2.0/3.0 located at [`src/main/resources/z4j.yaml`](file:///home/jimmy/git/pbu/z4j/src/main/resources/z4j.yaml).
-- **Code Generation**:
-  - Endpoint implementations and model classes rely on OpenAPI Generator driven by `z4j.yaml`.
-  - When modifying or extending API coverage, inspect and update `z4j.yaml` first.
+
+
 
 ---
+
 
 ## 2. Testing Standards & Conventions
 

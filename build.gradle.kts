@@ -13,20 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import org.gradle.api.tasks.testing.TestDescriptor
+import org.gradle.api.tasks.testing.TestListener
+import org.gradle.api.tasks.testing.TestResult
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
+import org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
+import org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED
 
 plugins {
+
     id("it.nicolasfarabegoli.conventional-commits") version "3.1.3"
     id("groovy")
     id("java-library")
     id("maven-publish")
     id("signing")
     id("com.gradleup.nmcp.aggregation").version("1.4.4")
-    id("io.micronaut.library") version "4.6.2"
+    id("io.micronaut.library") version "5.0.0"
     id("jacoco")
     id("org.sonarqube") version "latest.release"
 }
+
+
+
 
 group = "lol.pbu"
 version = project.properties["z4jVersion"]!!
@@ -47,31 +56,24 @@ dependencies {
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
     implementation("io.micronaut.reactor:micronaut-reactor-http-client")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
-    constraints {
-        implementation("io.micronaut:micronaut-json-core:4.10.16") {
-            because("CVE-2026-33012 & CVE-2026-33013")
-        }
-        implementation("io.micronaut:micronaut-context:4.10.22") {
-            because("CVE-2026-44241")
-        }
-        implementation("org.mozilla.rhino:1.7.14.1") {
-            because("CVE-2025-66453")
-        }
-    }
     implementation("io.micronaut.validation:micronaut-validation")
     implementation("io.micronaut:micronaut-retry")
     "lombok"("org.projectlombok:lombok:${lombokVersion}")
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("net.datafaker:datafaker:$dataFakerVersion")
-    testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml")
+    testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.18.2")
     testImplementation("ch.qos.logback:logback-classic")
 }
 
 java {
-    sourceCompatibility = JavaVersion.toVersion("21") // graalvm-ce
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(25))
+    }
     withSourcesJar()
     withJavadocJar()
 }
+
+
 
 configurations.all {
     resolutionStrategy {
@@ -115,15 +117,19 @@ tasks.check {
     dependsOn(tasks.jacocoTestReport)
 }
 
+val javaToolchains = project.extensions.getByType<JavaToolchainService>()
+
 val generateTestFixtures by tasks.registering(JavaExec::class) {
     group = "verification"
     description = "Generates static test data fixtures (YAML files) using DataFaker."
     dependsOn(tasks.compileTestGroovy)
+    javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
     mainClass.set("lol.pbu.z4j.fixture.FixtureGenerator")
     classpath = sourceSets["test"].runtimeClasspath
 }
 
 tasks.withType<Test> {
+
     useJUnitPlatform()
     testLogging {
         events = setOf(FAILED)
@@ -131,7 +137,19 @@ tasks.withType<Test> {
         showStackTraces = true
         showCauses = true
     }
+
+    addTestListener(object : TestListener {
+        override fun beforeSuite(suite: TestDescriptor) {}
+        override fun afterSuite(suite: TestDescriptor, result: TestResult) {
+            if (suite.parent == null) {
+                logger.lifecycle("Test Results: ${result.resultType} (${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped, ${result.testCount} total)")
+            }
+        }
+        override fun beforeTest(testDescriptor: TestDescriptor) {}
+        override fun afterTest(testDescriptor: TestDescriptor, result: TestResult) {}
+    })
 }
+
 
 publishing {
     publications {

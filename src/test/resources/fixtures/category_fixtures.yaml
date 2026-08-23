@@ -1,0 +1,29 @@
+categories:
+- userType: admin
+  categoryName: gerbil
+  description: All right. This is an oldie, but, uh... well, it's an oldie where I
+    come from.
+- userType: agent
+  categoryName: frog
+  description: Calvin? Wh... Why do you keep calling me Calvin?
+- userType: user
+  categoryName: salmon
+  description: Look, I'm just not ready to ask Lorraine out to the dance, and not
+    you, or anybody else on this planet is gonna make me change my mind.
+deleteCategories:
+- userType: admin
+  categoryName: This is trifficult! 8a12c7f6
+  description: Orthanc
+- userType: agent
+  categoryName: It's a good thing you're tough. fcb333e8
+  description: Nargothrond
+- userType: user
+  categoryName: Biscuits! 84dbd75f
+  description: Crack of Doom
+sortOptions:
+- sortBy: TITLE
+  sortOrder: ASC
+- sortBy: POSITION
+  sortOrder: DESC
+- sortBy: CREATED_AT
+  sortOrder: ASC

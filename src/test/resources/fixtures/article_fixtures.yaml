@@ -1,0 +1,9 @@
+articleQueries:
+- sortBy: TITLE
+  sortOrder: ASC
+- sortBy: POSITION
+  sortOrder: DESC
+- sortBy: CREATED_AT
+  sortOrder: ASC
+- sortBy: UPDATED_AT
+  sortOrder: DESC

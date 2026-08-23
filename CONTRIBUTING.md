@@ -13,12 +13,13 @@ Below are some instructions on best practices and standards used when contributi
 - We follow (and enforce) [conventional commits] in this repo.
 ## Set up your machine
 
-`z4j` is written in java 21, compiled with the [graalvm], and uses [gradle] as its build tool.
+`z4j` is written in java 25, compiled with the [graalvm], and uses [gradle] as its build tool.
 
 ### What you need locally:
 - Gradle doesn't need to be installed locally, a [gradle wrapper] is provided with this repo.
 - Docker or Podman installed and running at compile time
-- [Graal-CE 21]
+- [Graal-CE 25]
+
 - [Git]
 - a decent IDE like IntelliJ 
 

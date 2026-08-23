@@ -1,0 +1,7 @@
+userSegments:
+- userType: signed_in_users
+  segmentName: SignedIn-Charlie
+  updatedName: Updated-The Wind Rises
+- userType: staff
+  segmentName: Staff-Uncut Gems
+  updatedName: Updated-The Wind Rises
