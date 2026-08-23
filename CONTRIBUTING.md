@@ -254,6 +254,26 @@ One of the most important parts of contributing to z4j is getting tests right. A
   - Negative tests
   - e.g. behaviors between different auth level
 
+### Test Data Fixture Generation & Type Safety
+
+To minimize runtime memory consumption and avoid dynamic test data generation overhead during test runs, test data matrices and realistic sample payloads are pre-generated as static YAML files under `src/test/resources/fixtures/`.
+
+- **Generating or Updating Test Fixtures**:
+  Run the dedicated Gradle task:
+  ```shell
+  ./gradlew generateTestFixtures
+  ```
+  This task invokes `FixtureGenerator`, using DataFaker with a fixed seed (`Random(42L)`) to output deterministic YAML files (`ticket_fixtures.yaml`, `category_fixtures.yaml`, `user_segment_fixtures.yaml`, `article_fixtures.yaml`).
+
+- **Loading Fixtures with Compile-Time Type Safety**:
+  Spock specifications load static fixtures via `FixtureLoader` into strongly-typed model POJOs defined in `FixtureModels`:
+  ```groovy
+  TicketFixtures sampleData = FixtureLoader.load("fixtures/ticket_fixtures.yaml", TicketFixtures)
+  ```
+  This guarantees 100% compile-time type safety and IDE autocompletion when referencing fixture properties (e.g., `sampleData.getSubject()`).
+
+
+
 ### Testing Commandments
 - Methods and features are to have [adequate] unit and integration tests written before any pull request can be accepted.
 - Because we use lombok, we don't need to test setters and getters. Using getters and setters is the preferred way to access class fields.
