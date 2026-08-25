@@ -1,0 +1,108 @@
+/*
+ * Copyright 2026 Peanut Butter Unicorn, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package lol.pbu.z4j.model;
+
+import java.util.Objects;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import lol.pbu.z4j.model.OrganizationSubscriptionObject;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
+import com.fasterxml.jackson.annotation.*;
+import io.micronaut.serde.annotation.Serdeable;
+import jakarta.validation.constraints.*;
+import jakarta.validation.Valid;
+import io.micronaut.core.annotation.Nullable;
+
+/**
+ * OrganizationSubscriptionsResponse
+ */
+@Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@JsonPropertyOrder({
+    OrganizationSubscriptionsResponse.JSON_PROPERTY_COUNT,
+    OrganizationSubscriptionsResponse.JSON_PROPERTY_NEXT_PAGE,
+    OrganizationSubscriptionsResponse.JSON_PROPERTY_PREVIOUS_PAGE,
+    OrganizationSubscriptionsResponse.JSON_PROPERTY_ORGANIZATION_SUBSCRIPTIONS,
+})
+@Serdeable
+public class OrganizationSubscriptionsResponse {
+
+    public static final String JSON_PROPERTY_COUNT = "count";
+    public static final String JSON_PROPERTY_NEXT_PAGE = "next_page";
+    public static final String JSON_PROPERTY_PREVIOUS_PAGE = "previous_page";
+    public static final String JSON_PROPERTY_ORGANIZATION_SUBSCRIPTIONS = "organization_subscriptions";
+
+    /**
+     * <p>the total record count</p>
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_COUNT)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Integer count;
+
+    /**
+     * <p>the URL of the next page</p>
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_NEXT_PAGE)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String nextPage;
+
+    /**
+     * <p>the URL of the previous page</p>
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String previousPage;
+
+    /**
+     * <p>An array of organization subscriptions</p>
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_ORGANIZATION_SUBSCRIPTIONS)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private List<@Valid OrganizationSubscriptionObject> organizationSubscriptions;
+
+    /**
+     * Add an item to the organizationSubscriptions property in a chainable fashion.
+     *
+     * @return The same instance of OrganizationSubscriptionsResponse for chaining.
+     */
+    public OrganizationSubscriptionsResponse addOrganizationSubscriptionsItem(OrganizationSubscriptionObject organizationSubscriptionsItem) {
+        if (organizationSubscriptions == null) {
+            organizationSubscriptions = new ArrayList<>();
+        }
+        organizationSubscriptions.add(organizationSubscriptionsItem);
+        return this;
+    }
+
+}
