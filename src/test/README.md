@@ -6,22 +6,22 @@
 ## 📊 Summary Metrics
 
 - **Total Client Interfaces**: 98
-- **Clients with Active Tests**: 89 / 98 (90.8%)
+- **Clients with Active Tests**: 98 / 98 (100.0%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **223 / 629 (35.5%)**
-  - 👑 **Admin Level (`adminCtx`)**: 223 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 216 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 223 endpoints
+- **Endpoints Tested**: **232 / 629 (36.9%)**
+  - 👑 **Admin Level (`adminCtx`)**: 232 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 225 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 232 endpoints
 
 ---
 
 ## 📋 Client Breakdown
 
-### ⚪ `AccessClient` (0/2 endpoints — 0%)
+### 🟡 `AccessClient` (1/2 endpoints — 50%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `loginGet` | `GET /access/login` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `loginGet` | `GET /access/login` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `loginPost` | `POST /access/login` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### 🟢 `AccountFeaturesClient` (1/1 endpoints — 100%)
@@ -45,11 +45,11 @@
 | `listActivities` | `GET /api/v2/activities` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showActivity` | `GET /api/v2/activities/{activity_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### ⚪ `ApprovalRequestsClient` (0/3 endpoints — 0%)
+### 🟡 `ApprovalRequestsClient` (1/3 endpoints — 33%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `searchApprovals` | `POST /api/v2/approval_workflow_instances/{approval_workflow_instance_id}/approval_requests/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `searchApprovals` | `POST /api/v2/approval_workflow_instances/{approval_workflow_instance_id}/approval_requests/search` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showApprovalRequest` | `GET /api/v2/approval_workflow_instances/{approval_workflow_instance_id}/approval_requests/{approval_request_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateDecisionApprovalRequest` | `PATCH /api/v2/approval_workflow_instances/{approval_workflow_instance_id}/approval_requests/{approval_request_id}/decision` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
@@ -104,11 +104,11 @@
 | `updateAutomation` | `PUT /api/v2/automations/{automation_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateManyAutomations` | `PUT /api/v2/automations/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `BasicsClient` (0/3 endpoints — 0%)
+### 🟡 `BasicsClient` (1/3 endpoints — 33%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `createTicketOrVoicemailTicket` | `POST /api/v2/channels/voice/tickets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createTicketOrVoicemailTicket` | `POST /api/v2/channels/voice/tickets` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `openTicketInAgentBrowser` | `POST /api/v2/channels/voice/agents/{agent_id}/tickets/{ticket_id}/display` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `openUsersProfileInAgentBrowser` | `POST /api/v2/channels/voice/agents/{agent_id}/users/{user_id}/display` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
@@ -158,19 +158,19 @@
 | `updateCategoryNoLocale` | `PUT /api/v2/help_center/categories/{category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateCategorySourceLocale` | `PUT /api/v2/help_center/categories/{category_id}/source_locale` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `ChannelFrameworkClient` (0/3 endpoints — 0%)
+### 🟡 `ChannelFrameworkClient` (1/3 endpoints — 33%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `pushContentToSupport` | `POST /api/v2/any_channel/push` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `reportChannelbackError` | `POST /api/v2/any_channel/channelback/report_error` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `validateToken` | `POST /api/v2/any_channel/validate_token` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `validateToken` | `POST /api/v2/any_channel/validate_token` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### ⚪ `ConversationLogClient` (0/1 endpoints — 0%)
+### 🟢 `ConversationLogClient` (1/1 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `listConversationLogForTicket` | `GET /api/v2/tickets/{ticket_id}/conversation_log` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listConversationLogForTicket` | `GET /api/v2/tickets/{ticket_id}/conversation_log` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `CustomObjectFieldsClient` (1/7 endpoints — 14%)
 
@@ -316,11 +316,11 @@
 | `listGlobalOAuthClients` | `GET /api/v2/oauth/global_clients` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showGlobalClient` | `GET /api/v2/oauth/global_clients/{global_client_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `GrantTypeTokensClient` (0/1 endpoints — 0%)
+### 🟢 `GrantTypeTokensClient` (1/1 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `createTokenForGrantType` | `POST /oauth/tokens` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createTokenForGrantType` | `POST /oauth/tokens` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `GroupMembershipsClient` (5/14 endpoints — 36%)
 
@@ -387,11 +387,11 @@
 | `incrementalSkilBasedRoutingAttributesExport` | `GET /api/v2/incremental/routing/attributes` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `incrementalSkilBasedRoutingInstanceValuesExport` | `GET /api/v2/incremental/routing/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `InternalClient` (0/1 endpoints — 0%)
+### 🟢 `InternalClient` (1/1 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `resolveOrganizationNames` | `POST /api/v2/internal/organizations/resolve_by_names` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `resolveOrganizationNames` | `POST /api/v2/internal/organizations/resolve_by_names` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `ItamAssetFieldsClient` (1/5 endpoints — 20%)
 
@@ -649,12 +649,12 @@
 | `showRequest` | `GET /api/v2/requests/{request_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateRequest` | `PUT /api/v2/requests/{request_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `ResellerClient` (0/2 endpoints — 0%)
+### 🟡 `ResellerClient` (1/2 endpoints — 50%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createTrialAccount` | `POST /api/v2/accounts` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `verifySubdomainAvailability` | `GET /api/v2/accounts/available` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `verifySubdomainAvailability` | `GET /api/v2/accounts/available` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `ResourceCollectionsClient` (1/5 endpoints — 20%)
 
@@ -899,12 +899,12 @@
 | `updateTicketFormStatusById` | `PUT /api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses/{ticket_form_status_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateTicketFormStatuses` | `PUT /api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `TicketImportClient` (0/2 endpoints — 0%)
+### 🟡 `TicketImportClient` (1/2 endpoints — 50%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `ticketBulkImport` | `POST /api/v2/imports/tickets/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `ticketImport` | `POST /api/v2/imports/tickets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `ticketImport` | `POST /api/v2/imports/tickets` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟢 `TicketMetricEventsClient` (1/1 endpoints — 100%)
 
