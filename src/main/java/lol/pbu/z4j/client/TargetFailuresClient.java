@@ -1,0 +1,58 @@
+/*
+ * Copyright 2026 Peanut Butter Unicorn, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package lol.pbu.z4j.client;
+
+import io.micronaut.http.annotation.*;
+import io.micronaut.core.annotation.*;
+import io.micronaut.http.client.annotation.Client;
+import io.micronaut.core.convert.format.Format;
+import reactor.core.publisher.Mono;
+import lol.pbu.z4j.model.TargetFailureResponse;
+import lol.pbu.z4j.model.TargetFailuresResponse;
+import io.micronaut.retry.annotation.Retryable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
+
+@Retryable
+@Client("zendesk")
+public interface TargetFailuresClient {
+
+    /**
+     * {@summary List Target Failures}
+     * <p>Returns the 25 most recent target failures, per target.</p> <h4>Stability</h4> <ul> <li>Development</li> </ul> <h4>Allowed For</h4> <ul> <li>Admins</li> </ul>
+     *
+     * @return <p>Success response</p> (status code 200)
+     */
+    @Get("/api/v2/target_failures")
+    Mono<@Valid TargetFailuresResponse> listTargetFailures();
+
+    /**
+     * {@summary Show Target Failure}
+     * <h4>Stability</h4> <ul> <li>Development</li> </ul> <h4>Allowed For</h4> <ul> <li>Admins</li> </ul>
+     *
+     * @param targetFailureId <p>The ID of the target failure</p> (required)
+     *
+     * @return <p>Success response</p> (status code 200)
+     */
+    @Get("/api/v2/target_failures/{target_failure_id}")
+    Mono<@Valid TargetFailureResponse> showTargetFailure(
+        @PathVariable("target_failure_id") @NotNull Integer targetFailureId
+    );
+}

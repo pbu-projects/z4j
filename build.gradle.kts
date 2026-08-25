@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import org.gradle.api.tasks.testing.TestDescriptor
-import org.gradle.api.tasks.testing.TestListener
-import org.gradle.api.tasks.testing.TestResult
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
-import org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
-import org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED
 
 plugins {
 
@@ -30,12 +25,10 @@ plugins {
     id("signing")
     id("com.gradleup.nmcp.aggregation").version("1.4.4")
     id("io.micronaut.library") version "5.0.0"
+    // id("io.micronaut.openapi") version "5.0.0"
     id("jacoco")
     id("org.sonarqube") version "latest.release"
 }
-
-
-
 
 group = "lol.pbu"
 version = project.properties["z4jVersion"]!!
@@ -94,6 +87,21 @@ micronaut {
         incremental(true)
         annotations("lol.pbu.*")
     }
+    // openapi {
+    //     version = "6.20.0"
+    //     client(file("src/main/resources/Support.yaml")) {
+    //         apiPackageName.set("lol.pbu.z4j.client")
+    //         modelPackageName.set("lol.pbu.z4j.model")
+    //         useReactive.set(true)
+    //         useAuth.set(false)
+    //         lombok.set(true)
+    //         clientId.set("zendesk")
+    //         apiNameSuffix.set("Client")
+    //         alwaysUseGenerateHttpResponse.set(false)
+    //         generateHttpResponseWhereRequired.set(false)
+    //         additionalProperties.put("retryable", "true")
+    //     }
+    // }
 }
 
 sonarqube {
