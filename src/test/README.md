@@ -8,10 +8,10 @@
 - **Total Client Interfaces**: 98
 - **Clients with Active Tests**: 98 / 98 (100.0%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **253 / 629 (40.2%)**
-  - 👑 **Admin Level (`adminCtx`)**: 253 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 246 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 253 endpoints
+- **Endpoints Tested**: **265 / 629 (42.1%)**
+  - 👑 **Admin Level (`adminCtx`)**: 265 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 258 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 265 endpoints
 
 ---
 
@@ -130,12 +130,12 @@
 | `showBrandAgentById` | `GET /api/v2/brand_agents/{brand_agent_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showUserBrandAgentById` | `GET /api/v2/users/{user_id}/brand_agents/{brand_agent_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `BrandsClient` (2/7 endpoints — 29%)
+### 🟡 `BrandsClient` (4/7 endpoints — 57%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `checkHostMappingValidity` | `GET /api/v2/brands/check_host_mapping` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `checkHostMappingValidityForExistingBrand` | `GET /api/v2/brands/{brand_id}/check_host_mapping` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `checkHostMappingValidity` | `GET /api/v2/brands/check_host_mapping` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `checkHostMappingValidityForExistingBrand` | `GET /api/v2/brands/{brand_id}/check_host_mapping` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `createBrand` | `POST /api/v2/brands` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteBrand` | `DELETE /api/v2/brands/{brand_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listBrands` | `GET /api/v2/brands` | ✅ | ✅ | ✅ | 🟢 Complete |
@@ -207,11 +207,11 @@
 | `listCustomObjectRecordAttachments` | `GET /api/v2/custom_objects/{custom_object_key}/records/{record_id}/attachments/{id}/download` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateCustomObjectRecordAttachment` | `PUT /api/v2/custom_objects/{custom_object_key}/records/{record_id}/attachments/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `CustomObjectRecordsClient` (3/14 endpoints — 21%)
+### 🟡 `CustomObjectRecordsClient` (4/14 endpoints — 29%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `autocompleteCustomObjectRecordSearch` | `GET /api/v2/custom_objects/{custom_object_key}/records/autocomplete` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `autocompleteCustomObjectRecordSearch` | `GET /api/v2/custom_objects/{custom_object_key}/records/autocomplete` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `countCustomObjectRecords` | `GET /api/v2/custom_objects/{custom_object_key}/records/count` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `createCustomObjectRecord` | `POST /api/v2/custom_objects/{custom_object_key}/records` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `customObjectRecordBulkJobs` | `POST /api/v2/custom_objects/{custom_object_key}/jobs` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
@@ -308,13 +308,13 @@
 | `showEssentialsCards` | `GET /api/v2/object_layouts/essentials_cards` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateEssentialsCard` | `PUT /api/v2/object_layouts/{object_type}/essentials_card` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `GlobalClientsClient` (2/3 endpoints — 67%)
+### 🟢 `GlobalClientsClient` (3/3 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `globalOAuthClientsTokenSummary` | `GET /api/v2/oauth/global_clients/token_summary` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listGlobalOAuthClients` | `GET /api/v2/oauth/global_clients` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showGlobalClient` | `GET /api/v2/oauth/global_clients/{global_client_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showGlobalClient` | `GET /api/v2/oauth/global_clients/{global_client_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟢 `GrantTypeTokensClient` (1/1 endpoints — 100%)
 
@@ -367,25 +367,25 @@
 | `showGroupById` | `GET /api/v2/groups/{group_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateGroup` | `PUT /api/v2/groups/{group_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `IncrementalExportClient` (2/7 endpoints — 29%)
+### 🟢 `IncrementalExportClient` (7/7 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `incrementalOrganizationExport` | `GET /api/v2/incremental/organizations` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `incrementalSampleExport` | `GET /api/v2/incremental/{incremental_resource}/sample` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `incrementalSampleExport` | `GET /api/v2/incremental/{incremental_resource}/sample` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `incrementalTicketEvents` | `GET /api/v2/incremental/ticket_events` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `incrementalTicketExportCursor` | `GET /api/v2/incremental/tickets/cursor` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `incrementalTicketExportTime` | `GET /api/v2/incremental/tickets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `incrementalUserExportCursor` | `GET /api/v2/incremental/users/cursor` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `incrementalUserExportTime` | `GET /api/v2/incremental/users` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `incrementalTicketExportCursor` | `GET /api/v2/incremental/tickets/cursor` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `incrementalTicketExportTime` | `GET /api/v2/incremental/tickets` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `incrementalUserExportCursor` | `GET /api/v2/incremental/users/cursor` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `incrementalUserExportTime` | `GET /api/v2/incremental/users` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `IncrementalSkillBasedRoutingClient` (2/3 endpoints — 67%)
+### 🟢 `IncrementalSkillBasedRoutingClient` (3/3 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `incrementalSkilBasedRoutingAttributeValuesExport` | `GET /api/v2/incremental/routing/attribute_values` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `incrementalSkilBasedRoutingAttributesExport` | `GET /api/v2/incremental/routing/attributes` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `incrementalSkilBasedRoutingInstanceValuesExport` | `GET /api/v2/incremental/routing/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `incrementalSkilBasedRoutingInstanceValuesExport` | `GET /api/v2/incremental/routing/instance_values` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟢 `InternalClient` (1/1 endpoints — 100%)
 
@@ -413,12 +413,12 @@
 | `showItamLocation` | `GET /api/v2/it_asset_management/locations/{location_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateItamLocation` | `PATCH /api/v2/it_asset_management/locations/{location_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `ItamAssetStatusesClient` (1/2 endpoints — 50%)
+### 🟢 `ItamAssetStatusesClient` (2/2 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `listItamStatuses` | `GET /api/v2/it_asset_management/statuses` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showItamStatus` | `GET /api/v2/it_asset_management/statuses/{status_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showItamStatus` | `GET /api/v2/it_asset_management/statuses/{status_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `ItamAssetTypesClient` (1/5 endpoints — 20%)
 
@@ -441,13 +441,13 @@
 | `showItamAsset` | `GET /api/v2/it_asset_management/assets/{asset_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateItamAsset` | `PATCH /api/v2/it_asset_management/assets/{asset_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `JobStatusesClient` (2/3 endpoints — 67%)
+### 🟢 `JobStatusesClient` (3/3 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `listJobStatuses` | `GET /api/v2/job_statuses` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showJobStatus` | `GET /api/v2/job_statuses/{job_status_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showManyJobStatuses` | `GET /api/v2/job_statuses/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showManyJobStatuses` | `GET /api/v2/job_statuses/show_many` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟢 `LocaleClient` (1/1 endpoints — 100%)
 

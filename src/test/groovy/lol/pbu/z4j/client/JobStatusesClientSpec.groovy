@@ -86,6 +86,26 @@ class JobStatusesClientSpec extends Z4jSpec {
         ]
     }
 
+    @Unroll
+    def "can show many job statuses as an #userType"(
+            JobStatusesClient client, String userType) {
+        given: "an authenticated client for #userType and existing job status ID"
+
+        when: "requesting multiple job statuses"
+        if (existingJobStatusId != null) {
+            client.showManyJobStatuses(existingJobStatusId).block()
+        }
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminJobStatusesClient, "admin"],
+                [agentJobStatusesClient, "agent"]
+        ]
+    }
+
     def "end user cannot list job statuses"() {
         given: "an end user client"
 

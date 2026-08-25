@@ -31,12 +31,20 @@ class GlobalClientsClientSpec extends Z4jSpec {
     GlobalClientsClient adminGlobalClientsClient, agentGlobalClientsClient, userGlobalClientsClient,
                         badTokenGlobalClientsClient, badUrlGlobalClientsClient
 
+    @Shared
+    Integer existingGlobalClientId
+
     def setupSpec() {
         adminGlobalClientsClient = adminCtx.getBean(GlobalClientsClient.class)
         agentGlobalClientsClient = agentCtx.getBean(GlobalClientsClient.class)
         userGlobalClientsClient = userCtx.getBean(GlobalClientsClient.class)
         badTokenGlobalClientsClient = badTokenCtx.getBean(GlobalClientsClient.class)
         badUrlGlobalClientsClient = badUrlCtx.getBean(GlobalClientsClient.class)
+
+        def clients = adminGlobalClientsClient.listGlobalOAuthClients().block()
+        if (clients?.clients && !clients.clients.isEmpty()) {
+            existingGlobalClientId = clients.clients.first().id
+        }
     }
 
     def "can list global OAuth clients as an admin"() {
@@ -44,6 +52,18 @@ class GlobalClientsClientSpec extends Z4jSpec {
 
         when: "requesting global OAuth clients list"
         adminGlobalClientsClient.listGlobalOAuthClients().block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
+    def "can show global OAuth client by ID as an admin"() {
+        given: "an authenticated admin client and existing global client ID"
+
+        when: "requesting global OAuth client by ID"
+        if (existingGlobalClientId != null) {
+            adminGlobalClientsClient.showGlobalClient(existingGlobalClientId).block()
+        }
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
