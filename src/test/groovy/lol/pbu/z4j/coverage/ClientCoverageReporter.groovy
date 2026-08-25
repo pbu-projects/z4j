@@ -82,7 +82,7 @@ class ClientCoverageReporter {
         List<EndpointCoverage> list = []
         if (!clientDir.exists()) return list
 
-        clientDir.listFiles({ File f -> f.name.endsWith(".java") } as FileFilter).sort { it.name }.each { file ->
+        clientDir.listFiles()?.findAll { it.name.endsWith(".java") }?.sort { it.name }?.each { file ->
             String clientName = file.name.replace(".java", "")
             String content = file.text
 
@@ -105,7 +105,7 @@ class ClientCoverageReporter {
         Map<String, String> map = [:]
         if (!testDir.exists()) return map
 
-        testDir.listFiles({ File f -> f.name.endsWith("Spec.groovy") } as FileFilter).each { file ->
+        testDir.listFiles()?.findAll { it.name.endsWith("Spec.groovy") }?.each { file ->
             map[file.name] = file.text
         }
         return map
