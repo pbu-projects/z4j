@@ -31,12 +31,26 @@ class SkillBasedRoutingClientSpec extends Z4jSpec {
     SkillBasedRoutingClient adminRoutingClient, agentRoutingClient, userRoutingClient,
                             badTokenRoutingClient, badUrlRoutingClient
 
+    @Shared
+    String existingAttributeId
+
+    @Shared
+    Integer adminUserId
+
     def setupSpec() {
         adminRoutingClient = adminCtx.getBean(SkillBasedRoutingClient.class)
         agentRoutingClient = agentCtx.getBean(SkillBasedRoutingClient.class)
         userRoutingClient = userCtx.getBean(SkillBasedRoutingClient.class)
         badTokenRoutingClient = badTokenCtx.getBean(SkillBasedRoutingClient.class)
         badUrlRoutingClient = badUrlCtx.getBean(SkillBasedRoutingClient.class)
+
+        def me = adminCtx.getBean(UsersClient.class).showCurrentUser().block()
+        adminUserId = me?.user?.id
+
+        def attributes = adminRoutingClient.listAccountAttributes().block()
+        if (attributes?.attributes && !attributes.attributes.isEmpty()) {
+            existingAttributeId = attributes.attributes.first().id
+        }
     }
 
     @Unroll
@@ -46,6 +60,65 @@ class SkillBasedRoutingClientSpec extends Z4jSpec {
 
         when: "requesting account attributes list"
         client.listAccountAttributes().block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminRoutingClient, "admin"],
+                [agentRoutingClient, "agent"]
+        ]
+    }
+
+    @Unroll
+    def "can show attribute by ID as an #userType"(
+            SkillBasedRoutingClient client, String userType) {
+        given: "an authenticated client for #userType and existing attribute ID"
+
+        when: "requesting attribute by ID"
+        if (existingAttributeId != null) {
+            client.showAttribute(existingAttributeId).block()
+        }
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminRoutingClient, "admin"]
+        ]
+    }
+
+    @Unroll
+    def "can list attribute values as an #userType"(
+            SkillBasedRoutingClient client, String userType) {
+        given: "an authenticated client for #userType and existing attribute ID"
+
+        when: "requesting attribute values"
+        if (existingAttributeId != null) {
+            client.listAttributeValues(existingAttributeId).block()
+        }
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminRoutingClient, "admin"],
+                [agentRoutingClient, "agent"]
+        ]
+    }
+
+    @Unroll
+    def "can list agent attribute values as an #userType"(
+            SkillBasedRoutingClient client, String userType) {
+        given: "an authenticated client for #userType and admin user ID"
+
+        when: "requesting agent attribute values"
+        if (adminUserId != null) {
+            client.listAGentAttributeValues(adminUserId).block()
+        }
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()

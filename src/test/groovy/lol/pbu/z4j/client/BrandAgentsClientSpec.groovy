@@ -19,6 +19,7 @@ import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
+import lol.pbu.z4j.model.BrandAgentsResponse
 import lol.pbu.z4j.model.BrandsResponse
 import lol.pbu.z4j.model.CurrentUserResponse
 import spock.lang.Shared
@@ -39,6 +40,9 @@ class BrandAgentsClientSpec extends Z4jSpec {
     @Shared
     Integer existingBrandId
 
+    @Shared
+    Integer existingBrandAgentId
+
     def setupSpec() {
         adminBrandAgentsClient = adminCtx.getBean(BrandAgentsClient.class)
         agentBrandAgentsClient = agentCtx.getBean(BrandAgentsClient.class)
@@ -53,6 +57,11 @@ class BrandAgentsClientSpec extends Z4jSpec {
         if (brands?.brands && !brands.brands.isEmpty()) {
             existingBrandId = brands.brands.first().id
         }
+
+        BrandAgentsResponse brandAgents = adminBrandAgentsClient.listBrandAgents(null, null).block()
+        if (brandAgents?.brandAgents && !brandAgents.brandAgents.isEmpty()) {
+            existingBrandAgentId = brandAgents.brandAgents.first().id
+        }
     }
 
     def "can list brand agents as an admin"() {
@@ -60,6 +69,30 @@ class BrandAgentsClientSpec extends Z4jSpec {
 
         when: "requesting brand agents list"
         adminBrandAgentsClient.listBrandAgents(null, null).block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
+    def "can show brand agent by ID as an admin"() {
+        given: "an authenticated admin client and existing brand agent ID"
+
+        when: "requesting brand agent by ID"
+        if (existingBrandAgentId != null) {
+            adminBrandAgentsClient.showBrandAgentById(existingBrandAgentId).block()
+        }
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
+    def "can show user brand agent by ID as an admin"() {
+        given: "an authenticated admin client, admin user ID, and existing brand agent ID"
+
+        when: "requesting user brand agent by ID"
+        if (adminUserId != null && existingBrandAgentId != null) {
+            adminBrandAgentsClient.showUserBrandAgentById(adminUserId, existingBrandAgentId).block()
+        }
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()

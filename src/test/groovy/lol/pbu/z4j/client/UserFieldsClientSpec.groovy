@@ -87,6 +87,26 @@ class UserFieldsClientSpec extends Z4jSpec {
         ]
     }
 
+    @Unroll
+    def "can list user field options as an #userType"(
+            UserFieldsClient client, String userType) {
+        given: "an authenticated client for #userType and existing user field ID"
+
+        when: "requesting user field options"
+        if (existingUserFieldId != null) {
+            client.listUserFieldOptions(existingUserFieldId).block()
+        }
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminUserFieldsClient, "admin"],
+                [agentUserFieldsClient, "agent"]
+        ]
+    }
+
     def "end user cannot list user fields"() {
         given: "an end user client"
 

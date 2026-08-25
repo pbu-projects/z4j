@@ -8,10 +8,10 @@
 - **Total Client Interfaces**: 98
 - **Clients with Active Tests**: 98 / 98 (100.0%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **242 / 629 (38.5%)**
-  - 👑 **Admin Level (`adminCtx`)**: 242 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 235 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 242 endpoints
+- **Endpoints Tested**: **253 / 629 (40.2%)**
+  - 👑 **Admin Level (`adminCtx`)**: 253 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 246 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 253 endpoints
 
 ---
 
@@ -120,15 +120,15 @@
 | `deleteBookmark` | `DELETE /api/v2/bookmarks/{bookmark_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listBookmarks` | `GET /api/v2/bookmarks` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `BrandAgentsClient` (3/5 endpoints — 60%)
+### 🟢 `BrandAgentsClient` (5/5 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `listBrandAgents` | `GET /api/v2/brand_agents` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listBrandAgentsByBrand` | `GET /api/v2/brands/{brand_id}/agents` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listUserBrandAgents` | `GET /api/v2/users/{user_id}/brand_agents` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showBrandAgentById` | `GET /api/v2/brand_agents/{brand_agent_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showUserBrandAgentById` | `GET /api/v2/users/{user_id}/brand_agents/{brand_agent_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showBrandAgentById` | `GET /api/v2/brand_agents/{brand_agent_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showUserBrandAgentById` | `GET /api/v2/users/{user_id}/brand_agents/{brand_agent_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `BrandsClient` (2/7 endpoints — 29%)
 
@@ -473,7 +473,7 @@
 | `getRelationshipFilterDefinitions` | `GET /api/v2/relationships/definitions/{target_type}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `getSourcesByTarget` | `GET /api/v2/{target_type}/{target_id}/relationship_fields/{field_id}/{source_type}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `MacrosClient` (10/19 endpoints — 53%)
+### 🟡 `MacrosClient` (12/19 endpoints — 63%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
@@ -484,12 +484,12 @@
 | `deleteManyMacros` | `DELETE /api/v2/macros/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listActiveMacros` | `GET /api/v2/macros/active` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listMacroActionDefinitions` | `GET /api/v2/macros/definitions` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `listMacroAttachments` | `GET /api/v2/macros/{macro_id}/attachments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listMacroAttachments` | `GET /api/v2/macros/{macro_id}/attachments` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listMacroCategories` | `GET /api/v2/macros/categories` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listMacros` | `GET /api/v2/macros` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listMacrosActions` | `GET /api/v2/macros/actions` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `searchMacro` | `GET /api/v2/macros/search` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showChangesToTicket` | `GET /api/v2/macros/{macro_id}/apply` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showChangesToTicket` | `GET /api/v2/macros/{macro_id}/apply` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showDerivedMacro` | `GET /api/v2/macros/new` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showMacro` | `GET /api/v2/macros/{macro_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showMacroAttachment` | `GET /api/v2/macros/attachments/{attachment_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
@@ -535,7 +535,7 @@
 | `updateManyObjectTriggers` | `PUT /api/v2/custom_objects/{custom_object_key}/triggers/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateObjectTrigger` | `PUT /api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `OmnichannelRoutingQueuesClient` (2/7 endpoints — 29%)
+### 🟡 `OmnichannelRoutingQueuesClient` (3/7 endpoints — 43%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
@@ -544,7 +544,7 @@
 | `listQueueDefinitions` | `GET /api/v2/queues/definitions` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listQueues` | `GET /api/v2/queues` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `reorderQueues` | `PATCH /api/v2/queues/order` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showQueueById` | `GET /api/v2/queues/{queue_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showQueueById` | `GET /api/v2/queues/{queue_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateQueue` | `PUT /api/v2/queues/{queue_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### 🟡 `OrganizationFieldsClient` (2/6 endpoints — 33%)
@@ -666,21 +666,21 @@
 | `retrieveResourceCollection` | `GET /api/v2/resource_collections/{resource_collection_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateResourceCollection` | `PUT /api/v2/resource_collections/{resource_collection_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `SatisfactionRatingsClient` (2/4 endpoints — 50%)
+### 🟡 `SatisfactionRatingsClient` (3/4 endpoints — 75%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `countSatisfactionRatings` | `GET /api/v2/satisfaction_ratings/count` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `createTicketSatisfactionRating` | `POST /api/v2/tickets/{ticket_id}/satisfaction_rating` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listSatisfactionRatings` | `GET /api/v2/satisfaction_ratings` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showSatisfactionRating` | `GET /api/v2/satisfaction_ratings/{satisfaction_rating_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showSatisfactionRating` | `GET /api/v2/satisfaction_ratings/{satisfaction_rating_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `SatisfactionReasonsClient` (1/2 endpoints — 50%)
+### 🟢 `SatisfactionReasonsClient` (2/2 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `listSatisfactionRatingReasons` | `GET /api/v2/satisfaction_reasons` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showSatisfactionRatings` | `GET /api/v2/satisfaction_reasons/{satisfaction_reason_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showSatisfactionRatings` | `GET /api/v2/satisfaction_reasons/{satisfaction_reason_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟢 `SearchClient` (2/2 endpoints — 100%)
 
@@ -718,7 +718,7 @@
 | `showSharingAgreement` | `GET /api/v2/sharing_agreements/{sharing_agreement_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateSharingAgreement` | `PUT /api/v2/sharing_agreements/{sharing_agreement_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `SkillBasedRoutingClient` (2/18 endpoints — 11%)
+### 🟡 `SkillBasedRoutingClient` (5/18 endpoints — 28%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
@@ -727,16 +727,16 @@
 | `createAttributeValue` | `POST /api/v2/routing/attributes/{attribute_id}/values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteAttribute` | `DELETE /api/v2/routing/attributes/{attribute_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteAttributeValue` | `DELETE /api/v2/routing/attributes/{attribute_id}/values/{attribute_value_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listAGentAttributeValues` | `GET /api/v2/routing/agents/{user_id}/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAGentAttributeValues` | `GET /api/v2/routing/agents/{user_id}/instance_values` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listAccountAttributes` | `GET /api/v2/routing/attributes` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `listAttributeValues` | `GET /api/v2/routing/attributes/{attribute_id}/values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAttributeValues` | `GET /api/v2/routing/attributes/{attribute_id}/values` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listManyAgentsAttributeValues` | `GET /api/v2/routing/agents/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listRoutingAttributeDefinitions` | `GET /api/v2/routing/attributes/definitions` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listTicketAttributeValues` | `GET /api/v2/routing/tickets/{ticket_id}/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listTicketsFullfilledByUser` | `GET /api/v2/routing/requirements/fulfilled` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `setAgentAttributeValues` | `POST /api/v2/routing/agents/{user_id}/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `setTicketAttributeValues` | `POST /api/v2/routing/tickets/{ticket_id}/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showAttribute` | `GET /api/v2/routing/attributes/{attribute_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showAttribute` | `GET /api/v2/routing/attributes/{attribute_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showAttributeValue` | `GET /api/v2/routing/attributes/{attribute_id}/values/{attribute_value_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateAttribute` | `PUT /api/v2/routing/attributes/{attribute_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateAttributeValue` | `PATCH /api/v2/routing/attributes/{attribute_id}/values/{attribute_value_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
@@ -775,7 +775,7 @@
 | `recoverSuspendedTicket` | `PUT /api/v2/suspended_tickets/{id}/recover` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `recoverSuspendedTickets` | `PUT /api/v2/suspended_tickets/recover_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showSuspendedTickets` | `GET /api/v2/suspended_tickets/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `suspendedTicketsAttachments` | `POST /api/v2/suspended_tickets/attachments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `suspendedTicketsAttachments` | `POST /api/v2/suspended_tickets/{id}/attachments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### 🟡 `TagsClient` (4/15 endpoints — 27%)
 
@@ -991,7 +991,7 @@
 | `updateManyTriggers` | `PUT /api/v2/triggers/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateTrigger` | `PUT /api/v2/triggers/{trigger_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `UserFieldsClient` (2/10 endpoints — 20%)
+### 🟡 `UserFieldsClient` (3/10 endpoints — 30%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
@@ -999,7 +999,7 @@
 | `createUserField` | `POST /api/v2/user_fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteUserField` | `DELETE /api/v2/user_fields/{user_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteUserFieldOption` | `DELETE /api/v2/user_fields/{user_field_id}/options/{user_field_option_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listUserFieldOptions` | `GET /api/v2/user_fields/{user_field_id}/options` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserFieldOptions` | `GET /api/v2/user_fields/{user_field_id}/options` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listUserFields` | `GET /api/v2/user_fields` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `reorderUserField` | `PUT /api/v2/user_fields/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showUserField` | `GET /api/v2/user_fields/{user_field_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
