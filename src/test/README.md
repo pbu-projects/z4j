@@ -6,12 +6,12 @@
 ## 📊 Summary Metrics
 
 - **Total Client Interfaces**: 98
-- **Clients with Active Tests**: 78 / 98 (79.6%)
+- **Clients with Active Tests**: 89 / 98 (90.8%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **212 / 629 (33.7%)**
-  - 👑 **Admin Level (`adminCtx`)**: 212 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 205 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 212 endpoints
+- **Endpoints Tested**: **223 / 629 (35.5%)**
+  - 👑 **Admin Level (`adminCtx`)**: 223 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 216 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 223 endpoints
 
 ---
 
@@ -72,7 +72,7 @@
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `listAssigneeFieldAssignableGroupsAndAgentsSearch` | `GET /api/lotus/assignables/autocomplete.json` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### ⚪ `AttachmentsClient` (0/5 endpoints — 0%)
+### 🟡 `AttachmentsClient` (1/5 endpoints — 20%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
@@ -80,7 +80,7 @@
 | `redactCommentAttachment` | `PUT /api/v2/tickets/{ticket_id}/comments/{comment_id}/attachments/{attachment_id}/redact` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showAttachment` | `GET /api/v2/attachments/{attachment_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateAttachment` | `PUT /api/v2/attachments/{attachment_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `uploadFiles` | `POST /api/v2/uploads` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `uploadFiles` | `POST /api/v2/uploads` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `AuditLogsClient` (2/3 endpoints — 67%)
 
@@ -393,51 +393,51 @@
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `resolveOrganizationNames` | `POST /api/v2/internal/organizations/resolve_by_names` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `ItamAssetFieldsClient` (0/5 endpoints — 0%)
+### 🟡 `ItamAssetFieldsClient` (1/5 endpoints — 20%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createItamAssetTypeField` | `POST /api/v2/it_asset_management/asset_types/{asset_type_id}/fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteItamAssetTypeField` | `DELETE /api/v2/it_asset_management/asset_types/{asset_type_id}/fields/{asset_type_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listItamAssetTypeFields` | `GET /api/v2/it_asset_management/asset_types/{asset_type_id}/fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listItamAssetTypeFields` | `GET /api/v2/it_asset_management/asset_types/{asset_type_id}/fields` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showItamAssetTypeField` | `GET /api/v2/it_asset_management/asset_types/{asset_type_id}/fields/{asset_type_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateItamAssetTypeField` | `PATCH /api/v2/it_asset_management/asset_types/{asset_type_id}/fields/{asset_type_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `ItamAssetLocationsClient` (0/5 endpoints — 0%)
+### 🟡 `ItamAssetLocationsClient` (1/5 endpoints — 20%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createItamLocation` | `POST /api/v2/it_asset_management/locations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteItamLocation` | `DELETE /api/v2/it_asset_management/locations/{location_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listItamLocations` | `GET /api/v2/it_asset_management/locations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listItamLocations` | `GET /api/v2/it_asset_management/locations` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showItamLocation` | `GET /api/v2/it_asset_management/locations/{location_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateItamLocation` | `PATCH /api/v2/it_asset_management/locations/{location_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `ItamAssetStatusesClient` (0/2 endpoints — 0%)
+### 🟡 `ItamAssetStatusesClient` (1/2 endpoints — 50%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `listItamStatuses` | `GET /api/v2/it_asset_management/statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listItamStatuses` | `GET /api/v2/it_asset_management/statuses` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showItamStatus` | `GET /api/v2/it_asset_management/statuses/{status_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `ItamAssetTypesClient` (0/5 endpoints — 0%)
+### 🟡 `ItamAssetTypesClient` (1/5 endpoints — 20%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createItamAssetType` | `POST /api/v2/it_asset_management/asset_types` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteItamAssetType` | `DELETE /api/v2/it_asset_management/asset_types/{asset_type_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listItamAssetTypes` | `GET /api/v2/it_asset_management/asset_types` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listItamAssetTypes` | `GET /api/v2/it_asset_management/asset_types` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showItamAssetType` | `GET /api/v2/it_asset_management/asset_types/{asset_type_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateItamAssetType` | `PATCH /api/v2/it_asset_management/asset_types/{asset_type_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `ItamAssetsClient` (0/6 endpoints — 0%)
+### 🟡 `ItamAssetsClient` (1/6 endpoints — 17%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createItamAsset` | `POST /api/v2/it_asset_management/assets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteItamAsset` | `DELETE /api/v2/it_asset_management/assets/{asset_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `itamAssetBulkJobs` | `POST /api/v2/it_asset_management/assets/jobs` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listItamAssets` | `GET /api/v2/it_asset_management/assets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listItamAssets` | `GET /api/v2/it_asset_management/assets` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showItamAsset` | `GET /api/v2/it_asset_management/assets/{asset_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateItamAsset` | `PATCH /api/v2/it_asset_management/assets/{asset_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
@@ -612,25 +612,25 @@
 | `updateManyOrganizations` | `PUT /api/v2/organizations/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateOrganization` | `PUT /api/v2/organizations/{organization_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### ⚪ `OtpClient` (0/3 endpoints — 0%)
+### 🟡 `OtpClient` (1/3 endpoints — 33%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `removeOtpSetting` | `DELETE /auth/api/one_time_password` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showOtpSetting` | `GET /auth/api/one_time_password` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showOtpSetting` | `GET /auth/api/one_time_password` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateOtpSetting` | `PATCH /auth/api/one_time_password` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `PushNotificationDevicesClient` (0/1 endpoints — 0%)
+### 🟢 `PushNotificationDevicesClient` (1/1 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `pushNotificationDevices` | `POST /api/v2/push_notification_devices/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `pushNotificationDevices` | `POST /api/v2/push_notification_devices/destroy_many` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### ⚪ `RemoteAuthenticationsClient` (0/1 endpoints — 0%)
+### 🟢 `RemoteAuthenticationsClient` (1/1 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `listRemoteAuthentications` | `GET /api/v2/remote_authentications` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listRemoteAuthentications` | `GET /api/v2/remote_authentications` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `RequestsClient` (5/12 endpoints — 42%)
 
@@ -1025,12 +1025,12 @@
 | `updateUserIdentity` | `PUT /api/v2/users/{user_id}/identities/{user_identity_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `verifyUserIdentity` | `PUT /api/v2/users/{user_id}/identities/{user_identity_id}/verify` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `UserPasswordsClient` (0/3 endpoints — 0%)
+### 🟡 `UserPasswordsClient` (1/3 endpoints — 33%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `changeOwnPassword` | `PUT /api/v2/users/{user_id}/password` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `getUserPasswordRequirements` | `GET /api/v2/users/{user_id}/password/requirements` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `getUserPasswordRequirements` | `GET /api/v2/users/{user_id}/password/requirements` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `setUserPassword` | `POST /api/v2/users/{user_id}/password` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### 🟢 `UserSegmentClient` (7/7 endpoints — 100%)
@@ -1127,12 +1127,12 @@
 | `showWorkspace` | `GET /api/v2/workspaces/{workspace_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateWorkspace` | `PUT /api/v2/workspaces/{workspace_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `XChannelClient` (0/4 endpoints — 0%)
+### 🟡 `XChannelClient` (1/4 endpoints — 25%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createTicketFromTweet` | `POST /api/v2/channels/twitter/tickets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `gettingTwicketStatus` | `GET /api/v2/channels/twitter/tickets/{comment_id}/statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listMonitoredTwitterHandles` | `GET /api/v2/channels/twitter/monitored_twitter_handles` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listMonitoredTwitterHandles` | `GET /api/v2/channels/twitter/monitored_twitter_handles` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showMonitoredTwitterHandle` | `GET /api/v2/channels/twitter/monitored_twitter_handles/{monitored_twitter_handle_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
