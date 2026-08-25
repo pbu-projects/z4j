@@ -31,12 +31,20 @@ class OmnichannelRoutingQueuesClientSpec extends Z4jSpec {
     OmnichannelRoutingQueuesClient adminQueuesClient, agentQueuesClient, userQueuesClient,
                                    badTokenQueuesClient, badUrlQueuesClient
 
+    @Shared
+    String existingQueueId
+
     def setupSpec() {
         adminQueuesClient = adminCtx.getBean(OmnichannelRoutingQueuesClient.class)
         agentQueuesClient = agentCtx.getBean(OmnichannelRoutingQueuesClient.class)
         userQueuesClient = userCtx.getBean(OmnichannelRoutingQueuesClient.class)
         badTokenQueuesClient = badTokenCtx.getBean(OmnichannelRoutingQueuesClient.class)
         badUrlQueuesClient = badUrlCtx.getBean(OmnichannelRoutingQueuesClient.class)
+
+        def queues = adminQueuesClient.listQueues().block()
+        if (queues?.queues && !queues.queues.isEmpty()) {
+            existingQueueId = queues.queues.first().id
+        }
     }
 
     def "can list omnichannel routing queues as an admin"() {
@@ -44,6 +52,18 @@ class OmnichannelRoutingQueuesClientSpec extends Z4jSpec {
 
         when: "requesting omnichannel routing queues list"
         adminQueuesClient.listQueues().block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
+    def "can show omnichannel routing queue by ID as an admin"() {
+        given: "an authenticated admin client and existing queue ID"
+
+        when: "requesting queue by ID"
+        if (existingQueueId != null) {
+            adminQueuesClient.showQueueById(existingQueueId).block()
+        }
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()

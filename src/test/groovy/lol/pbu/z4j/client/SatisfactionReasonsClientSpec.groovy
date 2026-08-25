@@ -31,12 +31,20 @@ class SatisfactionReasonsClientSpec extends Z4jSpec {
     SatisfactionReasonsClient adminCsatReasonsClient, agentCsatReasonsClient, userCsatReasonsClient,
                               badTokenCsatReasonsClient, badUrlCsatReasonsClient
 
+    @Shared
+    Integer existingReasonId
+
     def setupSpec() {
         adminCsatReasonsClient = adminCtx.getBean(SatisfactionReasonsClient.class)
         agentCsatReasonsClient = agentCtx.getBean(SatisfactionReasonsClient.class)
         userCsatReasonsClient = userCtx.getBean(SatisfactionReasonsClient.class)
         badTokenCsatReasonsClient = badTokenCtx.getBean(SatisfactionReasonsClient.class)
         badUrlCsatReasonsClient = badUrlCtx.getBean(SatisfactionReasonsClient.class)
+
+        def reasons = adminCsatReasonsClient.listSatisfactionRatingReasons().block()
+        if (reasons?.reasons && !reasons.reasons.isEmpty()) {
+            existingReasonId = reasons.reasons.first().id
+        }
     }
 
     def "can list satisfaction rating reasons as an admin"() {
@@ -44,6 +52,18 @@ class SatisfactionReasonsClientSpec extends Z4jSpec {
 
         when: "requesting satisfaction rating reasons list"
         adminCsatReasonsClient.listSatisfactionRatingReasons().block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
+    def "can show satisfaction reason by ID as an admin"() {
+        given: "an authenticated admin client and existing reason ID"
+
+        when: "requesting satisfaction reason by ID"
+        if (existingReasonId != null) {
+            adminCsatReasonsClient.showSatisfactionRatings(existingReasonId).block()
+        }
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()

@@ -31,12 +31,20 @@ class OAuthClientsClientSpec extends Z4jSpec {
     OAuthClientsClient adminOAuthClientsClient, agentOAuthClientsClient, userOAuthClientsClient,
                        badTokenOAuthClientsClient, badUrlOAuthClientsClient
 
+    @Shared
+    Integer existingClientId
+
     def setupSpec() {
         adminOAuthClientsClient = adminCtx.getBean(OAuthClientsClient.class)
         agentOAuthClientsClient = agentCtx.getBean(OAuthClientsClient.class)
         userOAuthClientsClient = userCtx.getBean(OAuthClientsClient.class)
         badTokenOAuthClientsClient = badTokenCtx.getBean(OAuthClientsClient.class)
         badUrlOAuthClientsClient = badUrlCtx.getBean(OAuthClientsClient.class)
+
+        def clients = adminOAuthClientsClient.listOAuthClients().block()
+        if (clients?.clients && !clients.clients.isEmpty()) {
+            existingClientId = clients.clients.first().id
+        }
     }
 
     def "can list OAuth clients as an admin"() {
@@ -44,6 +52,18 @@ class OAuthClientsClientSpec extends Z4jSpec {
 
         when: "requesting OAuth clients list"
         adminOAuthClientsClient.listOAuthClients().block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
+    def "can show OAuth client by ID as an admin"() {
+        given: "an authenticated admin client and existing client ID"
+
+        when: "requesting OAuth client by ID"
+        if (existingClientId != null) {
+            adminOAuthClientsClient.showOAuthClient(existingClientId).block()
+        }
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()

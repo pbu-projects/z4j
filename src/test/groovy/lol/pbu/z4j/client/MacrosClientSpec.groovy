@@ -155,6 +155,46 @@ class MacrosClientSpec extends Z4jSpec {
         ].combinations()
     }
 
+    @Unroll
+    def "can show changes to ticket for macro as an #userType"(
+            MacrosClient client, String userType) {
+        given: "an authenticated client for #userType and existing macro ID"
+
+        when: "requesting macro apply ticket changes"
+        if (existingMacroId != null) {
+            client.showChangesToTicket(existingMacroId).block()
+        }
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminMacrosClient, "admin"],
+                [agentMacrosClient, "agent"]
+        ]
+    }
+
+    @Unroll
+    def "can list macro attachments as an #userType"(
+            MacrosClient client, String userType) {
+        given: "an authenticated client for #userType and existing macro ID"
+
+        when: "requesting macro attachments"
+        if (existingMacroId != null) {
+            client.listMacroAttachments(existingMacroId).block()
+        }
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminMacrosClient, "admin"],
+                [agentMacrosClient, "agent"]
+        ]
+    }
+
     def "can perform macro CRUD lifecycle as an admin"() {
         given: "a macro payload with title and comment action"
         String macroTitle = "z4j test macro " + UUID.randomUUID().toString().substring(0, 8)

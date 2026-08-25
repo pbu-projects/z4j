@@ -137,7 +137,7 @@ public interface SuspendedTicketsClient {
      *
      * @return <p>Success response</p> (status code 200)
      */
-    @Post("/api/v2/suspended_tickets/attachments")
+    @Post("/api/v2/suspended_tickets/{id}/attachments")
     Mono<@Valid SuspendedTicketsAttachmentsResponse> suspendedTicketsAttachments(
         @PathVariable("id") @NotNull BigDecimal id
     );

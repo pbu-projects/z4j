@@ -31,12 +31,20 @@ class SatisfactionRatingsClientSpec extends Z4jSpec {
     SatisfactionRatingsClient adminCsatClient, agentCsatClient, userCsatClient,
                               badTokenCsatClient, badUrlCsatClient
 
+    @Shared
+    Integer existingRatingId
+
     def setupSpec() {
         adminCsatClient = adminCtx.getBean(SatisfactionRatingsClient.class)
         agentCsatClient = agentCtx.getBean(SatisfactionRatingsClient.class)
         userCsatClient = userCtx.getBean(SatisfactionRatingsClient.class)
         badTokenCsatClient = badTokenCtx.getBean(SatisfactionRatingsClient.class)
         badUrlCsatClient = badUrlCtx.getBean(SatisfactionRatingsClient.class)
+
+        def ratings = adminCsatClient.listSatisfactionRatings().block()
+        if (ratings?.satisfactionRatings && !ratings.satisfactionRatings.isEmpty()) {
+            existingRatingId = ratings.satisfactionRatings.first().id
+        }
     }
 
     def "can count satisfaction ratings as an admin"() {
@@ -54,6 +62,18 @@ class SatisfactionRatingsClientSpec extends Z4jSpec {
 
         when: "requesting satisfaction ratings list"
         adminCsatClient.listSatisfactionRatings().block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
+    def "can show satisfaction rating by ID as an admin"() {
+        given: "an authenticated admin client and existing rating ID"
+
+        when: "requesting satisfaction rating by ID"
+        if (existingRatingId != null) {
+            adminCsatClient.showSatisfactionRating(existingRatingId).block()
+        }
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
