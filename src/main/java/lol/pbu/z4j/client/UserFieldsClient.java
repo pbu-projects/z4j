@@ -48,7 +48,7 @@ public interface UserFieldsClient {
      */
     @Post("/api/v2/user_fields/{user_field_id}/options")
     Mono<@Valid CustomFieldOptionResponse> createOrUpdateUserFieldOption(
-        @PathVariable("user_field_id") @NotNull @Valid ShowOrganizationFieldOrganizationFieldIdParameter userFieldId
+        @PathVariable("user_field_id") @NotNull Integer userFieldId
     );
 
     /**
@@ -70,7 +70,7 @@ public interface UserFieldsClient {
      */
     @Delete("/api/v2/user_fields/{user_field_id}")
     Mono<Void> deleteUserField(
-        @PathVariable("user_field_id") @NotNull @Valid ShowOrganizationFieldOrganizationFieldIdParameter userFieldId
+        @PathVariable("user_field_id") @NotNull Integer userFieldId
     );
 
     /**
@@ -84,7 +84,7 @@ public interface UserFieldsClient {
      */
     @Delete("/api/v2/user_fields/{user_field_id}/options/{user_field_option_id}")
     Mono<Void> deleteUserFieldOption(
-        @PathVariable("user_field_id") @NotNull @Valid ShowOrganizationFieldOrganizationFieldIdParameter userFieldId,
+        @PathVariable("user_field_id") @NotNull Integer userFieldId,
         @PathVariable("user_field_option_id") @NotNull Integer userFieldOptionId
     );
 
@@ -98,7 +98,7 @@ public interface UserFieldsClient {
      */
     @Get("/api/v2/user_fields/{user_field_id}/options")
     Mono<@Valid CustomFieldOptionsResponse> listUserFieldOptions(
-        @PathVariable("user_field_id") @NotNull @Valid ShowOrganizationFieldOrganizationFieldIdParameter userFieldId
+        @PathVariable("user_field_id") @NotNull Integer userFieldId
     );
 
     /**
@@ -129,7 +129,7 @@ public interface UserFieldsClient {
      */
     @Get("/api/v2/user_fields/{user_field_id}")
     Mono<@Valid UserFieldResponse> showUserField(
-        @PathVariable("user_field_id") @NotNull @Valid ShowOrganizationFieldOrganizationFieldIdParameter userFieldId
+        @PathVariable("user_field_id") @NotNull Integer userFieldId
     );
 
     /**
@@ -143,7 +143,7 @@ public interface UserFieldsClient {
      */
     @Get("/api/v2/user_fields/{user_field_id}/options/{user_field_option_id}")
     Mono<@Valid CustomFieldOptionResponse> showUserFieldOption(
-        @PathVariable("user_field_id") @NotNull @Valid ShowOrganizationFieldOrganizationFieldIdParameter userFieldId,
+        @PathVariable("user_field_id") @NotNull Integer userFieldId,
         @PathVariable("user_field_option_id") @NotNull Integer userFieldOptionId
     );
 
@@ -157,6 +157,6 @@ public interface UserFieldsClient {
      */
     @Put("/api/v2/user_fields/{user_field_id}")
     Mono<@Valid UserFieldResponse> updateUserField(
-        @PathVariable("user_field_id") @NotNull @Valid ShowOrganizationFieldOrganizationFieldIdParameter userFieldId
+        @PathVariable("user_field_id") @NotNull Integer userFieldId
     );
 }

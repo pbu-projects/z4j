@@ -1,0 +1,115 @@
+/*
+ * Copyright 2026 Peanut Butter Unicorn, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package lol.pbu.z4j.client
+
+import io.micronaut.http.client.exceptions.HttpClientException
+import io.micronaut.http.client.exceptions.HttpClientResponseException
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import lol.pbu.z4j.Z4jSpec
+import lol.pbu.z4j.model.OrganizationFieldsResponse
+import lol.pbu.z4j.model.ShowOrganizationFieldOrganizationFieldIdParameter
+import spock.lang.Shared
+import spock.lang.Unroll
+
+import static io.micronaut.http.HttpStatus.FORBIDDEN
+
+@MicronautTest
+class OrganizationFieldsClientSpec extends Z4jSpec {
+
+    @Shared
+    OrganizationFieldsClient adminOrgFieldsClient, agentOrgFieldsClient, userOrgFieldsClient,
+                             badTokenOrgFieldsClient, badUrlOrgFieldsClient
+
+    @Shared
+    Integer existingOrgFieldId
+
+    def setupSpec() {
+        adminOrgFieldsClient = adminCtx.getBean(OrganizationFieldsClient.class)
+        agentOrgFieldsClient = agentCtx.getBean(OrganizationFieldsClient.class)
+        userOrgFieldsClient = userCtx.getBean(OrganizationFieldsClient.class)
+        badTokenOrgFieldsClient = badTokenCtx.getBean(OrganizationFieldsClient.class)
+        badUrlOrgFieldsClient = badUrlCtx.getBean(OrganizationFieldsClient.class)
+
+        OrganizationFieldsResponse fields = adminOrgFieldsClient.listOrganizationFields().block()
+        if (fields?.organizationFields && !fields.organizationFields.isEmpty()) {
+            existingOrgFieldId = fields.organizationFields.first().id
+        }
+    }
+
+    @Unroll
+    def "can list organization fields as an #userType"(
+            OrganizationFieldsClient client, String userType) {
+        given: "an authenticated client for #userType"
+
+        when: "requesting organization fields list"
+        client.listOrganizationFields().block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminOrgFieldsClient, "admin"],
+                [agentOrgFieldsClient, "agent"]
+        ]
+    }
+
+    @Unroll
+    def "can show organization field by ID as an #userType"(
+            OrganizationFieldsClient client, String userType) {
+        given: "an authenticated client for #userType and existing organization field ID"
+
+        when: "requesting organization field by ID"
+        if (existingOrgFieldId != null) {
+            client.showOrganizationField(existingOrgFieldId).block()
+        }
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminOrgFieldsClient, "admin"],
+                [agentOrgFieldsClient, "agent"]
+        ]
+    }
+
+    def "end user cannot list organization fields"() {
+        given: "an end user client"
+
+        when: "requesting organization fields as an end user"
+        userOrgFieldsClient.listOrganizationFields().block()
+
+        then: "a 403 Forbidden exception is thrown as documented"
+        HttpClientResponseException e = thrown()
+        e.status == FORBIDDEN
+    }
+
+    @Unroll
+    def "calling organization fields client with #description throws HttpClientException"(
+            String description, OrganizationFieldsClient client) {
+        when: "requesting organization fields with invalid client configuration"
+        client.listOrganizationFields().block()
+
+        then: "an http client exception is thrown"
+        thrown(HttpClientException)
+
+        where:
+        description       | client
+        "invalid token"   | badTokenOrgFieldsClient
+        "unreachable url" | badUrlOrgFieldsClient
+    }
+}
