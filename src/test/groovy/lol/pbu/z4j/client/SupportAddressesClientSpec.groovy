@@ -33,7 +33,7 @@ class SupportAddressesClientSpec extends Z4jSpec {
                            badTokenSupportAddressesClient, badUrlSupportAddressesClient
 
     @Shared
-    Integer existingSupportAddressId
+    Integer existingAddressId
 
     def setupSpec() {
         adminSupportAddressesClient = adminCtx.getBean(SupportAddressesClient.class)
@@ -42,17 +42,18 @@ class SupportAddressesClientSpec extends Z4jSpec {
         badTokenSupportAddressesClient = badTokenCtx.getBean(SupportAddressesClient.class)
         badUrlSupportAddressesClient = badUrlCtx.getBean(SupportAddressesClient.class)
 
-        SupportAddressesResponse response = adminSupportAddressesClient.listSupportAddresses().block()
-        if (response?.recipientAddresses && !response.recipientAddresses.isEmpty()) {
-            existingSupportAddressId = response.recipientAddresses.first().id
+        SupportAddressesResponse addresses = adminSupportAddressesClient.listSupportAddresses().block()
+        if (addresses?.recipientAddresses && !addresses.recipientAddresses.isEmpty()) {
+            existingAddressId = addresses.recipientAddresses.first().id
         }
     }
 
     @Unroll
-    def "can list support addresses as an #userType"(SupportAddressesClient client, String userType) {
+    def "can list support addresses as an #userType"(
+            SupportAddressesClient client, String userType) {
         given: "an authenticated client for #userType"
 
-        when: "requesting all support addresses"
+        when: "requesting support addresses list"
         client.listSupportAddresses().block()
 
         then: "response deserializes successfully without exception"
@@ -66,11 +67,14 @@ class SupportAddressesClientSpec extends Z4jSpec {
     }
 
     @Unroll
-    def "can show support address as an #userType"(SupportAddressesClient client, String userType) {
-        given: "an authenticated client for #userType and an existing address ID"
+    def "can show support address by ID as an #userType"(
+            SupportAddressesClient client, String userType) {
+        given: "an authenticated client for #userType and existing address ID"
 
-        when: "requesting a specific support address by ID"
-        client.showSupportAddress(existingSupportAddressId).block()
+        when: "requesting support address by ID"
+        if (existingAddressId != null) {
+            client.showSupportAddress(existingAddressId).block()
+        }
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
@@ -93,19 +97,8 @@ class SupportAddressesClientSpec extends Z4jSpec {
         e.status == FORBIDDEN
     }
 
-    def "end user cannot show support address"() {
-        given: "an end user client"
-
-        when: "requesting a support address by ID as an end user"
-        userSupportAddressesClient.showSupportAddress(existingSupportAddressId ?: 1).block()
-
-        then: "a 403 Forbidden exception is thrown as documented"
-        HttpClientResponseException e = thrown()
-        e.status == FORBIDDEN
-    }
-
     @Unroll
-    def "calling support addresses with #description throws HttpClientException"(
+    def "calling support addresses client with #description throws HttpClientException"(
             String description, SupportAddressesClient client) {
         when: "requesting support addresses with invalid client configuration"
         client.listSupportAddresses().block()

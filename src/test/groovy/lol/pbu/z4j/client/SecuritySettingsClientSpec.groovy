@@ -25,36 +25,36 @@ import spock.lang.Unroll
 import static io.micronaut.http.HttpStatus.FORBIDDEN
 
 @MicronautTest
-class SatisfactionReasonsClientSpec extends Z4jSpec {
+class SecuritySettingsClientSpec extends Z4jSpec {
 
     @Shared
-    SatisfactionReasonsClient adminCsatReasonsClient, agentCsatReasonsClient, userCsatReasonsClient,
-                              badTokenCsatReasonsClient, badUrlCsatReasonsClient
+    SecuritySettingsClient adminSecurityClient, agentSecurityClient, userSecurityClient,
+                           badTokenSecurityClient, badUrlSecurityClient
 
     def setupSpec() {
-        adminCsatReasonsClient = adminCtx.getBean(SatisfactionReasonsClient.class)
-        agentCsatReasonsClient = agentCtx.getBean(SatisfactionReasonsClient.class)
-        userCsatReasonsClient = userCtx.getBean(SatisfactionReasonsClient.class)
-        badTokenCsatReasonsClient = badTokenCtx.getBean(SatisfactionReasonsClient.class)
-        badUrlCsatReasonsClient = badUrlCtx.getBean(SatisfactionReasonsClient.class)
+        adminSecurityClient = adminCtx.getBean(SecuritySettingsClient.class)
+        agentSecurityClient = agentCtx.getBean(SecuritySettingsClient.class)
+        userSecurityClient = userCtx.getBean(SecuritySettingsClient.class)
+        badTokenSecurityClient = badTokenCtx.getBean(SecuritySettingsClient.class)
+        badUrlSecurityClient = badUrlCtx.getBean(SecuritySettingsClient.class)
     }
 
-    def "can list satisfaction rating reasons as an admin"() {
+    def "can show security settings as an admin"() {
         given: "an authenticated admin client"
 
-        when: "requesting satisfaction rating reasons list"
-        adminCsatReasonsClient.listSatisfactionRatingReasons().block()
+        when: "requesting security settings"
+        adminSecurityClient.showSecuritySettings().block()
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
     }
 
     @Unroll
-    def "#userType cannot list satisfaction rating reasons"(SatisfactionReasonsClient client, String userType) {
+    def "#userType cannot show security settings"(SecuritySettingsClient client, String userType) {
         given: "an unauthorized client for #userType"
 
-        when: "requesting satisfaction rating reasons"
-        client.listSatisfactionRatingReasons().block()
+        when: "requesting security settings"
+        client.showSecuritySettings().block()
 
         then: "a 403 Forbidden exception is thrown as documented"
         HttpClientResponseException e = thrown()
@@ -62,23 +62,23 @@ class SatisfactionReasonsClientSpec extends Z4jSpec {
 
         where:
         [client, userType] << [
-                [agentCsatReasonsClient, "agent"],
-                [userCsatReasonsClient, "end user"]
+                [agentSecurityClient, "agent"],
+                [userSecurityClient, "end user"]
         ]
     }
 
     @Unroll
-    def "calling satisfaction rating reasons client with #description throws HttpClientException"(
-            String description, SatisfactionReasonsClient client) {
-        when: "requesting satisfaction rating reasons with invalid client configuration"
-        client.listSatisfactionRatingReasons().block()
+    def "calling security settings client with #description throws HttpClientException"(
+            String description, SecuritySettingsClient client) {
+        when: "requesting security settings with invalid client configuration"
+        client.showSecuritySettings().block()
 
         then: "an http client exception is thrown"
         thrown(HttpClientException)
 
         where:
         description       | client
-        "invalid token"   | badTokenCsatReasonsClient
-        "unreachable url" | badUrlCsatReasonsClient
+        "invalid token"   | badTokenSecurityClient
+        "unreachable url" | badUrlSecurityClient
     }
 }

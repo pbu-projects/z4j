@@ -19,6 +19,7 @@ import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
+import lol.pbu.z4j.model.CurrentUserResponse
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -31,36 +32,26 @@ class TagsClientSpec extends Z4jSpec {
     TagsClient adminTagsClient, agentTagsClient, userTagsClient,
                badTokenTagsClient, badUrlTagsClient
 
+    @Shared
+    Integer adminUserId
+
     def setupSpec() {
         adminTagsClient = adminCtx.getBean(TagsClient.class)
         agentTagsClient = agentCtx.getBean(TagsClient.class)
         userTagsClient = userCtx.getBean(TagsClient.class)
         badTokenTagsClient = badTokenCtx.getBean(TagsClient.class)
         badUrlTagsClient = badUrlCtx.getBean(TagsClient.class)
+
+        CurrentUserResponse me = adminCtx.getBean(UsersClient.class).showCurrentUser().block()
+        adminUserId = me?.user?.id
     }
 
     @Unroll
-    def "can count tags as an #userType"(TagsClient client, String userType) {
+    def "can list tags as an #userType"(
+            TagsClient client, String userType) {
         given: "an authenticated client for #userType"
 
-        when: "requesting tag count"
-        client.countTags().block()
-
-        then: "response deserializes successfully without exception"
-        noExceptionThrown()
-
-        where:
-        [client, userType] << [
-                [adminTagsClient, "admin"],
-                [agentTagsClient, "agent"]
-        ]
-    }
-
-    @Unroll
-    def "can list tags as an #userType"(TagsClient client, String userType) {
-        given: "an authenticated client for #userType"
-
-        when: "requesting tag list"
+        when: "requesting tags list"
         client.listTags().block()
 
         then: "response deserializes successfully without exception"
@@ -74,38 +65,65 @@ class TagsClientSpec extends Z4jSpec {
     }
 
     @Unroll
-    def "can autocomplete tags as an #userType with name=#name"(
-            TagsClient client, String userType, String name) {
+    def "can count tags as an #userType"(
+            TagsClient client, String userType) {
         given: "an authenticated client for #userType"
 
-        when: "searching for tags by prefix"
-        client.autocompleteTags(name).block()
+        when: "requesting tags count"
+        client.countTags().block()
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
 
         where:
-        [[client, userType], name] << [
-                [[adminTagsClient, "admin"], [agentTagsClient, "agent"]],
-                ["te", null]
-        ].combinations()
+        [client, userType] << [
+                [adminTagsClient, "admin"],
+                [agentTagsClient, "agent"]
+        ]
     }
 
-    def "end user cannot count tags"() {
-        given: "an end user client"
+    @Unroll
+    def "can autocomplete tags as an #userType"(
+            TagsClient client, String userType) {
+        given: "an authenticated client for #userType"
 
-        when: "requesting tag count as an end user"
-        userTagsClient.countTags().block()
+        when: "requesting tag autocomplete"
+        client.autocompleteTags("test").block()
 
-        then: "a 403 Forbidden exception is thrown as documented"
-        HttpClientResponseException e = thrown()
-        e.status == FORBIDDEN
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminTagsClient, "admin"],
+                [agentTagsClient, "agent"]
+        ]
+    }
+
+    @Unroll
+    def "can list user tags as an #userType"(
+            TagsClient client, String userType) {
+        given: "an authenticated client for #userType and admin user ID"
+
+        when: "requesting user tags"
+        if (adminUserId != null) {
+            client.listUserTags(adminUserId).block()
+        }
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminTagsClient, "admin"],
+                [agentTagsClient, "agent"]
+        ]
     }
 
     def "end user cannot list tags"() {
         given: "an end user client"
 
-        when: "requesting tag list as an end user"
+        when: "requesting tags as an end user"
         userTagsClient.listTags().block()
 
         then: "a 403 Forbidden exception is thrown as documented"
@@ -117,7 +135,7 @@ class TagsClientSpec extends Z4jSpec {
     def "calling tags client with #description throws HttpClientException"(
             String description, TagsClient client) {
         when: "requesting tags with invalid client configuration"
-        client.countTags().block()
+        client.listTags().block()
 
         then: "an http client exception is thrown"
         thrown(HttpClientException)

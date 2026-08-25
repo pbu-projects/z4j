@@ -6,12 +6,12 @@
 ## 📊 Summary Metrics
 
 - **Total Client Interfaces**: 98
-- **Clients with Active Tests**: 41 / 98 (41.8%)
+- **Clients with Active Tests**: 48 / 98 (49.0%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **156 / 629 (24.8%)**
-  - 👑 **Admin Level (`adminCtx`)**: 156 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 149 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 156 endpoints
+- **Endpoints Tested**: **166 / 629 (26.4%)**
+  - 👑 **Admin Level (`adminCtx`)**: 166 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 159 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 166 endpoints
 
 ---
 
@@ -268,26 +268,26 @@
 | `listDeletionSchedules` | `GET /api/v2/deletion_schedules` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateDeletionSchedule` | `PUT /api/v2/deletion_schedules/{deletion_schedule_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `DynamicContentClient` (0/6 endpoints — 0%)
+### 🟡 `DynamicContentClient` (2/6 endpoints — 33%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createDynamicContent` | `POST /api/v2/dynamic_content/items` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteDynamicContentItem` | `DELETE /api/v2/dynamic_content/items/{dynamic_content_item_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listDynamicContents` | `GET /api/v2/dynamic_content/items` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showDynamicContentItem` | `GET /api/v2/dynamic_content/items/{dynamic_content_item_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listDynamicContents` | `GET /api/v2/dynamic_content/items` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showDynamicContentItem` | `GET /api/v2/dynamic_content/items/{dynamic_content_item_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showManyDynamicContents` | `GET /api/v2/dynamic_content/items/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateDynamicContentItem` | `PUT /api/v2/dynamic_content/items/{dynamic_content_item_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `DynamicContentItemVariantsClient` (0/7 endpoints — 0%)
+### 🟡 `DynamicContentItemVariantsClient` (2/7 endpoints — 29%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createDynamicContentVariant` | `POST /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `createManyDynamicContentVariants` | `POST /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteDynamicContentVariant` | `DELETE /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `dynamicContentListVariants` | `GET /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showDynamicContentVariant` | `GET /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `dynamicContentListVariants` | `GET /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showDynamicContentVariant` | `GET /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateDynamicContentVariant` | `PUT /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateManyDynamicContentVariants` | `PUT /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
@@ -656,31 +656,31 @@
 | `createTrialAccount` | `POST /api/v2/accounts` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `verifySubdomainAvailability` | `GET /api/v2/accounts/available` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `ResourceCollectionsClient` (0/5 endpoints — 0%)
+### 🟡 `ResourceCollectionsClient` (1/5 endpoints — 20%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createResourceCollection` | `POST /api/v2/resource_collections` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteResourceCollection` | `DELETE /api/v2/resource_collections/{resource_collection_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listResourceCollections` | `GET /api/v2/resource_collections` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listResourceCollections` | `GET /api/v2/resource_collections` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `retrieveResourceCollection` | `GET /api/v2/resource_collections/{resource_collection_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateResourceCollection` | `PUT /api/v2/resource_collections/{resource_collection_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `SatisfactionRatingsClient` (3/4 endpoints — 75%)
+### 🟡 `SatisfactionRatingsClient` (2/4 endpoints — 50%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `countSatisfactionRatings` | `GET /api/v2/satisfaction_ratings/count` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `createTicketSatisfactionRating` | `POST /api/v2/tickets/{ticket_id}/satisfaction_rating` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listSatisfactionRatings` | `GET /api/v2/satisfaction_ratings` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showSatisfactionRating` | `GET /api/v2/satisfaction_ratings/{satisfaction_rating_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showSatisfactionRating` | `GET /api/v2/satisfaction_ratings/{satisfaction_rating_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟢 `SatisfactionReasonsClient` (2/2 endpoints — 100%)
+### 🟡 `SatisfactionReasonsClient` (1/2 endpoints — 50%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `listSatisfactionRatingReasons` | `GET /api/v2/satisfaction_reasons` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showSatisfactionRatings` | `GET /api/v2/satisfaction_reasons/{satisfaction_reason_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showSatisfactionRatings` | `GET /api/v2/satisfaction_reasons/{satisfaction_reason_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### 🟢 `SearchClient` (2/2 endpoints — 100%)
 
@@ -689,21 +689,21 @@
 | `count` | `GET /api/v2/search/count` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `list` | `GET /api/v2/search/export?filter[type]=ticket` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### ⚪ `SecuritySettingsClient` (0/1 endpoints — 0%)
+### 🟢 `SecuritySettingsClient` (1/1 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `showSecuritySettings` | `GET /api/v2/security_settings` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showSecuritySettings` | `GET /api/v2/security_settings` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### ⚪ `SessionsClient` (0/8 endpoints — 0%)
+### 🟡 `SessionsClient` (2/8 endpoints — 25%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `bulkDeleteSessionsByUserId` | `DELETE /api/v2/users/{user_id}/sessions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteAuthenticatedSession` | `DELETE /api/v2/users/me/logout` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteSession` | `DELETE /api/v2/users/{user_id}/sessions/{session_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listSessions` | `GET /api/v2/sessions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listUserSessions` | `GET /api/v2/users/{user_id}/sessions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listSessions` | `GET /api/v2/sessions` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listUserSessions` | `GET /api/v2/users/{user_id}/sessions` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `renewCurrentSession` | `GET /api/v2/users/me/session/renew` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showCurrentlyAuthenticatedSession` | `GET /api/v2/users/me/session` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showSession` | `GET /api/v2/users/{user_id}/sessions/{session_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
@@ -777,7 +777,7 @@
 | `showSuspendedTickets` | `GET /api/v2/suspended_tickets/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `suspendedTicketsAttachments` | `POST /api/v2/suspended_tickets/attachments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `TagsClient` (3/15 endpoints — 20%)
+### 🟡 `TagsClient` (4/15 endpoints — 27%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
@@ -789,7 +789,7 @@
 | `listOrganizationTags` | `GET /api/v2/organizations/{organization_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listResourceTags` | `GET /api/v2/tickets/{ticket_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listTags` | `GET /api/v2/tags` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `listUserTags` | `GET /api/v2/users/{user_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserTags` | `GET /api/v2/users/{user_id}/tags` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `putTagsTicket` | `PUT /api/v2/tickets/{ticket_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `putUserTags` | `PUT /api/v2/users/{user_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `removeOrganizationTags` | `DELETE /api/v2/organizations/{organization_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
@@ -797,21 +797,21 @@
 | `setTagsTicket` | `POST /api/v2/tickets/{ticket_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `setUserTags` | `POST /api/v2/users/{user_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `TargetFailuresClient` (0/2 endpoints — 0%)
+### 🟡 `TargetFailuresClient` (1/2 endpoints — 50%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `listTargetFailures` | `GET /api/v2/target_failures` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTargetFailures` | `GET /api/v2/target_failures` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showTargetFailure` | `GET /api/v2/target_failures/{target_failure_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `TargetsClient` (0/5 endpoints — 0%)
+### 🟡 `TargetsClient` (2/5 endpoints — 40%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createTarget` | `POST /api/v2/targets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteTarget` | `DELETE /api/v2/targets/{target_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listTargets` | `GET /api/v2/targets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showTarget` | `GET /api/v2/targets/{target_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTargets` | `GET /api/v2/targets` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showTarget` | `GET /api/v2/targets/{target_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateTarget` | `PUT /api/v2/targets/{target_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### 🟡 `TicketAuditsClient` (4/5 endpoints — 80%)
