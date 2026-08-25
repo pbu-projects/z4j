@@ -81,9 +81,7 @@ public interface SessionsClient {
      * @return <p>Success response</p> (status code 200)
      */
     @Get("/api/v2/sessions")
-    Mono<@Valid SessionsResponse> listSessions(
-        @PathVariable("user_id") @NotNull Integer userId
-    );
+    Mono<@Valid SessionsResponse> listSessions();
 
     /**
      * {@summary List Sessions for User}

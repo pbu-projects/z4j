@@ -25,36 +25,36 @@ import spock.lang.Unroll
 import static io.micronaut.http.HttpStatus.FORBIDDEN
 
 @MicronautTest
-class SatisfactionReasonsClientSpec extends Z4jSpec {
+class ResourceCollectionsClientSpec extends Z4jSpec {
 
     @Shared
-    SatisfactionReasonsClient adminCsatReasonsClient, agentCsatReasonsClient, userCsatReasonsClient,
-                              badTokenCsatReasonsClient, badUrlCsatReasonsClient
+    ResourceCollectionsClient adminCollectionsClient, agentCollectionsClient, userCollectionsClient,
+                              badTokenCollectionsClient, badUrlCollectionsClient
 
     def setupSpec() {
-        adminCsatReasonsClient = adminCtx.getBean(SatisfactionReasonsClient.class)
-        agentCsatReasonsClient = agentCtx.getBean(SatisfactionReasonsClient.class)
-        userCsatReasonsClient = userCtx.getBean(SatisfactionReasonsClient.class)
-        badTokenCsatReasonsClient = badTokenCtx.getBean(SatisfactionReasonsClient.class)
-        badUrlCsatReasonsClient = badUrlCtx.getBean(SatisfactionReasonsClient.class)
+        adminCollectionsClient = adminCtx.getBean(ResourceCollectionsClient.class)
+        agentCollectionsClient = agentCtx.getBean(ResourceCollectionsClient.class)
+        userCollectionsClient = userCtx.getBean(ResourceCollectionsClient.class)
+        badTokenCollectionsClient = badTokenCtx.getBean(ResourceCollectionsClient.class)
+        badUrlCollectionsClient = badUrlCtx.getBean(ResourceCollectionsClient.class)
     }
 
-    def "can list satisfaction rating reasons as an admin"() {
+    def "can list resource collections as an admin"() {
         given: "an authenticated admin client"
 
-        when: "requesting satisfaction rating reasons list"
-        adminCsatReasonsClient.listSatisfactionRatingReasons().block()
+        when: "requesting resource collections list"
+        adminCollectionsClient.listResourceCollections().block()
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
     }
 
     @Unroll
-    def "#userType cannot list satisfaction rating reasons"(SatisfactionReasonsClient client, String userType) {
+    def "#userType cannot list resource collections"(ResourceCollectionsClient client, String userType) {
         given: "an unauthorized client for #userType"
 
-        when: "requesting satisfaction rating reasons"
-        client.listSatisfactionRatingReasons().block()
+        when: "requesting resource collections"
+        client.listResourceCollections().block()
 
         then: "a 403 Forbidden exception is thrown as documented"
         HttpClientResponseException e = thrown()
@@ -62,23 +62,23 @@ class SatisfactionReasonsClientSpec extends Z4jSpec {
 
         where:
         [client, userType] << [
-                [agentCsatReasonsClient, "agent"],
-                [userCsatReasonsClient, "end user"]
+                [agentCollectionsClient, "agent"],
+                [userCollectionsClient, "end user"]
         ]
     }
 
     @Unroll
-    def "calling satisfaction rating reasons client with #description throws HttpClientException"(
-            String description, SatisfactionReasonsClient client) {
-        when: "requesting satisfaction rating reasons with invalid client configuration"
-        client.listSatisfactionRatingReasons().block()
+    def "calling resource collections client with #description throws HttpClientException"(
+            String description, ResourceCollectionsClient client) {
+        when: "requesting resource collections with invalid client configuration"
+        client.listResourceCollections().block()
 
         then: "an http client exception is thrown"
         thrown(HttpClientException)
 
         where:
         description       | client
-        "invalid token"   | badTokenCsatReasonsClient
-        "unreachable url" | badUrlCsatReasonsClient
+        "invalid token"   | badTokenCollectionsClient
+        "unreachable url" | badUrlCollectionsClient
     }
 }

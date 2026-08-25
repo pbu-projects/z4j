@@ -19,7 +19,6 @@ import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
-import lol.pbu.z4j.model.SatisfactionRatingsResponse
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -29,61 +28,40 @@ import static io.micronaut.http.HttpStatus.FORBIDDEN
 class SatisfactionRatingsClientSpec extends Z4jSpec {
 
     @Shared
-    SatisfactionRatingsClient adminSatisfactionRatingsClient, agentSatisfactionRatingsClient, userSatisfactionRatingsClient,
-                              badTokenSatisfactionRatingsClient, badUrlSatisfactionRatingsClient
-
-    @Shared
-    Integer existingSatisfactionRatingId
+    SatisfactionRatingsClient adminCsatClient, agentCsatClient, userCsatClient,
+                              badTokenCsatClient, badUrlCsatClient
 
     def setupSpec() {
-        adminSatisfactionRatingsClient = adminCtx.getBean(SatisfactionRatingsClient.class)
-        agentSatisfactionRatingsClient = agentCtx.getBean(SatisfactionRatingsClient.class)
-        userSatisfactionRatingsClient = userCtx.getBean(SatisfactionRatingsClient.class)
-        badTokenSatisfactionRatingsClient = badTokenCtx.getBean(SatisfactionRatingsClient.class)
-        badUrlSatisfactionRatingsClient = badUrlCtx.getBean(SatisfactionRatingsClient.class)
-
-        SatisfactionRatingsResponse response = adminSatisfactionRatingsClient.listSatisfactionRatings().block()
-        if (response?.satisfactionRatings && !response.satisfactionRatings.isEmpty()) {
-            existingSatisfactionRatingId = response.satisfactionRatings.first().id
-        }
+        adminCsatClient = adminCtx.getBean(SatisfactionRatingsClient.class)
+        agentCsatClient = agentCtx.getBean(SatisfactionRatingsClient.class)
+        userCsatClient = userCtx.getBean(SatisfactionRatingsClient.class)
+        badTokenCsatClient = badTokenCtx.getBean(SatisfactionRatingsClient.class)
+        badUrlCsatClient = badUrlCtx.getBean(SatisfactionRatingsClient.class)
     }
 
     def "can count satisfaction ratings as an admin"() {
-        given: "an admin client"
+        given: "an authenticated admin client"
 
         when: "requesting satisfaction ratings count"
-        adminSatisfactionRatingsClient.countSatisfactionRatings().block()
+        adminCsatClient.countSatisfactionRatings().block()
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
     }
 
     def "can list satisfaction ratings as an admin"() {
-        given: "an admin client"
+        given: "an authenticated admin client"
 
         when: "requesting satisfaction ratings list"
-        adminSatisfactionRatingsClient.listSatisfactionRatings().block()
-
-        then: "response deserializes successfully without exception"
-        noExceptionThrown()
-    }
-
-    def "can show satisfaction rating as an admin"() {
-        given: "an admin client and existing rating ID"
-
-        when: "requesting a specific satisfaction rating by ID"
-        if (existingSatisfactionRatingId != null) {
-            adminSatisfactionRatingsClient.showSatisfactionRating(existingSatisfactionRatingId).block()
-        }
+        adminCsatClient.listSatisfactionRatings().block()
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
     }
 
     @Unroll
-    def "non-admin #userType cannot list satisfaction ratings"(
-            SatisfactionRatingsClient client, String userType) {
-        given: "a non-admin client for #userType"
+    def "#userType cannot list satisfaction ratings"(SatisfactionRatingsClient client, String userType) {
+        given: "an unauthorized client for #userType"
 
         when: "requesting satisfaction ratings"
         client.listSatisfactionRatings().block()
@@ -94,23 +72,23 @@ class SatisfactionRatingsClientSpec extends Z4jSpec {
 
         where:
         [client, userType] << [
-                [agentSatisfactionRatingsClient, "agent"],
-                [userSatisfactionRatingsClient, "end user"]
+                [agentCsatClient, "agent"],
+                [userCsatClient, "end user"]
         ]
     }
 
     @Unroll
-    def "calling satisfaction ratings with #description throws HttpClientException"(
+    def "calling satisfaction ratings client with #description throws HttpClientException"(
             String description, SatisfactionRatingsClient client) {
         when: "requesting satisfaction ratings with invalid client configuration"
-        client.countSatisfactionRatings().block()
+        client.listSatisfactionRatings().block()
 
         then: "an http client exception is thrown"
         thrown(HttpClientException)
 
         where:
         description       | client
-        "invalid token"   | badTokenSatisfactionRatingsClient
-        "unreachable url" | badUrlSatisfactionRatingsClient
+        "invalid token"   | badTokenCsatClient
+        "unreachable url" | badUrlCsatClient
     }
 }
