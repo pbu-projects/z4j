@@ -64,7 +64,9 @@ public interface GroupsClient {
      * @return <p>Created response</p> (status code 201)
      */
     @Post("/api/v2/groups")
-    Mono<@Valid GroupResponse> createGroup();
+    Mono<@Valid GroupResponse> createGroup(
+        @Body @NotNull GroupResponse group
+    );
 
     /**
      * {@summary Delete Group}
@@ -134,11 +136,13 @@ public interface GroupsClient {
      * <h4>Allowed For</h4> <ul> <li>Admins</li> </ul>
      *
      * @param groupId <p>The ID of the group</p> (required)
+     * @param group <p>The group update payload</p> (required)
      *
      * @return <p>Success response</p> (status code 200)
      */
     @Put("/api/v2/groups/{group_id}")
     Mono<@Valid GroupResponse> updateGroup(
-        @PathVariable("group_id") @NotNull Integer groupId
+        @PathVariable("group_id") @NotNull Integer groupId,
+        @Body @NotNull GroupResponse group
     );
 }

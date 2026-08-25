@@ -113,12 +113,21 @@ class ClientCoverageReporter {
 
     static void evaluateCoverage(List<EndpointCoverage> endpoints, Map<String, String> specs) {
         endpoints.each { ep ->
-            // Match corresponding spec: e.g. CategoryClient -> CategoryClientSpec.groovy or CategorySpec.groovy
-            String matchingSpecContent = specs.find { specName, content ->
-                specName.startsWith(ep.clientName) ||
-                specName.startsWith(ep.clientName.replace("Client", "")) ||
-                ep.clientName.startsWith(specName.replace("ClientSpec.groovy", "").replace("Spec.groovy", ""))
-            }?.value
+            // Match corresponding spec precisely: e.g. GroupsClient -> GroupsClientSpec.groovy or GroupClientSpec.groovy
+            String exactSpecName = ep.clientName + "Spec.groovy"
+            String matchingSpecContent = specs[exactSpecName]
+            if (!matchingSpecContent) {
+                matchingSpecContent = specs[ep.clientName.replace("Client", "") + "Spec.groovy"]
+            }
+            if (!matchingSpecContent) {
+                matchingSpecContent = specs.find { specName, content ->
+                    String base = specName.replace("ClientSpec.groovy", "").replace("Spec.groovy", "")
+                    String clientBase = ep.clientName.replace("Client", "")
+                    base.equalsIgnoreCase(clientBase) || 
+                    base.equalsIgnoreCase(clientBase + "s") || 
+                    (clientBase.endsWith("s") && base.equalsIgnoreCase(clientBase.substring(0, clientBase.length() - 1)))
+                }?.value
+            }
 
             if (matchingSpecContent) {
                 // Check if method is invoked in spec
