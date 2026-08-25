@@ -6,12 +6,12 @@
 ## 📊 Summary Metrics
 
 - **Total Client Interfaces**: 98
-- **Clients with Active Tests**: 69 / 98 (70.4%)
+- **Clients with Active Tests**: 78 / 98 (79.6%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **198 / 629 (31.5%)**
-  - 👑 **Admin Level (`adminCtx`)**: 198 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 191 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 198 endpoints
+- **Endpoints Tested**: **212 / 629 (33.7%)**
+  - 👑 **Admin Level (`adminCtx`)**: 212 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 205 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 212 endpoints
 
 ---
 
@@ -172,47 +172,47 @@
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `listConversationLogForTicket` | `GET /api/v2/tickets/{ticket_id}/conversation_log` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `CustomObjectFieldsClient` (0/7 endpoints — 0%)
+### 🟡 `CustomObjectFieldsClient` (1/7 endpoints — 14%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createCustomObjectField` | `POST /api/v2/custom_objects/{custom_object_key}/fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `customObjectFieldsLimit` | `GET /api/v2/custom_objects/{custom_object_key}/limits/field_limit` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteCustomObjectField` | `DELETE /api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_key_or_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listCustomObjectFields` | `GET /api/v2/custom_objects/{custom_object_key}/fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listCustomObjectFields` | `GET /api/v2/custom_objects/{custom_object_key}/fields` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `reorderCustomObjectFields` | `PUT /api/v2/custom_objects/{custom_object_key}/fields/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showCustomObjectField` | `GET /api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_key_or_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateCustomObjectField` | `PATCH /api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_key_or_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `CustomObjectPermissionsClient` (0/9 endpoints — 0%)
+### 🟡 `CustomObjectPermissionsClient` (2/9 endpoints — 22%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createAccessRule` | `POST /api/v2/custom_objects/{custom_object_key}/access_rules` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteAccessRule` | `DELETE /api/v2/custom_objects/{custom_object_key}/access_rules/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listAccessRuleDefinitions` | `GET /api/v2/custom_objects/{custom_object_key}/access_rules/definitions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listAccessRules` | `GET /api/v2/custom_objects/{custom_object_key}/access_rules` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listPermissionPolicies` | `GET /api/v2/custom_objects/{custom_object_key}/permission_policies` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAccessRules` | `GET /api/v2/custom_objects/{custom_object_key}/access_rules` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listPermissionPolicies` | `GET /api/v2/custom_objects/{custom_object_key}/permission_policies` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showAccessRule` | `GET /api/v2/custom_objects/{custom_object_key}/access_rules/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showPermissionPolicy` | `GET /api/v2/custom_objects/{custom_object_key}/permission_policies/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateAccessRule` | `PATCH /api/v2/custom_objects/{custom_object_key}/access_rules/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updatePermissionPolicy` | `PATCH /api/v2/custom_objects/{custom_object_key}/permission_policies/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `CustomObjectRecordAttachmentsClient` (0/4 endpoints — 0%)
+### 🟡 `CustomObjectRecordAttachmentsClient` (1/4 endpoints — 25%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createCustomObjectRecordAttachment` | `POST /api/v2/custom_objects/{custom_object_key}/records/{record_id}/attachments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteCustomObjectRecordAttachment` | `DELETE /api/v2/custom_objects/{custom_object_key}/records/{record_id}/attachments/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listCustomObjectRecordAttachments` | `GET /api/v2/custom_objects/{custom_object_key}/records/{record_id}/attachments/{id}/download` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listCustomObjectRecordAttachments` | `GET /api/v2/custom_objects/{custom_object_key}/records/{record_id}/attachments/{id}/download` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateCustomObjectRecordAttachment` | `PUT /api/v2/custom_objects/{custom_object_key}/records/{record_id}/attachments/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `CustomObjectRecordsClient` (0/14 endpoints — 0%)
+### 🟡 `CustomObjectRecordsClient` (2/14 endpoints — 14%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `autocompleteCustomObjectRecordSearch` | `GET /api/v2/custom_objects/{custom_object_key}/records/autocomplete` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `countCustomObjectRecords` | `GET /api/v2/custom_objects/{custom_object_key}/records/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countCustomObjectRecords` | `GET /api/v2/custom_objects/{custom_object_key}/records/count` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `createCustomObjectRecord` | `POST /api/v2/custom_objects/{custom_object_key}/records` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `customObjectRecordBulkJobs` | `POST /api/v2/custom_objects/{custom_object_key}/jobs` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `customObjectRecordsLimit` | `GET /api/v2/custom_objects/limits/record_limit` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
@@ -220,7 +220,7 @@
 | `deleteCustomObjectRecordByExternalIdOrName` | `DELETE /api/v2/custom_objects/{custom_object_key}/records` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `filteredSearchCustomObjectRecords` | `POST /api/v2/custom_objects/{custom_object_key}/records/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `incrementalCustomObjectRecordExportCursor` | `GET /api/v2/incremental/custom_objects/{custom_object_key}/cursor` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listCustomObjectRecords` | `GET /api/v2/custom_objects/{custom_object_key}/records` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listCustomObjectRecords` | `GET /api/v2/custom_objects/{custom_object_key}/records` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `searchCustomObjectRecords` | `GET /api/v2/custom_objects/{custom_object_key}/records/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showCustomObjectRecord` | `GET /api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateCustomObjectRecord` | `PATCH /api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
@@ -291,29 +291,29 @@
 | `updateDynamicContentVariant` | `PUT /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateManyDynamicContentVariants` | `PUT /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `EmailNotificationsClient` (0/3 endpoints — 0%)
+### 🟡 `EmailNotificationsClient` (1/3 endpoints — 33%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `listEmailNotifications` | `GET /api/v2/email_notifications` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listEmailNotifications` | `GET /api/v2/email_notifications` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showEmailNotification` | `GET /api/v2/email_notifications/{notification_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showManyEmailNotifications` | `GET /api/v2/email_notifications/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `EssentialsCardClient` (0/4 endpoints — 0%)
+### 🟡 `EssentialsCardClient` (1/4 endpoints — 25%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `deleteEssentialsCard` | `DELETE /api/v2/object_layouts/{object_type}/essentials_card` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showEssentialsCard` | `GET /api/v2/object_layouts/{object_type}/essentials_card` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showEssentialsCards` | `GET /api/v2/object_layouts/essentials_cards` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showEssentialsCards` | `GET /api/v2/object_layouts/essentials_cards` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateEssentialsCard` | `PUT /api/v2/object_layouts/{object_type}/essentials_card` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `GlobalClientsClient` (0/3 endpoints — 0%)
+### 🟡 `GlobalClientsClient` (2/3 endpoints — 67%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `globalOAuthClientsTokenSummary` | `GET /api/v2/oauth/global_clients/token_summary` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listGlobalOAuthClients` | `GET /api/v2/oauth/global_clients` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `globalOAuthClientsTokenSummary` | `GET /api/v2/oauth/global_clients/token_summary` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listGlobalOAuthClients` | `GET /api/v2/oauth/global_clients` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showGlobalClient` | `GET /api/v2/oauth/global_clients/{global_client_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### ⚪ `GrantTypeTokensClient` (0/1 endpoints — 0%)
@@ -367,24 +367,24 @@
 | `showGroupById` | `GET /api/v2/groups/{group_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateGroup` | `PUT /api/v2/groups/{group_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### ⚪ `IncrementalExportClient` (0/7 endpoints — 0%)
+### 🟡 `IncrementalExportClient` (2/7 endpoints — 29%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `incrementalOrganizationExport` | `GET /api/v2/incremental/organizations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `incrementalOrganizationExport` | `GET /api/v2/incremental/organizations` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `incrementalSampleExport` | `GET /api/v2/incremental/{incremental_resource}/sample` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `incrementalTicketEvents` | `GET /api/v2/incremental/ticket_events` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `incrementalTicketEvents` | `GET /api/v2/incremental/ticket_events` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `incrementalTicketExportCursor` | `GET /api/v2/incremental/tickets/cursor` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `incrementalTicketExportTime` | `GET /api/v2/incremental/tickets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `incrementalUserExportCursor` | `GET /api/v2/incremental/users/cursor` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `incrementalUserExportTime` | `GET /api/v2/incremental/users` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `IncrementalSkillBasedRoutingClient` (0/3 endpoints — 0%)
+### 🟡 `IncrementalSkillBasedRoutingClient` (2/3 endpoints — 67%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `incrementalSkilBasedRoutingAttributeValuesExport` | `GET /api/v2/incremental/routing/attribute_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `incrementalSkilBasedRoutingAttributesExport` | `GET /api/v2/incremental/routing/attributes` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `incrementalSkilBasedRoutingAttributeValuesExport` | `GET /api/v2/incremental/routing/attribute_values` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `incrementalSkilBasedRoutingAttributesExport` | `GET /api/v2/incremental/routing/attributes` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `incrementalSkilBasedRoutingInstanceValuesExport` | `GET /api/v2/incremental/routing/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### ⚪ `InternalClient` (0/1 endpoints — 0%)
