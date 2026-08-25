@@ -84,6 +84,24 @@ class CustomObjectRecordsClientSpec extends Z4jSpec {
         ]
     }
 
+    @Unroll
+    def "can get custom object records limit as an #userType"(
+            CustomObjectRecordsClient client, String userType) {
+        given: "an authenticated client for #userType"
+
+        when: "requesting custom object records limit"
+        client.customObjectRecordsLimit().block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminObjectRecordsClient, "admin"],
+                [agentObjectRecordsClient, "agent"]
+        ]
+    }
+
     def "end user cannot list custom object records"() {
         given: "an end user client"
 

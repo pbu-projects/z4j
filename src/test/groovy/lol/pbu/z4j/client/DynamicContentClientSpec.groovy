@@ -86,6 +86,24 @@ class DynamicContentClientSpec extends Z4jSpec {
         ]
     }
 
+    @Unroll
+    def "can show many dynamic contents as an #userType"(
+            DynamicContentClient client, String userType) {
+        given: "an authenticated client for #userType"
+
+        when: "requesting many dynamic content items"
+        client.showManyDynamicContents(null).block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminDynamicContentClient, "admin"],
+                [agentDynamicContentClient, "agent"]
+        ]
+    }
+
     def "end user cannot list dynamic content items"() {
         given: "an end user client"
 
