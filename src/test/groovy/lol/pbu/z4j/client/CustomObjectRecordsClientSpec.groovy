@@ -102,6 +102,24 @@ class CustomObjectRecordsClientSpec extends Z4jSpec {
         ]
     }
 
+    @Unroll
+    def "can autocomplete custom object records as an #userType"(
+            CustomObjectRecordsClient client, String userType) {
+        given: "an authenticated client for #userType"
+
+        when: "requesting custom object records autocomplete"
+        client.autocompleteCustomObjectRecordSearch(customObjectKey, "test", null).block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminObjectRecordsClient, "admin"],
+                [agentObjectRecordsClient, "agent"]
+        ]
+    }
+
     def "end user cannot list custom object records"() {
         given: "an end user client"
 

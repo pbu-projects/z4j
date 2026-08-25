@@ -61,6 +61,61 @@ class IncrementalExportClientSpec extends Z4jSpec {
         noExceptionThrown()
     }
 
+    def "can export incremental tickets time-based as an admin"() {
+        given: "an authenticated admin client and start timestamp"
+        int oneWeekAgo = (System.currentTimeMillis() / 1000L - 604800) as int
+
+        when: "requesting time-based incremental tickets export"
+        adminExportClient.incrementalTicketExportTime(oneWeekAgo, null).block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
+    def "can export incremental tickets cursor-based as an admin"() {
+        given: "an authenticated admin client and start timestamp"
+        int oneWeekAgo = (System.currentTimeMillis() / 1000L - 604800) as int
+
+        when: "requesting cursor-based incremental tickets export"
+        adminExportClient.incrementalTicketExportCursor(oneWeekAgo, null, null).block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
+    def "can export incremental users time-based as an admin"() {
+        given: "an authenticated admin client and start timestamp"
+        int oneWeekAgo = (System.currentTimeMillis() / 1000L - 604800) as int
+
+        when: "requesting time-based incremental users export"
+        adminExportClient.incrementalUserExportTime(oneWeekAgo, null).block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
+    def "can export incremental users cursor-based as an admin"() {
+        given: "an authenticated admin client and start timestamp"
+        int oneWeekAgo = (System.currentTimeMillis() / 1000L - 604800) as int
+
+        when: "requesting cursor-based incremental users export"
+        adminExportClient.incrementalUserExportCursor(oneWeekAgo, null, null).block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
+    def "can export incremental sample as an admin"() {
+        given: "an authenticated admin client and start timestamp"
+        int oneWeekAgo = (System.currentTimeMillis() / 1000L - 604800) as int
+
+        when: "requesting incremental sample export"
+        adminExportClient.incrementalSampleExport(oneWeekAgo, "tickets").block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
     @Unroll
     def "#userType cannot export incremental organizations"(IncrementalExportClient client, String userType) {
         given: "an unauthorized client for #userType"

@@ -86,6 +86,28 @@ class BrandsClientSpec extends Z4jSpec {
         ]
     }
 
+    def "can check host mapping validity as an admin"() {
+        given: "an authenticated admin client"
+
+        when: "checking host mapping validity"
+        adminBrandsClient.checkHostMappingValidity("help.example.com", "example").block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
+    def "can check host mapping validity for existing brand as an admin"() {
+        given: "an authenticated admin client and existing brand ID"
+
+        when: "checking host mapping validity for brand"
+        if (existingBrandId != null) {
+            adminBrandsClient.checkHostMappingValidityForExistingBrand(existingBrandId).block()
+        }
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
     def "end user cannot list brands"() {
         given: "an end user client"
 

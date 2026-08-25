@@ -59,6 +59,16 @@ class IncrementalSkillBasedRoutingClientSpec extends Z4jSpec {
         noExceptionThrown()
     }
 
+    def "can export incremental routing instance values as an admin"() {
+        given: "an authenticated admin client"
+
+        when: "requesting incremental routing instance values export"
+        adminRoutingExportClient.incrementalSkilBasedRoutingInstanceValuesExport().block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
     @Unroll
     def "#userType cannot export incremental routing attributes"(
             IncrementalSkillBasedRoutingClient client, String userType) {

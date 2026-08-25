@@ -31,12 +31,20 @@ class ItamAssetStatusesClientSpec extends Z4jSpec {
     ItamAssetStatusesClient adminItamStatusesClient, agentItamStatusesClient, userItamStatusesClient,
                             badTokenItamStatusesClient, badUrlItamStatusesClient
 
+    @Shared
+    String existingStatusId
+
     def setupSpec() {
         adminItamStatusesClient = adminCtx.getBean(ItamAssetStatusesClient.class)
         agentItamStatusesClient = agentCtx.getBean(ItamAssetStatusesClient.class)
         userItamStatusesClient = userCtx.getBean(ItamAssetStatusesClient.class)
         badTokenItamStatusesClient = badTokenCtx.getBean(ItamAssetStatusesClient.class)
         badUrlItamStatusesClient = badUrlCtx.getBean(ItamAssetStatusesClient.class)
+
+        def statuses = adminItamStatusesClient.listItamStatuses().block()
+        if (statuses?.statuses && !statuses.statuses.isEmpty()) {
+            existingStatusId = statuses.statuses.first().id
+        }
     }
 
     @Unroll
@@ -46,6 +54,26 @@ class ItamAssetStatusesClientSpec extends Z4jSpec {
 
         when: "requesting ITAM asset statuses list"
         client.listItamStatuses().block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminItamStatusesClient, "admin"],
+                [agentItamStatusesClient, "agent"]
+        ]
+    }
+
+    @Unroll
+    def "can show ITAM asset status by ID as an #userType"(
+            ItamAssetStatusesClient client, String userType) {
+        given: "an authenticated client for #userType and existing status ID"
+
+        when: "requesting ITAM asset status by ID"
+        if (existingStatusId != null) {
+            client.showItamStatus(existingStatusId).block()
+        }
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
