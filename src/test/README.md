@@ -6,12 +6,12 @@
 ## 📊 Summary Metrics
 
 - **Total Client Interfaces**: 98
-- **Clients with Active Tests**: 48 / 98 (49.0%)
+- **Clients with Active Tests**: 59 / 98 (60.2%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **166 / 629 (26.4%)**
-  - 👑 **Admin Level (`adminCtx`)**: 166 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 159 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 166 endpoints
+- **Endpoints Tested**: **184 / 629 (29.3%)**
+  - 👑 **Admin Level (`adminCtx`)**: 184 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 177 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 184 endpoints
 
 ---
 
@@ -59,18 +59,18 @@
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `listArticles` | `GET /api/v2/help_center/{locale}/articles` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### ⚪ `AssigneeFieldAssignableAgentsClient` (0/2 endpoints — 0%)
+### 🟡 `AssigneeFieldAssignableAgentsClient` (1/2 endpoints — 50%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `listAssigneeFieldAssignableGroupAgents` | `GET /api/lotus/assignables/groups/{group_id}/agents.json` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listAssigneeFieldAssignableGroups` | `GET /api/lotus/assignables/groups.json` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAssigneeFieldAssignableGroups` | `GET /api/lotus/assignables/groups.json` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### ⚪ `AssigneeFieldAssignableGroupsClient` (0/1 endpoints — 0%)
+### 🟢 `AssigneeFieldAssignableGroupsClient` (1/1 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `listAssigneeFieldAssignableGroupsAndAgentsSearch` | `GET /api/lotus/assignables/autocomplete.json` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAssigneeFieldAssignableGroupsAndAgentsSearch` | `GET /api/lotus/assignables/autocomplete.json` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### ⚪ `AttachmentsClient` (0/5 endpoints — 0%)
 
@@ -120,13 +120,13 @@
 | `deleteBookmark` | `DELETE /api/v2/bookmarks/{bookmark_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listBookmarks` | `GET /api/v2/bookmarks` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `BrandAgentsClient` (0/5 endpoints — 0%)
+### 🟡 `BrandAgentsClient` (3/5 endpoints — 60%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `listBrandAgents` | `GET /api/v2/brand_agents` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listBrandAgentsByBrand` | `GET /api/v2/brands/{brand_id}/agents` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listUserBrandAgents` | `GET /api/v2/users/{user_id}/brand_agents` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listBrandAgents` | `GET /api/v2/brand_agents` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listBrandAgentsByBrand` | `GET /api/v2/brands/{brand_id}/agents` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listUserBrandAgents` | `GET /api/v2/users/{user_id}/brand_agents` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showBrandAgentById` | `GET /api/v2/brand_agents/{brand_agent_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showUserBrandAgentById` | `GET /api/v2/users/{user_id}/brand_agents/{brand_agent_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
@@ -237,14 +237,14 @@
 | `showCustomObject` | `GET /api/v2/custom_objects/{custom_object_key}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateCustomObject` | `PATCH /api/v2/custom_objects/{custom_object_key}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `CustomRolesClient` (0/5 endpoints — 0%)
+### 🟡 `CustomRolesClient` (2/5 endpoints — 40%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createCustomRole` | `POST /api/v2/custom_roles` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteCustomRoleById` | `DELETE /api/v2/custom_roles/{custom_role_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listCustomRoles` | `GET /api/v2/custom_roles` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showCustomRoleById` | `GET /api/v2/custom_roles/{custom_role_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listCustomRoles` | `GET /api/v2/custom_roles` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showCustomRoleById` | `GET /api/v2/custom_roles/{custom_role_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateCustomRoleById` | `PUT /api/v2/custom_roles/{custom_role_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### 🟡 `CustomTicketStatusesClient` (2/6 endpoints — 33%)
@@ -441,12 +441,12 @@
 | `showItamAsset` | `GET /api/v2/it_asset_management/assets/{asset_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateItamAsset` | `PATCH /api/v2/it_asset_management/assets/{asset_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `JobStatusesClient` (0/3 endpoints — 0%)
+### 🟡 `JobStatusesClient` (2/3 endpoints — 67%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `listJobStatuses` | `GET /api/v2/job_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showJobStatus` | `GET /api/v2/job_statuses/{job_status_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listJobStatuses` | `GET /api/v2/job_statuses` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showJobStatus` | `GET /api/v2/job_statuses/{job_status_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showManyJobStatuses` | `GET /api/v2/job_statuses/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### 🟢 `LocaleClient` (1/1 endpoints — 100%)
@@ -497,24 +497,24 @@
 | `updateMacro` | `PUT /api/v2/macros/{macro_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateManyMacros` | `PUT /api/v2/macros/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `OAuthClientsClient` (0/7 endpoints — 0%)
+### 🟡 `OAuthClientsClient` (2/7 endpoints — 29%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `clientGenerateSecret` | `PUT /api/v2/oauth/clients/{oauth_client_id}/generate_secret` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `createOAuthClient` | `POST /api/v2/oauth/clients` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteClient` | `DELETE /api/v2/oauth/clients/{oauth_client_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listCurrentUserOAuthClients` | `GET /api/v2/users/me/oauth/clients` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listOAuthClients` | `GET /api/v2/oauth/clients` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listCurrentUserOAuthClients` | `GET /api/v2/users/me/oauth/clients` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listOAuthClients` | `GET /api/v2/oauth/clients` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showClient` | `GET /api/v2/oauth/clients/{oauth_client_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateClient` | `PUT /api/v2/oauth/clients/{oauth_client_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `OAuthTokensClient` (0/6 endpoints — 0%)
+### 🟡 `OAuthTokensClient` (1/6 endpoints — 17%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createOAuthToken` | `POST /api/v2/oauth/tokens` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listOAuthTokens` | `GET /api/v2/oauth/tokens` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOAuthTokens` | `GET /api/v2/oauth/tokens` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `revokeCurrentOAuthToken` | `DELETE /api/v2/oauth/tokens/current` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `revokeOAuthToken` | `DELETE /api/v2/oauth/tokens/{oauth_token_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showCurrentToken` | `GET /api/v2/oauth/tokens/current` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
@@ -906,11 +906,11 @@
 | `ticketBulkImport` | `POST /api/v2/imports/tickets/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `ticketImport` | `POST /api/v2/imports/tickets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `TicketMetricEventsClient` (0/1 endpoints — 0%)
+### 🟢 `TicketMetricEventsClient` (1/1 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `listTicketMetricEvents` | `GET /api/v2/incremental/ticket_metric_events` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTicketMetricEvents` | `GET /api/v2/incremental/ticket_metric_events` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟢 `TicketMetricsClient` (3/3 endpoints — 100%)
 
@@ -920,12 +920,12 @@
 | `showTicketMetrics` | `GET /api/v2/ticket_metrics/{ticket_metric_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showTicketMetricsByTicket` | `GET /api/v2/tickets/{ticket_id}/metrics` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### ⚪ `TicketSkipsClient` (0/4 endpoints — 0%)
+### 🟡 `TicketSkipsClient` (2/4 endpoints — 50%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `listSkips` | `GET /api/v2/skips` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listTicketSkips` | `GET /api/v2/users/{user_id}/skips` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listSkips` | `GET /api/v2/skips` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listTicketSkips` | `GET /api/v2/users/{user_id}/skips` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listTicketSkipsByTicket` | `GET /api/v2/tickets/{ticket_id}/skips` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `recordNewSkip` | `POST /api/v2/skips` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
@@ -1081,13 +1081,13 @@
 | `updateManyUsers` | `PUT /api/v2/users/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateUser` | `PUT /api/v2/users/{user_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### ⚪ `ViewCategoriesClient` (0/5 endpoints — 0%)
+### 🟡 `ViewCategoriesClient` (1/5 endpoints — 20%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createViewCategory` | `POST /api/v2/view_categories` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteViewCategory` | `DELETE /api/v2/view_categories/{view_category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listViewCategories` | `GET /api/v2/view_categories` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listViewCategories` | `GET /api/v2/view_categories` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `orderViewCategories` | `PUT /api/v2/view_categories/order` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateViewCategory` | `PATCH /api/v2/view_categories/{view_category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
@@ -1115,16 +1115,16 @@
 | `updateManyViews` | `PUT /api/v2/views/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateView` | `PUT /api/v2/views/{view_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `WorkspacesClient` (0/7 endpoints — 0%)
+### 🟡 `WorkspacesClient` (2/7 endpoints — 29%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createWorkspace` | `POST /api/v2/workspaces` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteWorkspace` | `DELETE /api/v2/workspaces/{workspace_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `destroyManyWorkspaces` | `DELETE /api/v2/workspaces/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listWorkspaces` | `GET /api/v2/workspaces` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listWorkspaces` | `GET /api/v2/workspaces` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `reorderWorkspaces` | `PUT /api/v2/workspaces/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showWorkspace` | `GET /api/v2/workspaces/{workspace_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showWorkspace` | `GET /api/v2/workspaces/{workspace_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateWorkspace` | `PUT /api/v2/workspaces/{workspace_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### ⚪ `XChannelClient` (0/4 endpoints — 0%)

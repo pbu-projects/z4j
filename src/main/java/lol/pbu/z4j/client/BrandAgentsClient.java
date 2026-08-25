@@ -45,8 +45,8 @@ public interface BrandAgentsClient {
      */
     @Get("/api/v2/brand_agents")
     Mono<@Valid BrandAgentsResponse> listBrandAgents(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("brand_id") @NotNull Integer brandId
+        @QueryValue("user_id") @Nullable Integer userId,
+        @QueryValue("brand_id") @Nullable Integer brandId
     );
 
     /**
