@@ -85,6 +85,23 @@ class UsersClientSpec extends Z4jSpec {
     }
 
     @Unroll
+    def "can count deleted users as an #userType"(UsersClient client, String userType) {
+        given: "an authenticated client for #userType"
+
+        when: "requesting deleted user count"
+        client.countDeletedUsers().block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminUsersClient, "admin"],
+                [agentUsersClient, "agent"]
+        ]
+    }
+
+    @Unroll
     def "can list users as an #userType"(UsersClient client, String userType) {
         given: "an authenticated client for #userType"
 

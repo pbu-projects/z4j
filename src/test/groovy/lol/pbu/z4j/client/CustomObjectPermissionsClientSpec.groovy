@@ -58,6 +58,16 @@ class CustomObjectPermissionsClientSpec extends Z4jSpec {
         noExceptionThrown()
     }
 
+    def "can list access rule definitions as an admin"() {
+        given: "an authenticated admin client"
+
+        when: "requesting access rule definitions list"
+        adminPermissionsClient.listAccessRuleDefinitions(customObjectKey).block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+    }
+
     def "can list permission policies as an admin"() {
         given: "an authenticated admin client"
 

@@ -66,6 +66,24 @@ class CustomObjectFieldsClientSpec extends Z4jSpec {
         ]
     }
 
+    @Unroll
+    def "can get custom object fields limit as an #userType"(
+            CustomObjectFieldsClient client, String userType) {
+        given: "an authenticated client for #userType"
+
+        when: "requesting custom object fields limit"
+        client.customObjectFieldsLimit(customObjectKey).block()
+
+        then: "response deserializes successfully without exception"
+        noExceptionThrown()
+
+        where:
+        [client, userType] << [
+                [adminObjectFieldsClient, "admin"],
+                [agentObjectFieldsClient, "agent"]
+        ]
+    }
+
     def "end user cannot list custom object fields"() {
         given: "an end user client"
 

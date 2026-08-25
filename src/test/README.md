@@ -8,10 +8,10 @@
 - **Total Client Interfaces**: 98
 - **Clients with Active Tests**: 98 / 98 (100.0%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **232 / 629 (36.9%)**
-  - 👑 **Admin Level (`adminCtx`)**: 232 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 225 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 232 endpoints
+- **Endpoints Tested**: **242 / 629 (38.5%)**
+  - 👑 **Admin Level (`adminCtx`)**: 242 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 235 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 242 endpoints
 
 ---
 
@@ -172,25 +172,25 @@
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `listConversationLogForTicket` | `GET /api/v2/tickets/{ticket_id}/conversation_log` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `CustomObjectFieldsClient` (1/7 endpoints — 14%)
+### 🟡 `CustomObjectFieldsClient` (2/7 endpoints — 29%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createCustomObjectField` | `POST /api/v2/custom_objects/{custom_object_key}/fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `customObjectFieldsLimit` | `GET /api/v2/custom_objects/{custom_object_key}/limits/field_limit` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `customObjectFieldsLimit` | `GET /api/v2/custom_objects/{custom_object_key}/limits/field_limit` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `deleteCustomObjectField` | `DELETE /api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_key_or_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listCustomObjectFields` | `GET /api/v2/custom_objects/{custom_object_key}/fields` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `reorderCustomObjectFields` | `PUT /api/v2/custom_objects/{custom_object_key}/fields/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showCustomObjectField` | `GET /api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_key_or_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateCustomObjectField` | `PATCH /api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_key_or_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `CustomObjectPermissionsClient` (2/9 endpoints — 22%)
+### 🟡 `CustomObjectPermissionsClient` (3/9 endpoints — 33%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createAccessRule` | `POST /api/v2/custom_objects/{custom_object_key}/access_rules` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteAccessRule` | `DELETE /api/v2/custom_objects/{custom_object_key}/access_rules/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listAccessRuleDefinitions` | `GET /api/v2/custom_objects/{custom_object_key}/access_rules/definitions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAccessRuleDefinitions` | `GET /api/v2/custom_objects/{custom_object_key}/access_rules/definitions` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listAccessRules` | `GET /api/v2/custom_objects/{custom_object_key}/access_rules` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listPermissionPolicies` | `GET /api/v2/custom_objects/{custom_object_key}/permission_policies` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showAccessRule` | `GET /api/v2/custom_objects/{custom_object_key}/access_rules/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
@@ -207,7 +207,7 @@
 | `listCustomObjectRecordAttachments` | `GET /api/v2/custom_objects/{custom_object_key}/records/{record_id}/attachments/{id}/download` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateCustomObjectRecordAttachment` | `PUT /api/v2/custom_objects/{custom_object_key}/records/{record_id}/attachments/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `CustomObjectRecordsClient` (2/14 endpoints — 14%)
+### 🟡 `CustomObjectRecordsClient` (3/14 endpoints — 21%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
@@ -215,7 +215,7 @@
 | `countCustomObjectRecords` | `GET /api/v2/custom_objects/{custom_object_key}/records/count` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `createCustomObjectRecord` | `POST /api/v2/custom_objects/{custom_object_key}/records` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `customObjectRecordBulkJobs` | `POST /api/v2/custom_objects/{custom_object_key}/jobs` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `customObjectRecordsLimit` | `GET /api/v2/custom_objects/limits/record_limit` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `customObjectRecordsLimit` | `GET /api/v2/custom_objects/limits/record_limit` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `deleteCustomObjectRecord` | `DELETE /api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteCustomObjectRecordByExternalIdOrName` | `DELETE /api/v2/custom_objects/{custom_object_key}/records` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `filteredSearchCustomObjectRecords` | `POST /api/v2/custom_objects/{custom_object_key}/records/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
@@ -268,7 +268,7 @@
 | `listDeletionSchedules` | `GET /api/v2/deletion_schedules` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateDeletionSchedule` | `PUT /api/v2/deletion_schedules/{deletion_schedule_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `DynamicContentClient` (2/6 endpoints — 33%)
+### 🟡 `DynamicContentClient` (3/6 endpoints — 50%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
@@ -276,7 +276,7 @@
 | `deleteDynamicContentItem` | `DELETE /api/v2/dynamic_content/items/{dynamic_content_item_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listDynamicContents` | `GET /api/v2/dynamic_content/items` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showDynamicContentItem` | `GET /api/v2/dynamic_content/items/{dynamic_content_item_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showManyDynamicContents` | `GET /api/v2/dynamic_content/items/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showManyDynamicContents` | `GET /api/v2/dynamic_content/items/show_many` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateDynamicContentItem` | `PUT /api/v2/dynamic_content/items/{dynamic_content_item_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### 🟡 `DynamicContentItemVariantsClient` (2/7 endpoints — 29%)
@@ -455,16 +455,16 @@
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `listLocales` | `GET /api/v2/locales` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `LocalesClient` (1/6 endpoints — 17%)
+### 🟢 `LocalesClient` (6/6 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `detectBestLocale` | `GET /api/v2/locales/detect_best_locale` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listAvailablePublicLocales` | `GET /api/v2/locales/public` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `detectBestLocale` | `GET /api/v2/locales/detect_best_locale` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listAvailablePublicLocales` | `GET /api/v2/locales/public` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listLocales` | `GET /api/v2/locales` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `listLocalesForAgent` | `GET /api/v2/locales/agent` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showCurrentLocale` | `GET /api/v2/locales/current` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showLocaleById` | `GET /api/v2/locales/{locale_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listLocalesForAgent` | `GET /api/v2/locales/agent` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showCurrentLocale` | `GET /api/v2/locales/current` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showLocaleById` | `GET /api/v2/locales/{locale_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `LookupRelationshipsClient` (1/2 endpoints — 50%)
 
@@ -1045,13 +1045,13 @@
 | `showUserSegment` | `GET /api/v2/help_center/user_segments/{user_segment_id}` | ✅ | ⚪ | ✅ | 🟡 In Progress |
 | `updateUserSegment` | `PUT /api/v2/help_center/user_segments/{user_segment_id}` | ✅ | ⚪ | ✅ | 🟡 In Progress |
 
-### 🟡 `UsersClient` (10/31 endpoints — 32%)
+### 🟡 `UsersClient` (11/31 endpoints — 35%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `autocompleteUsers` | `GET /api/v2/users/autocomplete` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `autocompleteUsersPost` | `POST /api/v2/users/autocomplete` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `countDeletedUsers` | `GET /api/v2/deleted_users/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countDeletedUsers` | `GET /api/v2/deleted_users/count` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `countGroupUsers` | `GET /api/v2/groups/{group_id}/users/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `countOrganizationUsers` | `GET /api/v2/organizations/{organization_id}/users/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `countUsers` | `GET /api/v2/users/count` | ✅ | ✅ | ✅ | 🟢 Complete |
