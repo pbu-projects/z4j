@@ -1,0 +1,1138 @@
+# 🧪 Client Test & Authorization Coverage Matrix
+
+> **Note**: Declarative Micronaut client interfaces are tested via live sandbox integration tests (`Z4jSpec`).
+> This report tracks endpoint and admin-level test coverage across all client interfaces.
+
+## 📊 Summary Metrics
+
+- **Total Client Interfaces**: 98
+- **Clients with Active Tests**: 9 / 98 (9.2%)
+- **Total Endpoints Declared**: 629
+- **Endpoints Tested**: **30 / 629 (4.8%)**
+  - 👑 **Admin Level (`adminCtx`)**: 30 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 23 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 30 endpoints
+
+---
+
+## 📋 Client Breakdown
+
+### ⚪ `AccessClient` (0/2 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `loginGet` | `GET /access/login` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `loginPost` | `POST /access/login` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `AccountFeaturesClient` (0/1 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listFeatures` | `GET /api/v2/account/features` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `AccountSettingsClient` (0/2 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `showAccountSettings` | `GET /api/v2/account/settings` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateAccountSettings` | `PUT /api/v2/account/settings` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `ActivityStreamClient` (0/3 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `countActivities` | `GET /api/v2/activities/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listActivities` | `GET /api/v2/activities` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showActivity` | `GET /api/v2/activities/{activity_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `ApprovalRequestsClient` (0/3 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `searchApprovals` | `POST /api/v2/approval_workflow_instances/{approval_workflow_instance_id}/approval_requests/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showApprovalRequest` | `GET /api/v2/approval_workflow_instances/{approval_workflow_instance_id}/approval_requests/{approval_request_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateDecisionApprovalRequest` | `PATCH /api/v2/approval_workflow_instances/{approval_workflow_instance_id}/approval_requests/{approval_request_id}/decision` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### 🟢 `ArticleClient` (1/1 endpoints — 100%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listArticles` | `GET /api/v2/help_center/{locale}/articles` | ✅ | ✅ | ✅ | 🟢 Complete |
+
+### ⚪ `AssigneeFieldAssignableAgentsClient` (0/2 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listAssigneeFieldAssignableGroupAgents` | `GET /api/lotus/assignables/groups/{group_id}/agents.json` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAssigneeFieldAssignableGroups` | `GET /api/lotus/assignables/groups.json` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `AssigneeFieldAssignableGroupsClient` (0/1 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listAssigneeFieldAssignableGroupsAndAgentsSearch` | `GET /api/lotus/assignables/autocomplete.json` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `AttachmentsClient` (0/5 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `deleteUpload` | `DELETE /api/v2/uploads/{token}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `redactCommentAttachment` | `PUT /api/v2/tickets/{ticket_id}/comments/{comment_id}/attachments/{attachment_id}/redact` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showAttachment` | `GET /api/v2/attachments/{attachment_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateAttachment` | `PUT /api/v2/attachments/{attachment_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `uploadFiles` | `POST /api/v2/uploads` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `AuditLogsClient` (0/3 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `exportAuditLogs` | `POST /api/v2/audit_logs/export` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAuditLogs` | `GET /api/v2/audit_logs` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showAuditLog` | `GET /api/v2/audit_logs/{audit_log_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `AutomationsClient` (0/9 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `bulkDeleteAutomations` | `DELETE /api/v2/automations/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createAutomation` | `POST /api/v2/automations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteAutomation` | `DELETE /api/v2/automations/{automation_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listActiveAutomations` | `GET /api/v2/automations/active` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAutomations` | `GET /api/v2/automations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `searchAutomations` | `GET /api/v2/automations/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showAutomation` | `GET /api/v2/automations/{automation_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateAutomation` | `PUT /api/v2/automations/{automation_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateManyAutomations` | `PUT /api/v2/automations/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `BasicsClient` (0/3 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createTicketOrVoicemailTicket` | `POST /api/v2/channels/voice/tickets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `openTicketInAgentBrowser` | `POST /api/v2/channels/voice/agents/{agent_id}/tickets/{ticket_id}/display` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `openUsersProfileInAgentBrowser` | `POST /api/v2/channels/voice/agents/{agent_id}/users/{user_id}/display` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `BookmarksClient` (0/3 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createBookmark` | `POST /api/v2/bookmarks` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteBookmark` | `DELETE /api/v2/bookmarks/{bookmark_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listBookmarks` | `GET /api/v2/bookmarks` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `BrandAgentsClient` (0/5 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listBrandAgents` | `GET /api/v2/brand_agents` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listBrandAgentsByBrand` | `GET /api/v2/brands/{brand_id}/agents` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserBrandAgents` | `GET /api/v2/users/{user_id}/brand_agents` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showBrandAgentById` | `GET /api/v2/brand_agents/{brand_agent_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showUserBrandAgentById` | `GET /api/v2/users/{user_id}/brand_agents/{brand_agent_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `BrandsClient` (0/7 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `checkHostMappingValidity` | `GET /api/v2/brands/check_host_mapping` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `checkHostMappingValidityForExistingBrand` | `GET /api/v2/brands/{brand_id}/check_host_mapping` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createBrand` | `POST /api/v2/brands` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteBrand` | `DELETE /api/v2/brands/{brand_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listBrands` | `GET /api/v2/brands` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showBrand` | `GET /api/v2/brands/{brand_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateBrand` | `PUT /api/v2/brands/{brand_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### 🟡 `CategoryClient` (4/11 endpoints — 36%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createCategory` | `POST /api/v2/help_center/{locale}/categories` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `createCategoryNoLocale` | `POST /api/v2/help_center/categories` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteCategory` | `DELETE /api/v2/help_center/{locale}/categories/{category_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteCategoryNoLocale` | `DELETE /api/v2/help_center/categories/{category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listCategories` | `GET /api/v2/help_center/{locale}/categories` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listCategoriesNoLocale` | `GET /api/v2/help_center/categories` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showCategory` | `GET /api/v2/help_center/{locale}/categories/{category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showCategoryNoLocale` | `GET /api/v2/help_center/categories/{category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateCategory` | `PUT /api/v2/help_center/{locale}/categories/{category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateCategoryNoLocale` | `PUT /api/v2/help_center/categories/{category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateCategorySourceLocale` | `PUT /api/v2/help_center/categories/{category_id}/source_locale` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `ChannelFrameworkClient` (0/3 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `pushContentToSupport` | `POST /api/v2/any_channel/push` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `reportChannelbackError` | `POST /api/v2/any_channel/channelback/report_error` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `validateToken` | `POST /api/v2/any_channel/validate_token` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `ConversationLogClient` (0/1 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listConversationLogForTicket` | `GET /api/v2/tickets/{ticket_id}/conversation_log` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `CustomObjectFieldsClient` (0/7 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createCustomObjectField` | `POST /api/v2/custom_objects/{custom_object_key}/fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `customObjectFieldsLimit` | `GET /api/v2/custom_objects/{custom_object_key}/limits/field_limit` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteCustomObjectField` | `DELETE /api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_key_or_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listCustomObjectFields` | `GET /api/v2/custom_objects/{custom_object_key}/fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `reorderCustomObjectFields` | `PUT /api/v2/custom_objects/{custom_object_key}/fields/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showCustomObjectField` | `GET /api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_key_or_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateCustomObjectField` | `PATCH /api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_key_or_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `CustomObjectPermissionsClient` (0/9 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createAccessRule` | `POST /api/v2/custom_objects/{custom_object_key}/access_rules` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteAccessRule` | `DELETE /api/v2/custom_objects/{custom_object_key}/access_rules/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAccessRuleDefinitions` | `GET /api/v2/custom_objects/{custom_object_key}/access_rules/definitions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAccessRules` | `GET /api/v2/custom_objects/{custom_object_key}/access_rules` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listPermissionPolicies` | `GET /api/v2/custom_objects/{custom_object_key}/permission_policies` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showAccessRule` | `GET /api/v2/custom_objects/{custom_object_key}/access_rules/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showPermissionPolicy` | `GET /api/v2/custom_objects/{custom_object_key}/permission_policies/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateAccessRule` | `PATCH /api/v2/custom_objects/{custom_object_key}/access_rules/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updatePermissionPolicy` | `PATCH /api/v2/custom_objects/{custom_object_key}/permission_policies/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `CustomObjectRecordAttachmentsClient` (0/4 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createCustomObjectRecordAttachment` | `POST /api/v2/custom_objects/{custom_object_key}/records/{record_id}/attachments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteCustomObjectRecordAttachment` | `DELETE /api/v2/custom_objects/{custom_object_key}/records/{record_id}/attachments/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listCustomObjectRecordAttachments` | `GET /api/v2/custom_objects/{custom_object_key}/records/{record_id}/attachments/{id}/download` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateCustomObjectRecordAttachment` | `PUT /api/v2/custom_objects/{custom_object_key}/records/{record_id}/attachments/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `CustomObjectRecordsClient` (0/14 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `autocompleteCustomObjectRecordSearch` | `GET /api/v2/custom_objects/{custom_object_key}/records/autocomplete` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countCustomObjectRecords` | `GET /api/v2/custom_objects/{custom_object_key}/records/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createCustomObjectRecord` | `POST /api/v2/custom_objects/{custom_object_key}/records` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `customObjectRecordBulkJobs` | `POST /api/v2/custom_objects/{custom_object_key}/jobs` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `customObjectRecordsLimit` | `GET /api/v2/custom_objects/limits/record_limit` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteCustomObjectRecord` | `DELETE /api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteCustomObjectRecordByExternalIdOrName` | `DELETE /api/v2/custom_objects/{custom_object_key}/records` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `filteredSearchCustomObjectRecords` | `POST /api/v2/custom_objects/{custom_object_key}/records/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `incrementalCustomObjectRecordExportCursor` | `GET /api/v2/incremental/custom_objects/{custom_object_key}/cursor` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listCustomObjectRecords` | `GET /api/v2/custom_objects/{custom_object_key}/records` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `searchCustomObjectRecords` | `GET /api/v2/custom_objects/{custom_object_key}/records/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showCustomObjectRecord` | `GET /api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateCustomObjectRecord` | `PATCH /api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `upsertCustomObjectRecordByExternalIdOrName` | `PATCH /api/v2/custom_objects/{custom_object_key}/records` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `CustomObjectsClient` (0/6 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createCustomObject` | `POST /api/v2/custom_objects` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `customObjectsLimit` | `GET /api/v2/custom_objects/limits/object_limit` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteCustomObject` | `DELETE /api/v2/custom_objects/{custom_object_key}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listCustomObjects` | `GET /api/v2/custom_objects` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showCustomObject` | `GET /api/v2/custom_objects/{custom_object_key}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateCustomObject` | `PATCH /api/v2/custom_objects/{custom_object_key}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `CustomRolesClient` (0/5 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createCustomRole` | `POST /api/v2/custom_roles` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteCustomRoleById` | `DELETE /api/v2/custom_roles/{custom_role_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listCustomRoles` | `GET /api/v2/custom_roles` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showCustomRoleById` | `GET /api/v2/custom_roles/{custom_role_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateCustomRoleById` | `PUT /api/v2/custom_roles/{custom_role_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `CustomTicketStatusesClient` (0/6 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `bulkUpdateDefaultCustomStatus` | `PUT /api/v2/custom_status/default` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createCustomStatus` | `POST /api/v2/custom_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createTicketFormStatusesForCustomStatus` | `POST /api/v2/custom_statuses/{custom_status_id}/ticket_form_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listCustomStatuses` | `GET /api/v2/custom_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showCustomStatus` | `GET /api/v2/custom_statuses/{custom_status_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateCustomStatus` | `PUT /api/v2/custom_statuses/{custom_status_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `DeletionSchedulesClient` (0/5 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createDeletionSchedule` | `POST /api/v2/deletion_schedules` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteDeletionSchedule` | `DELETE /api/v2/deletion_schedules/{deletion_schedule_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `getDeletionSchedule` | `GET /api/v2/deletion_schedules/{deletion_schedule_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listDeletionSchedules` | `GET /api/v2/deletion_schedules` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateDeletionSchedule` | `PUT /api/v2/deletion_schedules/{deletion_schedule_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `DynamicContentClient` (0/6 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createDynamicContent` | `POST /api/v2/dynamic_content/items` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteDynamicContentItem` | `DELETE /api/v2/dynamic_content/items/{dynamic_content_item_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listDynamicContents` | `GET /api/v2/dynamic_content/items` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showDynamicContentItem` | `GET /api/v2/dynamic_content/items/{dynamic_content_item_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showManyDynamicContents` | `GET /api/v2/dynamic_content/items/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateDynamicContentItem` | `PUT /api/v2/dynamic_content/items/{dynamic_content_item_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `DynamicContentItemVariantsClient` (0/7 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createDynamicContentVariant` | `POST /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createManyDynamicContentVariants` | `POST /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteDynamicContentVariant` | `DELETE /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `dynamicContentListVariants` | `GET /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showDynamicContentVariant` | `GET /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateDynamicContentVariant` | `PUT /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateManyDynamicContentVariants` | `PUT /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `EmailNotificationsClient` (0/3 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listEmailNotifications` | `GET /api/v2/email_notifications` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showEmailNotification` | `GET /api/v2/email_notifications/{notification_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showManyEmailNotifications` | `GET /api/v2/email_notifications/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `EssentialsCardClient` (0/4 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `deleteEssentialsCard` | `DELETE /api/v2/object_layouts/{object_type}/essentials_card` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showEssentialsCard` | `GET /api/v2/object_layouts/{object_type}/essentials_card` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showEssentialsCards` | `GET /api/v2/object_layouts/essentials_cards` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateEssentialsCard` | `PUT /api/v2/object_layouts/{object_type}/essentials_card` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `GlobalClientsClient` (0/3 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `globalOAuthClientsTokenSummary` | `GET /api/v2/oauth/global_clients/token_summary` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listGlobalOAuthClients` | `GET /api/v2/oauth/global_clients` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showGlobalClient` | `GET /api/v2/oauth/global_clients/{global_client_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `GrantTypeTokensClient` (0/1 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createTokenForGrantType` | `POST /oauth/tokens` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `GroupMembershipsClient` (0/14 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createGroupMembership` | `POST /api/v2/group_memberships` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createUserGroupMembership` | `POST /api/v2/users/{user_id}/group_memberships` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteGroupMembership` | `DELETE /api/v2/group_memberships/{group_membership_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteUserGroupMembership` | `DELETE /api/v2/users/{user_id}/group_memberships/{group_membership_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `groupMembershipBulkCreate` | `POST /api/v2/group_memberships/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `groupMembershipBulkDelete` | `DELETE /api/v2/group_memberships/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `groupMembershipSetDefault` | `PUT /api/v2/users/{user_id}/group_memberships/{group_membership_id}/make_default` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAssignableGroupMemberships` | `GET /api/v2/group_memberships/assignable` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAssignableGroupMembershipsByGroup` | `GET /api/v2/groups/{group_id}/memberships/assignable` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listGroupMemberships` | `GET /api/v2/group_memberships` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listGroupMembershipsByGroup` | `GET /api/v2/groups/{group_id}/memberships` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserGroupMemberships` | `GET /api/v2/users/{user_id}/group_memberships` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showGroupMembershipById` | `GET /api/v2/group_memberships/{group_membership_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showUserGroupMembershipById` | `GET /api/v2/users/{user_id}/group_memberships/{group_membership_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `GroupSlaPoliciesClient` (0/7 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createGroupSLAPolicy` | `POST /api/v2/group_slas/policies` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteGroupSLAPolicy` | `DELETE /api/v2/group_slas/policies/{group_sla_policy_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listGroupSLAPolicies` | `GET /api/v2/group_slas/policies` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `reorderGroupSLAPolicies` | `PUT /api/v2/group_slas/policies/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `retrieveGroupSLAPolicyFilterDefinitionItems` | `GET /api/v2/group_slas/policies/definitions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showGroupSLAPolicy` | `GET /api/v2/group_slas/policies/{group_sla_policy_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateGroupSLAPolicy` | `PUT /api/v2/group_slas/policies/{group_sla_policy_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `GroupsClient` (0/9 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `countGroups` | `GET /api/v2/groups/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countUserGroups` | `GET /api/v2/users/{user_id}/groups/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createGroup` | `POST /api/v2/groups` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteGroup` | `DELETE /api/v2/groups/{group_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAssignableGroups` | `GET /api/v2/groups/assignable` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listGroups` | `GET /api/v2/groups` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserGroups` | `GET /api/v2/users/{user_id}/groups` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showGroupById` | `GET /api/v2/groups/{group_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateGroup` | `PUT /api/v2/groups/{group_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `IncrementalExportClient` (0/7 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `incrementalOrganizationExport` | `GET /api/v2/incremental/organizations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `incrementalSampleExport` | `GET /api/v2/incremental/{incremental_resource}/sample` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `incrementalTicketEvents` | `GET /api/v2/incremental/ticket_events` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `incrementalTicketExportCursor` | `GET /api/v2/incremental/tickets/cursor` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `incrementalTicketExportTime` | `GET /api/v2/incremental/tickets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `incrementalUserExportCursor` | `GET /api/v2/incremental/users/cursor` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `incrementalUserExportTime` | `GET /api/v2/incremental/users` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `IncrementalSkillBasedRoutingClient` (0/3 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `incrementalSkilBasedRoutingAttributeValuesExport` | `GET /api/v2/incremental/routing/attribute_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `incrementalSkilBasedRoutingAttributesExport` | `GET /api/v2/incremental/routing/attributes` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `incrementalSkilBasedRoutingInstanceValuesExport` | `GET /api/v2/incremental/routing/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `InternalClient` (0/1 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `resolveOrganizationNames` | `POST /api/v2/internal/organizations/resolve_by_names` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `ItamAssetFieldsClient` (0/5 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createItamAssetTypeField` | `POST /api/v2/it_asset_management/asset_types/{asset_type_id}/fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteItamAssetTypeField` | `DELETE /api/v2/it_asset_management/asset_types/{asset_type_id}/fields/{asset_type_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listItamAssetTypeFields` | `GET /api/v2/it_asset_management/asset_types/{asset_type_id}/fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showItamAssetTypeField` | `GET /api/v2/it_asset_management/asset_types/{asset_type_id}/fields/{asset_type_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateItamAssetTypeField` | `PATCH /api/v2/it_asset_management/asset_types/{asset_type_id}/fields/{asset_type_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `ItamAssetLocationsClient` (0/5 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createItamLocation` | `POST /api/v2/it_asset_management/locations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteItamLocation` | `DELETE /api/v2/it_asset_management/locations/{location_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listItamLocations` | `GET /api/v2/it_asset_management/locations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showItamLocation` | `GET /api/v2/it_asset_management/locations/{location_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateItamLocation` | `PATCH /api/v2/it_asset_management/locations/{location_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `ItamAssetStatusesClient` (0/2 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listItamStatuses` | `GET /api/v2/it_asset_management/statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showItamStatus` | `GET /api/v2/it_asset_management/statuses/{status_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `ItamAssetTypesClient` (0/5 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createItamAssetType` | `POST /api/v2/it_asset_management/asset_types` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteItamAssetType` | `DELETE /api/v2/it_asset_management/asset_types/{asset_type_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listItamAssetTypes` | `GET /api/v2/it_asset_management/asset_types` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showItamAssetType` | `GET /api/v2/it_asset_management/asset_types/{asset_type_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateItamAssetType` | `PATCH /api/v2/it_asset_management/asset_types/{asset_type_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `ItamAssetsClient` (0/6 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createItamAsset` | `POST /api/v2/it_asset_management/assets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteItamAsset` | `DELETE /api/v2/it_asset_management/assets/{asset_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `itamAssetBulkJobs` | `POST /api/v2/it_asset_management/assets/jobs` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listItamAssets` | `GET /api/v2/it_asset_management/assets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showItamAsset` | `GET /api/v2/it_asset_management/assets/{asset_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateItamAsset` | `PATCH /api/v2/it_asset_management/assets/{asset_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `JobStatusesClient` (0/3 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listJobStatuses` | `GET /api/v2/job_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showJobStatus` | `GET /api/v2/job_statuses/{job_status_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showManyJobStatuses` | `GET /api/v2/job_statuses/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### 🟢 `LocaleClient` (1/1 endpoints — 100%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listLocales` | `GET /api/v2/locales` | ✅ | ✅ | ✅ | 🟢 Complete |
+
+### 🟡 `LocalesClient` (1/6 endpoints — 17%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `detectBestLocale` | `GET /api/v2/locales/detect_best_locale` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAvailablePublicLocales` | `GET /api/v2/locales/public` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listLocales` | `GET /api/v2/locales` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listLocalesForAgent` | `GET /api/v2/locales/agent` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showCurrentLocale` | `GET /api/v2/locales/current` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showLocaleById` | `GET /api/v2/locales/{locale_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `LookupRelationshipsClient` (0/2 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `getRelationshipFilterDefinitions` | `GET /api/v2/relationships/definitions/{target_type}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `getSourcesByTarget` | `GET /api/v2/{target_type}/{target_id}/relationship_fields/{field_id}/{source_type}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `MacrosClient` (0/19 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createAssociatedMacroAttachment` | `POST /api/v2/macros/{macro_id}/attachments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createMacro` | `POST /api/v2/macros` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createMacroAttachment` | `POST /api/v2/macros/attachments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteMacro` | `DELETE /api/v2/macros/{macro_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteManyMacros` | `DELETE /api/v2/macros/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listActiveMacros` | `GET /api/v2/macros/active` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listMacroActionDefinitions` | `GET /api/v2/macros/definitions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listMacroAttachments` | `GET /api/v2/macros/{macro_id}/attachments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listMacroCategories` | `GET /api/v2/macros/categories` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listMacros` | `GET /api/v2/macros` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listMacrosActions` | `GET /api/v2/macros/actions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `searchMacro` | `GET /api/v2/macros/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showChangesToTicket` | `GET /api/v2/macros/{macro_id}/apply` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showDerivedMacro` | `GET /api/v2/macros/new` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showMacro` | `GET /api/v2/macros/{macro_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showMacroAttachment` | `GET /api/v2/macros/attachments/{attachment_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showTicketAfterChanges` | `GET /api/v2/tickets/{ticket_id}/macros/{macro_id}/apply` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateMacro` | `PUT /api/v2/macros/{macro_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateManyMacros` | `PUT /api/v2/macros/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `OAuthClientsClient` (0/7 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `clientGenerateSecret` | `PUT /api/v2/oauth/clients/{oauth_client_id}/generate_secret` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createOAuthClient` | `POST /api/v2/oauth/clients` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteClient` | `DELETE /api/v2/oauth/clients/{oauth_client_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listCurrentUserOAuthClients` | `GET /api/v2/users/me/oauth/clients` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOAuthClients` | `GET /api/v2/oauth/clients` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showClient` | `GET /api/v2/oauth/clients/{oauth_client_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateClient` | `PUT /api/v2/oauth/clients/{oauth_client_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `OAuthTokensClient` (0/6 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createOAuthToken` | `POST /api/v2/oauth/tokens` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOAuthTokens` | `GET /api/v2/oauth/tokens` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `revokeCurrentOAuthToken` | `DELETE /api/v2/oauth/tokens/current` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `revokeOAuthToken` | `DELETE /api/v2/oauth/tokens/{oauth_token_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showCurrentToken` | `GET /api/v2/oauth/tokens/current` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showToken` | `GET /api/v2/oauth/tokens/{oauth_token_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `ObjectTriggersClient` (0/10 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createObjectTrigger` | `POST /api/v2/custom_objects/{custom_object_key}/triggers` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteManyObjectTriggers` | `DELETE /api/v2/custom_objects/{custom_object_key}/triggers/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteObjectTrigger` | `DELETE /api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `getObjectTrigger` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listActiveObjectTriggers` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/active` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listObjectTriggers` | `GET /api/v2/custom_objects/{custom_object_key}/triggers` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listObjectTriggersDefinitions` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/definitions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `searchObjectTriggers` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateManyObjectTriggers` | `PUT /api/v2/custom_objects/{custom_object_key}/triggers/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateObjectTrigger` | `PUT /api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `OmnichannelRoutingQueuesClient` (0/7 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createQueue` | `POST /api/v2/queues` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteQueue` | `DELETE /api/v2/queues/{queue_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listQueueDefinitions` | `GET /api/v2/queues/definitions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listQueues` | `GET /api/v2/queues` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `reorderQueues` | `PATCH /api/v2/queues/order` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showQueueById` | `GET /api/v2/queues/{queue_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateQueue` | `PUT /api/v2/queues/{queue_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `OrganizationFieldsClient` (0/6 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createOrganizationField` | `POST /api/v2/organization_fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteOrganizationField` | `DELETE /api/v2/organization_fields/{organization_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOrganizationFields` | `GET /api/v2/organization_fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `reorderOrganizationField` | `PUT /api/v2/organization_fields/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showOrganizationField` | `GET /api/v2/organization_fields/{organization_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateOrganizationField` | `PUT /api/v2/organization_fields/{organization_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `OrganizationMembershipsClient` (0/14 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createManyOrganizationMemberships` | `POST /api/v2/organization_memberships/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createOrganizationMembership` | `POST /api/v2/organization_memberships` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createUserOrganizationMembership` | `POST /api/v2/users/{user_id}/organization_memberships` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteManyOrganizationMemberships` | `DELETE /api/v2/organization_memberships/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteOrganizationMembership` | `DELETE /api/v2/organization_memberships/{organization_membership_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteUserOrganizationMembership` | `DELETE /api/v2/users/{user_id}/organization_memberships/{organization_membership_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOrganizationMemberships` | `GET /api/v2/organization_memberships` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOrganizationMembershipsByOrganization` | `GET /api/v2/organizations/{organization_id}/organization_memberships` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserOrganizationMemberships` | `GET /api/v2/users/{user_id}/organization_memberships` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `setOrganizationAsDefault` | `PUT /api/v2/users/{user_id}/organizations/{organization_id}/make_default` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `setOrganizationMembershipAsDefault` | `PUT /api/v2/users/{user_id}/organization_memberships/{organization_membership_id}/make_default` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showOrganizationMembershipById` | `GET /api/v2/organization_memberships/{organization_membership_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showOrganizationMembershipByUserId` | `GET /api/v2/users/{user_id}/organization_memberships/{organization_membership_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `unassignOrganization` | `DELETE /api/v2/users/{user_id}/organizations/{organization_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `OrganizationSubscriptionsClient` (0/6 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createOrganizationSubscription` | `POST /api/v2/organization_subscriptions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteOrganizationSubscription` | `DELETE /api/v2/organization_subscriptions/{organization_subscription_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOrganizationSubscriptions` | `GET /api/v2/organization_subscriptions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOrganizationSubscriptionsByOrganization` | `GET /api/v2/organizations/{organization_id}/subscriptions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserOrganizationSubscriptions` | `GET /api/v2/users/{user_id}/organization_subscriptions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showOrganizationSubscription` | `GET /api/v2/organization_subscriptions/{organization_subscription_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `OrganizationsClient` (0/19 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `autocompleteOrganizations` | `GET /api/v2/organizations/autocomplete` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countOrganizations` | `GET /api/v2/organizations/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countUserOrganizations` | `GET /api/v2/users/{user_id}/organizations/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createManyOrganizations` | `POST /api/v2/organizations/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createOrUpdateOrganization` | `POST /api/v2/organizations/create_or_update` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createOrganization` | `POST /api/v2/organizations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createOrganizationMerge` | `POST /api/v2/organizations/{organization_id}/merge` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteManyOrganizations` | `DELETE /api/v2/organizations/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteOrganization` | `DELETE /api/v2/organizations/{organization_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOrganizationMerges` | `GET /api/v2/organizations/{organization_id}/merges` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOrganizations` | `GET /api/v2/organizations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserOrganizations` | `GET /api/v2/users/{user_id}/organizations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `organizationRelated` | `GET /api/v2/organizations/{organization_id}/related` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `searchOrganizations` | `GET /api/v2/organizations/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showManyOrganizations` | `GET /api/v2/organizations/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showOrganization` | `GET /api/v2/organizations/{organization_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showOrganizationMerge` | `GET /api/v2/organization_merges/{organization_merge_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateManyOrganizations` | `PUT /api/v2/organizations/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateOrganization` | `PUT /api/v2/organizations/{organization_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `OtpClient` (0/3 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `removeOtpSetting` | `DELETE /auth/api/one_time_password` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showOtpSetting` | `GET /auth/api/one_time_password` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateOtpSetting` | `PATCH /auth/api/one_time_password` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `PushNotificationDevicesClient` (0/1 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `pushNotificationDevices` | `POST /api/v2/push_notification_devices/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `RemoteAuthenticationsClient` (0/1 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listRemoteAuthentications` | `GET /api/v2/remote_authentications` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `RequestsClient` (0/12 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createRequest` | `POST /api/v2/requests` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listCCDRequests` | `GET /api/v2/requests/ccd` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listComments` | `GET /api/v2/requests/{request_id}/comments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOpenRequests` | `GET /api/v2/requests/open` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOrganizationRequests` | `GET /api/v2/organizations/{organization_id}/requests` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listRequests` | `GET /api/v2/requests` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listSolvedRequests` | `GET /api/v2/requests/solved` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserRequests` | `GET /api/v2/users/{user_id}/requests` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `searchRequests` | `GET /api/v2/requests/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showComment` | `GET /api/v2/requests/{request_id}/comments/{ticket_comment_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showRequest` | `GET /api/v2/requests/{request_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateRequest` | `PUT /api/v2/requests/{request_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `ResellerClient` (0/2 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createTrialAccount` | `POST /api/v2/accounts` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `verifySubdomainAvailability` | `GET /api/v2/accounts/available` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `ResourceCollectionsClient` (0/5 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createResourceCollection` | `POST /api/v2/resource_collections` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteResourceCollection` | `DELETE /api/v2/resource_collections/{resource_collection_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listResourceCollections` | `GET /api/v2/resource_collections` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `retrieveResourceCollection` | `GET /api/v2/resource_collections/{resource_collection_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateResourceCollection` | `PUT /api/v2/resource_collections/{resource_collection_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `SatisfactionRatingsClient` (0/4 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `countSatisfactionRatings` | `GET /api/v2/satisfaction_ratings/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createTicketSatisfactionRating` | `POST /api/v2/tickets/{ticket_id}/satisfaction_rating` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listSatisfactionRatings` | `GET /api/v2/satisfaction_ratings` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showSatisfactionRating` | `GET /api/v2/satisfaction_ratings/{satisfaction_rating_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `SatisfactionReasonsClient` (0/2 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listSatisfactionRatingReasons` | `GET /api/v2/satisfaction_reasons` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showSatisfactionRatings` | `GET /api/v2/satisfaction_reasons/{satisfaction_reason_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### 🟢 `SearchClient` (2/2 endpoints — 100%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `count` | `GET /api/v2/search/count` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `list` | `GET /api/v2/search/export?filter[type]=ticket` | ✅ | ✅ | ✅ | 🟢 Complete |
+
+### ⚪ `SecuritySettingsClient` (0/1 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `showSecuritySettings` | `GET /api/v2/security_settings` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `SessionsClient` (0/8 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `bulkDeleteSessionsByUserId` | `DELETE /api/v2/users/{user_id}/sessions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteAuthenticatedSession` | `DELETE /api/v2/users/me/logout` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteSession` | `DELETE /api/v2/users/{user_id}/sessions/{session_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listSessions` | `GET /api/v2/sessions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserSessions` | `GET /api/v2/users/{user_id}/sessions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `renewCurrentSession` | `GET /api/v2/users/me/session/renew` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showCurrentlyAuthenticatedSession` | `GET /api/v2/users/me/session` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showSession` | `GET /api/v2/users/{user_id}/sessions/{session_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `SharingAgreementsClient` (0/5 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createSharingAgreement` | `POST /api/v2/sharing_agreements` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteSharingAgreement` | `DELETE /api/v2/sharing_agreements/{sharing_agreement_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listSharingAgreements` | `GET /api/v2/sharing_agreements` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showSharingAgreement` | `GET /api/v2/sharing_agreements/{sharing_agreement_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateSharingAgreement` | `PUT /api/v2/sharing_agreements/{sharing_agreement_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `SkillBasedRoutingClient` (0/18 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `bulkSetAgentAttributeValuesJob` | `POST /api/v2/routing/agents/instance_values/job` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createAttribute` | `POST /api/v2/routing/attributes` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createAttributeValue` | `POST /api/v2/routing/attributes/{attribute_id}/values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteAttribute` | `DELETE /api/v2/routing/attributes/{attribute_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteAttributeValue` | `DELETE /api/v2/routing/attributes/{attribute_id}/values/{attribute_value_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAGentAttributeValues` | `GET /api/v2/routing/agents/{user_id}/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAccountAttributes` | `GET /api/v2/routing/attributes` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAttributeValues` | `GET /api/v2/routing/attributes/{attribute_id}/values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listManyAgentsAttributeValues` | `GET /api/v2/routing/agents/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listRoutingAttributeDefinitions` | `GET /api/v2/routing/attributes/definitions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTicketAttributeValues` | `GET /api/v2/routing/tickets/{ticket_id}/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTicketsFullfilledByUser` | `GET /api/v2/routing/requirements/fulfilled` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `setAgentAttributeValues` | `POST /api/v2/routing/agents/{user_id}/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `setTicketAttributeValues` | `POST /api/v2/routing/tickets/{ticket_id}/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showAttribute` | `GET /api/v2/routing/attributes/{attribute_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showAttributeValue` | `GET /api/v2/routing/attributes/{attribute_id}/values/{attribute_value_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateAttribute` | `PUT /api/v2/routing/attributes/{attribute_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateAttributeValue` | `PATCH /api/v2/routing/attributes/{attribute_id}/values/{attribute_value_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `SlaPoliciesClient` (0/7 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createSLAPolicy` | `POST /api/v2/slas/policies` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteSLAPolicy` | `DELETE /api/v2/slas/policies/{sla_policy_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listSLAPolicies` | `GET /api/v2/slas/policies` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `reorderSLAPolicies` | `PUT /api/v2/slas/policies/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `retrieveSLAPolicyFilterDefinitionItems` | `GET /api/v2/slas/policies/definitions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showSLAPolicy` | `GET /api/v2/slas/policies/{sla_policy_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateSLAPolicy` | `PUT /api/v2/slas/policies/{sla_policy_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `SupportAddressesClient` (0/6 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createSupportAddress` | `POST /api/v2/recipient_addresses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteRecipientAddress` | `DELETE /api/v2/recipient_addresses/{support_address_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listSupportAddresses` | `GET /api/v2/recipient_addresses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showSupportAddress` | `GET /api/v2/recipient_addresses/{support_address_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateSupportAddress` | `PUT /api/v2/recipient_addresses/{support_address_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `verifySupportAddressForwarding` | `PUT /api/v2/recipient_addresses/{support_address_id}/verify` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `SuspendedTicketsClient` (0/8 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `deleteSuspendedTicket` | `DELETE /api/v2/suspended_tickets/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteSuspendedTickets` | `DELETE /api/v2/suspended_tickets/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `exportSuspendedTickets` | `POST /api/v2/suspended_tickets/export` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listSuspendedTickets` | `GET /api/v2/suspended_tickets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `recoverSuspendedTicket` | `PUT /api/v2/suspended_tickets/{id}/recover` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `recoverSuspendedTickets` | `PUT /api/v2/suspended_tickets/recover_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showSuspendedTickets` | `GET /api/v2/suspended_tickets/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `suspendedTicketsAttachments` | `POST /api/v2/suspended_tickets/attachments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `TagsClient` (0/15 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `addOrganizationTags` | `PUT /api/v2/organizations/{organization_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `autocompleteTags` | `GET /api/v2/autocomplete/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countTags` | `GET /api/v2/tags/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteTagsTicket` | `DELETE /api/v2/tickets/{ticket_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteUserTags` | `DELETE /api/v2/users/{user_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOrganizationTags` | `GET /api/v2/organizations/{organization_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listResourceTags` | `GET /api/v2/tickets/{ticket_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTags` | `GET /api/v2/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserTags` | `GET /api/v2/users/{user_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `putTagsTicket` | `PUT /api/v2/tickets/{ticket_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `putUserTags` | `PUT /api/v2/users/{user_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `removeOrganizationTags` | `DELETE /api/v2/organizations/{organization_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `setOrganizationTags` | `POST /api/v2/organizations/{organization_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `setTagsTicket` | `POST /api/v2/tickets/{ticket_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `setUserTags` | `POST /api/v2/users/{user_id}/tags` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `TargetFailuresClient` (0/2 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listTargetFailures` | `GET /api/v2/target_failures` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showTargetFailure` | `GET /api/v2/target_failures/{target_failure_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `TargetsClient` (0/5 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createTarget` | `POST /api/v2/targets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteTarget` | `DELETE /api/v2/targets/{target_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTargets` | `GET /api/v2/targets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showTarget` | `GET /api/v2/targets/{target_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateTarget` | `PUT /api/v2/targets/{target_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `TicketAuditsClient` (0/5 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `countAuditsForTicket` | `GET /api/v2/tickets/{ticket_id}/audits/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAuditsForTicket` | `GET /api/v2/tickets/{ticket_id}/audits` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTicketAudits` | `GET /api/v2/ticket_audits` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `makeTicketCommentPrivateFromAudits` | `PUT /api/v2/tickets/{ticket_id}/audits/{ticket_audit_id}/make_private` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showTicketAudit` | `GET /api/v2/tickets/{ticket_id}/audits/{ticket_audit_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### 🟢 `TicketClient` (7/7 endpoints — 100%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createTicket` | `POST /api/v2/tickets` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `createTicketField` | `POST /api/v2/ticket_fields` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `getTicketCount` | `GET /api/v2/tickets/count` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listTicketFields` | `GET /api/v2/ticket_fields` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listTickets` | `GET /api/v2/tickets` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showTicket` | `GET /api/v2/tickets/{ticket_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateTicket` | `PUT /api/v2/tickets/{ticket_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+
+### ⚪ `TicketCommentsClient` (0/7 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `countTicketComments` | `GET /api/v2/tickets/{ticket_id}/comments/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTicketComments` | `GET /api/v2/tickets/{ticket_id}/comments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `makeTicketCommentPrivate` | `PUT /api/v2/tickets/{ticket_id}/comments/{ticket_comment_id}/make_private` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `redactChatComment` | `PUT /api/v2/chat_redactions/{ticket_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `redactChatCommentAttachment` | `PUT /api/v2/chat_file_redactions/{ticket_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `redactStringInComment` | `PUT /api/v2/tickets/{ticket_id}/comments/{ticket_comment_id}/redact` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `redactTicketCommentInAgentWorkspace` | `PUT /api/v2/comment_redactions/{ticket_comment_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `TicketContentPinsClient` (0/3 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createTicketContentPin` | `POST /api/v2/ticket_content_pins` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteTicketContentPin` | `DELETE /api/v2/ticket_content_pins/{content_pin_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTicketContentPins` | `GET /api/v2/ticket_content_pins` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### 🟡 `TicketFieldsClient` (2/12 endpoints — 17%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `countTicketFields` | `GET /api/v2/ticket_fields/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createOrUpdateTicketFieldOption` | `POST /api/v2/ticket_fields/{ticket_field_id}/options` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createTicketField` | `POST /api/v2/ticket_fields` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteTicketField` | `DELETE /api/v2/ticket_fields/{ticket_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteTicketFieldOption` | `DELETE /api/v2/ticket_fields/{ticket_field_id}/options/{ticket_field_option_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTicketFieldOptions` | `GET /api/v2/ticket_fields/{ticket_field_id}/options` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTicketFields` | `GET /api/v2/ticket_fields` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `reorderTicketFields` | `PUT /api/v2/ticket_fields/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showManyTicketFields` | `GET /api/v2/ticket_fields/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showTicketFieldOption` | `GET /api/v2/ticket_fields/{ticket_field_id}/options/{ticket_field_option_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showTicketfield` | `GET /api/v2/ticket_fields/{ticket_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateTicketField` | `PUT /api/v2/ticket_fields/{ticket_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `TicketFormStatusesClient` (0/4 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `deleteTicketFormStatusById` | `DELETE /api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses/{ticket_form_status_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteTicketFormStatuses` | `DELETE /api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTicketFormStatuses` | `GET /api/v2/ticket_form_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showManyTicketFormStatuses` | `GET /api/v2/ticket_form_statuses/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `TicketFormsClient` (0/12 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `cloneTicketForm` | `POST /api/v2/ticket_forms/{ticket_form_id}/clone` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createTicketForm` | `POST /api/v2/ticket_forms` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createTicketFormStatuses` | `POST /api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteTicketForm` | `DELETE /api/v2/ticket_forms/{ticket_form_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTicketForms` | `GET /api/v2/ticket_forms` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `reorderTicketForms` | `PUT /api/v2/ticket_forms/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showManyTicketForms` | `GET /api/v2/ticket_forms/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showTicketForm` | `GET /api/v2/ticket_forms/{ticket_form_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `ticketFormTicketFormStatuses` | `GET /api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateTicketForm` | `PUT /api/v2/ticket_forms/{ticket_form_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateTicketFormStatusById` | `PUT /api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses/{ticket_form_status_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateTicketFormStatuses` | `PUT /api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `TicketImportClient` (0/2 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `ticketBulkImport` | `POST /api/v2/imports/tickets/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `ticketImport` | `POST /api/v2/imports/tickets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `TicketMetricEventsClient` (0/1 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listTicketMetricEvents` | `GET /api/v2/incremental/ticket_metric_events` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `TicketMetricsClient` (0/3 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listTicketMetrics` | `GET /api/v2/ticket_metrics` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showTicketMetrics` | `GET /api/v2/ticket_metrics/{ticket_metric_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showTicketMetricsByTicket` | `GET /api/v2/tickets/{ticket_id}/metrics` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `TicketSkipsClient` (0/4 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `listSkips` | `GET /api/v2/skips` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTicketSkips` | `GET /api/v2/users/{user_id}/skips` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTicketSkipsByTicket` | `GET /api/v2/tickets/{ticket_id}/skips` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `recordNewSkip` | `POST /api/v2/skips` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### 🟡 `TicketsClient` (5/28 endpoints — 18%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `bulkDeleteTickets` | `POST /api/v2/problems/autocomplete` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `bulkPermanentlyDeleteTickets` | `DELETE /api/v2/deleted_tickets/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `bulkRestoreDeletedTickets` | `PUT /api/v2/deleted_tickets/restore_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countOrganizationTickets` | `GET /api/v2/organizations/{organization_id}/tickets/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countTickets` | `GET /api/v2/tickets/count` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `countUserAssignedTickets` | `GET /api/v2/users/{user_id}/tickets/assigned/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countUserCCDTickets` | `GET /api/v2/users/{user_id}/tickets/ccd/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createTicket` | `POST /api/v2/tickets` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteTicket` | `DELETE /api/v2/tickets/{ticket_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteTicketPermanently` | `DELETE /api/v2/deleted_tickets/{ticket_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listDeletedTickets` | `GET /api/v2/deleted_tickets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOrganizationTickets` | `GET /api/v2/organizations/{organization_id}/tickets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listRecentTickets` | `GET /api/v2/tickets/recent` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTickets` | `GET /api/v2/tickets/{ticket_id}/collaborators` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listUserAssignedTickets` | `GET /api/v2/users/{user_id}/tickets/assigned` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserCCDTickets` | `GET /api/v2/users/{user_id}/tickets/ccd` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserFollowedTickets` | `GET /api/v2/users/{user_id}/tickets/followed` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserRequestedTickets` | `GET /api/v2/users/{user_id}/tickets/requested` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `markManyTicketsAsSpam` | `PUT /api/v2/tickets/mark_many_as_spam` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `markTicketAsSpamAndSuspendRequester` | `PUT /api/v2/tickets/{ticket_id}/mark_as_spam` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `mergeTicketsIntoTargetTicket` | `POST /api/v2/tickets/{ticket_id}/merge` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `restoreDeletedTicket` | `PUT /api/v2/deleted_tickets/{ticket_id}/restore` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showTicket` | `GET /api/v2/tickets/{ticket_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `ticketRelatedInformation` | `GET /api/v2/tickets/{ticket_id}/related` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `ticketsCreateMany` | `POST /api/v2/tickets/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `ticketsShowMany` | `GET /api/v2/tickets/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `ticketsUpdateMany` | `PUT /api/v2/tickets/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateTicket` | `PUT /api/v2/tickets/{ticket_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+
+### ⚪ `TriggerCategoriesClient` (0/6 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `batchOperateTriggerCategories` | `POST /api/v2/trigger_categories/jobs` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createTriggerCategory` | `POST /api/v2/trigger_categories` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteTriggerCategory` | `DELETE /api/v2/trigger_categories/{trigger_category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTriggerCategories` | `GET /api/v2/trigger_categories` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showTriggerCategoryById` | `GET /api/v2/trigger_categories/{trigger_category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateTriggerCategory` | `PATCH /api/v2/trigger_categories/{trigger_category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `TriggersClient` (0/13 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createTrigger` | `POST /api/v2/triggers` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteManyTriggers` | `DELETE /api/v2/triggers/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteTrigger` | `DELETE /api/v2/triggers/{trigger_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `getTrigger` | `GET /api/v2/triggers/{trigger_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listActiveTriggers` | `GET /api/v2/triggers/active` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTriggerActionConditionDefinitions` | `GET /api/v2/triggers/definitions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTriggerRevisions` | `GET /api/v2/triggers/{trigger_id}/revisions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTriggers` | `GET /api/v2/triggers` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `reorderTriggers` | `PUT /api/v2/triggers/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `searchTriggers` | `GET /api/v2/triggers/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `triggerRevision` | `GET /api/v2/triggers/{trigger_id}/revisions/{trigger_revision_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateManyTriggers` | `PUT /api/v2/triggers/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateTrigger` | `PUT /api/v2/triggers/{trigger_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `UserFieldsClient` (0/10 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createOrUpdateUserFieldOption` | `POST /api/v2/user_fields/{user_field_id}/options` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createUserField` | `POST /api/v2/user_fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteUserField` | `DELETE /api/v2/user_fields/{user_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteUserFieldOption` | `DELETE /api/v2/user_fields/{user_field_id}/options/{user_field_option_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserFieldOptions` | `GET /api/v2/user_fields/{user_field_id}/options` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserFields` | `GET /api/v2/user_fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `reorderUserField` | `PUT /api/v2/user_fields/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showUserField` | `GET /api/v2/user_fields/{user_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showUserFieldOption` | `GET /api/v2/user_fields/{user_field_id}/options/{user_field_option_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateUserField` | `PUT /api/v2/user_fields/{user_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `UserIdentitiesClient` (0/14 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createEndUserIdentity` | `POST /api/v2/end_users/{user_id}/identities` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createUserIdentity` | `POST /api/v2/users/{user_id}/identities` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteEndUserIdentity` | `DELETE /api/v2/end_users/{user_id}/identities/{user_identity_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteUserIdentity` | `DELETE /api/v2/users/{user_id}/identities/{user_identity_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listEndUserIdentities` | `GET /api/v2/end_users/{user_id}/identities` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUserIdentities` | `GET /api/v2/users/{user_id}/identities` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `makeEndUserIdentityPrimary` | `PUT /api/v2/end_users/{user_id}/identities/{user_identity_id}/make_primary` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `makeUserIdentityPrimary` | `PUT /api/v2/users/{user_id}/identities/{user_identity_id}/make_primary` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `requestEndUserVerification` | `PUT /api/v2/end_users/{user_id}/identities/{user_identity_id}/request_verification` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `requestUserVerfication` | `PUT /api/v2/users/{user_id}/identities/{user_identity_id}/request_verification` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showEndUserIdentity` | `GET /api/v2/end_users/{user_id}/identities/{user_identity_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showUserIdentity` | `GET /api/v2/users/{user_id}/identities/{user_identity_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateUserIdentity` | `PUT /api/v2/users/{user_id}/identities/{user_identity_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `verifyUserIdentity` | `PUT /api/v2/users/{user_id}/identities/{user_identity_id}/verify` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `UserPasswordsClient` (0/3 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `changeOwnPassword` | `PUT /api/v2/users/{user_id}/password` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `getUserPasswordRequirements` | `GET /api/v2/users/{user_id}/password/requirements` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `setUserPassword` | `POST /api/v2/users/{user_id}/password` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### 🟢 `UserSegmentClient` (7/7 endpoints — 100%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createUserSegment` | `POST /api/v2/help_center/user_segments` | ✅ | ⚪ | ✅ | 🟡 In Progress |
+| `deleteUserSegment` | `DELETE /api/v2/help_center/user_segments/{user_segment_id}` | ✅ | ⚪ | ✅ | 🟡 In Progress |
+| `listUserSegmentSections` | `GET /api/v2/help_center/user_segments/{user_segment_id}/sections` | ✅ | ⚪ | ✅ | 🟡 In Progress |
+| `listUserSegmentTopics` | `GET /api/v2/help_center/user_segments/{user_segment_id}/topics` | ✅ | ⚪ | ✅ | 🟡 In Progress |
+| `listUserSegments` | `GET /api/v2/help_center/user_segments` | ✅ | ⚪ | ✅ | 🟡 In Progress |
+| `showUserSegment` | `GET /api/v2/help_center/user_segments/{user_segment_id}` | ✅ | ⚪ | ✅ | 🟡 In Progress |
+| `updateUserSegment` | `PUT /api/v2/help_center/user_segments/{user_segment_id}` | ✅ | ⚪ | ✅ | 🟡 In Progress |
+
+### ⚪ `UsersClient` (0/31 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `autocompleteUsers` | `GET /api/v2/users/autocomplete` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `autocompleteUsersPost` | `POST /api/v2/users/autocomplete` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countDeletedUsers` | `GET /api/v2/deleted_users/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countGroupUsers` | `GET /api/v2/groups/{group_id}/users/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countOrganizationUsers` | `GET /api/v2/organizations/{organization_id}/users/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countUsers` | `GET /api/v2/users/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createManyUsers` | `POST /api/v2/users/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createOrUpdateManyUsers` | `POST /api/v2/users/create_or_update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createOrUpdateUser` | `POST /api/v2/users/create_or_update` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createUser` | `POST /api/v2/users` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteUser` | `DELETE /api/v2/users/{user_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `destroyManyUsers` | `DELETE /api/v2/users/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `getUserEntitlementsFull` | `GET /api/v2/users/{user_id}/entitlements/full` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listDeletedUsers` | `GET /api/v2/deleted_users` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listGroupUsers` | `GET /api/v2/groups/{group_id}/users` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOrganizationUsers` | `GET /api/v2/organizations/{organization_id}/users` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUsers` | `GET /api/v2/users` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `logoutManyUsers` | `POST /api/v2/users/logout_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `mergeEndUsers` | `PUT /api/v2/users/{user_id}/merge` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `permanentlyDeleteUser` | `DELETE /api/v2/deleted_users/{deleted_user_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `requestUserCreate` | `POST /api/v2/users/request_create` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `searchUsers` | `GET /api/v2/users/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showCurrentUser` | `GET /api/v2/users/me` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showDeletedUser` | `GET /api/v2/deleted_users/{deleted_user_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showManyUsers` | `GET /api/v2/users/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showUser` | `GET /api/v2/users/{user_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showUserComplianceDeletionStatuses` | `GET /api/v2/users/{user_id}/compliance_deletion_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showUserRelated` | `GET /api/v2/users/{user_id}/related` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateCurrentUserSettings` | `PUT /api/v2/users/me/settings` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateManyUsers` | `PUT /api/v2/users/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateUser` | `PUT /api/v2/users/{user_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `ViewCategoriesClient` (0/5 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createViewCategory` | `POST /api/v2/view_categories` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteViewCategory` | `DELETE /api/v2/view_categories/{view_category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listViewCategories` | `GET /api/v2/view_categories` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `orderViewCategories` | `PUT /api/v2/view_categories/order` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateViewCategory` | `PATCH /api/v2/view_categories/{view_category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `ViewsClient` (0/19 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `bulkDeleteViews` | `DELETE /api/v2/views/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countViews` | `GET /api/v2/views/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createView` | `POST /api/v2/views` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteView` | `DELETE /api/v2/views/{view_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `executeView` | `GET /api/v2/views/{view_id}/execute` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `exportView` | `GET /api/v2/views/{view_id}/export` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `getViewCount` | `GET /api/v2/views/{view_id}/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `getViewCounts` | `GET /api/v2/views/count_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listActiveViews` | `GET /api/v2/views/active` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listCompactViews` | `GET /api/v2/views/compact` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTicketsFromView` | `GET /api/v2/views/{view_id}/tickets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listViews` | `GET /api/v2/views` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listViewsById` | `GET /api/v2/views/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `previewCount` | `POST /api/v2/views/preview/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `previewViews` | `POST /api/v2/views/preview` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `searchViews` | `GET /api/v2/views/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showView` | `GET /api/v2/views/{view_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateManyViews` | `PUT /api/v2/views/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateView` | `PUT /api/v2/views/{view_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `WorkspacesClient` (0/7 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createWorkspace` | `POST /api/v2/workspaces` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteWorkspace` | `DELETE /api/v2/workspaces/{workspace_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `destroyManyWorkspaces` | `DELETE /api/v2/workspaces/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listWorkspaces` | `GET /api/v2/workspaces` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `reorderWorkspaces` | `PUT /api/v2/workspaces/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showWorkspace` | `GET /api/v2/workspaces/{workspace_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateWorkspace` | `PUT /api/v2/workspaces/{workspace_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
+### ⚪ `XChannelClient` (0/4 endpoints — 0%)
+
+| Method | Route | Admin | Agent | End User | Status |
+| :--- | :--- | :---: | :---: | :---: | :---: |
+| `createTicketFromTweet` | `POST /api/v2/channels/twitter/tickets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `gettingTwicketStatus` | `GET /api/v2/channels/twitter/tickets/{comment_id}/statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listMonitoredTwitterHandles` | `GET /api/v2/channels/twitter/monitored_twitter_handles` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showMonitoredTwitterHandle` | `GET /api/v2/channels/twitter/monitored_twitter_handles/{monitored_twitter_handle_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+
