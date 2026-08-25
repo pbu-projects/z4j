@@ -48,8 +48,8 @@ public interface BasicsClient {
      */
     @Post("/api/v2/channels/voice/tickets")
     Mono<@Valid TicketResponse> createTicketOrVoicemailTicket(
-        @PathVariable("agent_id") @NotNull Integer agentId,
-        @PathVariable("ticket_id") @NotNull Integer ticketId,
+        @QueryValue("agent_id") @Nullable Integer agentId,
+        @QueryValue("ticket_id") @Nullable Integer ticketId,
         @Body @Nullable @Valid TicketCreateVoicemailTicketRequest ticketCreateVoicemailTicketRequest
     );
 

@@ -52,6 +52,6 @@ public interface AccessClient {
      */
     @Post("/access/login")
     Mono<Void> loginPost(
-        @PathVariable("user") @NotNull @Valid LoginPostUserParameter user
+        @Body @NotNull @Valid LoginPostUserParameter user
     );
 }
