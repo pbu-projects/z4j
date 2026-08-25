@@ -6,12 +6,12 @@
 ## 📊 Summary Metrics
 
 - **Total Client Interfaces**: 98
-- **Clients with Active Tests**: 59 / 98 (60.2%)
+- **Clients with Active Tests**: 69 / 98 (70.4%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **184 / 629 (29.3%)**
-  - 👑 **Admin Level (`adminCtx`)**: 184 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 177 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 184 endpoints
+- **Endpoints Tested**: **198 / 629 (31.5%)**
+  - 👑 **Admin Level (`adminCtx`)**: 198 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 191 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 198 endpoints
 
 ---
 
@@ -112,13 +112,13 @@
 | `openTicketInAgentBrowser` | `POST /api/v2/channels/voice/agents/{agent_id}/tickets/{ticket_id}/display` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `openUsersProfileInAgentBrowser` | `POST /api/v2/channels/voice/agents/{agent_id}/users/{user_id}/display` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `BookmarksClient` (0/3 endpoints — 0%)
+### 🟡 `BookmarksClient` (1/3 endpoints — 33%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createBookmark` | `POST /api/v2/bookmarks` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteBookmark` | `DELETE /api/v2/bookmarks/{bookmark_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listBookmarks` | `GET /api/v2/bookmarks` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listBookmarks` | `GET /api/v2/bookmarks` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `BrandAgentsClient` (3/5 endpoints — 60%)
 
@@ -258,14 +258,14 @@
 | `showCustomStatus` | `GET /api/v2/custom_statuses/{custom_status_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateCustomStatus` | `PUT /api/v2/custom_statuses/{custom_status_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `DeletionSchedulesClient` (0/5 endpoints — 0%)
+### 🟡 `DeletionSchedulesClient` (1/5 endpoints — 20%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createDeletionSchedule` | `POST /api/v2/deletion_schedules` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteDeletionSchedule` | `DELETE /api/v2/deletion_schedules/{deletion_schedule_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `getDeletionSchedule` | `GET /api/v2/deletion_schedules/{deletion_schedule_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listDeletionSchedules` | `GET /api/v2/deletion_schedules` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listDeletionSchedules` | `GET /api/v2/deletion_schedules` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateDeletionSchedule` | `PUT /api/v2/deletion_schedules/{deletion_schedule_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### 🟡 `DynamicContentClient` (2/6 endpoints — 33%)
@@ -466,11 +466,11 @@
 | `showCurrentLocale` | `GET /api/v2/locales/current` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showLocaleById` | `GET /api/v2/locales/{locale_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `LookupRelationshipsClient` (0/2 endpoints — 0%)
+### 🟡 `LookupRelationshipsClient` (1/2 endpoints — 50%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `getRelationshipFilterDefinitions` | `GET /api/v2/relationships/definitions/{target_type}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `getRelationshipFilterDefinitions` | `GET /api/v2/relationships/definitions/{target_type}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `getSourcesByTarget` | `GET /api/v2/{target_type}/{target_id}/relationship_fields/{field_id}/{source_type}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### 🟡 `MacrosClient` (10/19 endpoints — 53%)
@@ -520,7 +520,7 @@
 | `showCurrentToken` | `GET /api/v2/oauth/tokens/current` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showToken` | `GET /api/v2/oauth/tokens/{oauth_token_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `ObjectTriggersClient` (0/10 endpoints — 0%)
+### 🟡 `ObjectTriggersClient` (1/10 endpoints — 10%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
@@ -529,20 +529,20 @@
 | `deleteObjectTrigger` | `DELETE /api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `getObjectTrigger` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listActiveObjectTriggers` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/active` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listObjectTriggers` | `GET /api/v2/custom_objects/{custom_object_key}/triggers` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listObjectTriggers` | `GET /api/v2/custom_objects/{custom_object_key}/triggers` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listObjectTriggersDefinitions` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/definitions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `searchObjectTriggers` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateManyObjectTriggers` | `PUT /api/v2/custom_objects/{custom_object_key}/triggers/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateObjectTrigger` | `PUT /api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `OmnichannelRoutingQueuesClient` (0/7 endpoints — 0%)
+### 🟡 `OmnichannelRoutingQueuesClient` (2/7 endpoints — 29%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createQueue` | `POST /api/v2/queues` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteQueue` | `DELETE /api/v2/queues/{queue_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listQueueDefinitions` | `GET /api/v2/queues/definitions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listQueues` | `GET /api/v2/queues` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listQueueDefinitions` | `GET /api/v2/queues/definitions` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listQueues` | `GET /api/v2/queues` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `reorderQueues` | `PATCH /api/v2/queues/order` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showQueueById` | `GET /api/v2/queues/{queue_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateQueue` | `PUT /api/v2/queues/{queue_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
@@ -577,15 +577,15 @@
 | `showOrganizationMembershipByUserId` | `GET /api/v2/users/{user_id}/organization_memberships/{organization_membership_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `unassignOrganization` | `DELETE /api/v2/users/{user_id}/organizations/{organization_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `OrganizationSubscriptionsClient` (0/6 endpoints — 0%)
+### 🟡 `OrganizationSubscriptionsClient` (3/6 endpoints — 50%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createOrganizationSubscription` | `POST /api/v2/organization_subscriptions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteOrganizationSubscription` | `DELETE /api/v2/organization_subscriptions/{organization_subscription_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listOrganizationSubscriptions` | `GET /api/v2/organization_subscriptions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listOrganizationSubscriptionsByOrganization` | `GET /api/v2/organizations/{organization_id}/subscriptions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listUserOrganizationSubscriptions` | `GET /api/v2/users/{user_id}/organization_subscriptions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOrganizationSubscriptions` | `GET /api/v2/organization_subscriptions` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listOrganizationSubscriptionsByOrganization` | `GET /api/v2/organizations/{organization_id}/subscriptions` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listUserOrganizationSubscriptions` | `GET /api/v2/users/{user_id}/organization_subscriptions` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showOrganizationSubscription` | `GET /api/v2/organization_subscriptions/{organization_subscription_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### 🟡 `OrganizationsClient` (12/19 endpoints — 63%)
@@ -708,17 +708,17 @@
 | `showCurrentlyAuthenticatedSession` | `GET /api/v2/users/me/session` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showSession` | `GET /api/v2/users/{user_id}/sessions/{session_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `SharingAgreementsClient` (0/5 endpoints — 0%)
+### 🟡 `SharingAgreementsClient` (1/5 endpoints — 20%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createSharingAgreement` | `POST /api/v2/sharing_agreements` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteSharingAgreement` | `DELETE /api/v2/sharing_agreements/{sharing_agreement_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listSharingAgreements` | `GET /api/v2/sharing_agreements` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listSharingAgreements` | `GET /api/v2/sharing_agreements` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showSharingAgreement` | `GET /api/v2/sharing_agreements/{sharing_agreement_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateSharingAgreement` | `PUT /api/v2/sharing_agreements/{sharing_agreement_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `SkillBasedRoutingClient` (0/18 endpoints — 0%)
+### 🟡 `SkillBasedRoutingClient` (2/18 endpoints — 11%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
@@ -728,10 +728,10 @@
 | `deleteAttribute` | `DELETE /api/v2/routing/attributes/{attribute_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteAttributeValue` | `DELETE /api/v2/routing/attributes/{attribute_id}/values/{attribute_value_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listAGentAttributeValues` | `GET /api/v2/routing/agents/{user_id}/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listAccountAttributes` | `GET /api/v2/routing/attributes` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listAccountAttributes` | `GET /api/v2/routing/attributes` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listAttributeValues` | `GET /api/v2/routing/attributes/{attribute_id}/values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listManyAgentsAttributeValues` | `GET /api/v2/routing/agents/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listRoutingAttributeDefinitions` | `GET /api/v2/routing/attributes/definitions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listRoutingAttributeDefinitions` | `GET /api/v2/routing/attributes/definitions` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listTicketAttributeValues` | `GET /api/v2/routing/tickets/{ticket_id}/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listTicketsFullfilledByUser` | `GET /api/v2/routing/requirements/fulfilled` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `setAgentAttributeValues` | `POST /api/v2/routing/agents/{user_id}/instance_values` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
@@ -848,13 +848,13 @@
 | `redactStringInComment` | `PUT /api/v2/tickets/{ticket_id}/comments/{ticket_comment_id}/redact` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `redactTicketCommentInAgentWorkspace` | `PUT /api/v2/comment_redactions/{ticket_comment_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `TicketContentPinsClient` (0/3 endpoints — 0%)
+### 🟡 `TicketContentPinsClient` (1/3 endpoints — 33%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createTicketContentPin` | `POST /api/v2/ticket_content_pins` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteTicketContentPin` | `DELETE /api/v2/ticket_content_pins/{content_pin_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listTicketContentPins` | `GET /api/v2/ticket_content_pins` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTicketContentPins` | `GET /api/v2/ticket_content_pins` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `TicketFieldsClient` (4/12 endpoints — 33%)
 
@@ -873,13 +873,13 @@
 | `showTicketfield` | `GET /api/v2/ticket_fields/{ticket_field_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateTicketField` | `PUT /api/v2/ticket_fields/{ticket_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `TicketFormStatusesClient` (0/4 endpoints — 0%)
+### 🟡 `TicketFormStatusesClient` (1/4 endpoints — 25%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `deleteTicketFormStatusById` | `DELETE /api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses/{ticket_form_status_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteTicketFormStatuses` | `DELETE /api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listTicketFormStatuses` | `GET /api/v2/ticket_form_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listTicketFormStatuses` | `GET /api/v2/ticket_form_statuses` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showManyTicketFormStatuses` | `GET /api/v2/ticket_form_statuses/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### 🟡 `TicketFormsClient` (4/12 endpoints — 33%)
