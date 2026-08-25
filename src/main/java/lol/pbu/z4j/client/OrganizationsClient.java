@@ -292,6 +292,7 @@ public interface OrganizationsClient {
      */
     @Put("/api/v2/organizations/{organization_id}")
     Mono<@Valid OrganizationResponse> updateOrganization(
-        @PathVariable("organization_id") @NotNull Integer organizationId
+        @PathVariable("organization_id") @NotNull Integer organizationId,
+        @Body @NotNull @Valid CreateOrganizationRequest updateOrganizationRequest
     );
 }

@@ -6,12 +6,12 @@
 ## 📊 Summary Metrics
 
 - **Total Client Interfaces**: 98
-- **Clients with Active Tests**: 16 / 98 (16.3%)
+- **Clients with Active Tests**: 20 / 98 (20.4%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **45 / 629 (7.2%)**
-  - 👑 **Admin Level (`adminCtx`)**: 45 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 38 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 45 endpoints
+- **Endpoints Tested**: **91 / 629 (14.5%)**
+  - 👑 **Admin Level (`adminCtx`)**: 91 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 84 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 91 endpoints
 
 ---
 
@@ -353,19 +353,19 @@
 | `showGroupSLAPolicy` | `GET /api/v2/group_slas/policies/{group_sla_policy_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateGroupSLAPolicy` | `PUT /api/v2/group_slas/policies/{group_sla_policy_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `GroupsClient` (0/9 endpoints — 0%)
+### 🟢 `GroupsClient` (9/9 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `countGroups` | `GET /api/v2/groups/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `countUserGroups` | `GET /api/v2/users/{user_id}/groups/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `createGroup` | `POST /api/v2/groups` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteGroup` | `DELETE /api/v2/groups/{group_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listAssignableGroups` | `GET /api/v2/groups/assignable` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listGroups` | `GET /api/v2/groups` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listUserGroups` | `GET /api/v2/users/{user_id}/groups` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showGroupById` | `GET /api/v2/groups/{group_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateGroup` | `PUT /api/v2/groups/{group_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countGroups` | `GET /api/v2/groups/count` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `countUserGroups` | `GET /api/v2/users/{user_id}/groups/count` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `createGroup` | `POST /api/v2/groups` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteGroup` | `DELETE /api/v2/groups/{group_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listAssignableGroups` | `GET /api/v2/groups/assignable` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listGroups` | `GET /api/v2/groups` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listUserGroups` | `GET /api/v2/users/{user_id}/groups` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showGroupById` | `GET /api/v2/groups/{group_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateGroup` | `PUT /api/v2/groups/{group_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### ⚪ `IncrementalExportClient` (0/7 endpoints — 0%)
 
@@ -473,28 +473,28 @@
 | `getRelationshipFilterDefinitions` | `GET /api/v2/relationships/definitions/{target_type}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `getSourcesByTarget` | `GET /api/v2/{target_type}/{target_id}/relationship_fields/{field_id}/{source_type}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `MacrosClient` (0/19 endpoints — 0%)
+### 🟡 `MacrosClient` (10/19 endpoints — 53%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createAssociatedMacroAttachment` | `POST /api/v2/macros/{macro_id}/attachments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `createMacro` | `POST /api/v2/macros` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createMacro` | `POST /api/v2/macros` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `createMacroAttachment` | `POST /api/v2/macros/attachments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteMacro` | `DELETE /api/v2/macros/{macro_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteMacro` | `DELETE /api/v2/macros/{macro_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `deleteManyMacros` | `DELETE /api/v2/macros/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listActiveMacros` | `GET /api/v2/macros/active` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listMacroActionDefinitions` | `GET /api/v2/macros/definitions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listActiveMacros` | `GET /api/v2/macros/active` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listMacroActionDefinitions` | `GET /api/v2/macros/definitions` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listMacroAttachments` | `GET /api/v2/macros/{macro_id}/attachments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listMacroCategories` | `GET /api/v2/macros/categories` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listMacros` | `GET /api/v2/macros` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listMacrosActions` | `GET /api/v2/macros/actions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `searchMacro` | `GET /api/v2/macros/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listMacroCategories` | `GET /api/v2/macros/categories` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listMacros` | `GET /api/v2/macros` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listMacrosActions` | `GET /api/v2/macros/actions` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `searchMacro` | `GET /api/v2/macros/search` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showChangesToTicket` | `GET /api/v2/macros/{macro_id}/apply` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showDerivedMacro` | `GET /api/v2/macros/new` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showMacro` | `GET /api/v2/macros/{macro_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showMacro` | `GET /api/v2/macros/{macro_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showMacroAttachment` | `GET /api/v2/macros/attachments/{attachment_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showTicketAfterChanges` | `GET /api/v2/tickets/{ticket_id}/macros/{macro_id}/apply` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateMacro` | `PUT /api/v2/macros/{macro_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateMacro` | `PUT /api/v2/macros/{macro_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateManyMacros` | `PUT /api/v2/macros/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
 ### ⚪ `OAuthClientsClient` (0/7 endpoints — 0%)
@@ -588,29 +588,29 @@
 | `listUserOrganizationSubscriptions` | `GET /api/v2/users/{user_id}/organization_subscriptions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showOrganizationSubscription` | `GET /api/v2/organization_subscriptions/{organization_subscription_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `OrganizationsClient` (0/19 endpoints — 0%)
+### 🟡 `OrganizationsClient` (12/19 endpoints — 63%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `autocompleteOrganizations` | `GET /api/v2/organizations/autocomplete` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `countOrganizations` | `GET /api/v2/organizations/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `countUserOrganizations` | `GET /api/v2/users/{user_id}/organizations/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `autocompleteOrganizations` | `GET /api/v2/organizations/autocomplete` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `countOrganizations` | `GET /api/v2/organizations/count` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `countUserOrganizations` | `GET /api/v2/users/{user_id}/organizations/count` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `createManyOrganizations` | `POST /api/v2/organizations/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `createOrUpdateOrganization` | `POST /api/v2/organizations/create_or_update` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `createOrganization` | `POST /api/v2/organizations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createOrganization` | `POST /api/v2/organizations` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `createOrganizationMerge` | `POST /api/v2/organizations/{organization_id}/merge` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteManyOrganizations` | `DELETE /api/v2/organizations/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteOrganization` | `DELETE /api/v2/organizations/{organization_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteOrganization` | `DELETE /api/v2/organizations/{organization_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listOrganizationMerges` | `GET /api/v2/organizations/{organization_id}/merges` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listOrganizations` | `GET /api/v2/organizations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listUserOrganizations` | `GET /api/v2/users/{user_id}/organizations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `organizationRelated` | `GET /api/v2/organizations/{organization_id}/related` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `searchOrganizations` | `GET /api/v2/organizations/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showManyOrganizations` | `GET /api/v2/organizations/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showOrganization` | `GET /api/v2/organizations/{organization_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOrganizations` | `GET /api/v2/organizations` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listUserOrganizations` | `GET /api/v2/users/{user_id}/organizations` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `organizationRelated` | `GET /api/v2/organizations/{organization_id}/related` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `searchOrganizations` | `GET /api/v2/organizations/search` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showManyOrganizations` | `GET /api/v2/organizations/show_many` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showOrganization` | `GET /api/v2/organizations/{organization_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showOrganizationMerge` | `GET /api/v2/organization_merges/{organization_merge_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateManyOrganizations` | `PUT /api/v2/organizations/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateOrganization` | `PUT /api/v2/organizations/{organization_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateOrganization` | `PUT /api/v2/organizations/{organization_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### ⚪ `OtpClient` (0/3 endpoints — 0%)
 
@@ -856,17 +856,17 @@
 | `deleteTicketContentPin` | `DELETE /api/v2/ticket_content_pins/{content_pin_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listTicketContentPins` | `GET /api/v2/ticket_content_pins` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `TicketFieldsClient` (2/12 endpoints — 17%)
+### ⚪ `TicketFieldsClient` (0/12 endpoints — 0%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `countTicketFields` | `GET /api/v2/ticket_fields/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `createOrUpdateTicketFieldOption` | `POST /api/v2/ticket_fields/{ticket_field_id}/options` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `createTicketField` | `POST /api/v2/ticket_fields` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `createTicketField` | `POST /api/v2/ticket_fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteTicketField` | `DELETE /api/v2/ticket_fields/{ticket_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteTicketFieldOption` | `DELETE /api/v2/ticket_fields/{ticket_field_id}/options/{ticket_field_option_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listTicketFieldOptions` | `GET /api/v2/ticket_fields/{ticket_field_id}/options` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listTicketFields` | `GET /api/v2/ticket_fields` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listTicketFields` | `GET /api/v2/ticket_fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `reorderTicketFields` | `PUT /api/v2/ticket_fields/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showManyTicketFields` | `GET /api/v2/ticket_fields/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showTicketFieldOption` | `GET /api/v2/ticket_fields/{ticket_field_id}/options/{ticket_field_option_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
@@ -1045,41 +1045,41 @@
 | `showUserSegment` | `GET /api/v2/help_center/user_segments/{user_segment_id}` | ✅ | ⚪ | ✅ | 🟡 In Progress |
 | `updateUserSegment` | `PUT /api/v2/help_center/user_segments/{user_segment_id}` | ✅ | ⚪ | ✅ | 🟡 In Progress |
 
-### ⚪ `UsersClient` (0/31 endpoints — 0%)
+### 🟡 `UsersClient` (10/31 endpoints — 32%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `autocompleteUsers` | `GET /api/v2/users/autocomplete` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `autocompleteUsers` | `GET /api/v2/users/autocomplete` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `autocompleteUsersPost` | `POST /api/v2/users/autocomplete` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `countDeletedUsers` | `GET /api/v2/deleted_users/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `countGroupUsers` | `GET /api/v2/groups/{group_id}/users/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `countOrganizationUsers` | `GET /api/v2/organizations/{organization_id}/users/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `countUsers` | `GET /api/v2/users/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countUsers` | `GET /api/v2/users/count` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `createManyUsers` | `POST /api/v2/users/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `createOrUpdateManyUsers` | `POST /api/v2/users/create_or_update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `createOrUpdateUser` | `POST /api/v2/users/create_or_update` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `createUser` | `POST /api/v2/users` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteUser` | `DELETE /api/v2/users/{user_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createUser` | `POST /api/v2/users` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteUser` | `DELETE /api/v2/users/{user_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `destroyManyUsers` | `DELETE /api/v2/users/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `getUserEntitlementsFull` | `GET /api/v2/users/{user_id}/entitlements/full` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listDeletedUsers` | `GET /api/v2/deleted_users` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listGroupUsers` | `GET /api/v2/groups/{group_id}/users` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `listOrganizationUsers` | `GET /api/v2/organizations/{organization_id}/users` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listUsers` | `GET /api/v2/users` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listUsers` | `GET /api/v2/users` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `logoutManyUsers` | `POST /api/v2/users/logout_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `mergeEndUsers` | `PUT /api/v2/users/{user_id}/merge` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `permanentlyDeleteUser` | `DELETE /api/v2/deleted_users/{deleted_user_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `requestUserCreate` | `POST /api/v2/users/request_create` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `searchUsers` | `GET /api/v2/users/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showCurrentUser` | `GET /api/v2/users/me` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `searchUsers` | `GET /api/v2/users/search` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showCurrentUser` | `GET /api/v2/users/me` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showDeletedUser` | `GET /api/v2/deleted_users/{deleted_user_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showManyUsers` | `GET /api/v2/users/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showUser` | `GET /api/v2/users/{user_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showUser` | `GET /api/v2/users/{user_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showUserComplianceDeletionStatuses` | `GET /api/v2/users/{user_id}/compliance_deletion_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showUserRelated` | `GET /api/v2/users/{user_id}/related` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showUserRelated` | `GET /api/v2/users/{user_id}/related` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateCurrentUserSettings` | `PUT /api/v2/users/me/settings` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateManyUsers` | `PUT /api/v2/users/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateUser` | `PUT /api/v2/users/{user_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateUser` | `PUT /api/v2/users/{user_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### ⚪ `ViewCategoriesClient` (0/5 endpoints — 0%)
 
@@ -1091,22 +1091,22 @@
 | `orderViewCategories` | `PUT /api/v2/view_categories/order` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `updateViewCategory` | `PATCH /api/v2/view_categories/{view_category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### ⚪ `ViewsClient` (0/19 endpoints — 0%)
+### 🟡 `ViewsClient` (7/19 endpoints — 37%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `bulkDeleteViews` | `DELETE /api/v2/views/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `countViews` | `GET /api/v2/views/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `countViews` | `GET /api/v2/views/count` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `createView` | `POST /api/v2/views` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `deleteView` | `DELETE /api/v2/views/{view_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `executeView` | `GET /api/v2/views/{view_id}/execute` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `executeView` | `GET /api/v2/views/{view_id}/execute` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `exportView` | `GET /api/v2/views/{view_id}/export` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `getViewCount` | `GET /api/v2/views/{view_id}/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `getViewCount` | `GET /api/v2/views/{view_id}/count` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `getViewCounts` | `GET /api/v2/views/count_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listActiveViews` | `GET /api/v2/views/active` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listCompactViews` | `GET /api/v2/views/compact` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listTicketsFromView` | `GET /api/v2/views/{view_id}/tickets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listViews` | `GET /api/v2/views` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listActiveViews` | `GET /api/v2/views/active` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listCompactViews` | `GET /api/v2/views/compact` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listTicketsFromView` | `GET /api/v2/views/{view_id}/tickets` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listViews` | `GET /api/v2/views` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listViewsById` | `GET /api/v2/views/show_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `previewCount` | `POST /api/v2/views/preview/count` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `previewViews` | `POST /api/v2/views/preview` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
