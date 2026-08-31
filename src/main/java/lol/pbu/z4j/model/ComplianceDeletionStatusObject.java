@@ -79,13 +79,13 @@ public class ComplianceDeletionStatusObject {
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_EXECUTER_ID)
-    private Integer executerId;
+    private Long executerId;
 
     @NotNull
     @JsonProperty(JSON_PROPERTY_USER_ID)
-    private Integer userId;
+    private Long userId;
 
-    public ComplianceDeletionStatusObject(String accountSubdomain, String action, String application, String createdAt, Integer executerId, Integer userId) {
+    public ComplianceDeletionStatusObject(String accountSubdomain, String action, String application, String createdAt, Long executerId, Long userId) {
         this.accountSubdomain = accountSubdomain;
         this.action = action;
         this.application = application;

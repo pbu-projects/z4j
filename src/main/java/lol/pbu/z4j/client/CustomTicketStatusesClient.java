@@ -76,7 +76,7 @@ public interface CustomTicketStatusesClient {
      */
     @Post("/api/v2/custom_statuses/{custom_status_id}/ticket_form_statuses")
     Mono<@Valid TicketFormStatusesResponse> createTicketFormStatusesForCustomStatus(
-        @PathVariable("custom_status_id") @NotNull Integer customStatusId,
+        @PathVariable("custom_status_id") @NotNull Long customStatusId,
         @Body @Nullable @Valid CreateTicketFormStatusesForCustomStatusRequest createTicketFormStatusesForCustomStatusRequest
     );
 
@@ -107,7 +107,7 @@ public interface CustomTicketStatusesClient {
      */
     @Get("/api/v2/custom_statuses/{custom_status_id}")
     Mono<@Valid CustomStatusResponse> showCustomStatus(
-        @PathVariable("custom_status_id") @NotNull Integer customStatusId
+        @PathVariable("custom_status_id") @NotNull Long customStatusId
     );
 
     /**
@@ -121,7 +121,7 @@ public interface CustomTicketStatusesClient {
      */
     @Put("/api/v2/custom_statuses/{custom_status_id}")
     Mono<@Valid CustomStatusResponse> updateCustomStatus(
-        @PathVariable("custom_status_id") @NotNull Integer customStatusId,
+        @PathVariable("custom_status_id") @NotNull Long customStatusId,
         @Body @Nullable @Valid CustomStatusUpdateRequest customStatusUpdateRequest
     );
 }

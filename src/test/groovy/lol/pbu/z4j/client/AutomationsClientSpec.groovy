@@ -33,7 +33,7 @@ class AutomationsClientSpec extends Z4jSpec {
                       badTokenAutomationsClient, badUrlAutomationsClient
 
     @Shared
-    Integer existingAutomationId
+    Long existingAutomationId
 
     def setupSpec() {
         adminAutomationsClient = adminCtx.getBean(AutomationsClient.class)

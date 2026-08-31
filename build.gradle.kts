@@ -118,6 +118,7 @@ tasks.jacocoTestReport {
 }
 
 tasks.test {
+    maxHeapSize = "2g"
     finalizedBy(tasks.jacocoTestReport)
 }
 

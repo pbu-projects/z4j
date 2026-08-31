@@ -77,7 +77,7 @@ public class EmailNotificationObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_COMMENT_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer commentId;
+    private Long commentId;
 
     /**
      * <p>When this email notification was created</p>
@@ -109,7 +109,7 @@ public class EmailNotificationObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_NOTIFICATION_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer notificationId;
+    private Long notificationId;
 
     /**
      * <p>The list of recipients associated to this email notification</p>
@@ -125,7 +125,7 @@ public class EmailNotificationObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketId;
+    private Long ticketId;
 
     /**
      * <p>When this email notification was last updated</p>

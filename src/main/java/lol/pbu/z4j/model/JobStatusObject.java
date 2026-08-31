@@ -95,7 +95,7 @@ public class JobStatusObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_PROGRESS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer progress;
+    private Long progress;
 
     @Nullable
     @Valid
@@ -117,7 +117,7 @@ public class JobStatusObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TOTAL)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer total;
+    private Long total;
 
     /**
      * <p>The URL to poll for status updates</p>

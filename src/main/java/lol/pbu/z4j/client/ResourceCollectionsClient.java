@@ -54,7 +54,7 @@ public interface ResourceCollectionsClient {
      */
     @Delete("/api/v2/resource_collections/{resource_collection_id}")
     Mono<@Valid JobStatusResponse> deleteResourceCollection(
-        @PathVariable("resource_collection_id") @NotNull Integer resourceCollectionId
+        @PathVariable("resource_collection_id") @NotNull Long resourceCollectionId
     );
 
     /**
@@ -76,7 +76,7 @@ public interface ResourceCollectionsClient {
      */
     @Get("/api/v2/resource_collections/{resource_collection_id}")
     Mono<@Valid ResourceCollectionResponse> retrieveResourceCollection(
-        @PathVariable("resource_collection_id") @NotNull Integer resourceCollectionId
+        @PathVariable("resource_collection_id") @NotNull Long resourceCollectionId
     );
 
     /**
@@ -89,6 +89,6 @@ public interface ResourceCollectionsClient {
      */
     @Put("/api/v2/resource_collections/{resource_collection_id}")
     Mono<@Valid JobStatusResponse> updateResourceCollection(
-        @PathVariable("resource_collection_id") @NotNull Integer resourceCollectionId
+        @PathVariable("resource_collection_id") @NotNull Long resourceCollectionId
     );
 }

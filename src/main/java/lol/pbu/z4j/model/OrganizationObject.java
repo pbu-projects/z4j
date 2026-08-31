@@ -128,7 +128,7 @@ public class OrganizationObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_GROUP_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer groupId;
+    private Long groupId;
 
     /**
      * <p>Automatically assigned when the organization is created</p>
@@ -136,7 +136,7 @@ public class OrganizationObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Any notes you have about the organization</p>

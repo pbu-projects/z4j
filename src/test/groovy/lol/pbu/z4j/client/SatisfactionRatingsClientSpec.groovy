@@ -32,7 +32,7 @@ class SatisfactionRatingsClientSpec extends Z4jSpec {
                               badTokenCsatClient, badUrlCsatClient
 
     @Shared
-    Integer existingRatingId
+    Long existingRatingId
 
     def setupSpec() {
         adminCsatClient = adminCtx.getBean(SatisfactionRatingsClient.class)

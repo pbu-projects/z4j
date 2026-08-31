@@ -124,7 +124,7 @@ public class TicketMetricObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ASSIGNEE_STATIONS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer assigneeStations;
+    private Long assigneeStations;
 
     /**
      * <p>When the assignee last updated the ticket</p>
@@ -168,7 +168,7 @@ public class TicketMetricObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_GROUP_STATIONS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer groupStations;
+    private Long groupStations;
 
     /**
      * <p>Automatically assigned when the client is created</p>
@@ -176,7 +176,7 @@ public class TicketMetricObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>When the ticket was initially assigned</p>
@@ -206,7 +206,7 @@ public class TicketMetricObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_REOPENS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer reopens;
+    private Long reopens;
 
     /**
      * <p>The number of public replies added to a ticket by an agent</p>
@@ -214,7 +214,7 @@ public class TicketMetricObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_REPLIES)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer replies;
+    private Long replies;
 
     @Nullable
     @Valid
@@ -264,7 +264,7 @@ public class TicketMetricObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketId;
+    private Long ticketId;
 
     /**
      * <p>When the record was last updated</p>

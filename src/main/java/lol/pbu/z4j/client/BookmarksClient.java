@@ -59,7 +59,7 @@ public interface BookmarksClient {
      */
     @Delete("/api/v2/bookmarks/{bookmark_id}")
     Mono<Void> deleteBookmark(
-        @PathVariable("bookmark_id") @NotNull Integer bookmarkId
+        @PathVariable("bookmark_id") @NotNull Long bookmarkId
     );
 
     /**

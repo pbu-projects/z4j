@@ -195,7 +195,7 @@ public class ItamAsset implements ItamAssetBulkJobRequestJobItemsInner {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer organizationId;
+    private Long organizationId;
 
     /**
      * <p>The asset's purchase cost</p>
@@ -243,7 +243,7 @@ public class ItamAsset implements ItamAssetBulkJobRequestJobItemsInner {
     @Nullable
     @JsonProperty(JSON_PROPERTY_USER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer userId;
+    private Long userId;
 
     /**
      * <p>The asset's vendor name</p>

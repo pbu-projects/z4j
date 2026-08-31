@@ -58,7 +58,7 @@ public class OrganizationMetadataObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKETS_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketsCount;
+    private Long ticketsCount;
 
     /**
      * <p>The number of users for the organization</p>
@@ -66,6 +66,6 @@ public class OrganizationMetadataObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_USERS_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer usersCount;
+    private Long usersCount;
 
 }

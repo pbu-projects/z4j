@@ -111,7 +111,7 @@ public interface TicketsClient {
      */
     @Get("/api/v2/organizations/{organization_id}/tickets/count")
     Mono<@Valid CountOrganizationTickets200Response> countOrganizationTickets(
-        @PathVariable("organization_id") @NotNull Integer organizationId
+        @PathVariable("organization_id") @NotNull Long organizationId
     );
 
     /**
@@ -133,7 +133,7 @@ public interface TicketsClient {
      */
     @Get("/api/v2/users/{user_id}/tickets/assigned/count")
     Mono<@Valid CountOrganizationTickets200Response> countUserAssignedTickets(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -146,7 +146,7 @@ public interface TicketsClient {
      */
     @Get("/api/v2/users/{user_id}/tickets/ccd/count")
     Mono<@Valid CountOrganizationTickets200Response> countUserCCDTickets(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -171,7 +171,7 @@ public interface TicketsClient {
      */
     @Delete("/api/v2/tickets/{ticket_id}")
     Mono<Void> deleteTicket(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -184,7 +184,7 @@ public interface TicketsClient {
      */
     @Delete("/api/v2/deleted_tickets/{ticket_id}")
     Mono<@Valid JobStatusResponse> deleteTicketPermanently(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -214,7 +214,7 @@ public interface TicketsClient {
      */
     @Get("/api/v2/organizations/{organization_id}/tickets")
     Mono<@Valid TicketsResponse> listOrganizationTickets(
-        @PathVariable("organization_id") @NotNull Integer organizationId
+        @PathVariable("organization_id") @NotNull Long organizationId
     );
 
     /**
@@ -236,7 +236,7 @@ public interface TicketsClient {
      */
     @Get("/api/v2/tickets/{ticket_id}/collaborators")
     Mono<Map<String, Object>> listTicketCollaborators(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -249,7 +249,7 @@ public interface TicketsClient {
      */
     @Get("/api/v2/tickets/{ticket_id}/email_ccs")
     Mono<Map<String, Object>> listTicketEmailCCs(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -262,7 +262,7 @@ public interface TicketsClient {
      */
     @Get("/api/v2/tickets/{ticket_id}/followers")
     Mono<Map<String, Object>> listTicketFollowers(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -275,7 +275,7 @@ public interface TicketsClient {
      */
     @Get("/api/v2/tickets/{ticket_id}/incidents")
     Mono<Map<String, Object>> listTicketIncidents(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -311,7 +311,7 @@ public interface TicketsClient {
      */
     @Get("/api/v2/users/{user_id}/tickets/assigned")
     Mono<@Valid TicketsResponse> listUserAssignedTickets(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -324,7 +324,7 @@ public interface TicketsClient {
      */
     @Get("/api/v2/users/{user_id}/tickets/ccd")
     Mono<@Valid TicketsResponse> listUserCCDTickets(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -337,7 +337,7 @@ public interface TicketsClient {
      */
     @Get("/api/v2/users/{user_id}/tickets/followed")
     Mono<@Valid TicketsResponse> listUserFollowedTickets(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -349,7 +349,7 @@ public interface TicketsClient {
      */
     @Get("/api/v2/users/{user_id}/tickets/requested")
     Mono<@Valid TicketsResponse> listUserRequestedTickets(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -375,7 +375,7 @@ public interface TicketsClient {
      */
     @Put("/api/v2/tickets/{ticket_id}/mark_as_spam")
     Mono<@NotNull String> markTicketAsSpamAndSuspendRequester(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -389,7 +389,7 @@ public interface TicketsClient {
      */
     @Post("/api/v2/tickets/{ticket_id}/merge")
     Mono<@Valid JobStatusResponse> mergeTicketsIntoTargetTicket(
-        @PathVariable("ticket_id") @NotNull Integer ticketId,
+        @PathVariable("ticket_id") @NotNull Long ticketId,
         @Body @Nullable @Valid TicketMergeInput ticketMergeInput
     );
 
@@ -403,7 +403,7 @@ public interface TicketsClient {
      */
     @Put("/api/v2/deleted_tickets/{ticket_id}/restore")
     Mono<@NotNull String> restoreDeletedTicket(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -416,7 +416,7 @@ public interface TicketsClient {
      */
     @Get("/api/v2/tickets/{ticket_id}")
     Mono<@Valid TicketResponse> showTicket(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -429,7 +429,7 @@ public interface TicketsClient {
      */
     @Get("/api/v2/tickets/{ticket_id}/related")
     Mono<@Valid TicketRelatedInformation> ticketRelatedInformation(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -483,7 +483,7 @@ public interface TicketsClient {
      */
     @Put("/api/v2/tickets/{ticket_id}")
     Mono<@Valid TicketUpdateResponse> updateTicket(
-        @PathVariable("ticket_id") @NotNull Integer ticketId,
+        @PathVariable("ticket_id") @NotNull Long ticketId,
         @Body @Nullable @Valid TicketUpdateRequest ticketUpdateRequest
     );
 }

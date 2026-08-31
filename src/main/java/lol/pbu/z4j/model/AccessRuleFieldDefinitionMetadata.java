@@ -66,7 +66,7 @@ public class AccessRuleFieldDefinitionMetadata {
     @Nullable
     @JsonProperty(JSON_PROPERTY_FIELD_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer fieldId;
+    private Long fieldId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_ITEM_KEY)

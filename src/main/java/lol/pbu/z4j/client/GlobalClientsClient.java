@@ -46,7 +46,7 @@ public interface GlobalClientsClient {
      */
     @Get("/api/v2/oauth/global_clients/token_summary")
     Mono<@Valid GlobalClientsTokenSummaryResponse> globalOAuthClientsTokenSummary(
-        @QueryValue("global_client_id") @Nullable Integer globalClientId,
+        @QueryValue("global_client_id") @Nullable Long globalClientId,
         @QueryValue("include_expired") @Nullable Boolean includeExpired
     );
 
@@ -69,6 +69,6 @@ public interface GlobalClientsClient {
      */
     @Get("/api/v2/oauth/global_clients/{global_client_id}")
     Mono<@Valid GlobalClientResponse> showGlobalClient(
-        @PathVariable("global_client_id") @NotNull Integer globalClientId
+        @PathVariable("global_client_id") @NotNull Long globalClientId
     );
 }

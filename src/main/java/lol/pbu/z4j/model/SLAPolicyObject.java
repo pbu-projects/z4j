@@ -107,7 +107,7 @@ public class SLAPolicyObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Array of <a href=\"#policy-metric\">Policy Metric</a> objects</p>
@@ -123,7 +123,7 @@ public class SLAPolicyObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_POSITION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer position;
+    private Long position;
 
     /**
      * <p>The time of the last update of the SLA policy</p>

@@ -82,7 +82,7 @@ public interface OrganizationsClient {
      */
     @Get("/api/v2/users/{user_id}/organizations/count")
     Mono<@Valid CountOrganizationResponse> countUserOrganizations(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -128,7 +128,7 @@ public interface OrganizationsClient {
      */
     @Post("/api/v2/organizations/{organization_id}/merge")
     Mono<@Valid OrganizationMergeResponse> createOrganizationMerge(
-        @PathVariable("organization_id") @NotNull Integer organizationId,
+        @PathVariable("organization_id") @NotNull Long organizationId,
         @Body @NotNull @Valid OrganizationMergeRequest organizationMergeRequest
     );
 
@@ -157,7 +157,7 @@ public interface OrganizationsClient {
      */
     @Delete("/api/v2/organizations/{organization_id}")
     Mono<Void> deleteOrganization(
-        @PathVariable("organization_id") @NotNull Integer organizationId
+        @PathVariable("organization_id") @NotNull Long organizationId
     );
 
     /**
@@ -170,7 +170,7 @@ public interface OrganizationsClient {
      */
     @Get("/api/v2/organizations/{organization_id}/merges")
     Mono<@Valid OrganizationMergeListResponse> listOrganizationMerges(
-        @PathVariable("organization_id") @NotNull Integer organizationId
+        @PathVariable("organization_id") @NotNull Long organizationId
     );
 
     /**
@@ -194,7 +194,7 @@ public interface OrganizationsClient {
      */
     @Get("/api/v2/users/{user_id}/organizations")
     Mono<@Valid OrganizationsResponse> listUserOrganizations(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -207,7 +207,7 @@ public interface OrganizationsClient {
      */
     @Get("/api/v2/organizations/{organization_id}/related")
     Mono<@Valid OrganizationsRelatedResponse> organizationRelated(
-        @PathVariable("organization_id") @NotNull Integer organizationId
+        @PathVariable("organization_id") @NotNull Long organizationId
     );
 
     /**
@@ -221,7 +221,7 @@ public interface OrganizationsClient {
      */
     @Get("/api/v2/organizations/search")
     Mono<@Valid OrganizationsResponse> searchOrganizations(
-        @QueryValue("external_id") @Nullable Integer externalId,
+        @QueryValue("external_id") @Nullable Long externalId,
         @QueryValue("name") @Nullable String name
     );
 
@@ -250,7 +250,7 @@ public interface OrganizationsClient {
      */
     @Get("/api/v2/organizations/{organization_id}")
     Mono<@Valid OrganizationResponse> showOrganization(
-        @PathVariable("organization_id") @NotNull Integer organizationId
+        @PathVariable("organization_id") @NotNull Long organizationId
     );
 
     /**
@@ -292,7 +292,7 @@ public interface OrganizationsClient {
      */
     @Put("/api/v2/organizations/{organization_id}")
     Mono<@Valid OrganizationResponse> updateOrganization(
-        @PathVariable("organization_id") @NotNull Integer organizationId,
+        @PathVariable("organization_id") @NotNull Long organizationId,
         @Body @NotNull @Valid CreateOrganizationRequest updateOrganizationRequest
     );
 }

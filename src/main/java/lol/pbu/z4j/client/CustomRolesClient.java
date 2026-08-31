@@ -53,7 +53,7 @@ public interface CustomRolesClient {
      */
     @Delete("/api/v2/custom_roles/{custom_role_id}")
     Mono<Void> deleteCustomRoleById(
-        @PathVariable("custom_role_id") @NotNull Integer customRoleId
+        @PathVariable("custom_role_id") @NotNull Long customRoleId
     );
 
     /**
@@ -75,7 +75,7 @@ public interface CustomRolesClient {
      */
     @Get("/api/v2/custom_roles/{custom_role_id}")
     Mono<@Valid CustomRoleResponse> showCustomRoleById(
-        @PathVariable("custom_role_id") @NotNull Integer customRoleId
+        @PathVariable("custom_role_id") @NotNull Long customRoleId
     );
 
     /**
@@ -88,6 +88,6 @@ public interface CustomRolesClient {
      */
     @Put("/api/v2/custom_roles/{custom_role_id}")
     Mono<@Valid CustomRoleResponse> updateCustomRoleById(
-        @PathVariable("custom_role_id") @NotNull Integer customRoleId
+        @PathVariable("custom_role_id") @NotNull Long customRoleId
     );
 }

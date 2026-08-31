@@ -54,7 +54,7 @@ public interface GroupsClient {
      */
     @Get("/api/v2/users/{user_id}/groups/count")
     Mono<@Valid GroupsCountObject> countUserGroups(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -78,7 +78,7 @@ public interface GroupsClient {
      */
     @Delete("/api/v2/groups/{group_id}")
     Mono<Void> deleteGroup(
-        @PathVariable("group_id") @NotNull Integer groupId
+        @PathVariable("group_id") @NotNull Long groupId
     );
 
     /**
@@ -114,7 +114,7 @@ public interface GroupsClient {
      */
     @Get("/api/v2/users/{user_id}/groups")
     Mono<@Valid GroupsResponse> listUserGroups(
-        @PathVariable("user_id") @NotNull Integer userId,
+        @PathVariable("user_id") @NotNull Long userId,
         @QueryValue("exclude_deleted") @Nullable Boolean excludeDeleted
     );
 
@@ -128,7 +128,7 @@ public interface GroupsClient {
      */
     @Get("/api/v2/groups/{group_id}")
     Mono<@Valid GroupResponse> showGroupById(
-        @PathVariable("group_id") @NotNull Integer groupId
+        @PathVariable("group_id") @NotNull Long groupId
     );
 
     /**
@@ -142,7 +142,7 @@ public interface GroupsClient {
      */
     @Put("/api/v2/groups/{group_id}")
     Mono<@Valid GroupResponse> updateGroup(
-        @PathVariable("group_id") @NotNull Integer groupId,
+        @PathVariable("group_id") @NotNull Long groupId,
         @Body @NotNull GroupResponse group
     );
 }

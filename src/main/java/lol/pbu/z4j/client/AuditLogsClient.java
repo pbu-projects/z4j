@@ -50,8 +50,8 @@ public interface AuditLogsClient {
     @Post("/api/v2/audit_logs/export")
     Mono<@NotNull String> exportAuditLogs(
         @QueryValue("filter[source_type]") @Nullable String filterSourceType,
-        @QueryValue("filter[source_id]") @Nullable Integer filterSourceId,
-        @QueryValue("filter[actor_id]") @Nullable Integer filterActorId,
+        @QueryValue("filter[source_id]") @Nullable Long filterSourceId,
+        @QueryValue("filter[actor_id]") @Nullable Long filterActorId,
         @QueryValue("filter[ip_address]") @Nullable String filterIpAddress,
         @QueryValue("filter[created_at]") @Nullable String filterCreatedAt,
         @QueryValue("filter[action]") @Nullable String filterAction
@@ -76,8 +76,8 @@ public interface AuditLogsClient {
     @Get("/api/v2/audit_logs")
     Mono<@Valid AuditLogsResponse> listAuditLogs(
         @QueryValue("filter[source_type]") @Nullable String filterSourceType,
-        @QueryValue("filter[source_id]") @Nullable Integer filterSourceId,
-        @QueryValue("filter[actor_id]") @Nullable Integer filterActorId,
+        @QueryValue("filter[source_id]") @Nullable Long filterSourceId,
+        @QueryValue("filter[actor_id]") @Nullable Long filterActorId,
         @QueryValue("filter[ip_address]") @Nullable String filterIpAddress,
         @QueryValue("filter[created_at]") @Nullable String filterCreatedAt,
         @QueryValue("filter[action]") @Nullable String filterAction,
@@ -96,6 +96,6 @@ public interface AuditLogsClient {
      */
     @Get("/api/v2/audit_logs/{audit_log_id}")
     Mono<@Valid AuditLogResponse> showAuditLog(
-        @PathVariable("audit_log_id") @NotNull Integer auditLogId
+        @PathVariable("audit_log_id") @NotNull Long auditLogId
     );
 }

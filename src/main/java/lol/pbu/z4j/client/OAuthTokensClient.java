@@ -46,8 +46,8 @@ public interface OAuthTokensClient {
      */
     @Post("/api/v2/oauth/tokens")
     Mono<@Valid OAuthTokenResponse> createOAuthToken(
-        @QueryValue("client_id") @Nullable Integer clientId,
-        @QueryValue("global_client_id") @Nullable Integer globalClientId,
+        @QueryValue("client_id") @Nullable Long clientId,
+        @QueryValue("global_client_id") @Nullable Long globalClientId,
         @QueryValue("all") @Nullable Boolean all
     );
 
@@ -63,8 +63,8 @@ public interface OAuthTokensClient {
      */
     @Get("/api/v2/oauth/tokens")
     Mono<@Valid OAuthTokensResponse> listOAuthTokens(
-        @QueryValue("client_id") @Nullable Integer clientId,
-        @QueryValue("global_client_id") @Nullable Integer globalClientId,
+        @QueryValue("client_id") @Nullable Long clientId,
+        @QueryValue("global_client_id") @Nullable Long globalClientId,
         @QueryValue("all") @Nullable Boolean all
     );
 
@@ -87,7 +87,7 @@ public interface OAuthTokensClient {
      */
     @Delete("/api/v2/oauth/tokens/{oauth_token_id}")
     Mono<Void> revokeOAuthToken(
-        @PathVariable("oauth_token_id") @NotNull Integer oauthTokenId
+        @PathVariable("oauth_token_id") @NotNull Long oauthTokenId
     );
 
     /**
@@ -109,6 +109,6 @@ public interface OAuthTokensClient {
      */
     @Get("/api/v2/oauth/tokens/{oauth_token_id}")
     Mono<@Valid OAuthTokenResponse> showToken(
-        @PathVariable("oauth_token_id") @NotNull Integer oauthTokenId
+        @PathVariable("oauth_token_id") @NotNull Long oauthTokenId
     );
 }

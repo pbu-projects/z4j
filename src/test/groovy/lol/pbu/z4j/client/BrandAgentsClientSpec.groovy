@@ -35,13 +35,13 @@ class BrandAgentsClientSpec extends Z4jSpec {
                       badTokenBrandAgentsClient, badUrlBrandAgentsClient
 
     @Shared
-    Integer adminUserId
+    Long adminUserId
 
     @Shared
-    Integer existingBrandId
+    Long existingBrandId
 
     @Shared
-    Integer existingBrandAgentId
+    Long existingBrandAgentId
 
     def setupSpec() {
         adminBrandAgentsClient = adminCtx.getBean(BrandAgentsClient.class)

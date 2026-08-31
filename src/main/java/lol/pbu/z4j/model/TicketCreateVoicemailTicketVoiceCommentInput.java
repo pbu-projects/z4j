@@ -71,7 +71,7 @@ public class TicketCreateVoicemailTicketVoiceCommentInput {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ANSWERED_BY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer answeredById;
+    private Long answeredById;
 
     /**
      * <p>Duration in seconds of the call</p>
@@ -79,7 +79,7 @@ public class TicketCreateVoicemailTicketVoiceCommentInput {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CALL_DURATION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer callDuration;
+    private Long callDuration;
 
     /**
      * <p>Incoming phone number</p>

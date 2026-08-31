@@ -66,6 +66,6 @@ public interface TicketMetricsClient {
      */
     @Get("/api/v2/tickets/{ticket_id}/metrics")
     Mono<@Valid TicketMetricsByTicketMetricIdResponse> showTicketMetricsByTicket(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 }

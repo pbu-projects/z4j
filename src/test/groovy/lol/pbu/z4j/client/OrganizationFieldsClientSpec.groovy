@@ -34,7 +34,7 @@ class OrganizationFieldsClientSpec extends Z4jSpec {
                              badTokenOrgFieldsClient, badUrlOrgFieldsClient
 
     @Shared
-    Integer existingOrgFieldId
+    Long existingOrgFieldId
 
     def setupSpec() {
         adminOrgFieldsClient = adminCtx.getBean(OrganizationFieldsClient.class)

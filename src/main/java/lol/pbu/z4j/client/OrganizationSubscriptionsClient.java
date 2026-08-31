@@ -58,7 +58,7 @@ public interface OrganizationSubscriptionsClient {
      */
     @Delete("/api/v2/organization_subscriptions/{organization_subscription_id}")
     Mono<Void> deleteOrganizationSubscription(
-        @PathVariable("organization_subscription_id") @NotNull Integer organizationSubscriptionId
+        @PathVariable("organization_subscription_id") @NotNull Long organizationSubscriptionId
     );
 
     /**
@@ -80,7 +80,7 @@ public interface OrganizationSubscriptionsClient {
      */
     @Get("/api/v2/organizations/{organization_id}/subscriptions")
     Mono<@Valid OrganizationSubscriptionsResponse> listOrganizationSubscriptionsByOrganization(
-        @PathVariable("organization_id") @NotNull Integer organizationId
+        @PathVariable("organization_id") @NotNull Long organizationId
     );
 
     /**
@@ -93,7 +93,7 @@ public interface OrganizationSubscriptionsClient {
      */
     @Get("/api/v2/users/{user_id}/organization_subscriptions")
     Mono<@Valid OrganizationSubscriptionsResponse> listUserOrganizationSubscriptions(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -106,6 +106,6 @@ public interface OrganizationSubscriptionsClient {
      */
     @Get("/api/v2/organization_subscriptions/{organization_subscription_id}")
     Mono<@Valid OrganizationSubscriptionResponse> showOrganizationSubscription(
-        @PathVariable("organization_subscription_id") @NotNull Integer organizationSubscriptionId
+        @PathVariable("organization_subscription_id") @NotNull Long organizationSubscriptionId
     );
 }

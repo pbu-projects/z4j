@@ -34,10 +34,10 @@ class DynamicContentItemVariantsClientSpec extends Z4jSpec {
                                      badTokenVariantsClient, badUrlVariantsClient
 
     @Shared
-    Integer existingItemId
+    Long existingItemId
 
     @Shared
-    Integer existingVariantId
+    Long existingVariantId
 
     def setupSpec() {
         adminVariantsClient = adminCtx.getBean(DynamicContentItemVariantsClient.class)

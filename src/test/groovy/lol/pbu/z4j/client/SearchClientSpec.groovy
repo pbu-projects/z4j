@@ -82,8 +82,7 @@ class SearchClientSpec extends Z4jSpec {
         where:
         [client, sortBy, sortOrder] << [[userSearchClient],
                                         [SortBy.values(), null].flatten(),
-                                        [SortOrder.values(), null].flatten(),
-                                        [null, faker.cat().name()]].combinations()
+                                        [SortOrder.values(), null].flatten()].combinations()
     }
 
     /* ---------- count() tests --------------- */

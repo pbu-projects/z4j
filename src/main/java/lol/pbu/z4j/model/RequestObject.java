@@ -118,7 +118,7 @@ public class RequestObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ASSIGNEE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer assigneeId;
+    private Long assigneeId;
 
     /**
      * <p>If true, an end user can mark the request as solved. See <a href=\"/api-reference/ticketing/tickets/ticket-requests/#update-request\">Update Request</a></p>
@@ -134,7 +134,7 @@ public class RequestObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_COLLABORATOR_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> collaboratorIds;
+    private List<@NotNull Long> collaboratorIds;
 
     /**
      * <p>When this record was created</p>
@@ -158,7 +158,7 @@ public class RequestObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer customStatusId;
+    private Long customStatusId;
 
     /**
      * <p>Read-only first comment on the request. When <a href=\"#create-request\">creating a request</a>, use <code>comment</code> to set the description</p>
@@ -182,7 +182,7 @@ public class RequestObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_EMAIL_CC_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> emailCcIds;
+    private List<@NotNull Long> emailCcIds;
 
     /**
      * <p>The id of the original ticket if this request is a follow-up ticket. See <a href=\"#create-request\">Create Request</a></p>
@@ -190,7 +190,7 @@ public class RequestObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_FOLLOWUP_SOURCE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer followupSourceId;
+    private Long followupSourceId;
 
     /**
      * <p>The id of the assigned group if the field is visible to end users</p>
@@ -198,7 +198,7 @@ public class RequestObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_GROUP_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer groupId;
+    private Long groupId;
 
     /**
      * <p>Automatically assigned when creating requests</p>
@@ -206,7 +206,7 @@ public class RequestObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Is true if any comments are public, false otherwise</p>
@@ -222,7 +222,7 @@ public class RequestObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer organizationId;
+    private Long organizationId;
 
     /**
      * <p>The priority of the request, \"low\", \"normal\", \"high\", \"urgent\"</p>
@@ -246,7 +246,7 @@ public class RequestObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_REQUESTER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer requesterId;
+    private Long requesterId;
 
     /**
      * <p>Whether or not request is solved (an end user can set this if \"can_be_solved_by_me\", above, is true for that user)</p>
@@ -270,7 +270,7 @@ public class RequestObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_FORM_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketFormId;
+    private Long ticketFormId;
 
     /**
      * <p>The type of the request, \"question\", \"incident\", \"problem\", \"task\"</p>

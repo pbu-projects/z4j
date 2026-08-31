@@ -66,7 +66,7 @@ public class OrganizationFieldsResponse {
     @Nullable
     @JsonProperty(JSON_PROPERTY_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer count;
+    private Long count;
 
     /**
      * <p>URL of the next page</p>

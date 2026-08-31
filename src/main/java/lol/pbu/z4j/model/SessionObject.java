@@ -64,7 +64,7 @@ public class SessionObject {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_ID)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>When the session was created</p>
@@ -96,9 +96,9 @@ public class SessionObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_USER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer userId;
+    private Long userId;
 
-    public SessionObject(Integer id) {
+    public SessionObject(Long id) {
         this.id = id;
     }
 

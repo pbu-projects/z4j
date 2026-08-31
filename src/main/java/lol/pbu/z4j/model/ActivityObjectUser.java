@@ -155,7 +155,7 @@ public class ActivityObjectUser {
     @Nullable
     @JsonProperty(JSON_PROPERTY_AGENT_BRAND_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> agentBrandIds;
+    private List<@NotNull Long> agentBrandIds;
 
     /**
      * <p>An alias displayed to end users</p>
@@ -187,7 +187,7 @@ public class ActivityObjectUser {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_ROLE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer customRoleId;
+    private Long customRoleId;
 
     /**
      * <p>The id of the user's default group</p>
@@ -195,7 +195,7 @@ public class ActivityObjectUser {
     @Nullable
     @JsonProperty(JSON_PROPERTY_DEFAULT_GROUP_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer defaultGroupId;
+    private Long defaultGroupId;
 
     /**
      * <p>Any details you want to store about the user, such as an address</p>
@@ -235,7 +235,7 @@ public class ActivityObjectUser {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Last time the user signed in to Zendesk Support or made an API request using an API token</p>
@@ -259,7 +259,7 @@ public class ActivityObjectUser {
     @Nullable
     @JsonProperty(JSON_PROPERTY_LOCALE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer localeId;
+    private Long localeId;
 
     /**
      * <p>Designates whether the user has forum moderation capabilities</p>
@@ -291,7 +291,7 @@ public class ActivityObjectUser {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer organizationId;
+    private Long organizationId;
 
     /**
      * <p>The primary phone number of this user. See <a href=\"/api-reference/ticketing/users/users/#phone-number\">Phone Number</a> in the Users API</p>
@@ -347,7 +347,7 @@ public class ActivityObjectUser {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ROLE_TYPE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer roleType;
+    private Long roleType;
 
     /**
      * <p>If the user is shared from a different Zendesk Support instance. Shared users can be added to organizations but cannot be modified through update requests. Any attempt to update a shared user results in a 403 Forbidden error. Ticket sharing accounts only</p>
@@ -462,7 +462,7 @@ public class ActivityObjectUser {
      *
      * @return The same instance of ActivityObjectUser for chaining.
      */
-    public ActivityObjectUser addAgentBrandIdsItem(Integer agentBrandIdsItem) {
+    public ActivityObjectUser addAgentBrandIdsItem(Long agentBrandIdsItem) {
         if (agentBrandIds == null) {
             agentBrandIds = new ArrayList<>();
         }

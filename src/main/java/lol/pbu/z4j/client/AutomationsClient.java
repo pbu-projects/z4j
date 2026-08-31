@@ -45,7 +45,7 @@ public interface AutomationsClient {
      */
     @Delete("/api/v2/automations/destroy_many")
     Mono<Void> bulkDeleteAutomations(
-        @QueryValue("ids") @Nullable @Format(FORMAT_MULTI) List<@NotNull Integer> ids
+        @QueryValue("ids") @Nullable @Format(FORMAT_MULTI) List<@NotNull Long> ids
     );
 
     /**
@@ -67,7 +67,7 @@ public interface AutomationsClient {
      */
     @Delete("/api/v2/automations/{automation_id}")
     Mono<Void> deleteAutomation(
-        @PathVariable("automation_id") @NotNull Integer automationId
+        @PathVariable("automation_id") @NotNull Long automationId
     );
 
     /**
@@ -119,7 +119,7 @@ public interface AutomationsClient {
      */
     @Get("/api/v2/automations/{automation_id}")
     Mono<@Valid AutomationResponse> showAutomation(
-        @PathVariable("automation_id") @NotNull Integer automationId
+        @PathVariable("automation_id") @NotNull Long automationId
     );
 
     /**
@@ -132,7 +132,7 @@ public interface AutomationsClient {
      */
     @Put("/api/v2/automations/{automation_id}")
     Mono<@Valid AutomationResponse> updateAutomation(
-        @PathVariable("automation_id") @NotNull Integer automationId
+        @PathVariable("automation_id") @NotNull Long automationId
     );
 
     /**

@@ -228,7 +228,7 @@ public class AccountSettingsTicketObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_MAXIMUM_PERSONAL_VIEWS_TO_LIST)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer maximumPersonalViewsToList;
+    private Long maximumPersonalViewsToList;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_MODERN_TICKET_REASSIGNMENT)

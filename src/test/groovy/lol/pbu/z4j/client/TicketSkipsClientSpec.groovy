@@ -33,7 +33,7 @@ class TicketSkipsClientSpec extends Z4jSpec {
                       badTokenSkipsClient, badUrlSkipsClient
 
     @Shared
-    Integer adminUserId
+    Long adminUserId
 
     def setupSpec() {
         adminSkipsClient = adminCtx.getBean(TicketSkipsClient.class)

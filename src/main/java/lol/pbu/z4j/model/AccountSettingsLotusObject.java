@@ -57,7 +57,7 @@ public class AccountSettingsLotusObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_POD_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer podId;
+    private Long podId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_PREFER_LOTUS)

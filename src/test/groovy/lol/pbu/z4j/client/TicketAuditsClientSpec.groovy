@@ -34,10 +34,10 @@ class TicketAuditsClientSpec extends Z4jSpec {
                        badTokenTicketAuditsClient, badUrlTicketAuditsClient
 
     @Shared
-    Integer testTicketId
+    Long testTicketId
 
     @Shared
-    Integer testAuditId
+    Long testAuditId
 
     def setupSpec() {
         adminTicketAuditsClient = adminCtx.getBean(TicketAuditsClient.class)

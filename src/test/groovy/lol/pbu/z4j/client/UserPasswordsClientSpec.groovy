@@ -30,7 +30,7 @@ class UserPasswordsClientSpec extends Z4jSpec {
                         badTokenPasswordsClient, badUrlPasswordsClient
 
     @Shared
-    Integer adminUserId
+    Long adminUserId
 
     def setupSpec() {
         adminPasswordsClient = adminCtx.getBean(UserPasswordsClient.class)

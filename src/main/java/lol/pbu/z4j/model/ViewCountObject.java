@@ -98,7 +98,7 @@ public class ViewCountObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_VALUE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer value;
+    private Long value;
 
     /**
      * <p>The id of the view</p>
@@ -106,6 +106,6 @@ public class ViewCountObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_VIEW_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer viewId;
+    private Long viewId;
 
 }

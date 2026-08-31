@@ -44,19 +44,19 @@ import io.micronaut.core.annotation.Nullable;
 public enum RemoteAuthenticationObjectAuthMode {
 
     @JsonProperty("2")
-    NUMBER_2(2),
+    NUMBER_2(2L),
 
     @JsonProperty("3")
-    NUMBER_3(3),
+    NUMBER_3(3L),
 
     @JsonProperty("4")
-    NUMBER_4(4),
+    NUMBER_4(4L),
     ;
 
-    public static final Map<Integer, RemoteAuthenticationObjectAuthMode> VALUE_MAPPING = Map.copyOf(Arrays.stream(values())
+    public static final Map<Long, RemoteAuthenticationObjectAuthMode> VALUE_MAPPING = Map.copyOf(Arrays.stream(values())
         .collect(Collectors.toMap(v -> v.value, Function.identity())));
 
-    private final Integer value;
+    private final Long value;
 
     @Override
     public String toString() {
@@ -71,7 +71,7 @@ public enum RemoteAuthenticationObjectAuthMode {
      * @return The enum
      */
     @JsonCreator
-    public static RemoteAuthenticationObjectAuthMode fromValue(Integer value) {
+    public static RemoteAuthenticationObjectAuthMode fromValue(Long value) {
         if (!VALUE_MAPPING.containsKey(value)) {
             throw new IllegalArgumentException("Unexpected value '" + value + "'");
         }

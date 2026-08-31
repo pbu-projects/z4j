@@ -54,7 +54,7 @@ public interface SatisfactionRatingsClient {
      */
     @Post("/api/v2/tickets/{ticket_id}/satisfaction_rating")
     Mono<@Valid SatisfactionRatingResponse> createTicketSatisfactionRating(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -76,6 +76,6 @@ public interface SatisfactionRatingsClient {
      */
     @Get("/api/v2/satisfaction_ratings/{satisfaction_rating_id}")
     Mono<@Valid SatisfactionRatingResponse> showSatisfactionRating(
-        @PathVariable("satisfaction_rating_id") @NotNull Integer satisfactionRatingId
+        @PathVariable("satisfaction_rating_id") @NotNull Long satisfactionRatingId
     );
 }

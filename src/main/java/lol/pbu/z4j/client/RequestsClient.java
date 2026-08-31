@@ -72,7 +72,7 @@ public interface RequestsClient {
      */
     @Get("/api/v2/requests/{request_id}/comments")
     Mono<@Valid TicketCommentsResponse> listComments(
-        @PathVariable("request_id") @NotNull Integer requestId,
+        @PathVariable("request_id") @NotNull Long requestId,
         @QueryValue("since") @Nullable String since,
         @QueryValue("role") @Nullable String role
     );
@@ -104,7 +104,7 @@ public interface RequestsClient {
      */
     @Get("/api/v2/organizations/{organization_id}/requests")
     Mono<@Valid RequestsResponse> listOrganizationRequests(
-        @PathVariable("organization_id") @NotNull Integer organizationId,
+        @PathVariable("organization_id") @NotNull Long organizationId,
         @QueryValue("sort_by") @Nullable String sortBy,
         @QueryValue("sort_order") @Nullable String sortOrder
     );
@@ -151,7 +151,7 @@ public interface RequestsClient {
      */
     @Get("/api/v2/users/{user_id}/requests")
     Mono<@Valid RequestsResponse> listUserRequests(
-        @PathVariable("user_id") @NotNull Integer userId,
+        @PathVariable("user_id") @NotNull Long userId,
         @QueryValue("sort_by") @Nullable String sortBy,
         @QueryValue("sort_order") @Nullable String sortOrder
     );
@@ -180,8 +180,8 @@ public interface RequestsClient {
      */
     @Get("/api/v2/requests/{request_id}/comments/{ticket_comment_id}")
     Mono<@Valid TicketCommentResponse> showComment(
-        @PathVariable("request_id") @NotNull Integer requestId,
-        @PathVariable("ticket_comment_id") @NotNull Integer ticketCommentId
+        @PathVariable("request_id") @NotNull Long requestId,
+        @PathVariable("ticket_comment_id") @NotNull Long ticketCommentId
     );
 
     /**
@@ -194,7 +194,7 @@ public interface RequestsClient {
      */
     @Get("/api/v2/requests/{request_id}")
     Mono<@Valid RequestResponse> showRequest(
-        @PathVariable("request_id") @NotNull Integer requestId
+        @PathVariable("request_id") @NotNull Long requestId
     );
 
     /**
@@ -207,6 +207,6 @@ public interface RequestsClient {
      */
     @Put("/api/v2/requests/{request_id}")
     Mono<@Valid RequestResponse> updateRequest(
-        @PathVariable("request_id") @NotNull Integer requestId
+        @PathVariable("request_id") @NotNull Long requestId
     );
 }

@@ -67,14 +67,14 @@ public class BrandAgentObject {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_BRAND_ID)
-    private Integer brandId;
+    private Long brandId;
 
     /**
      * <p>The id of an agent</p>
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_USER_ID)
-    private Integer userId;
+    private Long userId;
 
     /**
      * <p>The time the brand membership was created</p>
@@ -108,7 +108,7 @@ public class BrandAgentObject {
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private String url;
 
-    public BrandAgentObject(Integer brandId, Integer userId) {
+    public BrandAgentObject(Long brandId, Long userId) {
         this.brandId = brandId;
         this.userId = userId;
     }

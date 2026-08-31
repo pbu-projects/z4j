@@ -225,7 +225,7 @@ public class RemoteAuthenticationObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Requests from these IP ranges will always be routed via remote authentication. Requests from IP addresses outside these ranges will be routed to the normal sign-in form. When this is blank, all requests are routed through remote authentication. An IP range is in the format n.n.n.n, where n is a number or an asterisk (*) wild card. Multiple IP ranges are separated with spaces</p>
@@ -286,7 +286,7 @@ public class RemoteAuthenticationObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_PRIORITY)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer priority;
+    private Long priority;
 
     /**
      * <p>For the \"oidc\" auth mode only. These are the user details your account can access, like name and email address. Supported scopes within the OIDC standard include <code>openid</code>, <code>profile</code>, <code>email</code>, <code>address</code>, and <code>phone</code>. It must contain at least <code>openid</code> and <code>email</code>. Scopes are separated with spaces</p>

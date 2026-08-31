@@ -65,7 +65,7 @@ public class TicketFormStatusesUpdateParams {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer customStatusId;
+    private Long customStatusId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)

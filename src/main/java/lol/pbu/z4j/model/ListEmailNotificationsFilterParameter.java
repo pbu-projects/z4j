@@ -57,16 +57,16 @@ public class ListEmailNotificationsFilterParameter {
     @Nullable
     @JsonProperty(JSON_PROPERTY_COMMENT_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer commentId;
+    private Long commentId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_NOTIFICATION_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer notificationId;
+    private Long notificationId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketId;
+    private Long ticketId;
 
 }

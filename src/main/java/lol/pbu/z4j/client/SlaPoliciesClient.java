@@ -55,7 +55,7 @@ public interface SlaPoliciesClient {
      */
     @Delete("/api/v2/slas/policies/{sla_policy_id}")
     Mono<Void> deleteSLAPolicy(
-        @PathVariable("sla_policy_id") @NotNull Integer slaPolicyId
+        @PathVariable("sla_policy_id") @NotNull Long slaPolicyId
     );
 
     /**
@@ -77,7 +77,7 @@ public interface SlaPoliciesClient {
      */
     @Put("/api/v2/slas/policies/reorder")
     Mono<@NotNull String> reorderSLAPolicies(
-        @QueryValue("sla_policy_ids") @Nullable @Format(FORMAT_MULTI) List<@NotNull Integer> slaPolicyIds
+        @QueryValue("sla_policy_ids") @Nullable @Format(FORMAT_MULTI) List<@NotNull Long> slaPolicyIds
     );
 
     /**
@@ -99,7 +99,7 @@ public interface SlaPoliciesClient {
      */
     @Get("/api/v2/slas/policies/{sla_policy_id}")
     Mono<@Valid SLAPolicyResponse> showSLAPolicy(
-        @PathVariable("sla_policy_id") @NotNull Integer slaPolicyId
+        @PathVariable("sla_policy_id") @NotNull Long slaPolicyId
     );
 
     /**
@@ -112,6 +112,6 @@ public interface SlaPoliciesClient {
      */
     @Put("/api/v2/slas/policies/{sla_policy_id}")
     Mono<@Valid SLAPolicyResponse> updateSLAPolicy(
-        @PathVariable("sla_policy_id") @NotNull Integer slaPolicyId
+        @PathVariable("sla_policy_id") @NotNull Long slaPolicyId
     );
 }

@@ -47,7 +47,7 @@ public interface TicketFormsClient {
      */
     @Post("/api/v2/ticket_forms/{ticket_form_id}/clone")
     Mono<@Valid TicketFormResponse> cloneTicketForm(
-        @PathVariable("ticket_form_id") @NotNull Integer ticketFormId
+        @PathVariable("ticket_form_id") @NotNull Long ticketFormId
     );
 
     /**
@@ -70,7 +70,7 @@ public interface TicketFormsClient {
      */
     @Post("/api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses")
     Mono<@Valid TicketFormStatusesResponse> createTicketFormStatuses(
-        @PathVariable("ticket_form_id") @NotNull Integer ticketFormId,
+        @PathVariable("ticket_form_id") @NotNull Long ticketFormId,
         @Body @Nullable @Valid TicketFormStatusesParams ticketFormStatusesParams
     );
 
@@ -84,7 +84,7 @@ public interface TicketFormsClient {
      */
     @Delete("/api/v2/ticket_forms/{ticket_form_id}")
     Mono<Void> deleteTicketForm(
-        @PathVariable("ticket_form_id") @NotNull Integer ticketFormId
+        @PathVariable("ticket_form_id") @NotNull Long ticketFormId
     );
 
     /**
@@ -146,7 +146,7 @@ public interface TicketFormsClient {
      */
     @Get("/api/v2/ticket_forms/{ticket_form_id}")
     Mono<@Valid TicketFormResponse> showTicketForm(
-        @PathVariable("ticket_form_id") @NotNull Integer ticketFormId
+        @PathVariable("ticket_form_id") @NotNull Long ticketFormId
     );
 
     /**
@@ -159,7 +159,7 @@ public interface TicketFormsClient {
      */
     @Get("/api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses")
     Mono<@Valid TicketFormStatusesResponse> ticketFormTicketFormStatuses(
-        @PathVariable("ticket_form_id") @NotNull Integer ticketFormId
+        @PathVariable("ticket_form_id") @NotNull Long ticketFormId
     );
 
     /**
@@ -172,7 +172,7 @@ public interface TicketFormsClient {
      */
     @Put("/api/v2/ticket_forms/{ticket_form_id}")
     Mono<@Valid TicketFormResponse> updateTicketForm(
-        @PathVariable("ticket_form_id") @NotNull Integer ticketFormId
+        @PathVariable("ticket_form_id") @NotNull Long ticketFormId
     );
 
     /**
@@ -187,7 +187,7 @@ public interface TicketFormsClient {
      */
     @Put("/api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses/{ticket_form_status_id}")
     Mono<@Valid TicketFormStatusesResponse> updateTicketFormStatusById(
-        @PathVariable("ticket_form_id") @NotNull Integer ticketFormId,
+        @PathVariable("ticket_form_id") @NotNull Long ticketFormId,
         @PathVariable("ticket_form_status_id") @NotNull String ticketFormStatusId,
         @Body @Nullable @Valid UpdateTicketFormStatusesParams updateTicketFormStatusesParams
     );
@@ -203,7 +203,7 @@ public interface TicketFormsClient {
      */
     @Put("/api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses")
     Mono<@Valid TicketFormStatusesResponse> updateTicketFormStatuses(
-        @PathVariable("ticket_form_id") @NotNull Integer ticketFormId,
+        @PathVariable("ticket_form_id") @NotNull Long ticketFormId,
         @Body @Nullable @Valid UpdateTicketFormStatusesParams updateTicketFormStatusesParams
     );
 }

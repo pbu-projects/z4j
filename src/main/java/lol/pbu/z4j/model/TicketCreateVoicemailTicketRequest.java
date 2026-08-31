@@ -59,7 +59,7 @@ public class TicketCreateVoicemailTicketRequest {
     @Nullable
     @JsonProperty(JSON_PROPERTY_DISPLAY_TO_AGENT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer displayToAgent;
+    private Long displayToAgent;
 
     /**
      * <p>Ticket object that lists the values to set when the ticket is created</p>

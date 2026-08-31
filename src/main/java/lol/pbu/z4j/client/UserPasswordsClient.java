@@ -43,7 +43,7 @@ public interface UserPasswordsClient {
      */
     @Put("/api/v2/users/{user_id}/password")
     Mono<@NotNull String> changeOwnPassword(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -56,7 +56,7 @@ public interface UserPasswordsClient {
      */
     @Get("/api/v2/users/{user_id}/password/requirements")
     Mono<@Valid UserPasswordRequirementsResponse> getUserPasswordRequirements(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -69,6 +69,6 @@ public interface UserPasswordsClient {
      */
     @Post("/api/v2/users/{user_id}/password")
     Mono<@NotNull String> setUserPassword(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 }

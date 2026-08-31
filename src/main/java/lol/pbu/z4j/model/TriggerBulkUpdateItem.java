@@ -62,7 +62,7 @@ public class TriggerBulkUpdateItem {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_ID)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The active status of the ticket trigger (true or false)</p>
@@ -86,9 +86,9 @@ public class TriggerBulkUpdateItem {
     @Nullable
     @JsonProperty(JSON_PROPERTY_POSITION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer position;
+    private Long position;
 
-    public TriggerBulkUpdateItem(Integer id) {
+    public TriggerBulkUpdateItem(Long id) {
         this.id = id;
     }
 

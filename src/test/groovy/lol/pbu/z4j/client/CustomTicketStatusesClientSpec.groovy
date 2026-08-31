@@ -30,7 +30,7 @@ class CustomTicketStatusesClientSpec extends Z4jSpec {
                                badTokenCustomStatusesClient, badUrlCustomStatusesClient
 
     @Shared
-    Integer existingStatusId
+    Long existingStatusId
 
     def setupSpec() {
         adminCustomStatusesClient = adminCtx.getBean(CustomTicketStatusesClient.class)

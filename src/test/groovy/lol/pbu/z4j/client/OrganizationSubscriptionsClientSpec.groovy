@@ -31,10 +31,10 @@ class OrganizationSubscriptionsClientSpec extends Z4jSpec {
                                     badTokenSubscriptionsClient, badUrlSubscriptionsClient
 
     @Shared
-    Integer adminUserId
+    Long adminUserId
 
     @Shared
-    Integer existingOrgId
+    Long existingOrgId
 
     def setupSpec() {
         adminSubscriptionsClient = adminCtx.getBean(OrganizationSubscriptionsClient.class)

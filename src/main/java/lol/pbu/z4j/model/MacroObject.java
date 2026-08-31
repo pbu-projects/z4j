@@ -146,7 +146,7 @@ public class MacroObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The position of the macro</p>
@@ -154,7 +154,7 @@ public class MacroObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_POSITION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer position;
+    private Long position;
 
     /**
      * <p>The raw format of the title of the macro</p>
@@ -218,7 +218,7 @@ public class MacroObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_USAGE1H)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer usage1h;
+    private Long usage1h;
 
     /**
      * <p>The number of times each macro has been used in the past week</p>
@@ -226,7 +226,7 @@ public class MacroObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_USAGE7D)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer usage7d;
+    private Long usage7d;
 
     /**
      * <p>The number of times each macro has been used in the past day</p>
@@ -234,7 +234,7 @@ public class MacroObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_USAGE24H)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer usage24h;
+    private Long usage24h;
 
     /**
      * <p>The number of times each macro has been used in the past thirty days</p>
@@ -242,7 +242,7 @@ public class MacroObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_USAGE30D)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer usage30d;
+    private Long usage30d;
 
     public MacroObject(List<@Valid ActionObject> actions, String title) {
         this.actions = actions;

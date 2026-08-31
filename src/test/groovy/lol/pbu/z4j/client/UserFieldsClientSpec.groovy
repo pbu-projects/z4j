@@ -34,7 +34,7 @@ class UserFieldsClientSpec extends Z4jSpec {
                      badTokenUserFieldsClient, badUrlUserFieldsClient
 
     @Shared
-    Integer existingUserFieldId
+    Long existingUserFieldId
 
     def setupSpec() {
         adminUserFieldsClient = adminCtx.getBean(UserFieldsClient.class)

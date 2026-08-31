@@ -74,7 +74,7 @@ public class SecuritySettingsObjectAuthenticationAgentAllOfPassword {
     @Nullable
     @JsonProperty(JSON_PROPERTY_FAILED_ATTEMPTS_ALLOWED)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer failedAttemptsAllowed;
+    private Long failedAttemptsAllowed;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_IS_AVAILABLE)
@@ -84,22 +84,22 @@ public class SecuritySettingsObjectAuthenticationAgentAllOfPassword {
     @Nullable
     @JsonProperty(JSON_PROPERTY_MAX_SEQUENCE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer maxSequence;
+    private Long maxSequence;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_PASSWORD_COMPLEXITY)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer passwordComplexity;
+    private Long passwordComplexity;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_PASSWORD_DURATION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer passwordDuration;
+    private Long passwordDuration;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_PASSWORD_HISTORY_LENGTH)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer passwordHistoryLength;
+    private Long passwordHistoryLength;
 
     /**
      * <p>If must include letters in mixed case</p>
@@ -112,6 +112,6 @@ public class SecuritySettingsObjectAuthenticationAgentAllOfPassword {
     @Nullable
     @JsonProperty(JSON_PROPERTY_PASSWORD_LENGTH)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer passwordLength;
+    private Long passwordLength;
 
 }

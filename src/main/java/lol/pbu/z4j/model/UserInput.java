@@ -92,12 +92,12 @@ public class UserInput extends HashMap<String, Object> {
     @Nullable
     @JsonProperty(JSON_PROPERTY_AGENT_BRAND_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> agentBrandIds;
+    private List<@NotNull Long> agentBrandIds;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_ROLE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer customRoleId;
+    private Long customRoleId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_EXTERNAL_ID)
@@ -118,7 +118,7 @@ public class UserInput extends HashMap<String, Object> {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer organizationId;
+    private Long organizationId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_ROLE)
@@ -133,7 +133,7 @@ public class UserInput extends HashMap<String, Object> {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     public UserInput(String email, String name) {
         this.email = email;
@@ -145,7 +145,7 @@ public class UserInput extends HashMap<String, Object> {
      *
      * @return The same instance of UserInput for chaining.
      */
-    public UserInput addAgentBrandIdsItem(Integer agentBrandIdsItem) {
+    public UserInput addAgentBrandIdsItem(Long agentBrandIdsItem) {
         if (agentBrandIds == null) {
             agentBrandIds = new ArrayList<>();
         }

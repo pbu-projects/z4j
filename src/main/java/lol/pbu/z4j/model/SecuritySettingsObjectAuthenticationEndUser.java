@@ -99,7 +99,7 @@ public class SecuritySettingsObjectAuthenticationEndUser {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SECURITY_POLICY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer securityPolicyId;
+    private Long securityPolicyId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_SECURITY_POLICY_NAME)

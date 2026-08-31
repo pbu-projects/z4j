@@ -69,14 +69,14 @@ public class GroupMembershipObject {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_GROUP_ID)
-    private Integer groupId;
+    private Long groupId;
 
     /**
      * <p>The id of an agent</p>
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_USER_ID)
-    private Integer userId;
+    private Long userId;
 
     /**
      * <p>The time the group was created</p>
@@ -100,7 +100,7 @@ public class GroupMembershipObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The time of the last update of the group</p>
@@ -118,7 +118,7 @@ public class GroupMembershipObject {
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private String url;
 
-    public GroupMembershipObject(Integer groupId, Integer userId) {
+    public GroupMembershipObject(Long groupId, Long userId) {
         this.groupId = groupId;
         this.userId = userId;
     }

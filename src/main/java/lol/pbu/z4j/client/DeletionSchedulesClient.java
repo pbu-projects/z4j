@@ -57,7 +57,7 @@ public interface DeletionSchedulesClient {
      */
     @Delete("/api/v2/deletion_schedules/{deletion_schedule_id}")
     Mono<Void> deleteDeletionSchedule(
-        @PathVariable("deletion_schedule_id") @NotNull Integer deletionScheduleId
+        @PathVariable("deletion_schedule_id") @NotNull Long deletionScheduleId
     );
 
     /**
@@ -70,7 +70,7 @@ public interface DeletionSchedulesClient {
      */
     @Get("/api/v2/deletion_schedules/{deletion_schedule_id}")
     Mono<@Valid CreateDeletionScheduleRequest> getDeletionSchedule(
-        @PathVariable("deletion_schedule_id") @NotNull Integer deletionScheduleId
+        @PathVariable("deletion_schedule_id") @NotNull Long deletionScheduleId
     );
 
     /**
@@ -93,7 +93,7 @@ public interface DeletionSchedulesClient {
      */
     @Put("/api/v2/deletion_schedules/{deletion_schedule_id}")
     Mono<@Valid CreateDeletionScheduleRequest> updateDeletionSchedule(
-        @PathVariable("deletion_schedule_id") @NotNull Integer deletionScheduleId,
+        @PathVariable("deletion_schedule_id") @NotNull Long deletionScheduleId,
         @Body @NotNull @Valid CreateDeletionScheduleRequest createDeletionScheduleRequest
     );
 }

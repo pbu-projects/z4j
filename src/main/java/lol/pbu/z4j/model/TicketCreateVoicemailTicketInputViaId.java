@@ -44,19 +44,19 @@ import io.micronaut.core.annotation.Nullable;
 public enum TicketCreateVoicemailTicketInputViaId {
 
     @JsonProperty("44")
-    NUMBER_44(44),
+    NUMBER_44(44L),
 
     @JsonProperty("45")
-    NUMBER_45(45),
+    NUMBER_45(45L),
 
     @JsonProperty("46")
-    NUMBER_46(46),
+    NUMBER_46(46L),
     ;
 
-    public static final Map<Integer, TicketCreateVoicemailTicketInputViaId> VALUE_MAPPING = Map.copyOf(Arrays.stream(values())
+    public static final Map<Long, TicketCreateVoicemailTicketInputViaId> VALUE_MAPPING = Map.copyOf(Arrays.stream(values())
         .collect(Collectors.toMap(v -> v.value, Function.identity())));
 
-    private final Integer value;
+    private final Long value;
 
     @Override
     public String toString() {
@@ -71,7 +71,7 @@ public enum TicketCreateVoicemailTicketInputViaId {
      * @return The enum
      */
     @JsonCreator
-    public static TicketCreateVoicemailTicketInputViaId fromValue(Integer value) {
+    public static TicketCreateVoicemailTicketInputViaId fromValue(Long value) {
         if (!VALUE_MAPPING.containsKey(value)) {
             throw new IllegalArgumentException("Unexpected value '" + value + "'");
         }

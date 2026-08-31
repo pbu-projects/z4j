@@ -88,7 +88,7 @@ public class UserIdentityObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_USER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer userId;
+    private Long userId;
 
     /**
      * <p>The identifier for this identity, such as an email address</p>
@@ -120,7 +120,7 @@ public class UserIdentityObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>If the identity is the primary identity. *Writable only when creating, not when updating. Use the <a href=\"#make-identity-primary\">Make Identity Primary</a> endpoint instead</p>
@@ -136,7 +136,7 @@ public class UserIdentityObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_UNDELIVERABLE_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer undeliverableCount;
+    private Long undeliverableCount;
 
     /**
      * <p>The time the identity was updated</p>

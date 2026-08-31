@@ -33,7 +33,7 @@ class TicketFieldsClientSpec extends Z4jSpec {
                        badTokenTicketFieldsClient, badUrlTicketFieldsClient
 
     @Shared
-    Integer existingFieldId
+    Long existingFieldId
 
     def setupSpec() {
         adminTicketFieldsClient = adminCtx.getBean(TicketFieldsClient.class)

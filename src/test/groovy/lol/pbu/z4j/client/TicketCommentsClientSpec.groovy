@@ -33,7 +33,7 @@ class TicketCommentsClientSpec extends Z4jSpec {
                          badTokenTicketCommentsClient, badUrlTicketCommentsClient
 
     @Shared
-    Integer testTicketId
+    Long testTicketId
 
     def setupSpec() {
         adminTicketCommentsClient = adminCtx.getBean(TicketCommentsClient.class)

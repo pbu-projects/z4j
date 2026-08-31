@@ -80,7 +80,7 @@ public class CustomRoleObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ROLE_TYPE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer roleType;
+    private Long roleType;
 
     @Nullable
     @Valid
@@ -110,7 +110,7 @@ public class CustomRoleObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The number of team members assigned to this role</p>
@@ -118,7 +118,7 @@ public class CustomRoleObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TEAM_MEMBER_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer teamMemberCount;
+    private Long teamMemberCount;
 
     /**
      * <p>The time the record was last updated</p>

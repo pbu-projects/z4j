@@ -51,6 +51,6 @@ public class AccountSettingsLimitsObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ATTACHMENT_SIZE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer attachmentSize;
+    private Long attachmentSize;
 
 }

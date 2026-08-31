@@ -53,6 +53,6 @@ public interface SatisfactionReasonsClient {
      */
     @Get("/api/v2/satisfaction_reasons/{satisfaction_reason_id}")
     Mono<@Valid SatisfactionReasonResponse> showSatisfactionRatings(
-        @PathVariable("satisfaction_reason_id") @NotNull Integer satisfactionReasonId
+        @PathVariable("satisfaction_reason_id") @NotNull Long satisfactionReasonId
     );
 }

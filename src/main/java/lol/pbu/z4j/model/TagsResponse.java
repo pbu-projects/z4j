@@ -66,7 +66,7 @@ public class TagsResponse {
     @Nullable
     @JsonProperty(JSON_PROPERTY_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer count;
+    private Long count;
 
     /**
      * <p>The url of the previous page</p>

@@ -120,7 +120,7 @@ public class UserForEndUser {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The locale for this user</p>
@@ -136,7 +136,7 @@ public class UserForEndUser {
     @Nullable
     @JsonProperty(JSON_PROPERTY_LOCALE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer localeId;
+    private Long localeId;
 
     /**
      * <p>The id of the user's organization. If the user has more than one <a href=\"/api-reference/ticketing/organizations/organization_memberships/\">organization memberships</a>, the id of the user's default organization. If updating, see <a href=\"/api-reference/ticketing/users/users/#organization-id\">Organization ID</a></p>
@@ -144,7 +144,7 @@ public class UserForEndUser {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer organizationId;
+    private Long organizationId;
 
     /**
      * <p>The primary phone number of this user. See <a href=\"/api-reference/ticketing/users/users/#phone-number\">Phone Number</a> in the Users API</p>

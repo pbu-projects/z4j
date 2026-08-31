@@ -105,10 +105,10 @@ public interface UsersClient {
      */
     @Get("/api/v2/groups/{group_id}/users/count")
     Mono<@Valid CountResponse> countGroupUsers(
-        @PathVariable("group_id") @NotNull Integer groupId,
+        @PathVariable("group_id") @NotNull Long groupId,
         @QueryValue("role") @Nullable ListGroupUsersRoleParameter role,
         @QueryValue("role[]") @Nullable String role2,
-        @QueryValue("permission_set") @Nullable Integer permissionSet
+        @QueryValue("permission_set") @Nullable Long permissionSet
     );
 
     /**
@@ -124,10 +124,10 @@ public interface UsersClient {
      */
     @Get("/api/v2/organizations/{organization_id}/users/count")
     Mono<@Valid CountResponse> countOrganizationUsers(
-        @PathVariable("organization_id") @NotNull Integer organizationId,
+        @PathVariable("organization_id") @NotNull Long organizationId,
         @QueryValue("role") @Nullable ListGroupUsersRoleParameter role,
         @QueryValue("role[]") @Nullable String role2,
-        @QueryValue("permission_set") @Nullable Integer permissionSet
+        @QueryValue("permission_set") @Nullable Long permissionSet
     );
 
     /**
@@ -144,7 +144,7 @@ public interface UsersClient {
     Mono<@Valid CountResponse> countUsers(
         @QueryValue("role") @Nullable ListGroupUsersRoleParameter role,
         @QueryValue("role[]") @Nullable String role2,
-        @QueryValue("permission_set") @Nullable Integer permissionSet
+        @QueryValue("permission_set") @Nullable Long permissionSet
     );
 
     /**
@@ -209,7 +209,7 @@ public interface UsersClient {
      */
     @Delete("/api/v2/users/{user_id}")
     Mono<@Valid UserResponse> deleteUser(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -239,7 +239,7 @@ public interface UsersClient {
      */
     @Get("/api/v2/users/{user_id}/entitlements/full")
     Mono<@Valid UserEntitlementsFullResponse> getUserEntitlementsFull(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -265,10 +265,10 @@ public interface UsersClient {
      */
     @Get("/api/v2/groups/{group_id}/users")
     Mono<@Valid UsersResponse> listGroupUsers(
-        @PathVariable("group_id") @NotNull Integer groupId,
+        @PathVariable("group_id") @NotNull Long groupId,
         @QueryValue("role") @Nullable ListGroupUsersRoleParameter role,
         @QueryValue("role[]") @Nullable String role2,
-        @QueryValue("permission_set") @Nullable Integer permissionSet,
+        @QueryValue("permission_set") @Nullable Long permissionSet,
         @QueryValue("external_id") @Nullable String externalId
     );
 
@@ -286,10 +286,10 @@ public interface UsersClient {
      */
     @Get("/api/v2/organizations/{organization_id}/users")
     Mono<@Valid UsersResponse> listOrganizationUsers(
-        @PathVariable("organization_id") @NotNull Integer organizationId,
+        @PathVariable("organization_id") @NotNull Long organizationId,
         @QueryValue("role") @Nullable ListGroupUsersRoleParameter role,
         @QueryValue("role[]") @Nullable String role2,
-        @QueryValue("permission_set") @Nullable Integer permissionSet,
+        @QueryValue("permission_set") @Nullable Long permissionSet,
         @QueryValue("external_id") @Nullable String externalId
     );
 
@@ -308,7 +308,7 @@ public interface UsersClient {
     Mono<@Valid UsersResponse> listUsers(
         @QueryValue("role") @Nullable ListGroupUsersRoleParameter role,
         @QueryValue("role[]") @Nullable String role2,
-        @QueryValue("permission_set") @Nullable Integer permissionSet,
+        @QueryValue("permission_set") @Nullable Long permissionSet,
         @QueryValue("external_id") @Nullable String externalId
     );
 
@@ -336,7 +336,7 @@ public interface UsersClient {
      */
     @Put("/api/v2/users/{user_id}/merge")
     Mono<@Valid UserResponse> mergeEndUsers(
-        @PathVariable("user_id") @NotNull Integer userId,
+        @PathVariable("user_id") @NotNull Long userId,
         @Body @NotNull @Valid UserRequest userRequest
     );
 
@@ -350,7 +350,7 @@ public interface UsersClient {
      */
     @Delete("/api/v2/deleted_users/{deleted_user_id}")
     Mono<@Valid DeletedUserResponse> permanentlyDeleteUser(
-        @PathVariable("deleted_user_id") @NotNull Integer deletedUserId
+        @PathVariable("deleted_user_id") @NotNull Long deletedUserId
     );
 
     /**
@@ -400,7 +400,7 @@ public interface UsersClient {
      */
     @Get("/api/v2/deleted_users/{deleted_user_id}")
     Mono<@Valid DeletedUserResponse> showDeletedUser(
-        @PathVariable("deleted_user_id") @NotNull Integer deletedUserId
+        @PathVariable("deleted_user_id") @NotNull Long deletedUserId
     );
 
     /**
@@ -430,7 +430,7 @@ public interface UsersClient {
      */
     @Get("/api/v2/users/{user_id}")
     Mono<@Valid UserResponse> showUser(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -444,7 +444,7 @@ public interface UsersClient {
      */
     @Get("/api/v2/users/{user_id}/compliance_deletion_statuses")
     Mono<@Valid ComplianceDeletionStatusesResponse> showUserComplianceDeletionStatuses(
-        @PathVariable("user_id") @NotNull Integer userId,
+        @PathVariable("user_id") @NotNull Long userId,
         @QueryValue("application") @Nullable String application
     );
 
@@ -457,7 +457,7 @@ public interface UsersClient {
      */
     @Get("/api/v2/users/{user_id}/related")
     Mono<@Valid UserRelatedResponse> showUserRelated(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -501,7 +501,7 @@ public interface UsersClient {
      */
     @Put("/api/v2/users/{user_id}")
     Mono<@Valid UserResponse> updateUser(
-        @PathVariable("user_id") @NotNull Integer userId,
+        @PathVariable("user_id") @NotNull Long userId,
         @Body @NotNull @Valid UserRequest userRequest
     );
 }

@@ -94,7 +94,7 @@ public class SupportAddressObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_BRAND_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer brandId;
+    private Long brandId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_CNAME_STATUS)
@@ -146,7 +146,7 @@ public class SupportAddressObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The name for the address</p>

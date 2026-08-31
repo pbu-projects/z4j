@@ -81,7 +81,7 @@ public class CustomFieldOptionObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Position of the dropdown option</p>
@@ -89,7 +89,7 @@ public class CustomFieldOptionObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_POSITION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer position;
+    private Long position;
 
     /**
      * <p>Raw name of the dropdown option</p>

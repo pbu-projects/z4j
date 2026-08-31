@@ -67,7 +67,7 @@ public class TicketMergeInput {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_IDS)
-    private List<@NotNull Integer> ids = new ArrayList<>();
+    private List<@NotNull Long> ids = new ArrayList<>();
 
     /**
      * <p>Private comment to add to the source ticket</p>
@@ -101,7 +101,7 @@ public class TicketMergeInput {
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private Boolean targetCommentIsPublic;
 
-    public TicketMergeInput(List<@NotNull Integer> ids) {
+    public TicketMergeInput(List<@NotNull Long> ids) {
         this.ids = ids;
     }
 
@@ -110,7 +110,7 @@ public class TicketMergeInput {
      *
      * @return The same instance of TicketMergeInput for chaining.
      */
-    public TicketMergeInput addIdsItem(Integer idsItem) {
+    public TicketMergeInput addIdsItem(Long idsItem) {
         ids.add(idsItem);
         return this;
     }

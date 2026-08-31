@@ -71,7 +71,7 @@ public class OrganizationSubscriptionObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The ID of the organization</p>
@@ -79,7 +79,7 @@ public class OrganizationSubscriptionObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer organizationId;
+    private Long organizationId;
 
     /**
      * <p>The ID of the user</p>
@@ -87,6 +87,6 @@ public class OrganizationSubscriptionObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_USER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer userId;
+    private Long userId;
 
 }

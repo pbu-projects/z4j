@@ -32,7 +32,7 @@ class OAuthClientsClientSpec extends Z4jSpec {
                        badTokenOAuthClientsClient, badUrlOAuthClientsClient
 
     @Shared
-    Integer existingClientId
+    Long existingClientId
 
     def setupSpec() {
         adminOAuthClientsClient = adminCtx.getBean(OAuthClientsClient.class)

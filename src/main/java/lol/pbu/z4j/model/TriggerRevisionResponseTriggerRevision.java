@@ -62,7 +62,7 @@ public class TriggerRevisionResponseTriggerRevision {
     @Nullable
     @JsonProperty(JSON_PROPERTY_AUTHOR_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer authorId;
+    private Long authorId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_CREATED_AT)
@@ -72,7 +72,7 @@ public class TriggerRevisionResponseTriggerRevision {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     @Nullable
     @Valid

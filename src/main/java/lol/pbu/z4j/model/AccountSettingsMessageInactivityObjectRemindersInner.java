@@ -81,7 +81,7 @@ public class AccountSettingsMessageInactivityObjectRemindersInner {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_STATUS_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketStatusId;
+    private Long ticketStatusId;
 
     /**
      * <p>Reminder timeout in seconds, available and mandatory for the 2nd and 3rd reminders, if the reminder is configured</p>
@@ -89,7 +89,7 @@ public class AccountSettingsMessageInactivityObjectRemindersInner {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TIMEOUT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer timeout;
+    private Long timeout;
 
     public AccountSettingsMessageInactivityObjectRemindersInner(String message) {
         this.message = message;

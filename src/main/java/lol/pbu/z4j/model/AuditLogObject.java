@@ -95,7 +95,7 @@ public class AuditLogObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ACTOR_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer actorId;
+    private Long actorId;
 
     /**
      * <p>Name of the user or system that initiated the change</p>
@@ -127,7 +127,7 @@ public class AuditLogObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The IP address of the user doing the audit</p>
@@ -143,7 +143,7 @@ public class AuditLogObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SOURCE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer sourceId;
+    private Long sourceId;
 
     /**
      * <p>The name of the item being audited</p>

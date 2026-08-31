@@ -101,7 +101,7 @@ public interface TicketClient {
             @QueryValue("locale") @Nullable LocaleAbbreviation localeAbbreviation,
             @QueryValue("creator") @Nullable Boolean creator,
             @QueryValue("page[after]") @Nullable String pageAfter,
-            @QueryValue("page[size]") @Nullable @Max(100) Integer pageSize
+            @QueryValue("page[size]") @Nullable @Max(100) Long pageSize
     );
 
     /**

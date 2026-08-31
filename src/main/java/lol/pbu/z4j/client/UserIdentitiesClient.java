@@ -47,7 +47,7 @@ public interface UserIdentitiesClient {
      */
     @Post("/api/v2/end_users/{user_id}/identities")
     Mono<@Valid UserIdentityResponse> createEndUserIdentity(
-        @PathVariable("user_id") @NotNull Integer userId,
+        @PathVariable("user_id") @NotNull Long userId,
         @QueryValue("type[]") @Nullable ListEndUserIdentitiesTypeParameter type
     );
 
@@ -62,7 +62,7 @@ public interface UserIdentitiesClient {
      */
     @Post("/api/v2/users/{user_id}/identities")
     Mono<@Valid UserIdentityResponse> createUserIdentity(
-        @PathVariable("user_id") @NotNull Integer userId,
+        @PathVariable("user_id") @NotNull Long userId,
         @QueryValue("type[]") @Nullable ListUserIdentitiesTypeParameter type
     );
 
@@ -77,8 +77,8 @@ public interface UserIdentitiesClient {
      */
     @Delete("/api/v2/end_users/{user_id}/identities/{user_identity_id}")
     Mono<Void> deleteEndUserIdentity(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("user_identity_id") @NotNull Integer userIdentityId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("user_identity_id") @NotNull Long userIdentityId
     );
 
     /**
@@ -92,8 +92,8 @@ public interface UserIdentitiesClient {
      */
     @Delete("/api/v2/users/{user_id}/identities/{user_identity_id}")
     Mono<Void> deleteUserIdentity(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("user_identity_id") @NotNull Integer userIdentityId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("user_identity_id") @NotNull Long userIdentityId
     );
 
     /**
@@ -107,7 +107,7 @@ public interface UserIdentitiesClient {
      */
     @Get("/api/v2/end_users/{user_id}/identities")
     Mono<@Valid UserIdentitiesResponse> listEndUserIdentities(
-        @PathVariable("user_id") @NotNull Integer userId,
+        @PathVariable("user_id") @NotNull Long userId,
         @QueryValue("type[]") @Nullable ListEndUserIdentitiesTypeParameter type
     );
 
@@ -122,7 +122,7 @@ public interface UserIdentitiesClient {
      */
     @Get("/api/v2/users/{user_id}/identities")
     Mono<@Valid UserIdentitiesResponse> listUserIdentities(
-        @PathVariable("user_id") @NotNull Integer userId,
+        @PathVariable("user_id") @NotNull Long userId,
         @QueryValue("type[]") @Nullable ListUserIdentitiesTypeParameter type
     );
 
@@ -137,8 +137,8 @@ public interface UserIdentitiesClient {
      */
     @Put("/api/v2/end_users/{user_id}/identities/{user_identity_id}/make_primary")
     Mono<@Valid UserIdentitiesResponse> makeEndUserIdentityPrimary(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("user_identity_id") @NotNull Integer userIdentityId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("user_identity_id") @NotNull Long userIdentityId
     );
 
     /**
@@ -152,8 +152,8 @@ public interface UserIdentitiesClient {
      */
     @Put("/api/v2/users/{user_id}/identities/{user_identity_id}/make_primary")
     Mono<@Valid UserIdentitiesResponse> makeUserIdentityPrimary(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("user_identity_id") @NotNull Integer userIdentityId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("user_identity_id") @NotNull Long userIdentityId
     );
 
     /**
@@ -167,8 +167,8 @@ public interface UserIdentitiesClient {
      */
     @Put("/api/v2/end_users/{user_id}/identities/{user_identity_id}/request_verification")
     Mono<@NotNull String> requestEndUserVerification(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("user_identity_id") @NotNull Integer userIdentityId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("user_identity_id") @NotNull Long userIdentityId
     );
 
     /**
@@ -182,8 +182,8 @@ public interface UserIdentitiesClient {
      */
     @Put("/api/v2/users/{user_id}/identities/{user_identity_id}/request_verification")
     Mono<@NotNull String> requestUserVerfication(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("user_identity_id") @NotNull Integer userIdentityId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("user_identity_id") @NotNull Long userIdentityId
     );
 
     /**
@@ -197,8 +197,8 @@ public interface UserIdentitiesClient {
      */
     @Get("/api/v2/end_users/{user_id}/identities/{user_identity_id}")
     Mono<@Valid UserIdentityResponse> showEndUserIdentity(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("user_identity_id") @NotNull Integer userIdentityId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("user_identity_id") @NotNull Long userIdentityId
     );
 
     /**
@@ -212,8 +212,8 @@ public interface UserIdentitiesClient {
      */
     @Get("/api/v2/users/{user_id}/identities/{user_identity_id}")
     Mono<@Valid UserIdentityResponse> showUserIdentity(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("user_identity_id") @NotNull Integer userIdentityId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("user_identity_id") @NotNull Long userIdentityId
     );
 
     /**
@@ -227,8 +227,8 @@ public interface UserIdentitiesClient {
      */
     @Put("/api/v2/users/{user_id}/identities/{user_identity_id}")
     Mono<@Valid UserIdentityResponse> updateUserIdentity(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("user_identity_id") @NotNull Integer userIdentityId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("user_identity_id") @NotNull Long userIdentityId
     );
 
     /**
@@ -242,7 +242,7 @@ public interface UserIdentitiesClient {
      */
     @Put("/api/v2/users/{user_id}/identities/{user_identity_id}/verify")
     Mono<@Valid UserIdentityResponse> verifyUserIdentity(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("user_identity_id") @NotNull Integer userIdentityId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("user_identity_id") @NotNull Long userIdentityId
     );
 }

@@ -80,7 +80,7 @@ public interface ObjectTriggersClient {
     @Delete("/api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}")
     Mono<Void> deleteObjectTrigger(
         @PathVariable("custom_object_key") @NotNull String customObjectKey,
-        @PathVariable("trigger_id") @NotNull Integer triggerId
+        @PathVariable("trigger_id") @NotNull Long triggerId
     );
 
     /**
@@ -95,7 +95,7 @@ public interface ObjectTriggersClient {
     @Get("/api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}")
     Mono<@Valid ObjectTriggerResponse> getObjectTrigger(
         @PathVariable("custom_object_key") @NotNull String customObjectKey,
-        @PathVariable("trigger_id") @NotNull Integer triggerId
+        @PathVariable("trigger_id") @NotNull Long triggerId
     );
 
     /**
@@ -202,7 +202,7 @@ public interface ObjectTriggersClient {
     @Put("/api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}")
     Mono<@Valid ObjectTriggerResponse> updateObjectTrigger(
         @PathVariable("custom_object_key") @NotNull String customObjectKey,
-        @PathVariable("trigger_id") @NotNull Integer triggerId,
+        @PathVariable("trigger_id") @NotNull Long triggerId,
         @Body @NotNull @Valid ObjectTriggerRequest objectTriggerRequest
     );
 }

@@ -33,7 +33,7 @@ class InternalClientSpec extends Z4jSpec {
                    badTokenInternalClient, badUrlInternalClient
 
     @Shared
-    ResolveOrganizationNamesRequest request = new ResolveOrganizationNamesRequest().organizationNames(["Test Org"])
+    ResolveOrganizationNamesRequest request = new ResolveOrganizationNamesRequest().setOrganizationNames(["Test Org"])
 
     def setupSpec() {
         adminInternalClient = adminCtx.getBean(InternalClient.class)

@@ -37,10 +37,10 @@ class OrganizationsClientSpec extends Z4jSpec {
                         badTokenOrganizationsClient, badUrlOrganizationsClient
 
     @Shared
-    Integer adminUserId
+    Long adminUserId
 
     @Shared
-    Integer existingOrgId
+    Long existingOrgId
 
     def setupSpec() {
         adminOrganizationsClient = adminCtx.getBean(OrganizationsClient.class)
@@ -191,7 +191,7 @@ class OrganizationsClientSpec extends Z4jSpec {
         CreateOrganizationRequest createRequest = new CreateOrganizationRequest(
                 new OrganizationObject().setName(orgName).setDetails("Test Org created by z4j")
         )
-        Integer createdOrgId = null
+        Long createdOrgId = null
 
         when: "creating a new organization as admin"
         OrganizationResponse created = adminOrganizationsClient.createOrganization(createRequest).block()

@@ -81,7 +81,7 @@ public class OrganizationMembershipObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer organizationId;
+    private Long organizationId;
 
     /**
      * <p>The ID of the user for whom this membership belongs</p>
@@ -89,7 +89,7 @@ public class OrganizationMembershipObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_USER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer userId;
+    private Long userId;
 
     /**
      * <p>When this record was created</p>
@@ -105,7 +105,7 @@ public class OrganizationMembershipObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The name of the organization associated with this user, in this membership</p>

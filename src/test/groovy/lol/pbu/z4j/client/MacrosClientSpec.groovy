@@ -37,7 +37,7 @@ class MacrosClientSpec extends Z4jSpec {
                  badTokenMacrosClient, badUrlMacrosClient
 
     @Shared
-    Integer existingMacroId
+    Long existingMacroId
 
     def setupSpec() {
         adminMacrosClient = adminCtx.getBean(MacrosClient.class)
@@ -201,7 +201,7 @@ class MacrosClientSpec extends Z4jSpec {
         CreateMacroRequest createRequest = new CreateMacroRequest(
                 new MacroInput().setTitle(macroTitle).setActions([new ActionObject().setField("comment_value").setValue("Macro comment test")])
         )
-        Integer createdMacroId = null
+        Long createdMacroId = null
 
         when: "creating a new macro as admin"
         CreateMacro200Response created = adminMacrosClient.createMacro(createRequest).block()

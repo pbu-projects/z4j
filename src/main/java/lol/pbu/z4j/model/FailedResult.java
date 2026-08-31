@@ -30,6 +30,6 @@ public class FailedResult extends JobStatus {
     private String details;
     private String error;
     @JsonProperty("id")
-    private Integer failedResultID;
+    private Long failedResultID;
     private Boolean success;
 }

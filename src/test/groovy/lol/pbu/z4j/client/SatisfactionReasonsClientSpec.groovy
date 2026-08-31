@@ -32,7 +32,7 @@ class SatisfactionReasonsClientSpec extends Z4jSpec {
                               badTokenCsatReasonsClient, badUrlCsatReasonsClient
 
     @Shared
-    Integer existingReasonId
+    Long existingReasonId
 
     def setupSpec() {
         adminCsatReasonsClient = adminCtx.getBean(SatisfactionReasonsClient.class)

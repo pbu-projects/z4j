@@ -63,8 +63,8 @@ public interface LookupRelationshipsClient {
     @Get("/api/v2/{target_type}/{target_id}/relationship_fields/{field_id}/{source_type}")
     Mono<@Valid UsersResponse> getSourcesByTarget(
         @PathVariable("target_type") @NotNull String targetType,
-        @PathVariable("target_id") @NotNull Integer targetId,
-        @PathVariable("field_id") @NotNull Integer fieldId,
+        @PathVariable("target_id") @NotNull Long targetId,
+        @PathVariable("field_id") @NotNull Long fieldId,
         @PathVariable("source_type") @NotNull String sourceType
     );
 }

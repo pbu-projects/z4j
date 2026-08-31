@@ -46,7 +46,7 @@ public interface TicketCommentsClient {
      */
     @Get("/api/v2/tickets/{ticket_id}/comments/count")
     Mono<@Valid TicketCommentsCountResponse> countTicketComments(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -61,7 +61,7 @@ public interface TicketCommentsClient {
      */
     @Get("/api/v2/tickets/{ticket_id}/comments")
     Mono<@Valid TicketCommentsResponse> listTicketComments(
-        @PathVariable("ticket_id") @NotNull Integer ticketId,
+        @PathVariable("ticket_id") @NotNull Long ticketId,
         @QueryValue("include_inline_images") @Nullable Boolean includeInlineImages,
         @QueryValue("include") @Nullable String include
     );
@@ -77,8 +77,8 @@ public interface TicketCommentsClient {
      */
     @Put("/api/v2/tickets/{ticket_id}/comments/{ticket_comment_id}/make_private")
     Mono<@NotNull String> makeTicketCommentPrivate(
-        @PathVariable("ticket_id") @NotNull Integer ticketId,
-        @PathVariable("ticket_comment_id") @NotNull Integer ticketCommentId
+        @PathVariable("ticket_id") @NotNull Long ticketId,
+        @PathVariable("ticket_comment_id") @NotNull Long ticketCommentId
     );
 
     /**
@@ -91,7 +91,7 @@ public interface TicketCommentsClient {
      */
     @Put("/api/v2/chat_redactions/{ticket_id}")
     Mono<@Valid TicketChatCommentRedactionResponse> redactChatComment(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -104,7 +104,7 @@ public interface TicketCommentsClient {
      */
     @Put("/api/v2/chat_file_redactions/{ticket_id}")
     Mono<@Valid TicketChatCommentRedactionResponse> redactChatCommentAttachment(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -118,8 +118,8 @@ public interface TicketCommentsClient {
      */
     @Put("/api/v2/tickets/{ticket_id}/comments/{ticket_comment_id}/redact")
     Mono<@Valid TicketCommentResponse> redactStringInComment(
-        @PathVariable("ticket_id") @NotNull Integer ticketId,
-        @PathVariable("ticket_comment_id") @NotNull Integer ticketCommentId
+        @PathVariable("ticket_id") @NotNull Long ticketId,
+        @PathVariable("ticket_comment_id") @NotNull Long ticketCommentId
     );
 
     /**
@@ -132,6 +132,6 @@ public interface TicketCommentsClient {
      */
     @Put("/api/v2/comment_redactions/{ticket_comment_id}")
     Mono<@Valid TicketCommentResponse> redactTicketCommentInAgentWorkspace(
-        @PathVariable("ticket_comment_id") @NotNull Integer ticketCommentId
+        @PathVariable("ticket_comment_id") @NotNull Long ticketCommentId
     );
 }

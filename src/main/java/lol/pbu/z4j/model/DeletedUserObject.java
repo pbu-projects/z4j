@@ -93,7 +93,7 @@ public class DeletedUserObject {
 
     @NotNull
     @JsonProperty(JSON_PROPERTY_ID)
-    private Integer id;
+    private Long id;
 
     @NotNull
     @JsonProperty(JSON_PROPERTY_LOCALE)
@@ -101,7 +101,7 @@ public class DeletedUserObject {
 
     @NotNull
     @JsonProperty(JSON_PROPERTY_LOCALE_ID)
-    private Integer localeId;
+    private Long localeId;
 
     @NotNull
     @JsonProperty(JSON_PROPERTY_NAME)
@@ -109,7 +109,7 @@ public class DeletedUserObject {
 
     @NotNull
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
-    private Integer organizationId;
+    private Long organizationId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_PHONE)
@@ -139,7 +139,7 @@ public class DeletedUserObject {
     @JsonProperty(JSON_PROPERTY_URL)
     private String url;
 
-    public DeletedUserObject(Boolean active, String createdAt, String email, Integer id, String locale, Integer localeId, String name, Integer organizationId, String phone, Object photo, String role, String sharedPhoneNumber, String timeZone, String updatedAt, String url) {
+    public DeletedUserObject(Boolean active, String createdAt, String email, Long id, String locale, Long localeId, String name, Long organizationId, String phone, Object photo, String role, String sharedPhoneNumber, String timeZone, String updatedAt, String url) {
         this.active = active;
         this.createdAt = createdAt;
         this.email = email;

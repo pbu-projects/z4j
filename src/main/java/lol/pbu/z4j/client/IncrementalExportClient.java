@@ -49,8 +49,8 @@ public interface IncrementalExportClient {
      */
     @Get("/api/v2/incremental/organizations")
     Mono<@Valid ExportIncrementalOrganizationsResponse> incrementalOrganizationExport(
-        @QueryValue("start_time") @NotNull Integer startTime,
-        @QueryValue("per_page") @Nullable Integer perPage
+        @QueryValue("start_time") @NotNull Long startTime,
+        @QueryValue("per_page") @Nullable Long perPage
     );
 
     /**
@@ -64,7 +64,7 @@ public interface IncrementalExportClient {
      */
     @Get("/api/v2/incremental/{incremental_resource}/sample")
     Mono<@Valid TimeBasedExportIncrementalTicketsResponse> incrementalSampleExport(
-        @QueryValue("start_time") @NotNull Integer startTime,
+        @QueryValue("start_time") @NotNull Long startTime,
         @PathVariable("incremental_resource") @NotNull String incrementalResource
     );
 
@@ -79,7 +79,7 @@ public interface IncrementalExportClient {
      */
     @Get("/api/v2/incremental/ticket_events")
     Mono<@Valid ExportIncrementalTicketEventsResponse> incrementalTicketEvents(
-        @QueryValue("start_time") @NotNull Integer startTime,
+        @QueryValue("start_time") @NotNull Long startTime,
         @QueryValue("support_type_scope") @Nullable String supportTypeScope
     );
 
@@ -95,7 +95,7 @@ public interface IncrementalExportClient {
      */
     @Get("/api/v2/incremental/tickets/cursor")
     Mono<@Valid CursorBasedExportIncrementalTicketsResponse> incrementalTicketExportCursor(
-        @QueryValue("start_time") @NotNull Integer startTime,
+        @QueryValue("start_time") @NotNull Long startTime,
         @QueryValue("cursor") @Nullable String cursor,
         @QueryValue("support_type_scope") @Nullable String supportTypeScope
     );
@@ -111,7 +111,7 @@ public interface IncrementalExportClient {
      */
     @Get("/api/v2/incremental/tickets")
     Mono<@Valid TimeBasedExportIncrementalTicketsResponse> incrementalTicketExportTime(
-        @QueryValue("start_time") @NotNull Integer startTime,
+        @QueryValue("start_time") @NotNull Long startTime,
         @QueryValue("support_type_scope") @Nullable String supportTypeScope
     );
 
@@ -127,9 +127,9 @@ public interface IncrementalExportClient {
      */
     @Get("/api/v2/incremental/users/cursor")
     Mono<@Valid CursorBasedExportIncrementalUsersResponse> incrementalUserExportCursor(
-        @QueryValue("start_time") @NotNull Integer startTime,
+        @QueryValue("start_time") @NotNull Long startTime,
         @QueryValue("cursor") @Nullable String cursor,
-        @QueryValue("per_page") @Nullable Integer perPage
+        @QueryValue("per_page") @Nullable Long perPage
     );
 
     /**
@@ -143,7 +143,7 @@ public interface IncrementalExportClient {
      */
     @Get("/api/v2/incremental/users")
     Mono<@Valid TimeBasedExportIncrementalUsersResponse> incrementalUserExportTime(
-        @QueryValue("start_time") @NotNull Integer startTime,
-        @QueryValue("per_page") @Nullable Integer perPage
+        @QueryValue("start_time") @NotNull Long startTime,
+        @QueryValue("per_page") @Nullable Long perPage
     );
 }

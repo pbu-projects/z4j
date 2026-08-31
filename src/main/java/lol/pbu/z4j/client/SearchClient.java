@@ -31,7 +31,7 @@ import reactor.core.publisher.Mono;
  * <p>Reactive client for performing searches in Zendesk. These methods provide low-level access to the search endpoints.</p>
  * <ul>
  *     <li>Show Search Result Counts with {@link #count(String)}</li>
- *     <li>Export Search Results with {@link #exportTicket(String, Integer, String)}</li>
+ *     <li>Export Search Results with {@link #exportTicket(String, Long, String)}</li>
  *     <li>List Search Results with{@link #list}</li>
  * </ul>
  *
@@ -93,7 +93,7 @@ public interface SearchClient {
     @Get("/api/v2/search/export?filter[type]=ticket")
     Mono<@Valid ExportResponse<Ticket>> exportTicket(
             @QueryValue("query") @NotNull String query,
-            @QueryValue("page[size]") @Nullable @Max(1000) Integer pageSize,
+            @QueryValue("page[size]") @Nullable @Max(1000) Long pageSize,
             @QueryValue("page[after]") @Nullable String pageAfter
     );
 
@@ -120,7 +120,7 @@ public interface SearchClient {
             @QueryValue("query") @NotNull String query,
             @QueryValue("sort_by") @Nullable SortBy sortBy,
             @QueryValue("sort_order") @Nullable SortOrder sortOrder,
-            @QueryValue("page") @Nullable Integer page,
-            @QueryValue("per_page") @Nullable @Max(100) Integer perPage
+            @QueryValue("page") @Nullable Long page,
+            @QueryValue("per_page") @Nullable @Max(100) Long perPage
     );
 }

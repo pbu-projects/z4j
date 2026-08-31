@@ -44,7 +44,7 @@ public interface DynamicContentItemVariantsClient {
      */
     @Post("/api/v2/dynamic_content/items/{dynamic_content_item_id}/variants")
     Mono<@Valid DynamicContentVariantResponse> createDynamicContentVariant(
-        @PathVariable("dynamic_content_item_id") @NotNull Integer dynamicContentItemId
+        @PathVariable("dynamic_content_item_id") @NotNull Long dynamicContentItemId
     );
 
     /**
@@ -57,7 +57,7 @@ public interface DynamicContentItemVariantsClient {
      */
     @Post("/api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/create_many")
     Mono<@Valid DynamicContentVariantsResponse> createManyDynamicContentVariants(
-        @PathVariable("dynamic_content_item_id") @NotNull Integer dynamicContentItemId
+        @PathVariable("dynamic_content_item_id") @NotNull Long dynamicContentItemId
     );
 
     /**
@@ -71,8 +71,8 @@ public interface DynamicContentItemVariantsClient {
      */
     @Delete("/api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}")
     Mono<Void> deleteDynamicContentVariant(
-        @PathVariable("dynamic_content_item_id") @NotNull Integer dynamicContentItemId,
-        @PathVariable("dynamic_content_variant_id") @NotNull Integer dynamicContentVariantId
+        @PathVariable("dynamic_content_item_id") @NotNull Long dynamicContentItemId,
+        @PathVariable("dynamic_content_variant_id") @NotNull Long dynamicContentVariantId
     );
 
     /**
@@ -85,7 +85,7 @@ public interface DynamicContentItemVariantsClient {
      */
     @Get("/api/v2/dynamic_content/items/{dynamic_content_item_id}/variants")
     Mono<@Valid DynamicContentVariantsResponse> dynamicContentListVariants(
-        @PathVariable("dynamic_content_item_id") @NotNull Integer dynamicContentItemId
+        @PathVariable("dynamic_content_item_id") @NotNull Long dynamicContentItemId
     );
 
     /**
@@ -99,8 +99,8 @@ public interface DynamicContentItemVariantsClient {
      */
     @Get("/api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}")
     Mono<@Valid DynamicContentVariantResponse> showDynamicContentVariant(
-        @PathVariable("dynamic_content_item_id") @NotNull Integer dynamicContentItemId,
-        @PathVariable("dynamic_content_variant_id") @NotNull Integer dynamicContentVariantId
+        @PathVariable("dynamic_content_item_id") @NotNull Long dynamicContentItemId,
+        @PathVariable("dynamic_content_variant_id") @NotNull Long dynamicContentVariantId
     );
 
     /**
@@ -114,8 +114,8 @@ public interface DynamicContentItemVariantsClient {
      */
     @Put("/api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}")
     Mono<@Valid DynamicContentVariantResponse> updateDynamicContentVariant(
-        @PathVariable("dynamic_content_item_id") @NotNull Integer dynamicContentItemId,
-        @PathVariable("dynamic_content_variant_id") @NotNull Integer dynamicContentVariantId
+        @PathVariable("dynamic_content_item_id") @NotNull Long dynamicContentItemId,
+        @PathVariable("dynamic_content_variant_id") @NotNull Long dynamicContentVariantId
     );
 
     /**
@@ -128,6 +128,6 @@ public interface DynamicContentItemVariantsClient {
      */
     @Put("/api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/update_many")
     Mono<@Valid DynamicContentVariantsResponse> updateManyDynamicContentVariants(
-        @PathVariable("dynamic_content_item_id") @NotNull Integer dynamicContentItemId
+        @PathVariable("dynamic_content_item_id") @NotNull Long dynamicContentItemId
     );
 }

@@ -71,7 +71,7 @@ public class TicketFieldsShowManyResponse {
     @Nullable
     @JsonProperty(JSON_PROPERTY_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer count;
+    private Long count;
 
     /**
      * <p>URL or cursor to the next page when paginated; null otherwise</p>

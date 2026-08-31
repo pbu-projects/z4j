@@ -33,7 +33,7 @@ class AuditLogsClientSpec extends Z4jSpec {
                     badTokenAuditLogsClient, badUrlAuditLogsClient
 
     @Shared
-    Integer existingAuditLogId
+    Long existingAuditLogId
 
     def setupSpec() {
         adminAuditLogsClient = adminCtx.getBean(AuditLogsClient.class)

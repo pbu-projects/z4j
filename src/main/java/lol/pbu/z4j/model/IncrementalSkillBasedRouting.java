@@ -88,7 +88,7 @@ public class IncrementalSkillBasedRouting {
     @Nullable
     @JsonProperty(JSON_PROPERTY_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer count;
+    private Long count;
 
     /**
      * <p>The most recent resource creation time present in this result set in Unix epoch time</p>
@@ -96,7 +96,7 @@ public class IncrementalSkillBasedRouting {
     @Nullable
     @JsonProperty(JSON_PROPERTY_END_TIME)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer endTime;
+    private Long endTime;
 
     /**
      * <p>Routing instance values</p>

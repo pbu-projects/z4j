@@ -60,7 +60,7 @@ public class MacroUpdateManyInputMacrosInner {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_ID)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The active status of the macro (true or false)</p>
@@ -76,9 +76,9 @@ public class MacroUpdateManyInputMacrosInner {
     @Nullable
     @JsonProperty(JSON_PROPERTY_POSITION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer position;
+    private Long position;
 
-    public MacroUpdateManyInputMacrosInner(Integer id) {
+    public MacroUpdateManyInputMacrosInner(Long id) {
         this.id = id;
     }
 

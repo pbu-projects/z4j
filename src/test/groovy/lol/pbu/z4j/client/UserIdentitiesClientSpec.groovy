@@ -31,10 +31,10 @@ class UserIdentitiesClientSpec extends Z4jSpec {
                          badTokenUserIdentitiesClient, badUrlUserIdentitiesClient
 
     @Shared
-    Integer adminUserId
+    Long adminUserId
 
     @Shared
-    Integer existingIdentityId
+    Long existingIdentityId
 
     def setupSpec() {
         adminUserIdentitiesClient = adminCtx.getBean(UserIdentitiesClient.class)

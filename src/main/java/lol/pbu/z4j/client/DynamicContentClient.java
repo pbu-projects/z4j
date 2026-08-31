@@ -53,7 +53,7 @@ public interface DynamicContentClient {
      */
     @Delete("/api/v2/dynamic_content/items/{dynamic_content_item_id}")
     Mono<Void> deleteDynamicContentItem(
-        @PathVariable("dynamic_content_item_id") @NotNull Integer dynamicContentItemId
+        @PathVariable("dynamic_content_item_id") @NotNull Long dynamicContentItemId
     );
 
     /**
@@ -75,7 +75,7 @@ public interface DynamicContentClient {
      */
     @Get("/api/v2/dynamic_content/items/{dynamic_content_item_id}")
     Mono<@Valid DynamicContentResponse> showDynamicContentItem(
-        @PathVariable("dynamic_content_item_id") @NotNull Integer dynamicContentItemId
+        @PathVariable("dynamic_content_item_id") @NotNull Long dynamicContentItemId
     );
 
     /**
@@ -101,6 +101,6 @@ public interface DynamicContentClient {
      */
     @Put("/api/v2/dynamic_content/items/{dynamic_content_item_id}")
     Mono<@Valid DynamicContentResponse> updateDynamicContentItem(
-        @PathVariable("dynamic_content_item_id") @NotNull Integer dynamicContentItemId
+        @PathVariable("dynamic_content_item_id") @NotNull Long dynamicContentItemId
     );
 }

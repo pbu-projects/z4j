@@ -82,7 +82,7 @@ public class SatisfactionRatingObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ASSIGNEE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer assigneeId;
+    private Long assigneeId;
 
     /**
      * <p>The id of group assigned to at the time of rating</p>
@@ -90,7 +90,7 @@ public class SatisfactionRatingObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_GROUP_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer groupId;
+    private Long groupId;
 
     /**
      * <p>The id of ticket requester submitting the rating</p>
@@ -98,7 +98,7 @@ public class SatisfactionRatingObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_REQUESTER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer requesterId;
+    private Long requesterId;
 
     /**
      * <p>The rating \"offered\", \"unoffered\", \"good\" or \"bad\". For POST requests, only \"good\" or \"bad\" are valid</p>
@@ -113,7 +113,7 @@ public class SatisfactionRatingObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketId;
+    private Long ticketId;
 
     /**
      * <p>The comment received with this rating, if available</p>
@@ -137,7 +137,7 @@ public class SatisfactionRatingObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The reason for a bad rating given by the requester in a follow-up question. Satisfaction reasons must be <a href=\"https://support.zendesk.com/hc/en-us/articles/223152967\">enabled</a></p>
@@ -153,7 +153,7 @@ public class SatisfactionRatingObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_REASON_CODE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer reasonCode;
+    private Long reasonCode;
 
     /**
      * <p>id for the reason the user gave a negative rating. Can only be set on ratings with a <code>score</code> of \"bad\". To get a descriptive value for the id, use the <a href=\"/api-reference/ticketing/ticket-management/satisfaction_reasons/#show-reason-for-satisfaction-rating\">Show Reason for Satisfaction Rating</a> endpoint</p>
@@ -161,7 +161,7 @@ public class SatisfactionRatingObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_REASON_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer reasonId;
+    private Long reasonId;
 
     /**
      * <p>The time the satisfaction rating got updated</p>

@@ -80,7 +80,7 @@ public class OauthTokenObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CLIENT_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer clientId;
+    private Long clientId;
 
     /**
      * <p>The time the token was created</p>
@@ -104,7 +104,7 @@ public class OauthTokenObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The refresh token, if generated</p>
@@ -160,6 +160,6 @@ public class OauthTokenObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_USER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer userId;
+    private Long userId;
 
 }

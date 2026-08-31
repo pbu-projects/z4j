@@ -60,7 +60,7 @@ public class GlobalClientTokenSummaryObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Date and time in ISO 8601 format of last token usage for a client</p>
@@ -76,6 +76,6 @@ public class GlobalClientTokenSummaryObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TOKENS_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer tokensCount;
+    private Long tokensCount;
 
 }

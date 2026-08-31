@@ -100,7 +100,7 @@ public class OAuthClientObject {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_USER_ID)
-    private Integer userId;
+    private Long userId;
 
     /**
      * <p>The company name displayed when users are asked to grant access to your application.</p>
@@ -140,7 +140,7 @@ public class OAuthClientObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Either \"public\" or \"confidential\". Specifies whether the OAuth client operates in a public environment where credentials cannot be securely stored, or on secure servers that can safely store credentials. See <a href=\"/documentation/ticketing/working-with-oauth/oauth-pkce/#client-types\">Client types</a></p>
@@ -190,7 +190,7 @@ public class OAuthClientObject {
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private String url;
 
-    public OAuthClientObject(String identifier, String name, Integer userId) {
+    public OAuthClientObject(String identifier, String name, Long userId) {
         this.identifier = identifier;
         this.name = name;
         this.userId = userId;

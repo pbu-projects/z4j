@@ -167,7 +167,7 @@ public class TicketFormObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Is the form available for use in all brands on this account</p>
@@ -183,7 +183,7 @@ public class TicketFormObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_POSITION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer position;
+    private Long position;
 
     /**
      * <p>The dynamic content placeholder, if present, or the \"display_name\" value, if not. See <a href=\"/api-reference/ticketing/ticket-management/dynamic_content/\">Dynamic Content Items</a></p>
@@ -207,7 +207,7 @@ public class TicketFormObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_RESTRICTED_BRAND_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> restrictedBrandIds;
+    private List<@NotNull Long> restrictedBrandIds;
 
     /**
      * <p>IDs of all ticket fields which are in this ticket form. The products use the order of the IDs to show the field values in the tickets</p>
@@ -215,7 +215,7 @@ public class TicketFormObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_FIELD_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> ticketFieldIds;
+    private List<@NotNull Long> ticketFieldIds;
 
     /**
      * <p>The time of the last update of the ticket form</p>
@@ -268,7 +268,7 @@ public class TicketFormObject {
      *
      * @return The same instance of TicketFormObject for chaining.
      */
-    public TicketFormObject addTicketFieldIdsItem(Integer ticketFieldIdsItem) {
+    public TicketFormObject addTicketFieldIdsItem(Long ticketFieldIdsItem) {
         if (ticketFieldIds == null) {
             ticketFieldIds = new ArrayList<>();
         }
