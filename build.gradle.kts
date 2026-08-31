@@ -112,7 +112,7 @@ sonarqube {
 }
 
 tasks.jacocoTestReport {
-    executionData(tasks.withType<Test>())
+    executionData.setFrom(fileTree(layout.buildDirectory).include("jacoco/*.exec"))
     reports {
         xml.required.set(true)
         html.required.set(true)

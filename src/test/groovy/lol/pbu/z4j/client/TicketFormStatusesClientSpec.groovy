@@ -55,19 +55,9 @@ class TicketFormStatusesClientSpec extends Z4jSpec {
         where:
         [client, userType] << [
                 [adminFormStatusesClient, "admin"],
-                [agentFormStatusesClient, "agent"]
+                [agentFormStatusesClient, "agent"],
+                [userFormStatusesClient, "end user"]
         ]
-    }
-
-    def "end user cannot list ticket form statuses"() {
-        given: "an end user client"
-
-        when: "requesting ticket form statuses as an end user"
-        userFormStatusesClient.listTicketFormStatuses().block()
-
-        then: "a 403 Forbidden exception is thrown as documented"
-        HttpClientResponseException e = thrown()
-        e.status == FORBIDDEN
     }
 
     @Unroll
