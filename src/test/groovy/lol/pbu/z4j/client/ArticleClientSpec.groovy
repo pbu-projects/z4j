@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package lol.pbu.z4j.client
+import org.junit.jupiter.api.Tag
 
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
@@ -25,6 +26,7 @@ import reactor.core.publisher.Mono
 import spock.lang.Shared
 
 @MicronautTest
+@Tag("help_center")
 class ArticleClientSpec extends Z4jSpec {
 
     @Shared

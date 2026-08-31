@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package lol.pbu.z4j.client
+import org.junit.jupiter.api.Tag
 
 import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
@@ -24,6 +25,7 @@ import spock.lang.Shared
 import spock.lang.Unroll
 
 @MicronautTest
+@Tag("admin")
 class LocaleClientSpec extends Z4jSpec {
 
     @Shared

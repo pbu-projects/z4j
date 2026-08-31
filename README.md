@@ -4,7 +4,7 @@ The ultra-lightweight, cloud-native Java client for the Zendesk API
 
 ## About The Project
 
-A zippy Zendesk client built for heavy lifting, z4j pairs Micronaut’s lightning-fast architecture and minimal footprint with a testing suite so rigorous it’s borderline obsessive.
+A zippy Zendesk client built for heavy lifting, z4j pairs [Micronaut]’s lightning-fast architecture and minimal footprint with a [testing] suite so rigorous it’s borderline obsessive.
 
 ## Getting Started
 
@@ -32,10 +32,18 @@ A zippy Zendesk client built for heavy lifting, z4j pairs Micronaut’s lightnin
 
 - [zcmi] is a cli project built with z4j.
 
+## Testing
+
+Integration tests are partitioned into domain-specific tasks to prevent exceeding Zendesk Sandbox rate limits (HTTP 429). Run tasks individually and wait at least **1 minute** between executions:
+- `./gradlew ticketingTest`
+- `./gradlew userTest`
+- `./gradlew helpCenterTest`
+- `./gradlew adminTest`
+
 ## Contributing
 
-Please read our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contributing Guide](CONTRIBUTING.md) for details on our
-development process, style guides, and testing strategy.
+Please read our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contributing Guide] for details on our
+development process, style guides, and [testing] strategy.
 
 [Contributing Guide]:CONTRIBUTING.md#set-up-your-machine
 
