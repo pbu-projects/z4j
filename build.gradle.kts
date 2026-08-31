@@ -44,6 +44,7 @@ repositories {
 }
 
 dependencies {
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
@@ -119,6 +120,54 @@ tasks.jacocoTestReport {
 
 tasks.test {
     maxHeapSize = "2g"
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+val ticketingTest by tasks.registering(Test::class) {
+    description = "Runs ticketing related integration tests"
+    group = "verification"
+    useJUnitPlatform {
+        includeTags("ticketing")
+    }
+    maxHeapSize = "2g"
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+val userTest by tasks.registering(Test::class) {
+    description = "Runs user, group, and organization integration tests"
+    group = "verification"
+    useJUnitPlatform {
+        includeTags("users")
+    }
+    maxHeapSize = "2g"
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+val helpCenterTest by tasks.registering(Test::class) {
+    description = "Runs Help Center (Guide) integration tests"
+    group = "verification"
+    useJUnitPlatform {
+        includeTags("help_center")
+    }
+    maxHeapSize = "2g"
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+val adminTest by tasks.registering(Test::class) {
+    description = "Runs admin and business rules integration tests"
+    group = "verification"
+    useJUnitPlatform {
+        includeTags("admin")
+    }
+    maxHeapSize = "2g"
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
     finalizedBy(tasks.jacocoTestReport)
 }
 

@@ -1,10 +1,12 @@
 package lol.pbu.z4j
+import org.junit.jupiter.api.Tag
 
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import lol.pbu.z4j.model.Ticket
 import spock.lang.Shared
 
+@Tag("ticketing")
 class SearchServiceSpec extends Z4jSpec {
 
     @Shared

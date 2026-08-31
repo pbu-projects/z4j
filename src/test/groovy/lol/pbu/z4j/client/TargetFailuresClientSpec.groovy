@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package lol.pbu.z4j.client
+import org.junit.jupiter.api.Tag
 
 import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.http.client.exceptions.HttpClientResponseException
@@ -25,6 +26,7 @@ import spock.lang.Unroll
 import static io.micronaut.http.HttpStatus.FORBIDDEN
 
 @MicronautTest
+@Tag("admin")
 class TargetFailuresClientSpec extends Z4jSpec {
 
     @Shared

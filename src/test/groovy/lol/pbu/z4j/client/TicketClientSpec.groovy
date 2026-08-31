@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package lol.pbu.z4j.client
+import org.junit.jupiter.api.Tag
 
 import io.micronaut.http.client.exceptions.HttpClientException
 import lol.pbu.z4j.Z4jSpec
@@ -23,6 +24,7 @@ import lol.pbu.z4j.fixture.TicketItem
 import lol.pbu.z4j.model.*
 import spock.lang.Shared
 
+@Tag("ticketing")
 class TicketClientSpec extends Z4jSpec {
 
     @Shared

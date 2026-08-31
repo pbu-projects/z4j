@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package lol.pbu.z4j.client
+import org.junit.jupiter.api.Tag
 
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import lol.pbu.z4j.Z4jSpec
@@ -21,6 +22,7 @@ import lol.pbu.z4j.model.*
 import spock.lang.Shared
 import spock.lang.Unroll
 
+@Tag("ticketing")
 class SearchClientSpec extends Z4jSpec {
     @Shared
     SearchClient adminSearchClient, agentSearchClient, userSearchClient
