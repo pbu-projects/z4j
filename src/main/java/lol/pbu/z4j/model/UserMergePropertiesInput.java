@@ -69,7 +69,7 @@ public class UserMergePropertiesInput {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer organizationId;
+    private Long organizationId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_PASSWORD)

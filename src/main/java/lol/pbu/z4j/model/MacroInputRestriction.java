@@ -67,7 +67,7 @@ public class MacroInputRestriction extends HashMap<String, Object> {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The numeric IDs of the groups</p>
@@ -75,7 +75,7 @@ public class MacroInputRestriction extends HashMap<String, Object> {
     @Nullable
     @JsonProperty(JSON_PROPERTY_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> ids;
+    private List<@NotNull Long> ids;
 
     /**
      * <p>Allowed values are Group or User</p>
@@ -90,7 +90,7 @@ public class MacroInputRestriction extends HashMap<String, Object> {
      *
      * @return The same instance of MacroInputRestriction for chaining.
      */
-    public MacroInputRestriction addIdsItem(Integer idsItem) {
+    public MacroInputRestriction addIdsItem(Long idsItem) {
         if (ids == null) {
             ids = new ArrayList<>();
         }

@@ -27,6 +27,6 @@ import lombok.experimental.Accessors;
 @Getter
 @Serdeable
 public class CreateResourceResult extends JobStatus {
-    private Integer id;
-    private Integer index;
+    private Long id;
+    private Long index;
 }

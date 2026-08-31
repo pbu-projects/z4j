@@ -33,7 +33,7 @@ class ViewClientSpec extends Z4jSpec {
                 badTokenViewsClient, badUrlViewsClient
 
     @Shared
-    Integer existingViewId
+    Long existingViewId
 
     def setupSpec() {
         adminViewsClient = adminCtx.getBean(ViewsClient.class)

@@ -66,7 +66,7 @@ public class OrganizationMergeResponseOrganizationMerge {
 
     @NotNull
     @JsonProperty(JSON_PROPERTY_LOSER_ID)
-    private Integer loserId;
+    private Long loserId;
 
     @NotNull
     @JsonProperty(JSON_PROPERTY_STATUS)
@@ -78,9 +78,9 @@ public class OrganizationMergeResponseOrganizationMerge {
 
     @NotNull
     @JsonProperty(JSON_PROPERTY_WINNER_ID)
-    private Integer winnerId;
+    private Long winnerId;
 
-    public OrganizationMergeResponseOrganizationMerge(String id, Integer loserId, OrganizationMergeListResponseOrganizationMergesInnerStatus status, String url, Integer winnerId) {
+    public OrganizationMergeResponseOrganizationMerge(String id, Long loserId, OrganizationMergeListResponseOrganizationMergesInnerStatus status, String url, Long winnerId) {
         this.id = id;
         this.loserId = loserId;
         this.status = status;

@@ -65,7 +65,7 @@ public class TimeBasedExportIncrementalTicketsResponse {
     @Nullable
     @JsonProperty(JSON_PROPERTY_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer count;
+    private Long count;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_END_OF_STREAM)
@@ -75,7 +75,7 @@ public class TimeBasedExportIncrementalTicketsResponse {
     @Nullable
     @JsonProperty(JSON_PROPERTY_END_TIME)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer endTime;
+    private Long endTime;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_NEXT_PAGE)

@@ -144,7 +144,7 @@ public class CustomStatusObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The dynamic content placeholder. If the dynamic content placeholder is not available, this is the \"agent_label\" value. See <a href=\"/api-reference/ticketing/ticket-management/dynamic_content/\">Dynamic Content Items</a></p>

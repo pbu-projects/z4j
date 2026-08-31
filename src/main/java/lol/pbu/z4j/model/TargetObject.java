@@ -246,7 +246,7 @@ public class TargetObject extends HashMap<String, Object> {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Can be filled if it is a \"message\" resource</p>

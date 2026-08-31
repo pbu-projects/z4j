@@ -113,7 +113,7 @@ public class GroupObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>If true, the group is public. If false, the group is private. You can't change a private group to a public group</p>

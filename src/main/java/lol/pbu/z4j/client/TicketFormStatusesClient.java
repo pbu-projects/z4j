@@ -45,7 +45,7 @@ public interface TicketFormStatusesClient {
      */
     @Delete("/api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses/{ticket_form_status_id}")
     Mono<Void> deleteTicketFormStatusById(
-        @PathVariable("ticket_form_id") @NotNull Integer ticketFormId,
+        @PathVariable("ticket_form_id") @NotNull Long ticketFormId,
         @PathVariable("ticket_form_status_id") @NotNull String ticketFormStatusId
     );
 
@@ -60,7 +60,7 @@ public interface TicketFormStatusesClient {
      */
     @Delete("/api/v2/ticket_forms/{ticket_form_id}/ticket_form_statuses")
     Mono<Void> deleteTicketFormStatuses(
-        @PathVariable("ticket_form_id") @NotNull Integer ticketFormId,
+        @PathVariable("ticket_form_id") @NotNull Long ticketFormId,
         @Body @Nullable @Valid DeleteTicketFormStatusesRequest deleteTicketFormStatusesRequest
     );
 

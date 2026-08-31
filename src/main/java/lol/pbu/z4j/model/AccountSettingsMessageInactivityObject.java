@@ -98,7 +98,7 @@ public class AccountSettingsMessageInactivityObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_STATUS_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketStatusId;
+    private Long ticketStatusId;
 
     /**
      * <p>Timeout in minutes after which the ticket will be marked as inactive</p>
@@ -106,7 +106,7 @@ public class AccountSettingsMessageInactivityObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TIMEOUT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer timeout;
+    private Long timeout;
 
     /**
      * Add an item to the reminders property in a chainable fashion.

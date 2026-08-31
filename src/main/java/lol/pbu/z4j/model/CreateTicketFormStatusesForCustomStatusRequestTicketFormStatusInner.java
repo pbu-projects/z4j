@@ -54,6 +54,6 @@ public class CreateTicketFormStatusesForCustomStatusRequestTicketFormStatusInner
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_FORM_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketFormId;
+    private Long ticketFormId;
 
 }

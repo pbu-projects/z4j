@@ -51,9 +51,9 @@ public class TicketFormStatusesCreateParams {
 
     @NotNull
     @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS_ID)
-    private Integer customStatusId;
+    private Long customStatusId;
 
-    public TicketFormStatusesCreateParams(Integer customStatusId) {
+    public TicketFormStatusesCreateParams(Long customStatusId) {
         this.customStatusId = customStatusId;
     }
 

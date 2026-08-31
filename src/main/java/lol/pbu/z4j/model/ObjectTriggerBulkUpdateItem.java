@@ -60,7 +60,7 @@ public class ObjectTriggerBulkUpdateItem {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_ID)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Whether an object trigger is active</p>
@@ -76,9 +76,9 @@ public class ObjectTriggerBulkUpdateItem {
     @Nullable
     @JsonProperty(JSON_PROPERTY_POSITION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer position;
+    private Long position;
 
-    public ObjectTriggerBulkUpdateItem(Integer id) {
+    public ObjectTriggerBulkUpdateItem(Long id) {
         this.id = id;
     }
 

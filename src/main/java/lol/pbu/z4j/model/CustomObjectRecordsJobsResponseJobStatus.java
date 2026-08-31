@@ -79,7 +79,7 @@ public class CustomObjectRecordsJobsResponseJobStatus {
     @Nullable
     @JsonProperty(JSON_PROPERTY_PROGRESS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer progress;
+    private Long progress;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_RESULTS)
@@ -94,7 +94,7 @@ public class CustomObjectRecordsJobsResponseJobStatus {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TOTAL)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer total;
+    private Long total;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_URL)

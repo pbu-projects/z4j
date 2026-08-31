@@ -54,14 +54,14 @@ public class AccountSettingsLocalizationObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_LOCALE_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> localeIds;
+    private List<@NotNull Long> localeIds;
 
     /**
      * Add an item to the localeIds property in a chainable fashion.
      *
      * @return The same instance of AccountSettingsLocalizationObject for chaining.
      */
-    public AccountSettingsLocalizationObject addLocaleIdsItem(Integer localeIdsItem) {
+    public AccountSettingsLocalizationObject addLocaleIdsItem(Long localeIdsItem) {
         if (localeIds == null) {
             localeIds = new ArrayList<>();
         }

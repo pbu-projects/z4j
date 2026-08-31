@@ -58,7 +58,7 @@ public class TicketMetricObjectReplyTimeInSeconds {
     @Nullable
     @JsonProperty(JSON_PROPERTY_BUSINESS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer business;
+    private Long business;
 
     /**
      * <p>Time in calendar hours</p>
@@ -66,6 +66,6 @@ public class TicketMetricObjectReplyTimeInSeconds {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CALENDAR)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer calendar;
+    private Long calendar;
 
 }

@@ -81,7 +81,7 @@ public interface ViewsClient {
      */
     @Delete("/api/v2/views/{view_id}")
     Mono<Void> deleteView(
-        @PathVariable("view_id") @NotNull Integer viewId
+        @PathVariable("view_id") @NotNull Long viewId
     );
 
     /**
@@ -96,7 +96,7 @@ public interface ViewsClient {
      */
     @Get("/api/v2/views/{view_id}/execute")
     Mono<@Valid ViewResponse> executeView(
-        @PathVariable("view_id") @NotNull Integer viewId,
+        @PathVariable("view_id") @NotNull Long viewId,
         @QueryValue("sort_by") @Nullable String sortBy,
         @QueryValue("sort_order") @Nullable String sortOrder
     );
@@ -111,7 +111,7 @@ public interface ViewsClient {
      */
     @Get("/api/v2/views/{view_id}/export")
     Mono<@Valid ViewExportResponse> exportView(
-        @PathVariable("view_id") @NotNull Integer viewId
+        @PathVariable("view_id") @NotNull Long viewId
     );
 
     /**
@@ -124,7 +124,7 @@ public interface ViewsClient {
      */
     @Get("/api/v2/views/{view_id}/count")
     Mono<@Valid ViewCountResponse> getViewCount(
-        @PathVariable("view_id") @NotNull Integer viewId
+        @PathVariable("view_id") @NotNull Long viewId
     );
 
     /**
@@ -155,7 +155,7 @@ public interface ViewsClient {
     @Get("/api/v2/views/active")
     Mono<@Valid ViewsResponse> listActiveViews(
         @QueryValue("access") @Nullable String access,
-        @QueryValue("group_id") @Nullable Integer groupId,
+        @QueryValue("group_id") @Nullable Long groupId,
         @QueryValue("sort_by") @Nullable String sortBy,
         @QueryValue("sort_order") @Nullable String sortOrder
     );
@@ -181,7 +181,7 @@ public interface ViewsClient {
      */
     @Get("/api/v2/views/{view_id}/tickets")
     Mono<@Valid TicketsResponse> listTicketsFromView(
-        @PathVariable("view_id") @NotNull Integer viewId,
+        @PathVariable("view_id") @NotNull Long viewId,
         @QueryValue("sort_by") @Nullable String sortBy,
         @QueryValue("sort_order") @Nullable String sortOrder
     );
@@ -203,7 +203,7 @@ public interface ViewsClient {
     Mono<@Valid ViewsResponse> listViews(
         @QueryValue("access") @Nullable String access,
         @QueryValue("active") @Nullable Boolean active,
-        @QueryValue("group_id") @Nullable Integer groupId,
+        @QueryValue("group_id") @Nullable Long groupId,
         @QueryValue("sort") @Nullable String sort,
         @QueryValue("sort_by") @Nullable String sortBy,
         @QueryValue("sort_order") @Nullable String sortOrder
@@ -261,7 +261,7 @@ public interface ViewsClient {
         @QueryValue("query") @NotNull String query,
         @QueryValue("access") @Nullable String access,
         @QueryValue("active") @Nullable Boolean active,
-        @QueryValue("group_id") @Nullable Integer groupId,
+        @QueryValue("group_id") @Nullable Long groupId,
         @QueryValue("sort_by") @Nullable String sortBy,
         @QueryValue("sort_order") @Nullable String sortOrder,
         @QueryValue("include") @Nullable String include
@@ -277,7 +277,7 @@ public interface ViewsClient {
      */
     @Get("/api/v2/views/{view_id}")
     Mono<@Valid ViewResponse> showView(
-        @PathVariable("view_id") @NotNull Integer viewId
+        @PathVariable("view_id") @NotNull Long viewId
     );
 
     /**
@@ -299,6 +299,6 @@ public interface ViewsClient {
      */
     @Put("/api/v2/views/{view_id}")
     Mono<@Valid ViewResponse> updateView(
-        @PathVariable("view_id") @NotNull Integer viewId
+        @PathVariable("view_id") @NotNull Long viewId
     );
 }

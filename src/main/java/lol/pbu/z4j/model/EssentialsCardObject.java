@@ -123,7 +123,7 @@ public class EssentialsCardObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_MAX_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer maxCount;
+    private Long maxCount;
 
     /**
      * <p>Date and time the essentials card were last updated</p>

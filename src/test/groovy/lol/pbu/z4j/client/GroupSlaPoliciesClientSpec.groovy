@@ -33,7 +33,7 @@ class GroupSlaPoliciesClientSpec extends Z4jSpec {
                            badTokenGroupSlaPoliciesClient, badUrlGroupSlaPoliciesClient
 
     @Shared
-    Integer existingGroupSlaPolicyId
+    Long existingGroupSlaPolicyId
 
     def setupSpec() {
         adminGroupSlaPoliciesClient = adminCtx.getBean(GroupSlaPoliciesClient.class)

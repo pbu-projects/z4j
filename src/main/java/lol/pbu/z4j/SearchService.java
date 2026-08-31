@@ -44,18 +44,19 @@ public class SearchService {
      * @see #getTickets(String, int)
      */
     public Flux<Ticket> getTickets(String query) {
-        return getTickets(query, 100);
+        return getTickets(query, 100L);
     }
 
 
     /**
      * Searches for tickets using the provided query string and page size.
+     * The query is automatically filtered by 'type:ticket'.
      *
-     * @param query    The search query string. Note: 'type:ticket' is automatically prepended.
-     * @param pageSize The number of results to return per page.
+     * @param query The search query string.
+     * @param pageSize The number of results to request per page.
      * @return A {@link Flux} emitting the {@link Ticket} results found.
      */
-    public Flux<Ticket> getTickets(String query, int pageSize) {
+    public Flux<Ticket> getTickets(String query, Long pageSize) {
         String ticketPreface = "type:ticket";
         query = query.replace(ticketPreface + " ", "").replace(ticketPreface, "");
         if (query.contains("type:")) {

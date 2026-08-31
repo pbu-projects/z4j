@@ -76,7 +76,7 @@ public interface TriggersClient {
      */
     @Delete("/api/v2/triggers/{trigger_id}")
     Mono<Void> deleteTrigger(
-        @PathVariable("trigger_id") @NotNull Integer triggerId
+        @PathVariable("trigger_id") @NotNull Long triggerId
     );
 
     /**
@@ -89,7 +89,7 @@ public interface TriggersClient {
      */
     @Get("/api/v2/triggers/{trigger_id}")
     Mono<@Valid TriggerResponse> getTrigger(
-        @PathVariable("trigger_id") @NotNull Integer triggerId
+        @PathVariable("trigger_id") @NotNull Long triggerId
     );
 
     /**
@@ -130,7 +130,7 @@ public interface TriggersClient {
      */
     @Get("/api/v2/triggers/{trigger_id}/revisions")
     Mono<@Valid TriggerRevisionsResponse> listTriggerRevisions(
-        @PathVariable("trigger_id") @NotNull Integer triggerId
+        @PathVariable("trigger_id") @NotNull Long triggerId
     );
 
     /**
@@ -199,8 +199,8 @@ public interface TriggersClient {
      */
     @Get("/api/v2/triggers/{trigger_id}/revisions/{trigger_revision_id}")
     Mono<@Valid TriggerRevisionResponse> triggerRevision(
-        @PathVariable("trigger_id") @NotNull Integer triggerId,
-        @PathVariable("trigger_revision_id") @NotNull Integer triggerRevisionId
+        @PathVariable("trigger_id") @NotNull Long triggerId,
+        @PathVariable("trigger_revision_id") @NotNull Long triggerRevisionId
     );
 
     /**
@@ -227,7 +227,7 @@ public interface TriggersClient {
      */
     @Put("/api/v2/triggers/{trigger_id}")
     Mono<@Valid TriggerResponse> updateTrigger(
-        @PathVariable("trigger_id") @NotNull Integer triggerId,
+        @PathVariable("trigger_id") @NotNull Long triggerId,
         @Body @NotNull @Valid TriggerWithCategoryRequest triggerWithCategoryRequest
     );
 }

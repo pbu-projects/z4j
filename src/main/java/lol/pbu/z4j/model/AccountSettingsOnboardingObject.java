@@ -57,7 +57,7 @@ public class AccountSettingsOnboardingObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CHECKLIST_ONBOARDING_VERSION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer checklistOnboardingVersion;
+    private Long checklistOnboardingVersion;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_ONBOARDING_SEGMENTS)

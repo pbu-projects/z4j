@@ -160,7 +160,7 @@ public class BrandObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>If the brand object is deleted or not</p>
@@ -190,7 +190,7 @@ public class BrandObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_FORM_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> ticketFormIds;
+    private List<@NotNull Long> ticketFormIds;
 
     /**
      * <p>The time of the last update of the brand</p>

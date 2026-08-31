@@ -60,7 +60,7 @@ public interface TicketSkipsClient {
      */
     @Get("/api/v2/users/{user_id}/skips")
     Mono<@Valid TicketSkipsResponse> listTicketSkips(
-        @PathVariable("user_id") @NotNull Integer userId,
+        @PathVariable("user_id") @NotNull Long userId,
         @QueryValue("sort_order") @Nullable ListDeletedTicketsSortOrderParameter sortOrder
     );
 
@@ -75,7 +75,7 @@ public interface TicketSkipsClient {
      */
     @Get("/api/v2/tickets/{ticket_id}/skips")
     Mono<@Valid TicketSkipsResponse> listTicketSkipsByTicket(
-        @PathVariable("ticket_id") @NotNull Integer ticketId,
+        @PathVariable("ticket_id") @NotNull Long ticketId,
         @QueryValue("sort_order") @Nullable ListDeletedTicketsSortOrderParameter sortOrder
     );
 

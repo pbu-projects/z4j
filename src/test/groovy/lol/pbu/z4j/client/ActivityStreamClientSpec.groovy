@@ -33,7 +33,7 @@ class ActivityStreamClientSpec extends Z4jSpec {
                          badTokenActivityStreamClient, badUrlActivityStreamClient
 
     @Shared
-    Integer existingActivityId
+    Long existingActivityId
 
     def setupSpec() {
         adminActivityStreamClient = adminCtx.getBean(ActivityStreamClient.class)

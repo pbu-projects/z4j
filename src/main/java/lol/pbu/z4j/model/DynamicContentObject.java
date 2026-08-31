@@ -77,7 +77,7 @@ public class DynamicContentObject {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_DEFAULT_LOCALE_ID)
-    private Integer defaultLocaleId;
+    private Long defaultLocaleId;
 
     /**
      * <p>The unique name of the item</p>
@@ -107,7 +107,7 @@ public class DynamicContentObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Indicates the item has outdated variants within it</p>
@@ -141,7 +141,7 @@ public class DynamicContentObject {
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private String url;
 
-    public DynamicContentObject(Integer defaultLocaleId, String name, List<@Valid DynamicContentVariantObject> variants) {
+    public DynamicContentObject(Long defaultLocaleId, String name, List<@Valid DynamicContentVariantObject> variants) {
         this.defaultLocaleId = defaultLocaleId;
         this.name = name;
         this.variants = variants;

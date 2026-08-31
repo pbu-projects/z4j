@@ -35,7 +35,7 @@ public class UpdateResourceResult extends JobStatus {
     /**
      * the id of the resource the job attempted to update
      */
-    private Integer id;
+    private Long id;
 
     /**
      * the status ({@code "status": "Updated"})

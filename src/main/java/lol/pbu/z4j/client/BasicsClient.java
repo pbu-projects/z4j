@@ -48,8 +48,8 @@ public interface BasicsClient {
      */
     @Post("/api/v2/channels/voice/tickets")
     Mono<@Valid TicketResponse> createTicketOrVoicemailTicket(
-        @QueryValue("agent_id") @Nullable Integer agentId,
-        @QueryValue("ticket_id") @Nullable Integer ticketId,
+        @QueryValue("agent_id") @Nullable Long agentId,
+        @QueryValue("ticket_id") @Nullable Long ticketId,
         @Body @Nullable @Valid TicketCreateVoicemailTicketRequest ticketCreateVoicemailTicketRequest
     );
 
@@ -65,8 +65,8 @@ public interface BasicsClient {
      */
     @Post("/api/v2/channels/voice/agents/{agent_id}/tickets/{ticket_id}/display")
     Mono<@NotNull String> openTicketInAgentBrowser(
-        @PathVariable("agent_id") @NotNull Integer agentId,
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("agent_id") @NotNull Long agentId,
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -81,7 +81,7 @@ public interface BasicsClient {
      */
     @Post("/api/v2/channels/voice/agents/{agent_id}/users/{user_id}/display")
     Mono<@NotNull String> openUsersProfileInAgentBrowser(
-        @PathVariable("agent_id") @NotNull Integer agentId,
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("agent_id") @NotNull Long agentId,
+        @PathVariable("user_id") @NotNull Long userId
     );
 }

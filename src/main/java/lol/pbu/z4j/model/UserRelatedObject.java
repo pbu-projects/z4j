@@ -62,7 +62,7 @@ public class UserRelatedObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ASSIGNED_TICKETS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer assignedTickets;
+    private Long assignedTickets;
 
     /**
      * <p>Count of collaborated tickets</p>
@@ -70,7 +70,7 @@ public class UserRelatedObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CCD_TICKETS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ccdTickets;
+    private Long ccdTickets;
 
     /**
      * <p>Count of organization subscriptions</p>
@@ -78,7 +78,7 @@ public class UserRelatedObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_SUBSCRIPTIONS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer organizationSubscriptions;
+    private Long organizationSubscriptions;
 
     /**
      * <p>Count of requested tickets</p>
@@ -86,6 +86,6 @@ public class UserRelatedObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_REQUESTED_TICKETS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer requestedTickets;
+    private Long requestedTickets;
 
 }

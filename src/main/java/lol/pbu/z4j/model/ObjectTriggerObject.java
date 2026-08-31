@@ -135,7 +135,7 @@ public class ObjectTriggerObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Position of the trigger, determines the order they will execute in</p>
@@ -143,7 +143,7 @@ public class ObjectTriggerObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_POSITION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer position;
+    private Long position;
 
     /**
      * <p>The raw format of the title of the trigger</p>

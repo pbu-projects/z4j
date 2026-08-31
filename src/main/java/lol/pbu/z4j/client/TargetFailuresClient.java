@@ -53,6 +53,6 @@ public interface TargetFailuresClient {
      */
     @Get("/api/v2/target_failures/{target_failure_id}")
     Mono<@Valid TargetFailureResponse> showTargetFailure(
-        @PathVariable("target_failure_id") @NotNull Integer targetFailureId
+        @PathVariable("target_failure_id") @NotNull Long targetFailureId
     );
 }

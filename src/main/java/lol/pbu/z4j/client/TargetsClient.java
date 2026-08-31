@@ -53,7 +53,7 @@ public interface TargetsClient {
      */
     @Delete("/api/v2/targets/{target_id}")
     Mono<Void> deleteTarget(
-        @PathVariable("target_id") @NotNull Integer targetId
+        @PathVariable("target_id") @NotNull Long targetId
     );
 
     /**
@@ -75,7 +75,7 @@ public interface TargetsClient {
      */
     @Get("/api/v2/targets/{target_id}")
     Mono<@Valid TargetResponse> showTarget(
-        @PathVariable("target_id") @NotNull Integer targetId
+        @PathVariable("target_id") @NotNull Long targetId
     );
 
     /**
@@ -88,6 +88,6 @@ public interface TargetsClient {
      */
     @Put("/api/v2/targets/{target_id}")
     Mono<@Valid TargetResponse> updateTarget(
-        @PathVariable("target_id") @NotNull Integer targetId
+        @PathVariable("target_id") @NotNull Long targetId
     );
 }

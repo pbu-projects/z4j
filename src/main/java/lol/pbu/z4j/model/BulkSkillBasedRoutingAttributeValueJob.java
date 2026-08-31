@@ -78,7 +78,7 @@ public class BulkSkillBasedRoutingAttributeValueJob {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ITEMS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> items = new ArrayList<>();
+    private List<@NotNull Long> items = new ArrayList<>();
 
     public BulkSkillBasedRoutingAttributeValueJob(BulkSkillBasedRoutingAttributeValueJobAttributes attributes) {
         this.attributes = attributes;

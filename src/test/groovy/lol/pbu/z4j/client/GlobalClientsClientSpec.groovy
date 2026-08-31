@@ -32,7 +32,7 @@ class GlobalClientsClientSpec extends Z4jSpec {
                         badTokenGlobalClientsClient, badUrlGlobalClientsClient
 
     @Shared
-    Integer existingGlobalClientId
+    Long existingGlobalClientId
 
     def setupSpec() {
         adminGlobalClientsClient = adminCtx.getBean(GlobalClientsClient.class)

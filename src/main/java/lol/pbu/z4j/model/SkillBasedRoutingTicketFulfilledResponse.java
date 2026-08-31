@@ -54,14 +54,14 @@ public class SkillBasedRoutingTicketFulfilledResponse {
     @Nullable
     @JsonProperty(JSON_PROPERTY_FULFILLED_TICKET_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> fulfilledTicketIds;
+    private List<@NotNull Long> fulfilledTicketIds;
 
     /**
      * Add an item to the fulfilledTicketIds property in a chainable fashion.
      *
      * @return The same instance of SkillBasedRoutingTicketFulfilledResponse for chaining.
      */
-    public SkillBasedRoutingTicketFulfilledResponse addFulfilledTicketIdsItem(Integer fulfilledTicketIdsItem) {
+    public SkillBasedRoutingTicketFulfilledResponse addFulfilledTicketIdsItem(Long fulfilledTicketIdsItem) {
         if (fulfilledTicketIds == null) {
             fulfilledTicketIds = new ArrayList<>();
         }

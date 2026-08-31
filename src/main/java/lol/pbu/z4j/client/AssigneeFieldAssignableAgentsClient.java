@@ -44,7 +44,7 @@ public interface AssigneeFieldAssignableAgentsClient {
      */
     @Get("/api/lotus/assignables/groups/{group_id}/agents.json")
     Mono<@Valid AssigneeFieldAssignableGroupAgentsResponse> listAssigneeFieldAssignableGroupAgents(
-        @PathVariable("group_id") @NotNull Integer groupId
+        @PathVariable("group_id") @NotNull Long groupId
     );
 
     /**

@@ -33,7 +33,7 @@ class DynamicContentClientSpec extends Z4jSpec {
                          badTokenDynamicContentClient, badUrlDynamicContentClient
 
     @Shared
-    Integer existingItemId
+    Long existingItemId
 
     def setupSpec() {
         adminDynamicContentClient = adminCtx.getBean(DynamicContentClient.class)

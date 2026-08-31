@@ -75,6 +75,6 @@ public class RecipientObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_USER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer userId;
+    private Long userId;
 
 }

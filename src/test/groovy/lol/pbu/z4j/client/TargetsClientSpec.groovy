@@ -33,7 +33,7 @@ class TargetsClientSpec extends Z4jSpec {
                   badTokenTargetsClient, badUrlTargetsClient
 
     @Shared
-    Integer existingTargetId
+    Long existingTargetId
 
     def setupSpec() {
         adminTargetsClient = adminCtx.getBean(TargetsClient.class)

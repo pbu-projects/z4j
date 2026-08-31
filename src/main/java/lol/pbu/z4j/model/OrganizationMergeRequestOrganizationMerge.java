@@ -54,6 +54,6 @@ public class OrganizationMergeRequestOrganizationMerge {
     @Nullable
     @JsonProperty(JSON_PROPERTY_WINNER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer winnerId;
+    private Long winnerId;
 
 }

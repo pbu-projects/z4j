@@ -106,7 +106,7 @@ public class SecuritySettingsObjectAuthenticationAgent {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SECURITY_POLICY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer securityPolicyId;
+    private Long securityPolicyId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_SECURITY_POLICY_NAME)
@@ -147,6 +147,6 @@ public class SecuritySettingsObjectAuthenticationAgent {
     @Nullable
     @JsonProperty(JSON_PROPERTY_REMOTE_BYPASS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer remoteBypass;
+    private Long remoteBypass;
 
 }

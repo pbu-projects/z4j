@@ -69,7 +69,7 @@ public class ResourceCollectionObjectResourcesInner {
     @Nullable
     @JsonProperty(JSON_PROPERTY_RESOURCE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer resourceId;
+    private Long resourceId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_TYPE)

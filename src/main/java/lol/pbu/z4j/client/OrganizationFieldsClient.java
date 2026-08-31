@@ -54,7 +54,7 @@ public interface OrganizationFieldsClient {
      */
     @Delete("/api/v2/organization_fields/{organization_field_id}")
     Mono<Void> deleteOrganizationField(
-        @PathVariable("organization_field_id") @NotNull Integer organizationFieldId
+        @PathVariable("organization_field_id") @NotNull Long organizationFieldId
     );
 
     /**
@@ -85,7 +85,7 @@ public interface OrganizationFieldsClient {
      */
     @Get("/api/v2/organization_fields/{organization_field_id}")
     Mono<@Valid OrganizationFieldResponse> showOrganizationField(
-        @PathVariable("organization_field_id") @NotNull Integer organizationFieldId
+        @PathVariable("organization_field_id") @NotNull Long organizationFieldId
     );
 
     /**
@@ -98,6 +98,6 @@ public interface OrganizationFieldsClient {
      */
     @Put("/api/v2/organization_fields/{organization_field_id}")
     Mono<@Valid OrganizationFieldResponse> updateOrganizationField(
-        @PathVariable("organization_field_id") @NotNull Integer organizationFieldId
+        @PathVariable("organization_field_id") @NotNull Long organizationFieldId
     );
 }

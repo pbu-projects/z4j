@@ -33,7 +33,7 @@ class CustomRolesClientSpec extends Z4jSpec {
                       badTokenRolesClient, badUrlRolesClient
 
     @Shared
-    Integer existingRoleId
+    Long existingRoleId
 
     def setupSpec() {
         adminRolesClient = adminCtx.getBean(CustomRolesClient.class)

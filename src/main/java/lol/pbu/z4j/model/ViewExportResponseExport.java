@@ -60,6 +60,6 @@ public class ViewExportResponseExport {
     @Nullable
     @JsonProperty(JSON_PROPERTY_VIEW_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer viewId;
+    private Long viewId;
 
 }

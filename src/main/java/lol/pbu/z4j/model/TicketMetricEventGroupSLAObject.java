@@ -81,7 +81,7 @@ public class TicketMetricEventGroupSLAObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The instance of the metric associated with the event. See <a href=\"#instance_id\">instance_id</a></p>
@@ -89,7 +89,7 @@ public class TicketMetricEventGroupSLAObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_INSTANCE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer instanceId;
+    private Long instanceId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_METRIC)
@@ -102,7 +102,7 @@ public class TicketMetricEventGroupSLAObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketId;
+    private Long ticketId;
 
     /**
      * <p>The time the event occurred</p>

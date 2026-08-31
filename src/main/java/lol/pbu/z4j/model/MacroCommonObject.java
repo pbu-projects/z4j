@@ -132,7 +132,7 @@ public class MacroCommonObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The position of the macro</p>
@@ -140,7 +140,7 @@ public class MacroCommonObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_POSITION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer position;
+    private Long position;
 
     /**
      * <p>The raw format of the title of the macro</p>

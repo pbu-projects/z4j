@@ -80,7 +80,7 @@ public class TicketRelatedInformation {
     @Nullable
     @JsonProperty(JSON_PROPERTY_INCIDENTS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer incidents;
+    private Long incidents;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_JIRA_ISSUE_IDS)

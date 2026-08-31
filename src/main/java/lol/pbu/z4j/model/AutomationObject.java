@@ -118,7 +118,7 @@ public class AutomationObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The position of the automation which specifies the order it will be executed</p>
@@ -126,7 +126,7 @@ public class AutomationObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_POSITION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer position;
+    private Long position;
 
     /**
      * <p>The raw title of the automation</p>

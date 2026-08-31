@@ -83,12 +83,12 @@ public class UserCreateInput {
     @Nullable
     @JsonProperty(JSON_PROPERTY_AGENT_BRAND_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> agentBrandIds;
+    private List<@NotNull Long> agentBrandIds;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_ROLE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer customRoleId;
+    private Long customRoleId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_EXTERNAL_ID)
@@ -109,7 +109,7 @@ public class UserCreateInput {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer organizationId;
+    private Long organizationId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_ROLE)
@@ -126,7 +126,7 @@ public class UserCreateInput {
      *
      * @return The same instance of UserCreateInput for chaining.
      */
-    public UserCreateInput addAgentBrandIdsItem(Integer agentBrandIdsItem) {
+    public UserCreateInput addAgentBrandIdsItem(Long agentBrandIdsItem) {
         if (agentBrandIds == null) {
             agentBrandIds = new ArrayList<>();
         }

@@ -58,7 +58,7 @@ public class CustomObjectLimitsResponse {
     @Nullable
     @JsonProperty(JSON_PROPERTY_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer count;
+    private Long count;
 
     /**
      * <p>The maximum allowed number for the requested resource</p>
@@ -66,6 +66,6 @@ public class CustomObjectLimitsResponse {
     @Nullable
     @JsonProperty(JSON_PROPERTY_LIMIT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer limit;
+    private Long limit;
 
 }

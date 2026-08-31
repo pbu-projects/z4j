@@ -35,13 +35,13 @@ class GroupMembershipsClientSpec extends Z4jSpec {
                            badTokenGroupMembershipsClient, badUrlGroupMembershipsClient
 
     @Shared
-    Integer adminUserId
+    Long adminUserId
 
     @Shared
-    Integer existingGroupId
+    Long existingGroupId
 
     @Shared
-    Integer existingMembershipId
+    Long existingMembershipId
 
     def setupSpec() {
         adminGroupMembershipsClient = adminCtx.getBean(GroupMembershipsClient.class)

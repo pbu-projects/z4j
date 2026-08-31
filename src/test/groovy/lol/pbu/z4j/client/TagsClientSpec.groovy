@@ -33,7 +33,7 @@ class TagsClientSpec extends Z4jSpec {
                badTokenTagsClient, badUrlTagsClient
 
     @Shared
-    Integer adminUserId
+    Long adminUserId
 
     def setupSpec() {
         adminTagsClient = adminCtx.getBean(TagsClient.class)

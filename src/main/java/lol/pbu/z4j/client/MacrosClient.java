@@ -54,7 +54,7 @@ public interface MacrosClient {
      */
     @Post("/api/v2/macros/{macro_id}/attachments")
     Mono<@Valid MacroAttachmentResponse> createAssociatedMacroAttachment(
-        @PathVariable("macro_id") @NotNull Integer macroId
+        @PathVariable("macro_id") @NotNull Long macroId
     );
 
     /**
@@ -89,7 +89,7 @@ public interface MacrosClient {
      */
     @Delete("/api/v2/macros/{macro_id}")
     Mono<Void> deleteMacro(
-        @PathVariable("macro_id") @NotNull Integer macroId
+        @PathVariable("macro_id") @NotNull Long macroId
     );
 
     /**
@@ -102,7 +102,7 @@ public interface MacrosClient {
      */
     @Delete("/api/v2/macros/destroy_many")
     Mono<Void> deleteManyMacros(
-        @QueryValue("ids") @NotNull @Format(FORMAT_MULTI) List<@NotNull Integer> ids
+        @QueryValue("ids") @NotNull @Format(FORMAT_MULTI) List<@NotNull Long> ids
     );
 
     /**
@@ -122,8 +122,8 @@ public interface MacrosClient {
     Mono<@Valid MacrosResponse> listActiveMacros(
         @QueryValue("include") @Nullable String include,
         @QueryValue("access") @Nullable String access,
-        @QueryValue("category") @Nullable Integer category,
-        @QueryValue("group_id") @Nullable Integer groupId,
+        @QueryValue("category") @Nullable Long category,
+        @QueryValue("group_id") @Nullable Long groupId,
         @QueryValue("sort_by") @Nullable String sortBy,
         @QueryValue("sort_order") @Nullable String sortOrder
     );
@@ -147,7 +147,7 @@ public interface MacrosClient {
      */
     @Get("/api/v2/macros/{macro_id}/attachments")
     Mono<@Valid MacroAttachmentsResponse> listMacroAttachments(
-        @PathVariable("macro_id") @NotNull Integer macroId
+        @PathVariable("macro_id") @NotNull Long macroId
     );
 
     /**
@@ -179,8 +179,8 @@ public interface MacrosClient {
         @QueryValue("include") @Nullable String include,
         @QueryValue("access") @Nullable String access,
         @QueryValue("active") @Nullable Boolean active,
-        @QueryValue("category") @Nullable Integer category,
-        @QueryValue("group_id") @Nullable Integer groupId,
+        @QueryValue("category") @Nullable Long category,
+        @QueryValue("group_id") @Nullable Long groupId,
         @QueryValue("only_viewable") @Nullable Boolean onlyViewable,
         @QueryValue("sort_by") @Nullable String sortBy,
         @QueryValue("sort_order") @Nullable String sortOrder
@@ -217,8 +217,8 @@ public interface MacrosClient {
         @QueryValue("include") @Nullable String include,
         @QueryValue("access") @Nullable String access,
         @QueryValue("active") @Nullable Boolean active,
-        @QueryValue("category") @Nullable Integer category,
-        @QueryValue("group_id") @Nullable Integer groupId,
+        @QueryValue("category") @Nullable Long category,
+        @QueryValue("group_id") @Nullable Long groupId,
         @QueryValue("only_viewable") @Nullable Boolean onlyViewable,
         @QueryValue("sort_by") @Nullable String sortBy,
         @QueryValue("sort_order") @Nullable String sortOrder
@@ -234,7 +234,7 @@ public interface MacrosClient {
      */
     @Get("/api/v2/macros/{macro_id}/apply")
     Mono<@Valid MacroApplyTicketResponse> showChangesToTicket(
-        @PathVariable("macro_id") @NotNull Integer macroId
+        @PathVariable("macro_id") @NotNull Long macroId
     );
 
     /**
@@ -248,8 +248,8 @@ public interface MacrosClient {
      */
     @Get("/api/v2/macros/new")
     Mono<@Valid MacroResponse> showDerivedMacro(
-        @QueryValue("macro_id") @NotNull Integer macroId,
-        @QueryValue("ticket_id") @NotNull Integer ticketId
+        @QueryValue("macro_id") @NotNull Long macroId,
+        @QueryValue("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -262,7 +262,7 @@ public interface MacrosClient {
      */
     @Get("/api/v2/macros/{macro_id}")
     Mono<@Valid MacroResponse> showMacro(
-        @PathVariable("macro_id") @NotNull Integer macroId
+        @PathVariable("macro_id") @NotNull Long macroId
     );
 
     /**
@@ -275,7 +275,7 @@ public interface MacrosClient {
      */
     @Get("/api/v2/macros/attachments/{attachment_id}")
     Mono<@Valid MacroAttachmentResponse> showMacroAttachment(
-        @PathVariable("attachment_id") @NotNull Integer attachmentId
+        @PathVariable("attachment_id") @NotNull Long attachmentId
     );
 
     /**
@@ -289,8 +289,8 @@ public interface MacrosClient {
      */
     @Get("/api/v2/tickets/{ticket_id}/macros/{macro_id}/apply")
     Mono<@Valid MacroApplyTicketResponse> showTicketAfterChanges(
-        @PathVariable("macro_id") @NotNull Integer macroId,
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("macro_id") @NotNull Long macroId,
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -304,7 +304,7 @@ public interface MacrosClient {
      */
     @Put("/api/v2/macros/{macro_id}")
     Mono<@Valid CreateMacro200Response> updateMacro(
-        @PathVariable("macro_id") @NotNull Integer macroId,
+        @PathVariable("macro_id") @NotNull Long macroId,
         @Body @Nullable @Valid CreateMacroRequest createMacroRequest
     );
 

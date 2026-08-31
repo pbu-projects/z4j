@@ -98,7 +98,7 @@ public class SecuritySettingsObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_AGENT_SESSION_TIMEOUT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer agentSessionTimeout;
+    private Long agentSessionTimeout;
 
     /**
      * <p>If account assumption is enabled</p>
@@ -157,7 +157,7 @@ public class SecuritySettingsObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_END_USER_SESSION_TIMEOUT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer endUserSessionTimeout;
+    private Long endUserSessionTimeout;
 
     @Nullable
     @Valid
@@ -171,7 +171,7 @@ public class SecuritySettingsObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_MAXIMUM_SESSION_DURATION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer maximumSessionDuration;
+    private Long maximumSessionDuration;
 
     /**
      * <p>If maximum session duration for team members is enabled</p>
@@ -195,7 +195,7 @@ public class SecuritySettingsObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_MOBILE_APP_SESSION_TIMEOUT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer mobileAppSessionTimeout;
+    private Long mobileAppSessionTimeout;
 
     /**
      * <p>The time when the two-factor authentication setting was last updated</p>

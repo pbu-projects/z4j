@@ -35,7 +35,7 @@ class GroupsClientSpec extends Z4jSpec {
                  badTokenGroupsClient, badUrlGroupsClient
 
     @Shared
-    Integer adminUserId
+    Long adminUserId
 
     def setupSpec() {
         adminGroupsClient = adminCtx.getBean(GroupsClient.class)
@@ -143,7 +143,7 @@ class GroupsClientSpec extends Z4jSpec {
         given: "a group payload with unique name"
         String groupName = faker.company().name() + " " + UUID.randomUUID().toString().substring(0, 8)
         GroupResponse createRequest = new GroupResponse(new GroupObject(groupName).setDescription("Test group created by z4j"))
-        Integer createdGroupId = null
+        Long createdGroupId = null
 
         when: "creating a new group as admin"
         GroupResponse created = adminGroupsClient.createGroup(createRequest).block()

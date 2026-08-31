@@ -80,7 +80,7 @@ public class DynamicContentVariantObject {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_LOCALE_ID)
-    private Integer localeId;
+    private Long localeId;
 
     /**
      * <p>If the variant is active and usable</p>
@@ -112,7 +112,7 @@ public class DynamicContentVariantObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>If the variant is outdated</p>
@@ -138,7 +138,7 @@ public class DynamicContentVariantObject {
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private String url;
 
-    public DynamicContentVariantObject(String content, Integer localeId) {
+    public DynamicContentVariantObject(String content, Long localeId) {
         this.content = content;
         this.localeId = localeId;
     }

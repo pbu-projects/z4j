@@ -33,7 +33,7 @@ class TriggersClientSpec extends Z4jSpec {
                    badTokenTriggersClient, badUrlTriggersClient
 
     @Shared
-    Integer existingTriggerId
+    Long existingTriggerId
 
     def setupSpec() {
         adminTriggersClient = adminCtx.getBean(TriggersClient.class)

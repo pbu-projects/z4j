@@ -123,7 +123,7 @@ public class GroupSLAPolicyObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_POSITION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer position;
+    private Long position;
 
     /**
      * <p>The time of the last update of the Group SLA policy</p>

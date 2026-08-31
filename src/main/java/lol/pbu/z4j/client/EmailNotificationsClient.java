@@ -48,7 +48,7 @@ public interface EmailNotificationsClient {
     @Get("/api/v2/email_notifications")
     Mono<@Valid EmailNotificationsResponse> listEmailNotifications(
         @QueryValue("filter") @NotNull @Valid ListEmailNotificationsFilterParameter filter,
-        @QueryValue("per_page") @Nullable Integer perPage,
+        @QueryValue("per_page") @Nullable Long perPage,
         @QueryValue("sort") @Nullable String sort
     );
 
@@ -62,7 +62,7 @@ public interface EmailNotificationsClient {
      */
     @Get("/api/v2/email_notifications/{notification_id}")
     Mono<@Valid EmailNotificationResponse> showEmailNotification(
-        @PathVariable("notification_id") @NotNull Integer notificationId
+        @PathVariable("notification_id") @NotNull Long notificationId
     );
 
     /**

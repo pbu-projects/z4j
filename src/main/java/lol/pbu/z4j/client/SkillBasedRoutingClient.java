@@ -117,7 +117,7 @@ public interface SkillBasedRoutingClient {
      */
     @Get("/api/v2/routing/agents/{user_id}/instance_values")
     Mono<@Valid SkillBasedRoutingAttributeValuesResponse> listAGentAttributeValues(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -159,7 +159,7 @@ public interface SkillBasedRoutingClient {
         @QueryValue("filter[agent_ids]") @NotNull String filterAgentIds,
         @QueryValue("page[before]") @Nullable String pageBefore,
         @QueryValue("page[after]") @Nullable String pageAfter,
-        @QueryValue("page[size]") @Nullable @Min(1) @Max(100) Integer pageSize
+        @QueryValue("page[size]") @Nullable @Min(1) @Max(100) Long pageSize
     );
 
     /**
@@ -181,7 +181,7 @@ public interface SkillBasedRoutingClient {
      */
     @Get("/api/v2/routing/tickets/{ticket_id}/instance_values")
     Mono<@Valid SkillBasedRoutingAttributeValuesResponse> listTicketAttributeValues(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -194,7 +194,7 @@ public interface SkillBasedRoutingClient {
      */
     @Get("/api/v2/routing/requirements/fulfilled")
     Mono<@Valid SkillBasedRoutingTicketFulfilledResponse> listTicketsFullfilledByUser(
-        @QueryValue("ticket_ids") @NotNull Integer ticketIds
+        @QueryValue("ticket_ids") @NotNull Long ticketIds
     );
 
     /**
@@ -207,7 +207,7 @@ public interface SkillBasedRoutingClient {
      */
     @Post("/api/v2/routing/agents/{user_id}/instance_values")
     Mono<@Valid SkillBasedRoutingAttributeValuesWithoutPriorityResponse> setAgentAttributeValues(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -220,7 +220,7 @@ public interface SkillBasedRoutingClient {
      */
     @Post("/api/v2/routing/tickets/{ticket_id}/instance_values")
     Mono<@Valid SkillBasedRoutingAttributeValuesResponse> setTicketAttributeValues(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**

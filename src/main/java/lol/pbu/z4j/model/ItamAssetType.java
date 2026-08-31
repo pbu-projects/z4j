@@ -108,7 +108,7 @@ public class ItamAssetType {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CREATED_BY_USER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer createdByUserId;
+    private Long createdByUserId;
 
     /**
      * <p>A description of the asset type</p>
@@ -140,7 +140,7 @@ public class ItamAssetType {
     @Nullable
     @JsonProperty(JSON_PROPERTY_HIERARCHY_DEPTH)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer hierarchyDepth;
+    private Long hierarchyDepth;
 
     /**
      * <p>Automatically assigned upon creation</p>
@@ -172,7 +172,7 @@ public class ItamAssetType {
     @Nullable
     @JsonProperty(JSON_PROPERTY_UPDATED_BY_USER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer updatedByUserId;
+    private Long updatedByUserId;
 
     /**
      * <p>Direct link to the specific asset type</p>

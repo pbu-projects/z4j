@@ -74,7 +74,7 @@ public class OAuthTokenForGrantTypesObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_EXPIRES_IN)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer expiresIn;
+    private Long expiresIn;
 
     /**
      * <p>The refresh token</p>
@@ -90,7 +90,7 @@ public class OAuthTokenForGrantTypesObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_REFRESH_TOKEN_EXPIRES_IN)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer refreshTokenExpiresIn;
+    private Long refreshTokenExpiresIn;
 
     /**
      * <p>The valid scopes for this token. See <a href=\"#scope\">Scope</a> below</p>

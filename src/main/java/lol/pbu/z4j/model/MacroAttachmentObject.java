@@ -99,7 +99,7 @@ public class MacroAttachmentObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The size of the image file in bytes</p>
@@ -107,6 +107,6 @@ public class MacroAttachmentObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SIZE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer size;
+    private Long size;
 
 }

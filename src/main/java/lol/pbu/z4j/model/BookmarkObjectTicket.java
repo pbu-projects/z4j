@@ -174,7 +174,7 @@ public class BookmarkObjectTicket {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_REQUESTER_ID)
-    private Integer requesterId;
+    private Long requesterId;
 
     /**
      * <p>Permission for agents to add add attachments to a comment. Defaults to true</p>
@@ -206,7 +206,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ASSIGNEE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer assigneeId;
+    private Long assigneeId;
 
     /**
      * <p>Write only. An array of the IDs of attribute values to be associated with the ticket</p>
@@ -214,7 +214,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ATTRIBUTE_VALUE_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> attributeValueIds;
+    private List<@NotNull Long> attributeValueIds;
 
     /**
      * <p>The id of the brand this ticket is associated with. See <a href=\"https://support.zendesk.com/hc/en-us/articles/4408829476378\">Setting up multiple brands</a></p>
@@ -222,7 +222,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_BRAND_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer brandId;
+    private Long brandId;
 
     /**
      * <p>The ids of users currently CC'ed on the ticket</p>
@@ -230,7 +230,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_COLLABORATOR_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> collaboratorIds;
+    private List<@NotNull Long> collaboratorIds;
 
     /**
      * <p>POST requests only. Users to add as cc's when creating a ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets#setting-collaborators\">Setting Collaborators</a></p>
@@ -270,7 +270,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer customStatusId;
+    private Long customStatusId;
 
     /**
      * <p>Read-only first comment on the ticket. When <a href=\"#create-ticket\">creating a ticket</a>, use <code>comment</code> to set the description. See <a href=\"#description-and-first-comment\">Description and first comment</a></p>
@@ -294,7 +294,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_EMAIL_CC_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> emailCcIds;
+    private List<@NotNull Long> emailCcIds;
 
     /**
      * <p>Write only. An array of objects that represents agent or end users email CCs to add or delete from the ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-email-ccs\">Setting email CCs</a>. Ignored when <a href=\"https://support.zendesk.com/hc/en-us/articles/360020585233\">CCs and followers</a> is not enabled</p>
@@ -326,7 +326,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_FOLLOWER_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> followerIds;
+    private List<@NotNull Long> followerIds;
 
     /**
      * <p>Write only. An array of objects that represents agent followers to add or delete from the ticket. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-followers\">Setting followers</a>. Ignored when <a href=\"https://support.zendesk.com/hc/en-us/articles/360020585233\">CCs and followers</a> is not enabled</p>
@@ -342,7 +342,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_FOLLOWUP_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> followupIds;
+    private List<@NotNull Long> followupIds;
 
     /**
      * <p>The topic in the Zendesk Web portal this ticket originated from, if any. The Web portal is deprecated</p>
@@ -350,7 +350,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_FORUM_TOPIC_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer forumTopicId;
+    private Long forumTopicId;
 
     /**
      * <p>If true, the ticket's <a href=\"/documentation/ticketing/reference-guides/via-object-reference/\">via type</a> is a messaging channel.</p>
@@ -366,7 +366,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_GENERATED_TIMESTAMP)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer generatedTimestamp;
+    private Long generatedTimestamp;
 
     /**
      * <p>The group this ticket is assigned to</p>
@@ -374,7 +374,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_GROUP_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer groupId;
+    private Long groupId;
 
     /**
      * <p>Is true if a ticket is a problem type and has one or more incidents linked to it. Otherwise, the value is false.</p>
@@ -390,7 +390,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Is true if any comments are public, false otherwise</p>
@@ -406,7 +406,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_MACRO_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer macroId;
+    private Long macroId;
 
     /**
      * <p>POST requests only. List of macro IDs to be recorded in the ticket audit</p>
@@ -414,7 +414,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_MACRO_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> macroIds;
+    private List<@NotNull Long> macroIds;
 
     /**
      * <p>Write only. Metadata for the audit. In the <code>audit</code> object, the data is specified in the <code>custom</code> property of the <code>metadata</code> object. See <a href=\"/documentation/ticketing/managing-tickets/creating-and-updating-tickets/#setting-metadata\">Setting Metadata</a></p>
@@ -430,7 +430,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer organizationId;
+    private Long organizationId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_PRIORITY)
@@ -443,7 +443,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_PROBLEM_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer problemId;
+    private Long problemId;
 
     /**
      * <p>The dynamic content placeholder, if present, or the \"subject\" value, if not. See <a href=\"/api-reference/ticketing/ticket-management/dynamic_content/\">Dynamic Content Items</a></p>
@@ -491,7 +491,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SHARING_AGREEMENT_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> sharingAgreementIds;
+    private List<@NotNull Long> sharingAgreementIds;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_STATUS)
@@ -512,7 +512,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SUBMITTER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer submitterId;
+    private Long submitterId;
 
     /**
      * <p>The array of tags applied to this ticket. Unless otherwise specified, the <a href=\"/api-reference/ticketing/ticket-management/tags/#set-tags\">set tag</a> behavior is used, which overwrites and replaces existing tags</p>
@@ -528,7 +528,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_FORM_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketFormId;
+    private Long ticketFormId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_TYPE)
@@ -571,7 +571,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_VIA_FOLLOWUP_SOURCE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer viaFollowupSourceId;
+    private Long viaFollowupSourceId;
 
     /**
      * <p>Write only. For more information, see the <a href=\"/documentation/ticketing/reference-guides/via-object-reference/\">Via object reference</a></p>
@@ -579,7 +579,7 @@ public class BookmarkObjectTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_VIA_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer viaId;
+    private Long viaId;
 
     /**
      * <p>Write only. See <a href=\"/api-reference/voice/talk-partner-edition-api/basics/#creating-voicemail-tickets\">Creating voicemail ticket</a></p>
@@ -589,7 +589,7 @@ public class BookmarkObjectTicket {
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private Object voiceComment;
 
-    public BookmarkObjectTicket(Integer requesterId) {
+    public BookmarkObjectTicket(Long requesterId) {
         this.requesterId = requesterId;
     }
 
@@ -598,7 +598,7 @@ public class BookmarkObjectTicket {
      *
      * @return The same instance of BookmarkObjectTicket for chaining.
      */
-    public BookmarkObjectTicket addAttributeValueIdsItem(Integer attributeValueIdsItem) {
+    public BookmarkObjectTicket addAttributeValueIdsItem(Long attributeValueIdsItem) {
         if (attributeValueIds == null) {
             attributeValueIds = new ArrayList<>();
         }
@@ -611,7 +611,7 @@ public class BookmarkObjectTicket {
      *
      * @return The same instance of BookmarkObjectTicket for chaining.
      */
-    public BookmarkObjectTicket addCollaboratorIdsItem(Integer collaboratorIdsItem) {
+    public BookmarkObjectTicket addCollaboratorIdsItem(Long collaboratorIdsItem) {
         if (collaboratorIds == null) {
             collaboratorIds = new ArrayList<>();
         }
@@ -650,7 +650,7 @@ public class BookmarkObjectTicket {
      *
      * @return The same instance of BookmarkObjectTicket for chaining.
      */
-    public BookmarkObjectTicket addEmailCcIdsItem(Integer emailCcIdsItem) {
+    public BookmarkObjectTicket addEmailCcIdsItem(Long emailCcIdsItem) {
         if (emailCcIds == null) {
             emailCcIds = new ArrayList<>();
         }
@@ -663,7 +663,7 @@ public class BookmarkObjectTicket {
      *
      * @return The same instance of BookmarkObjectTicket for chaining.
      */
-    public BookmarkObjectTicket addFollowerIdsItem(Integer followerIdsItem) {
+    public BookmarkObjectTicket addFollowerIdsItem(Long followerIdsItem) {
         if (followerIds == null) {
             followerIds = new ArrayList<>();
         }
@@ -676,7 +676,7 @@ public class BookmarkObjectTicket {
      *
      * @return The same instance of BookmarkObjectTicket for chaining.
      */
-    public BookmarkObjectTicket addMacroIdsItem(Integer macroIdsItem) {
+    public BookmarkObjectTicket addMacroIdsItem(Long macroIdsItem) {
         if (macroIds == null) {
             macroIds = new ArrayList<>();
         }
@@ -689,7 +689,7 @@ public class BookmarkObjectTicket {
      *
      * @return The same instance of BookmarkObjectTicket for chaining.
      */
-    public BookmarkObjectTicket addSharingAgreementIdsItem(Integer sharingAgreementIdsItem) {
+    public BookmarkObjectTicket addSharingAgreementIdsItem(Long sharingAgreementIdsItem) {
         if (sharingAgreementIds == null) {
             sharingAgreementIds = new ArrayList<>();
         }

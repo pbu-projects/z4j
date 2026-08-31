@@ -72,7 +72,7 @@ public class AssigneeFieldAssignableSearchAgentObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_GROUP_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer groupId;
+    private Long groupId;
 
     /**
      * <p>Agent ID</p>
@@ -80,7 +80,7 @@ public class AssigneeFieldAssignableSearchAgentObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Name of the agent</p>

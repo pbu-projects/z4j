@@ -45,7 +45,7 @@ public interface TagsClient {
      */
     @Put("/api/v2/organizations/{organization_id}/tags")
     Mono<@Valid TagsByObjectIdResponse> addOrganizationTags(
-        @PathVariable("organization_id") @NotNull Integer organizationId
+        @PathVariable("organization_id") @NotNull Long organizationId
     );
 
     /**
@@ -80,7 +80,7 @@ public interface TagsClient {
      */
     @Delete("/api/v2/tickets/{ticket_id}/tags")
     Mono<@Valid TagsByObjectIdResponse> deleteTagsTicket(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -93,7 +93,7 @@ public interface TagsClient {
      */
     @Delete("/api/v2/users/{user_id}/tags")
     Mono<@Valid TagsByObjectIdResponse> deleteUserTags(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -106,7 +106,7 @@ public interface TagsClient {
      */
     @Get("/api/v2/organizations/{organization_id}/tags")
     Mono<@Valid TagsByObjectIdResponse> listOrganizationTags(
-        @PathVariable("organization_id") @NotNull Integer organizationId
+        @PathVariable("organization_id") @NotNull Long organizationId
     );
 
     /**
@@ -119,7 +119,7 @@ public interface TagsClient {
      */
     @Get("/api/v2/tickets/{ticket_id}/tags")
     Mono<@Valid TagsByObjectIdResponse> listResourceTags(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -141,7 +141,7 @@ public interface TagsClient {
      */
     @Get("/api/v2/users/{user_id}/tags")
     Mono<@Valid TagsByObjectIdResponse> listUserTags(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -154,7 +154,7 @@ public interface TagsClient {
      */
     @Put("/api/v2/tickets/{ticket_id}/tags")
     Mono<@Valid TagsByObjectIdResponse> putTagsTicket(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -167,7 +167,7 @@ public interface TagsClient {
      */
     @Put("/api/v2/users/{user_id}/tags")
     Mono<@Valid TagsByObjectIdResponse> putUserTags(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -180,7 +180,7 @@ public interface TagsClient {
      */
     @Delete("/api/v2/organizations/{organization_id}/tags")
     Mono<@Valid TagsByObjectIdResponse> removeOrganizationTags(
-        @PathVariable("organization_id") @NotNull Integer organizationId
+        @PathVariable("organization_id") @NotNull Long organizationId
     );
 
     /**
@@ -193,7 +193,7 @@ public interface TagsClient {
      */
     @Post("/api/v2/organizations/{organization_id}/tags")
     Mono<@Valid TagsByObjectIdResponse> setOrganizationTags(
-        @PathVariable("organization_id") @NotNull Integer organizationId
+        @PathVariable("organization_id") @NotNull Long organizationId
     );
 
     /**
@@ -206,7 +206,7 @@ public interface TagsClient {
      */
     @Post("/api/v2/tickets/{ticket_id}/tags")
     Mono<@Valid TagsByObjectIdResponse> setTagsTicket(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -219,6 +219,6 @@ public interface TagsClient {
      */
     @Post("/api/v2/users/{user_id}/tags")
     Mono<@Valid TagsByObjectIdResponse> setUserTags(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 }

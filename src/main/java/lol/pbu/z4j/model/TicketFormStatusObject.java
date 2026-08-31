@@ -60,7 +60,7 @@ public class TicketFormStatusObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer customStatusId;
+    private Long customStatusId;
 
     /**
      * <p>Automatically assigned when creating a ticket form</p>
@@ -76,6 +76,6 @@ public class TicketFormStatusObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_FORM_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketFormId;
+    private Long ticketFormId;
 
 }

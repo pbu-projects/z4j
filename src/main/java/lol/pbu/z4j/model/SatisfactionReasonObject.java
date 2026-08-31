@@ -95,7 +95,7 @@ public class SatisfactionReasonObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The dynamic content placeholder, if present, or the current \"value\", if not. See <a href=\"/api-reference/ticketing/ticket-management/dynamic_content/\">Dynamic Content Items</a></p>
@@ -111,7 +111,7 @@ public class SatisfactionReasonObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_REASON_CODE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer reasonCode;
+    private Long reasonCode;
 
     /**
      * <p>The time the reason was updated</p>

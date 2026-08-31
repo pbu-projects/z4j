@@ -155,6 +155,6 @@ public class CustomObjectRecordAttachment {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SIZE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer size;
+    private Long size;
 
 }

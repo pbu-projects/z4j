@@ -55,7 +55,7 @@ public interface XChannelClient {
      */
     @Get("/api/v2/channels/twitter/tickets/{comment_id}/statuses")
     Mono<@Valid TwitterChannelTwicketStatusResponse> gettingTwicketStatus(
-        @PathVariable("comment_id") @NotNull Integer commentId,
+        @PathVariable("comment_id") @NotNull Long commentId,
         @QueryValue("ids") @Nullable String ids
     );
 
@@ -78,6 +78,6 @@ public interface XChannelClient {
      */
     @Get("/api/v2/channels/twitter/monitored_twitter_handles/{monitored_twitter_handle_id}")
     Mono<@Valid TwitterChannelResponse> showMonitoredTwitterHandle(
-        @PathVariable("monitored_twitter_handle_id") @NotNull Integer monitoredTwitterHandleId
+        @PathVariable("monitored_twitter_handle_id") @NotNull Long monitoredTwitterHandleId
     );
 }

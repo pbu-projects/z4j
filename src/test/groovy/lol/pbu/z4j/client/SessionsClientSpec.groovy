@@ -30,7 +30,7 @@ class SessionsClientSpec extends Z4jSpec {
                    badTokenSessionsClient, badUrlSessionsClient
 
     @Shared
-    Integer adminUserId
+    Long adminUserId
 
     def setupSpec() {
         adminSessionsClient = adminCtx.getBean(SessionsClient.class)

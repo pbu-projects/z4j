@@ -114,7 +114,7 @@ public class DeletionSchedule {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Represents the entity the schedule will delete. Cannot be modified after schedule creation. Can be one of <code>'zen:ticket'</code>, <code>'zen:user'</code>, <code>'zen:attachment'</code>, <code>'zen:bot_only_conversation'</code>, or <code>'zen:custom_object:CUSTOM_OBJECT_KEY'</code>.</p>

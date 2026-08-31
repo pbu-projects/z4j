@@ -135,7 +135,7 @@ public class TicketsUpdateRequestOneOfTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ASSIGNEE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer assigneeId;
+    private Long assigneeId;
 
     /**
      * <p>An array of the IDs of attribute values to be associated with the ticket</p>
@@ -143,7 +143,7 @@ public class TicketsUpdateRequestOneOfTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ATTRIBUTE_VALUE_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> attributeValueIds;
+    private List<@NotNull Long> attributeValueIds;
 
     /**
      * <p>The ids of users currently CC'ed on the ticket</p>
@@ -151,7 +151,7 @@ public class TicketsUpdateRequestOneOfTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_COLLABORATOR_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> collaboratorIds;
+    private List<@NotNull Long> collaboratorIds;
 
     @Nullable
     @Valid
@@ -173,7 +173,7 @@ public class TicketsUpdateRequestOneOfTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer customStatusId;
+    private Long customStatusId;
 
     /**
      * <p>If this is a ticket of type \"task\" it has a due date.  Due date format uses <a href=\"http://en.wikipedia.org/wiki/ISO_8601\">ISO 8601</a> format.</p>
@@ -213,7 +213,7 @@ public class TicketsUpdateRequestOneOfTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_GROUP_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer groupId;
+    private Long groupId;
 
     /**
      * <p>The organization of the requester. You can only specify the ID of an organization associated with the requester. See <a href=\"/api-reference/ticketing/organizations/organization_memberships/\">Organization Memberships</a></p>
@@ -221,7 +221,7 @@ public class TicketsUpdateRequestOneOfTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer organizationId;
+    private Long organizationId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_PRIORITY)
@@ -234,7 +234,7 @@ public class TicketsUpdateRequestOneOfTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_PROBLEM_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer problemId;
+    private Long problemId;
 
     /**
      * <p>The user who requested this ticket</p>
@@ -242,7 +242,7 @@ public class TicketsUpdateRequestOneOfTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_REQUESTER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer requesterId;
+    private Long requesterId;
 
     /**
      * <p>Optional boolean. Prevents updates with outdated ticket data (<code>updated_stamp</code> property required when true)</p>
@@ -258,7 +258,7 @@ public class TicketsUpdateRequestOneOfTicket {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SHARING_AGREEMENT_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> sharingAgreementIds;
+    private List<@NotNull Long> sharingAgreementIds;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_STATUS)
@@ -328,7 +328,7 @@ public class TicketsUpdateRequestOneOfTicket {
      *
      * @return The same instance of TicketsUpdateRequestOneOfTicket for chaining.
      */
-    public TicketsUpdateRequestOneOfTicket addAttributeValueIdsItem(Integer attributeValueIdsItem) {
+    public TicketsUpdateRequestOneOfTicket addAttributeValueIdsItem(Long attributeValueIdsItem) {
         if (attributeValueIds == null) {
             attributeValueIds = new ArrayList<>();
         }
@@ -341,7 +341,7 @@ public class TicketsUpdateRequestOneOfTicket {
      *
      * @return The same instance of TicketsUpdateRequestOneOfTicket for chaining.
      */
-    public TicketsUpdateRequestOneOfTicket addCollaboratorIdsItem(Integer collaboratorIdsItem) {
+    public TicketsUpdateRequestOneOfTicket addCollaboratorIdsItem(Long collaboratorIdsItem) {
         if (collaboratorIds == null) {
             collaboratorIds = new ArrayList<>();
         }
@@ -393,7 +393,7 @@ public class TicketsUpdateRequestOneOfTicket {
      *
      * @return The same instance of TicketsUpdateRequestOneOfTicket for chaining.
      */
-    public TicketsUpdateRequestOneOfTicket addSharingAgreementIdsItem(Integer sharingAgreementIdsItem) {
+    public TicketsUpdateRequestOneOfTicket addSharingAgreementIdsItem(Long sharingAgreementIdsItem) {
         if (sharingAgreementIds == null) {
             sharingAgreementIds = new ArrayList<>();
         }

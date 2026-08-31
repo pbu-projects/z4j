@@ -67,7 +67,7 @@ public class OrganizationMergeListResponseOrganizationMergesInner {
     @Nullable
     @JsonProperty(JSON_PROPERTY_LOSER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer loserId;
+    private Long loserId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_STATUS)
@@ -82,6 +82,6 @@ public class OrganizationMergeListResponseOrganizationMergesInner {
     @Nullable
     @JsonProperty(JSON_PROPERTY_WINNER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer winnerId;
+    private Long winnerId;
 
 }

@@ -53,7 +53,7 @@ public interface SharingAgreementsClient {
      */
     @Delete("/api/v2/sharing_agreements/{sharing_agreement_id}")
     Mono<Void> deleteSharingAgreement(
-        @PathVariable("sharing_agreement_id") @NotNull Integer sharingAgreementId
+        @PathVariable("sharing_agreement_id") @NotNull Long sharingAgreementId
     );
 
     /**
@@ -75,7 +75,7 @@ public interface SharingAgreementsClient {
      */
     @Get("/api/v2/sharing_agreements/{sharing_agreement_id}")
     Mono<@Valid SharingAgreementResponse> showSharingAgreement(
-        @PathVariable("sharing_agreement_id") @NotNull Integer sharingAgreementId
+        @PathVariable("sharing_agreement_id") @NotNull Long sharingAgreementId
     );
 
     /**
@@ -88,6 +88,6 @@ public interface SharingAgreementsClient {
      */
     @Put("/api/v2/sharing_agreements/{sharing_agreement_id}")
     Mono<@Valid SharingAgreementResponse> updateSharingAgreement(
-        @PathVariable("sharing_agreement_id") @NotNull Integer sharingAgreementId
+        @PathVariable("sharing_agreement_id") @NotNull Long sharingAgreementId
     );
 }

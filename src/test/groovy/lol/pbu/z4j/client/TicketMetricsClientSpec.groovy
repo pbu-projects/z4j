@@ -34,7 +34,7 @@ class TicketMetricsClientSpec extends Z4jSpec {
                         badTokenTicketMetricsClient, badUrlTicketMetricsClient
 
     @Shared
-    Integer testTicketId
+    Long testTicketId
 
     @Shared
     String testMetricId

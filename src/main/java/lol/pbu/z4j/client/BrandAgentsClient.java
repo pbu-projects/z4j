@@ -45,8 +45,8 @@ public interface BrandAgentsClient {
      */
     @Get("/api/v2/brand_agents")
     Mono<@Valid BrandAgentsResponse> listBrandAgents(
-        @QueryValue("user_id") @Nullable Integer userId,
-        @QueryValue("brand_id") @Nullable Integer brandId
+        @QueryValue("user_id") @Nullable Long userId,
+        @QueryValue("brand_id") @Nullable Long brandId
     );
 
     /**
@@ -59,7 +59,7 @@ public interface BrandAgentsClient {
      */
     @Get("/api/v2/brands/{brand_id}/agents")
     Mono<@Valid BrandAgentsResponse> listBrandAgentsByBrand(
-        @PathVariable("brand_id") @NotNull Integer brandId
+        @PathVariable("brand_id") @NotNull Long brandId
     );
 
     /**
@@ -72,7 +72,7 @@ public interface BrandAgentsClient {
      */
     @Get("/api/v2/users/{user_id}/brand_agents")
     Mono<@Valid BrandAgentsResponse> listUserBrandAgents(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -99,7 +99,7 @@ public interface BrandAgentsClient {
      */
     @Get("/api/v2/users/{user_id}/brand_agents/{brand_agent_id}")
     Mono<@Valid BrandAgentResponse> showUserBrandAgentById(
-        @PathVariable("user_id") @NotNull Integer userId,
+        @PathVariable("user_id") @NotNull Long userId,
         @PathVariable("brand_agent_id") @NotNull String brandAgentId
     );
 }

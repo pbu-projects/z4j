@@ -35,7 +35,7 @@ class SkillBasedRoutingClientSpec extends Z4jSpec {
     String existingAttributeId
 
     @Shared
-    Integer adminUserId
+    Long adminUserId
 
     def setupSpec() {
         adminRoutingClient = adminCtx.getBean(SkillBasedRoutingClient.class)

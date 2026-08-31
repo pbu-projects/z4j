@@ -33,7 +33,7 @@ class WorkspacesClientSpec extends Z4jSpec {
                      badTokenWorkspacesClient, badUrlWorkspacesClient
 
     @Shared
-    Integer existingWorkspaceId
+    Long existingWorkspaceId
 
     def setupSpec() {
         adminWorkspacesClient = adminCtx.getBean(WorkspacesClient.class)

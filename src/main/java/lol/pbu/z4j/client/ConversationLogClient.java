@@ -43,6 +43,6 @@ public interface ConversationLogClient {
      */
     @Get("/api/v2/tickets/{ticket_id}/conversation_log")
     Mono<@Valid ConversationLogResponse> listConversationLogForTicket(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 }

@@ -96,7 +96,7 @@ public class TargetCommonFields {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     public TargetCommonFields(String title, String type) {
         this.title = title;

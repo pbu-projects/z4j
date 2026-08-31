@@ -58,7 +58,7 @@ public interface TicketFieldsClient {
      */
     @Post("/api/v2/ticket_fields/{ticket_field_id}/options")
     Mono<@Valid CustomFieldOptionResponse> createOrUpdateTicketFieldOption(
-        @PathVariable("ticket_field_id") @NotNull Integer ticketFieldId
+        @PathVariable("ticket_field_id") @NotNull Long ticketFieldId
     );
 
     /**
@@ -81,7 +81,7 @@ public interface TicketFieldsClient {
      */
     @Delete("/api/v2/ticket_fields/{ticket_field_id}")
     Mono<Void> deleteTicketField(
-        @PathVariable("ticket_field_id") @NotNull Integer ticketFieldId,
+        @PathVariable("ticket_field_id") @NotNull Long ticketFieldId,
         @QueryValue("creator") @Nullable Boolean creator
     );
 
@@ -96,8 +96,8 @@ public interface TicketFieldsClient {
      */
     @Delete("/api/v2/ticket_fields/{ticket_field_id}/options/{ticket_field_option_id}")
     Mono<Void> deleteTicketFieldOption(
-        @PathVariable("ticket_field_id") @NotNull Integer ticketFieldId,
-        @PathVariable("ticket_field_option_id") @NotNull Integer ticketFieldOptionId
+        @PathVariable("ticket_field_id") @NotNull Long ticketFieldId,
+        @PathVariable("ticket_field_option_id") @NotNull Long ticketFieldOptionId
     );
 
     /**
@@ -110,7 +110,7 @@ public interface TicketFieldsClient {
      */
     @Get("/api/v2/ticket_fields/{ticket_field_id}/options")
     Mono<@Valid CustomFieldOptionsResponse> listTicketFieldOptions(
-        @PathVariable("ticket_field_id") @NotNull Integer ticketFieldId
+        @PathVariable("ticket_field_id") @NotNull Long ticketFieldId
     );
 
     /**
@@ -167,8 +167,8 @@ public interface TicketFieldsClient {
      */
     @Get("/api/v2/ticket_fields/{ticket_field_id}/options/{ticket_field_option_id}")
     Mono<@Valid CustomFieldOptionResponse> showTicketFieldOption(
-        @PathVariable("ticket_field_id") @NotNull Integer ticketFieldId,
-        @PathVariable("ticket_field_option_id") @NotNull Integer ticketFieldOptionId
+        @PathVariable("ticket_field_id") @NotNull Long ticketFieldId,
+        @PathVariable("ticket_field_option_id") @NotNull Long ticketFieldOptionId
     );
 
     /**
@@ -182,7 +182,7 @@ public interface TicketFieldsClient {
      */
     @Get("/api/v2/ticket_fields/{ticket_field_id}")
     Mono<TicketFieldResponse> showTicketfield(
-        @PathVariable("ticket_field_id") @NotNull Integer ticketFieldId,
+        @PathVariable("ticket_field_id") @NotNull Long ticketFieldId,
         @QueryValue("creator") @Nullable Boolean creator
     );
 
@@ -197,7 +197,7 @@ public interface TicketFieldsClient {
      */
     @Put("/api/v2/ticket_fields/{ticket_field_id}")
     Mono<TicketFieldResponse> updateTicketField(
-        @PathVariable("ticket_field_id") @NotNull Integer ticketFieldId,
+        @PathVariable("ticket_field_id") @NotNull Long ticketFieldId,
         @QueryValue("creator") @Nullable Boolean creator
     );
 }

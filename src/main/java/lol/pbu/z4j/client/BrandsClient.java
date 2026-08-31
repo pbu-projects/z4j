@@ -62,7 +62,7 @@ public interface BrandsClient {
      */
     @Get("/api/v2/brands/{brand_id}/check_host_mapping")
     Mono<@Valid HostMappingObject> checkHostMappingValidityForExistingBrand(
-        @PathVariable("brand_id") @NotNull Integer brandId
+        @PathVariable("brand_id") @NotNull Long brandId
     );
 
     /**
@@ -88,7 +88,7 @@ public interface BrandsClient {
      */
     @Delete("/api/v2/brands/{brand_id}")
     Mono<Void> deleteBrand(
-        @PathVariable("brand_id") @NotNull Integer brandId
+        @PathVariable("brand_id") @NotNull Long brandId
     );
 
     /**
@@ -110,7 +110,7 @@ public interface BrandsClient {
      */
     @Get("/api/v2/brands/{brand_id}")
     Mono<@Valid BrandResponse> showBrand(
-        @PathVariable("brand_id") @NotNull Integer brandId
+        @PathVariable("brand_id") @NotNull Long brandId
     );
 
     /**
@@ -125,7 +125,7 @@ public interface BrandsClient {
     @Put("/api/v2/brands/{brand_id}")
     @Consumes({"application/json", "image/jpg", "image/png"})
     Mono<@Valid BrandResponse> updateBrand(
-        @PathVariable("brand_id") @NotNull Integer brandId,
+        @PathVariable("brand_id") @NotNull Long brandId,
         @Body @Nullable @Valid BrandUpdateRequest brandUpdateRequest
     );
 }

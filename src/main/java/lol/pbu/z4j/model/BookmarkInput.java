@@ -54,6 +54,6 @@ public class BookmarkInput {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketId;
+    private Long ticketId;
 
 }

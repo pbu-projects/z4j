@@ -76,7 +76,7 @@ public class AccountSettingsChatObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_MAXIMUM_REQUEST_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer maximumRequestCount;
+    private Long maximumRequestCount;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_WELCOME_MESSAGE)

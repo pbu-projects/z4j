@@ -53,7 +53,7 @@ public interface SupportAddressesClient {
      */
     @Delete("/api/v2/recipient_addresses/{support_address_id}")
     Mono<Void> deleteRecipientAddress(
-        @PathVariable("support_address_id") @NotNull Integer supportAddressId
+        @PathVariable("support_address_id") @NotNull Long supportAddressId
     );
 
     /**
@@ -75,7 +75,7 @@ public interface SupportAddressesClient {
      */
     @Get("/api/v2/recipient_addresses/{support_address_id}")
     Mono<@Valid SupportAddressResponse> showSupportAddress(
-        @PathVariable("support_address_id") @NotNull Integer supportAddressId
+        @PathVariable("support_address_id") @NotNull Long supportAddressId
     );
 
     /**
@@ -88,7 +88,7 @@ public interface SupportAddressesClient {
      */
     @Put("/api/v2/recipient_addresses/{support_address_id}")
     Mono<@Valid SupportAddressResponse> updateSupportAddress(
-        @PathVariable("support_address_id") @NotNull Integer supportAddressId
+        @PathVariable("support_address_id") @NotNull Long supportAddressId
     );
 
     /**
@@ -101,6 +101,6 @@ public interface SupportAddressesClient {
      */
     @Put("/api/v2/recipient_addresses/{support_address_id}/verify")
     Mono<@NotNull String> verifySupportAddressForwarding(
-        @PathVariable("support_address_id") @NotNull Integer supportAddressId
+        @PathVariable("support_address_id") @NotNull Long supportAddressId
     );
 }

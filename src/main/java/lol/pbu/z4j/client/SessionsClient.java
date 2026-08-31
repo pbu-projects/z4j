@@ -45,7 +45,7 @@ public interface SessionsClient {
      */
     @Delete("/api/v2/users/{user_id}/sessions")
     Mono<Void> bulkDeleteSessionsByUserId(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -68,8 +68,8 @@ public interface SessionsClient {
      */
     @Delete("/api/v2/users/{user_id}/sessions/{session_id}")
     Mono<Void> deleteSession(
-        @PathVariable("session_id") @NotNull Integer sessionId,
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("session_id") @NotNull Long sessionId,
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -93,7 +93,7 @@ public interface SessionsClient {
      */
     @Get("/api/v2/users/{user_id}/sessions")
     Mono<@Valid SessionsResponse> listUserSessions(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -125,7 +125,7 @@ public interface SessionsClient {
      */
     @Get("/api/v2/users/{user_id}/sessions/{session_id}")
     Mono<@Valid SessionResponse> showSession(
-        @PathVariable("session_id") @NotNull Integer sessionId,
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("session_id") @NotNull Long sessionId,
+        @PathVariable("user_id") @NotNull Long userId
     );
 }

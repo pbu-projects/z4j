@@ -87,7 +87,7 @@ public class TriggerRevisionsResponse {
     @Nullable
     @JsonProperty(JSON_PROPERTY_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer count;
+    private Long count;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_TRIGGER_REVISIONS)

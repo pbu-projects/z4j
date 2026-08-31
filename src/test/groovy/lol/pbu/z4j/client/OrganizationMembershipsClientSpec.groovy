@@ -32,13 +32,13 @@ class OrganizationMembershipsClientSpec extends Z4jSpec {
                                   badTokenOrgMembershipsClient, badUrlOrgMembershipsClient
 
     @Shared
-    Integer adminUserId
+    Long adminUserId
 
     @Shared
-    Integer existingOrgId
+    Long existingOrgId
 
     @Shared
-    Integer existingMembershipId
+    Long existingMembershipId
 
     def setupSpec() {
         adminOrgMembershipsClient = adminCtx.getBean(OrganizationMembershipsClient.class)

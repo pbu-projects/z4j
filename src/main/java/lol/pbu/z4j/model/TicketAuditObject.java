@@ -75,7 +75,7 @@ public class TicketAuditObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_AUTHOR_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer authorId;
+    private Long authorId;
 
     /**
      * <p>The time the audit was created</p>
@@ -99,7 +99,7 @@ public class TicketAuditObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>Metadata for the audit, custom and system data</p>
@@ -115,7 +115,7 @@ public class TicketAuditObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketId;
+    private Long ticketId;
 
     @Nullable
     @Valid

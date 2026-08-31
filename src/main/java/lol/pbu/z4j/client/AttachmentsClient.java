@@ -60,9 +60,9 @@ public interface AttachmentsClient {
      */
     @Put("/api/v2/tickets/{ticket_id}/comments/{comment_id}/attachments/{attachment_id}/redact")
     Mono<@Valid AttachmentResponse> redactCommentAttachment(
-        @PathVariable("ticket_id") @NotNull Integer ticketId,
-        @PathVariable("comment_id") @NotNull Integer commentId,
-        @PathVariable("attachment_id") @NotNull Integer attachmentId
+        @PathVariable("ticket_id") @NotNull Long ticketId,
+        @PathVariable("comment_id") @NotNull Long commentId,
+        @PathVariable("attachment_id") @NotNull Long attachmentId
     );
 
     /**
@@ -75,7 +75,7 @@ public interface AttachmentsClient {
      */
     @Get("/api/v2/attachments/{attachment_id}")
     Mono<@Valid AttachmentResponse> showAttachment(
-        @PathVariable("attachment_id") @NotNull Integer attachmentId
+        @PathVariable("attachment_id") @NotNull Long attachmentId
     );
 
     /**
@@ -89,7 +89,7 @@ public interface AttachmentsClient {
      */
     @Put("/api/v2/attachments/{attachment_id}")
     Mono<@Valid AttachmentResponse> updateAttachment(
-        @PathVariable("attachment_id") @NotNull Integer attachmentId,
+        @PathVariable("attachment_id") @NotNull Long attachmentId,
         @Body @Nullable @Valid AttachmentUpdateRequest attachmentUpdateRequest
     );
 

@@ -33,7 +33,7 @@ class SupportAddressesClientSpec extends Z4jSpec {
                            badTokenSupportAddressesClient, badUrlSupportAddressesClient
 
     @Shared
-    Integer existingAddressId
+    Long existingAddressId
 
     def setupSpec() {
         adminSupportAddressesClient = adminCtx.getBean(SupportAddressesClient.class)

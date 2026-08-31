@@ -129,7 +129,7 @@ public class WorkspaceObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The ids of the macros associated to this workspace</p>
@@ -137,7 +137,7 @@ public class WorkspaceObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_MACRO_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> macroIds;
+    private List<@NotNull Long> macroIds;
 
     /**
      * <p>The ids of the macros associated to this workspace</p>
@@ -145,7 +145,7 @@ public class WorkspaceObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_MACROS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> macros;
+    private List<@NotNull Long> macros;
 
     /**
      * <p>Ordering of the workspace relative to other workspaces</p>
@@ -153,7 +153,7 @@ public class WorkspaceObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_POSITION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer position;
+    private Long position;
 
     /**
      * <p>If true, the order of apps within the workspace will be preserved</p>
@@ -177,7 +177,7 @@ public class WorkspaceObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_FORM_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketFormId;
+    private Long ticketFormId;
 
     /**
      * <p>The title of the workspace</p>
@@ -221,7 +221,7 @@ public class WorkspaceObject {
      *
      * @return The same instance of WorkspaceObject for chaining.
      */
-    public WorkspaceObject addMacroIdsItem(Integer macroIdsItem) {
+    public WorkspaceObject addMacroIdsItem(Long macroIdsItem) {
         if (macroIds == null) {
             macroIds = new ArrayList<>();
         }
@@ -234,7 +234,7 @@ public class WorkspaceObject {
      *
      * @return The same instance of WorkspaceObject for chaining.
      */
-    public WorkspaceObject addMacrosItem(Integer macrosItem) {
+    public WorkspaceObject addMacrosItem(Long macrosItem) {
         if (macros == null) {
             macros = new ArrayList<>();
         }

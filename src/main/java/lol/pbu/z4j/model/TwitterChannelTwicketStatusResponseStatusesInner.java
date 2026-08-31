@@ -64,7 +64,7 @@ public class TwitterChannelTwicketStatusResponseStatusesInner {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_RETWEETED)

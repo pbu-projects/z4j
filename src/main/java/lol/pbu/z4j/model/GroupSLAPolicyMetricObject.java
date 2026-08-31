@@ -86,6 +86,6 @@ public class GroupSLAPolicyMetricObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TARGET)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer target;
+    private Long target;
 
 }

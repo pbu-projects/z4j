@@ -33,7 +33,7 @@ class BrandsClientSpec extends Z4jSpec {
                  badTokenBrandsClient, badUrlBrandsClient
 
     @Shared
-    Integer existingBrandId
+    Long existingBrandId
 
     def setupSpec() {
         adminBrandsClient = adminCtx.getBean(BrandsClient.class)

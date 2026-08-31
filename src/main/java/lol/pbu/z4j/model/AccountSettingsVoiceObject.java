@@ -91,12 +91,12 @@ public class AccountSettingsVoiceObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_MAXIMUM_QUEUE_SIZE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer maximumQueueSize;
+    private Long maximumQueueSize;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_MAXIMUM_QUEUE_WAIT_TIME)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer maximumQueueWaitTime;
+    private Long maximumQueueWaitTime;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_ONLY_DURING_BUSINESS_HOURS)

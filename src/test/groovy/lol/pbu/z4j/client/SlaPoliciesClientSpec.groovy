@@ -33,7 +33,7 @@ class SlaPoliciesClientSpec extends Z4jSpec {
                       badTokenSlaPoliciesClient, badUrlSlaPoliciesClient
 
     @Shared
-    Integer existingSlaPolicyId
+    Long existingSlaPolicyId
 
     def setupSpec() {
         adminSlaPoliciesClient = adminCtx.getBean(SlaPoliciesClient.class)

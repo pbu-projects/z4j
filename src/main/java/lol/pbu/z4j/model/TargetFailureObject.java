@@ -71,7 +71,7 @@ public class TargetFailureObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CONSECUTIVE_FAILURE_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer consecutiveFailureCount;
+    private Long consecutiveFailureCount;
 
     /**
      * <p>Time of the failure</p>
@@ -87,7 +87,7 @@ public class TargetFailureObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The raw message of the target request</p>
@@ -111,7 +111,7 @@ public class TargetFailureObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_STATUS_CODE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer statusCode;
+    private Long statusCode;
 
     /**
      * <p>Name of the target failure</p>

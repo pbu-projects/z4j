@@ -107,7 +107,7 @@ public class SuspendedTicketObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_BRAND_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer brandId;
+    private Long brandId;
 
     /**
      * <p>Why the ticket was suspended</p>
@@ -123,7 +123,7 @@ public class SuspendedTicketObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CAUSE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer causeId;
+    private Long causeId;
 
     /**
      * <p>The content that was flagged</p>
@@ -155,7 +155,7 @@ public class SuspendedTicketObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The ID of the email, if available</p>
@@ -187,7 +187,7 @@ public class SuspendedTicketObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ticketId;
+    private Long ticketId;
 
     /**
      * <p>When the ticket was assigned</p>

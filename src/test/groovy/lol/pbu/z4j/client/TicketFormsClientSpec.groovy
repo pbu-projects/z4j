@@ -30,7 +30,7 @@ class TicketFormsClientSpec extends Z4jSpec {
                       badTokenTicketFormsClient, badUrlTicketFormsClient
 
     @Shared
-    Integer existingFormId
+    Long existingFormId
 
     def setupSpec() {
         adminTicketFormsClient = adminCtx.getBean(TicketFormsClient.class)

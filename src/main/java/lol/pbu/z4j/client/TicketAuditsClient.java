@@ -46,7 +46,7 @@ public interface TicketAuditsClient {
      */
     @Get("/api/v2/tickets/{ticket_id}/audits/count")
     Mono<@Valid TicketAuditsCountResponse> countAuditsForTicket(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -59,7 +59,7 @@ public interface TicketAuditsClient {
      */
     @Get("/api/v2/tickets/{ticket_id}/audits")
     Mono<@Valid TicketAuditsResponseNoneCursor> listAuditsForTicket(
-        @PathVariable("ticket_id") @NotNull Integer ticketId
+        @PathVariable("ticket_id") @NotNull Long ticketId
     );
 
     /**
@@ -76,7 +76,7 @@ public interface TicketAuditsClient {
     Mono<@Valid TicketAuditsResponse> listTicketAudits(
         @QueryValue("page[before]") @Nullable String pageBefore,
         @QueryValue("page[after]") @Nullable String pageAfter,
-        @QueryValue("page[size]") @Nullable Integer pageSize
+        @QueryValue("page[size]") @Nullable Long pageSize
     );
 
     /**
@@ -90,8 +90,8 @@ public interface TicketAuditsClient {
      */
     @Put("/api/v2/tickets/{ticket_id}/audits/{ticket_audit_id}/make_private")
     Mono<@NotNull String> makeTicketCommentPrivateFromAudits(
-        @PathVariable("ticket_id") @NotNull Integer ticketId,
-        @PathVariable("ticket_audit_id") @NotNull Integer ticketAuditId
+        @PathVariable("ticket_id") @NotNull Long ticketId,
+        @PathVariable("ticket_audit_id") @NotNull Long ticketAuditId
     );
 
     /**
@@ -105,7 +105,7 @@ public interface TicketAuditsClient {
      */
     @Get("/api/v2/tickets/{ticket_id}/audits/{ticket_audit_id}")
     Mono<@Valid TicketAuditResponse> showTicketAudit(
-        @PathVariable("ticket_id") @NotNull Integer ticketId,
-        @PathVariable("ticket_audit_id") @NotNull Integer ticketAuditId
+        @PathVariable("ticket_id") @NotNull Long ticketId,
+        @PathVariable("ticket_audit_id") @NotNull Long ticketAuditId
     );
 }

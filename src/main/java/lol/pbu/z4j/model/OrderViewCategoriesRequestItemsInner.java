@@ -60,7 +60,7 @@ public class OrderViewCategoriesRequestItemsInner {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The new position of the category or view</p>
@@ -68,7 +68,7 @@ public class OrderViewCategoriesRequestItemsInner {
     @Nullable
     @JsonProperty(JSON_PROPERTY_POSITION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer position;
+    private Long position;
 
     /**
      * <p>The type of the item</p>

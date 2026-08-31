@@ -75,12 +75,12 @@ public class AccountSettingsRoutingObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_MAX_EMAIL_CAPACITY)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer maxEmailCapacity;
+    private Long maxEmailCapacity;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_MAX_MESSAGING_CAPACITY)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer maxMessagingCapacity;
+    private Long maxMessagingCapacity;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_REASSIGNMENT_MESSAGING_ENABLED)
@@ -90,11 +90,11 @@ public class AccountSettingsRoutingObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_REASSIGNMENT_MESSAGING_TIMEOUT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer reassignmentMessagingTimeout;
+    private Long reassignmentMessagingTimeout;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_REASSIGNMENT_TALK_TIMEOUT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer reassignmentTalkTimeout;
+    private Long reassignmentTalkTimeout;
 
 }

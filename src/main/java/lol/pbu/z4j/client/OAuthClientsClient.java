@@ -44,7 +44,7 @@ public interface OAuthClientsClient {
      */
     @Put("/api/v2/oauth/clients/{oauth_client_id}/generate_secret")
     Mono<@Valid OauthClientResponse> clientGenerateSecret(
-        @PathVariable("oauth_client_id") @NotNull Integer oauthClientId
+        @PathVariable("oauth_client_id") @NotNull Long oauthClientId
     );
 
     /**
@@ -66,7 +66,7 @@ public interface OAuthClientsClient {
      */
     @Delete("/api/v2/oauth/clients/{oauth_client_id}")
     Mono<Void> deleteClient(
-        @PathVariable("oauth_client_id") @NotNull Integer oauthClientId
+        @PathVariable("oauth_client_id") @NotNull Long oauthClientId
     );
 
     /**
@@ -97,7 +97,7 @@ public interface OAuthClientsClient {
      */
     @Get("/api/v2/oauth/clients/{oauth_client_id}")
     Mono<@Valid OauthClientResponse> showClient(
-        @PathVariable("oauth_client_id") @NotNull Integer oauthClientId
+        @PathVariable("oauth_client_id") @NotNull Long oauthClientId
     );
 
     /**
@@ -110,6 +110,6 @@ public interface OAuthClientsClient {
      */
     @Put("/api/v2/oauth/clients/{oauth_client_id}")
     Mono<@Valid OauthClientResponse> updateClient(
-        @PathVariable("oauth_client_id") @NotNull Integer oauthClientId
+        @PathVariable("oauth_client_id") @NotNull Long oauthClientId
     );
 }

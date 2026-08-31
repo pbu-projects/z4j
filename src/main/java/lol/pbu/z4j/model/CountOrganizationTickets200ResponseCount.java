@@ -61,6 +61,6 @@ public class CountOrganizationTickets200ResponseCount {
     @Nullable
     @JsonProperty(JSON_PROPERTY_VALUE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer value;
+    private Long value;
 
 }

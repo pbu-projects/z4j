@@ -59,7 +59,7 @@ public class SearchResponse {
     @Nullable
     @JsonProperty(JSON_PROPERTY_COUNT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer count;
+    private Long count;
 
     /**
      * The facets corresponding to the search query

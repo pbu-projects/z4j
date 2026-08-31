@@ -118,7 +118,7 @@ public class AttachmentObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_HEIGHT)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer height;
+    private Long height;
 
     /**
      * <p>Automatically assigned when created</p>
@@ -126,7 +126,7 @@ public class AttachmentObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>If true, the attachment is excluded from the attachment list and the attachment's URL can be referenced within the comment of a ticket. Default is false</p>
@@ -166,7 +166,7 @@ public class AttachmentObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SIZE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer size;
+    private Long size;
 
     /**
      * <p>A URL to access the attachment details</p>
@@ -182,7 +182,7 @@ public class AttachmentObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_WIDTH)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer width;
+    private Long width;
 
     /**
      * <p>An array of attachment objects. Note that photo thumbnails do not have thumbnails</p>

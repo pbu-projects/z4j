@@ -113,7 +113,7 @@ public class AttachmentBase {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * If true, the attachment is excluded from the attachment list and the attachment's URL can be referenced within the comment of a ticket. Default is false
@@ -150,7 +150,7 @@ public class AttachmentBase {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SIZE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer size;
+    private Long size;
 
     /**
      * A URL to access the attachment details

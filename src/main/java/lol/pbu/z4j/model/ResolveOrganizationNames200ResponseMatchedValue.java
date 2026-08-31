@@ -54,9 +54,9 @@ public class ResolveOrganizationNames200ResponseMatchedValue {
      */
     @NotNull
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
-    private Integer organizationId;
+    private Long organizationId;
 
-    public ResolveOrganizationNames200ResponseMatchedValue(Integer organizationId) {
+    public ResolveOrganizationNames200ResponseMatchedValue(Long organizationId) {
         this.organizationId = organizationId;
     }
 

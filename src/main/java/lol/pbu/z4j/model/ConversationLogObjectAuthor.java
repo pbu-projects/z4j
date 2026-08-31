@@ -78,6 +78,6 @@ public class ConversationLogObjectAuthor extends HashMap<String, Object> {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ZEN_SUPPORT_USER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer zenSupportUserId;
+    private Long zenSupportUserId;
 
 }

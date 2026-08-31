@@ -57,7 +57,7 @@ public class AccountSettingsBrandsObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_DEFAULT_BRAND_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer defaultBrandId;
+    private Long defaultBrandId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_END_USER_ACROSS_BRAND_REQUESTS)

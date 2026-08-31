@@ -44,7 +44,7 @@ public interface TicketMetricEventsClient {
      */
     @Get("/api/v2/incremental/ticket_metric_events")
     Mono<@Valid TicketMetricEventsResponse> listTicketMetricEvents(
-        @QueryValue("start_time") @NotNull Integer startTime,
+        @QueryValue("start_time") @NotNull Long startTime,
         @QueryValue("include_changes") @Nullable Boolean includeChanges
     );
 }

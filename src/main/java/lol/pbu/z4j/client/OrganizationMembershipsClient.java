@@ -64,7 +64,7 @@ public interface OrganizationMembershipsClient {
      */
     @Post("/api/v2/users/{user_id}/organization_memberships")
     Mono<@Valid OrganizationMembershipResponse> createUserOrganizationMembership(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -77,7 +77,7 @@ public interface OrganizationMembershipsClient {
      */
     @Delete("/api/v2/organization_memberships/destroy_many")
     Mono<@Valid JobStatusResponse> deleteManyOrganizationMemberships(
-        @QueryValue("ids") @Nullable @Format(FORMAT_MULTI) List<@NotNull Integer> ids
+        @QueryValue("ids") @Nullable @Format(FORMAT_MULTI) List<@NotNull Long> ids
     );
 
     /**
@@ -90,7 +90,7 @@ public interface OrganizationMembershipsClient {
      */
     @Delete("/api/v2/organization_memberships/{organization_membership_id}")
     Mono<Void> deleteOrganizationMembership(
-        @PathVariable("organization_membership_id") @NotNull Integer organizationMembershipId
+        @PathVariable("organization_membership_id") @NotNull Long organizationMembershipId
     );
 
     /**
@@ -104,8 +104,8 @@ public interface OrganizationMembershipsClient {
      */
     @Delete("/api/v2/users/{user_id}/organization_memberships/{organization_membership_id}")
     Mono<Void> deleteUserOrganizationMembership(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("organization_membership_id") @NotNull Integer organizationMembershipId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("organization_membership_id") @NotNull Long organizationMembershipId
     );
 
     /**
@@ -127,7 +127,7 @@ public interface OrganizationMembershipsClient {
      */
     @Get("/api/v2/organizations/{organization_id}/organization_memberships")
     Mono<@Valid OrganizationMembershipsResponse> listOrganizationMembershipsByOrganization(
-        @PathVariable("organization_id") @NotNull Integer organizationId
+        @PathVariable("organization_id") @NotNull Long organizationId
     );
 
     /**
@@ -140,7 +140,7 @@ public interface OrganizationMembershipsClient {
      */
     @Get("/api/v2/users/{user_id}/organization_memberships")
     Mono<@Valid OrganizationMembershipsResponse> listUserOrganizationMemberships(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -154,8 +154,8 @@ public interface OrganizationMembershipsClient {
      */
     @Put("/api/v2/users/{user_id}/organizations/{organization_id}/make_default")
     Mono<@Valid OrganizationMembershipResponse> setOrganizationAsDefault(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("organization_id") @NotNull Integer organizationId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("organization_id") @NotNull Long organizationId
     );
 
     /**
@@ -169,8 +169,8 @@ public interface OrganizationMembershipsClient {
      */
     @Put("/api/v2/users/{user_id}/organization_memberships/{organization_membership_id}/make_default")
     Mono<@Valid OrganizationMembershipsResponse> setOrganizationMembershipAsDefault(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("organization_membership_id") @NotNull Integer organizationMembershipId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("organization_membership_id") @NotNull Long organizationMembershipId
     );
 
     /**
@@ -183,7 +183,7 @@ public interface OrganizationMembershipsClient {
      */
     @Get("/api/v2/organization_memberships/{organization_membership_id}")
     Mono<@Valid OrganizationMembershipResponse> showOrganizationMembershipById(
-        @PathVariable("organization_membership_id") @NotNull Integer organizationMembershipId
+        @PathVariable("organization_membership_id") @NotNull Long organizationMembershipId
     );
 
     /**
@@ -197,8 +197,8 @@ public interface OrganizationMembershipsClient {
      */
     @Get("/api/v2/users/{user_id}/organization_memberships/{organization_membership_id}")
     Mono<@Valid OrganizationMembershipResponse> showOrganizationMembershipByUserId(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("organization_membership_id") @NotNull Integer organizationMembershipId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("organization_membership_id") @NotNull Long organizationMembershipId
     );
 
     /**
@@ -212,7 +212,7 @@ public interface OrganizationMembershipsClient {
      */
     @Delete("/api/v2/users/{user_id}/organizations/{organization_id}")
     Mono<Void> unassignOrganization(
-        @PathVariable("organization_id") @NotNull Integer organizationId,
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("organization_id") @NotNull Long organizationId,
+        @PathVariable("user_id") @NotNull Long userId
     );
 }

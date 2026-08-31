@@ -74,7 +74,7 @@ public class ManySkillBasedRoutingAttributeValues {
     @Nullable
     @JsonProperty(JSON_PROPERTY_AGENT_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer agentId;
+    private Long agentId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_AGENT_SKILL_PRIORITY)

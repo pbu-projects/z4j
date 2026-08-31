@@ -88,7 +88,7 @@ public class ActivityObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ACTOR_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer actorId;
+    private Long actorId;
 
     /**
      * <p>When the record was created</p>
@@ -104,7 +104,7 @@ public class ActivityObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The content of the activity. Can be a ticket, comment, or change.</p>
@@ -158,7 +158,7 @@ public class ActivityObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_USER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer userId;
+    private Long userId;
 
     /**
      * <p>The type of activity. Can be \"tickets.assignment\", \"tickets.comment\", or \"tickets.priority_increase\"</p>

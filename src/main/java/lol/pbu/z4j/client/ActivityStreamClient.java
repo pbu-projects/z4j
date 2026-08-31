@@ -67,6 +67,6 @@ public interface ActivityStreamClient {
      */
     @Get("/api/v2/activities/{activity_id}")
     Mono<@Valid ActivityResponse> showActivity(
-        @PathVariable("activity_id") @NotNull Integer activityId
+        @PathVariable("activity_id") @NotNull Long activityId
     );
 }

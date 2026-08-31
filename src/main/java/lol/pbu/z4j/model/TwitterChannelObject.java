@@ -75,7 +75,7 @@ public class TwitterChannelObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * <p>The X handle</p>
@@ -91,7 +91,7 @@ public class TwitterChannelObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TWITTER_USER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer twitterUserId;
+    private Long twitterUserId;
 
     /**
      * <p>If replies are allowed for this handle</p>
@@ -115,7 +115,7 @@ public class TwitterChannelObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_BRAND_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer brandId;
+    private Long brandId;
 
     /**
      * <p>If replies are allowed for this handle</p>

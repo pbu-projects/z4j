@@ -66,6 +66,6 @@ public class PermissionAction {
     @Nullable
     @JsonProperty(JSON_PROPERTY_RULE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ruleId;
+    private Long ruleId;
 
 }

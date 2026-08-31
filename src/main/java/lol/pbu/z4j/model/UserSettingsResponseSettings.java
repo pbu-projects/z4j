@@ -75,14 +75,14 @@ public class UserSettingsResponseSettings {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SHARED_VIEWS_ORDER)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Integer> sharedViewsOrder;
+    private List<@NotNull Long> sharedViewsOrder;
 
     /**
      * Add an item to the sharedViewsOrder property in a chainable fashion.
      *
      * @return The same instance of UserSettingsResponseSettings for chaining.
      */
-    public UserSettingsResponseSettings addSharedViewsOrderItem(Integer sharedViewsOrderItem) {
+    public UserSettingsResponseSettings addSharedViewsOrderItem(Long sharedViewsOrderItem) {
         if (sharedViewsOrder == null) {
             sharedViewsOrder = new ArrayList<>();
         }

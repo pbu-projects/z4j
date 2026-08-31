@@ -33,7 +33,7 @@ class EmailNotificationsClientSpec extends Z4jSpec {
                              badTokenEmailClient, badUrlEmailClient
 
     @Shared
-    ListEmailNotificationsFilterParameter filter = new ListEmailNotificationsFilterParameter().ticketId(1)
+    ListEmailNotificationsFilterParameter filter = new ListEmailNotificationsFilterParameter().setTicketId(1)
 
     def setupSpec() {
         adminEmailClient = adminCtx.getBean(EmailNotificationsClient.class)

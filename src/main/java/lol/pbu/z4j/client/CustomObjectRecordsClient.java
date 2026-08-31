@@ -68,13 +68,13 @@ public interface CustomObjectRecordsClient {
         @QueryValue("name") @Nullable String name,
         @QueryValue("page[before]") @Nullable String pageBefore,
         @QueryValue("page[after]") @Nullable String pageAfter,
-        @QueryValue("page[size]") @Nullable Integer pageSize,
+        @QueryValue("page[size]") @Nullable Long pageSize,
         @QueryValue("field_id") @Nullable String fieldId,
         @QueryValue("source") @Nullable String source,
-        @QueryValue("filter[dynamic_values]") @Nullable @Format(FORMAT_DEEP_OBJECT) Map<String, @NotNull Integer> filterDynamicValues,
-        @QueryValue("requester_id") @Nullable Integer requesterId,
-        @QueryValue("assignee_id") @Nullable Integer assigneeId,
-        @QueryValue("organization_id") @Nullable Integer organizationId
+        @QueryValue("filter[dynamic_values]") @Nullable @Format(FORMAT_DEEP_OBJECT) Map<String, @NotNull Long> filterDynamicValues,
+        @QueryValue("requester_id") @Nullable Long requesterId,
+        @QueryValue("assignee_id") @Nullable Long assigneeId,
+        @QueryValue("organization_id") @Nullable Long organizationId
     );
 
     /**
@@ -182,7 +182,7 @@ public interface CustomObjectRecordsClient {
         @QueryValue("sort") @Nullable String sort,
         @QueryValue("page[before]") @Nullable String pageBefore,
         @QueryValue("page[after]") @Nullable String pageAfter,
-        @QueryValue("page[size]") @Nullable Integer pageSize,
+        @QueryValue("page[size]") @Nullable Long pageSize,
         @Body @Nullable @Valid FilteredSearchCustomObjectRecordsRequest filteredSearchCustomObjectRecordsRequest
     );
 
@@ -205,10 +205,10 @@ public interface CustomObjectRecordsClient {
      */
     @Get("/api/v2/incremental/custom_objects/{custom_object_key}/cursor")
     Mono<@Valid IncrementalCustomObjectRecordsResponse> incrementalCustomObjectRecordExportCursor(
-        @QueryValue("start_time") @NotNull Integer startTime,
+        @QueryValue("start_time") @NotNull Long startTime,
         @PathVariable("custom_object_key") @NotNull String customObjectKey,
         @QueryValue("cursor") @Nullable String cursor,
-        @QueryValue(value = "per_page", defaultValue = "1000") @Nullable @Min(1) @Max(1000) Integer perPage,
+        @QueryValue(value = "per_page", defaultValue = "1000") @Nullable @Min(1) @Max(1000) Long perPage,
         @QueryValue(value = "filter[exclude_deleted]", defaultValue = "false") @Nullable Boolean filterExcludeDeleted
     );
 
@@ -234,7 +234,7 @@ public interface CustomObjectRecordsClient {
         @QueryValue("sort") @Nullable String sort,
         @QueryValue("page[before]") @Nullable String pageBefore,
         @QueryValue("page[after]") @Nullable String pageAfter,
-        @QueryValue("page[size]") @Nullable Integer pageSize
+        @QueryValue("page[size]") @Nullable Long pageSize
     );
 
     /**
@@ -257,7 +257,7 @@ public interface CustomObjectRecordsClient {
         @QueryValue("sort") @Nullable String sort,
         @QueryValue("page[before]") @Nullable String pageBefore,
         @QueryValue("page[after]") @Nullable String pageAfter,
-        @QueryValue("page[size]") @Nullable Integer pageSize
+        @QueryValue("page[size]") @Nullable Long pageSize
     );
 
     /**

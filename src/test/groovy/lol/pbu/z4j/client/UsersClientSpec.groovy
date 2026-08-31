@@ -36,7 +36,7 @@ class UsersClientSpec extends Z4jSpec {
                 badTokenUsersClient, badUrlUsersClient
 
     @Shared
-    Integer adminUserId
+    Long adminUserId
 
     def setupSpec() {
         adminUsersClient = adminCtx.getBean(UsersClient.class)
@@ -179,7 +179,7 @@ class UsersClientSpec extends Z4jSpec {
         String userEmail = "z4j-test-" + UUID.randomUUID().toString().substring(0, 8) + "@example.com"
         String userName = faker.name().fullName() + " " + UUID.randomUUID().toString().substring(0, 8)
         UserRequest createRequest = new UserRequest(new UserInput().setName(userName).setEmail(userEmail))
-        Integer createdUserId = null
+        Long createdUserId = null
 
         when: "creating a new user as admin"
         UserResponse created = adminUsersClient.createUser(createRequest).block()

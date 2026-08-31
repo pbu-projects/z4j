@@ -70,7 +70,7 @@ public class TicketImportInput {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ASSIGNEE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer assigneeId;
+    private Long assigneeId;
 
     /**
      * <p>The conversation between requesters, collaborators, and agents</p>
@@ -94,7 +94,7 @@ public class TicketImportInput {
     @Nullable
     @JsonProperty(JSON_PROPERTY_REQUESTER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer requesterId;
+    private Long requesterId;
 
     /**
      * <p>The value of the subject field for this ticket</p>

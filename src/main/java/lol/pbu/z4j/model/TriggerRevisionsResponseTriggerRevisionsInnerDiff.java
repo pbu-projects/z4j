@@ -104,7 +104,7 @@ public class TriggerRevisionsResponseTriggerRevisionsInnerDiff {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SOURCE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer sourceId;
+    private Long sourceId;
 
     /**
      * <p>ID of the target revision</p>
@@ -112,7 +112,7 @@ public class TriggerRevisionsResponseTriggerRevisionsInnerDiff {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TARGET_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer targetId;
+    private Long targetId;
 
     /**
      * <p>An array of <a href=\"#change\">change</a> objects</p>

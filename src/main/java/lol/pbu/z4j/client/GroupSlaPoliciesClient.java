@@ -55,7 +55,7 @@ public interface GroupSlaPoliciesClient {
      */
     @Delete("/api/v2/group_slas/policies/{group_sla_policy_id}")
     Mono<Void> deleteGroupSLAPolicy(
-        @PathVariable("group_sla_policy_id") @NotNull Integer groupSlaPolicyId
+        @PathVariable("group_sla_policy_id") @NotNull Long groupSlaPolicyId
     );
 
     /**
@@ -99,7 +99,7 @@ public interface GroupSlaPoliciesClient {
      */
     @Get("/api/v2/group_slas/policies/{group_sla_policy_id}")
     Mono<@Valid GroupSLAPolicyResponse> showGroupSLAPolicy(
-        @PathVariable("group_sla_policy_id") @NotNull Integer groupSlaPolicyId
+        @PathVariable("group_sla_policy_id") @NotNull Long groupSlaPolicyId
     );
 
     /**
@@ -112,6 +112,6 @@ public interface GroupSlaPoliciesClient {
      */
     @Put("/api/v2/group_slas/policies/{group_sla_policy_id}")
     Mono<@Valid GroupSLAPolicyResponse> updateGroupSLAPolicy(
-        @PathVariable("group_sla_policy_id") @NotNull Integer groupSlaPolicyId
+        @PathVariable("group_sla_policy_id") @NotNull Long groupSlaPolicyId
     );
 }

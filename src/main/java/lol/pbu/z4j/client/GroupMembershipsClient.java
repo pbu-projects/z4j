@@ -45,7 +45,7 @@ public interface GroupMembershipsClient {
      */
     @Post("/api/v2/group_memberships")
     Mono<@Valid GroupMembershipResponse> createGroupMembership(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -58,7 +58,7 @@ public interface GroupMembershipsClient {
      */
     @Post("/api/v2/users/{user_id}/group_memberships")
     Mono<@Valid GroupMembershipResponse> createUserGroupMembership(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -72,8 +72,8 @@ public interface GroupMembershipsClient {
      */
     @Delete("/api/v2/group_memberships/{group_membership_id}")
     Mono<Void> deleteGroupMembership(
-        @PathVariable("group_membership_id") @NotNull Integer groupMembershipId,
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("group_membership_id") @NotNull Long groupMembershipId,
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -87,8 +87,8 @@ public interface GroupMembershipsClient {
      */
     @Delete("/api/v2/users/{user_id}/group_memberships/{group_membership_id}")
     Mono<Void> deleteUserGroupMembership(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("group_membership_id") @NotNull Integer groupMembershipId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("group_membership_id") @NotNull Long groupMembershipId
     );
 
     /**
@@ -124,8 +124,8 @@ public interface GroupMembershipsClient {
      */
     @Put("/api/v2/users/{user_id}/group_memberships/{group_membership_id}/make_default")
     Mono<@Valid GroupMembershipsResponse> groupMembershipSetDefault(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("group_membership_id") @NotNull Integer groupMembershipId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("group_membership_id") @NotNull Long groupMembershipId
     );
 
     /**
@@ -147,7 +147,7 @@ public interface GroupMembershipsClient {
      */
     @Get("/api/v2/groups/{group_id}/memberships/assignable")
     Mono<@Valid GroupMembershipsResponse> listAssignableGroupMembershipsByGroup(
-        @PathVariable("group_id") @NotNull Integer groupId
+        @PathVariable("group_id") @NotNull Long groupId
     );
 
     /**
@@ -161,8 +161,8 @@ public interface GroupMembershipsClient {
      */
     @Get("/api/v2/group_memberships")
     Mono<@Valid GroupMembershipsResponse> listGroupMemberships(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("group_id") @NotNull Integer groupId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("group_id") @NotNull Long groupId
     );
 
     /**
@@ -175,7 +175,7 @@ public interface GroupMembershipsClient {
      */
     @Get("/api/v2/groups/{group_id}/memberships")
     Mono<@Valid GroupMembershipsResponse> listGroupMembershipsByGroup(
-        @PathVariable("group_id") @NotNull Integer groupId
+        @PathVariable("group_id") @NotNull Long groupId
     );
 
     /**
@@ -188,7 +188,7 @@ public interface GroupMembershipsClient {
      */
     @Get("/api/v2/users/{user_id}/group_memberships")
     Mono<@Valid GroupMembershipsResponse> listUserGroupMemberships(
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -202,8 +202,8 @@ public interface GroupMembershipsClient {
      */
     @Get("/api/v2/group_memberships/{group_membership_id}")
     Mono<@Valid GroupMembershipResponse> showGroupMembershipById(
-        @PathVariable("group_membership_id") @NotNull Integer groupMembershipId,
-        @PathVariable("user_id") @NotNull Integer userId
+        @PathVariable("group_membership_id") @NotNull Long groupMembershipId,
+        @PathVariable("user_id") @NotNull Long userId
     );
 
     /**
@@ -217,7 +217,7 @@ public interface GroupMembershipsClient {
      */
     @Get("/api/v2/users/{user_id}/group_memberships/{group_membership_id}")
     Mono<@Valid GroupMembershipResponse> showUserGroupMembershipById(
-        @PathVariable("user_id") @NotNull Integer userId,
-        @PathVariable("group_membership_id") @NotNull Integer groupMembershipId
+        @PathVariable("user_id") @NotNull Long userId,
+        @PathVariable("group_membership_id") @NotNull Long groupMembershipId
     );
 }

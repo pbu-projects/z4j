@@ -60,7 +60,7 @@ public interface WorkspacesClient {
      */
     @Delete("/api/v2/workspaces/{workspace_id}")
     Mono<Void> deleteWorkspace(
-        @PathVariable("workspace_id") @NotNull Integer workspaceId
+        @PathVariable("workspace_id") @NotNull Long workspaceId
     );
 
     /**
@@ -73,7 +73,7 @@ public interface WorkspacesClient {
      */
     @Delete("/api/v2/workspaces/destroy_many")
     Mono<@NotNull String> destroyManyWorkspaces(
-        @QueryValue("ids") @NotNull @Format(FORMAT_MULTI) List<@NotNull Integer> ids
+        @QueryValue("ids") @NotNull @Format(FORMAT_MULTI) List<@NotNull Long> ids
     );
 
     /**
@@ -108,7 +108,7 @@ public interface WorkspacesClient {
      */
     @Get("/api/v2/workspaces/{workspace_id}")
     Mono<@Valid CreateWorkspace201Response> showWorkspace(
-        @PathVariable("workspace_id") @NotNull Integer workspaceId
+        @PathVariable("workspace_id") @NotNull Long workspaceId
     );
 
     /**
@@ -122,7 +122,7 @@ public interface WorkspacesClient {
      */
     @Put("/api/v2/workspaces/{workspace_id}")
     Mono<@Valid CreateWorkspace201Response> updateWorkspace(
-        @PathVariable("workspace_id") @NotNull Integer workspaceId,
+        @PathVariable("workspace_id") @NotNull Long workspaceId,
         @Body @Nullable @Valid CreateWorkspaceRequest createWorkspaceRequest
     );
 }

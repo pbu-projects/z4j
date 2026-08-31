@@ -118,7 +118,7 @@ public class QueueObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORDER)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer order;
+    private Long order;
 
     @Nullable
     @Valid
@@ -132,7 +132,7 @@ public class QueueObject {
     @Nullable
     @JsonProperty(JSON_PROPERTY_PRIORITY)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer priority;
+    private Long priority;
 
     @Nullable
     @Valid
