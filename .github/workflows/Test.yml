@@ -41,12 +41,28 @@ jobs:
         uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # 6.1.0
       - name: Build and run tests
         if: ${{ github.event.pull_request.base.ref != 'main' && github.event.action != 'closed' }}
-        run: ./gradlew build
+        run: |
+          ./gradlew assemble testClasses -x test
+          ./gradlew ticketingTest
+          sleep 60
+          ./gradlew userTest
+          sleep 60
+          ./gradlew helpCenterTest
+          sleep 60
+          ./gradlew adminTest jacocoTestReport
       - name: Sonar Scan
         if: ${{ github.event.pull_request.base.ref == 'main' && github.event.action != 'closed' }} # Only run SonarQube on PRs to main
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew build sonar
+        run: |
+          ./gradlew assemble testClasses -x test
+          ./gradlew ticketingTest
+          sleep 60
+          ./gradlew userTest
+          sleep 60
+          ./gradlew helpCenterTest
+          sleep 60
+          ./gradlew adminTest jacocoTestReport sonar
       - name: Upload test report
         if: failure()
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # 7.0.0
