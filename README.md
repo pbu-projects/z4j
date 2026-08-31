@@ -40,6 +40,8 @@ Integration tests are partitioned into domain-specific tasks to prevent exceedin
 - `./gradlew helpCenterTest`
 - `./gradlew adminTest`
 
+For details on test coverage reporting and the project's current API testing status, please see [TESTING.md](TESTING.md).
+
 ## Contributing
 
 Please read our [Code of Conduct](CODE_OF_CONDUCT.md) and [Contributing Guide] for details on our

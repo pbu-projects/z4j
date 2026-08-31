@@ -112,6 +112,7 @@ sonarqube {
 }
 
 tasks.jacocoTestReport {
+    executionData(tasks.withType<Test>())
     reports {
         xml.required.set(true)
         html.required.set(true)
@@ -119,6 +120,7 @@ tasks.jacocoTestReport {
 }
 
 tasks.test {
+    enabled = false
     maxHeapSize = "2g"
     finalizedBy(tasks.jacocoTestReport)
 }
@@ -126,9 +128,8 @@ tasks.test {
 val ticketingTest by tasks.registering(Test::class) {
     description = "Runs ticketing related integration tests"
     group = "verification"
-    useJUnitPlatform {
-        includeTags("ticketing")
-    }
+    useJUnitPlatform()
+    include("**/Ticket*Spec.class", "**/View*Spec.class", "**/Macro*Spec.class")
     maxHeapSize = "2g"
     testClassesDirs = sourceSets["test"].output.classesDirs
     classpath = sourceSets["test"].runtimeClasspath
@@ -138,9 +139,8 @@ val ticketingTest by tasks.registering(Test::class) {
 val userTest by tasks.registering(Test::class) {
     description = "Runs user, group, and organization integration tests"
     group = "verification"
-    useJUnitPlatform {
-        includeTags("users")
-    }
+    useJUnitPlatform()
+    include("**/User*Spec.class", "**/Group*Spec.class", "**/Organization*Spec.class")
     maxHeapSize = "2g"
     testClassesDirs = sourceSets["test"].output.classesDirs
     classpath = sourceSets["test"].runtimeClasspath
@@ -150,9 +150,8 @@ val userTest by tasks.registering(Test::class) {
 val helpCenterTest by tasks.registering(Test::class) {
     description = "Runs Help Center (Guide) integration tests"
     group = "verification"
-    useJUnitPlatform {
-        includeTags("help_center")
-    }
+    useJUnitPlatform()
+    include("**/Article*Spec.class", "**/Section*Spec.class", "**/Categor*Spec.class", "**/Post*Spec.class")
     maxHeapSize = "2g"
     testClassesDirs = sourceSets["test"].output.classesDirs
     classpath = sourceSets["test"].runtimeClasspath
@@ -162,9 +161,8 @@ val helpCenterTest by tasks.registering(Test::class) {
 val adminTest by tasks.registering(Test::class) {
     description = "Runs admin and business rules integration tests"
     group = "verification"
-    useJUnitPlatform {
-        includeTags("admin")
-    }
+    useJUnitPlatform()
+    exclude("**/Ticket*Spec.class", "**/View*Spec.class", "**/Macro*Spec.class", "**/User*Spec.class", "**/Group*Spec.class", "**/Organization*Spec.class", "**/Article*Spec.class", "**/Section*Spec.class", "**/Categor*Spec.class", "**/Post*Spec.class")
     maxHeapSize = "2g"
     testClassesDirs = sourceSets["test"].output.classesDirs
     classpath = sourceSets["test"].runtimeClasspath
