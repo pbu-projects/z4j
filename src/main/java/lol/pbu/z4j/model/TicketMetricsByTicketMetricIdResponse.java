@@ -55,18 +55,15 @@ public class TicketMetricsByTicketMetricIdResponse {
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKET_METRIC)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid TicketMetricObject> ticketMetric;
+    private @Valid TicketMetricObject ticketMetric;
 
     /**
      * Add an item to the ticketMetric property in a chainable fashion.
      *
      * @return The same instance of TicketMetricsByTicketMetricIdResponse for chaining.
      */
-    public TicketMetricsByTicketMetricIdResponse addTicketMetricItem(TicketMetricObject ticketMetricItem) {
-        if (ticketMetric == null) {
-            ticketMetric = new ArrayList<>();
-        }
-        ticketMetric.add(ticketMetricItem);
+    public TicketMetricsByTicketMetricIdResponse ticketMetric(TicketMetricObject ticketMetricItem) {
+        this.ticketMetric = ticketMetricItem;
         return this;
     }
 

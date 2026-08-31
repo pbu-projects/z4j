@@ -201,7 +201,7 @@ class MacrosClientSpec extends Z4jSpec {
         given: "a macro payload with title and comment action"
         String macroTitle = "z4j test macro " + UUID.randomUUID().toString().substring(0, 8)
         CreateMacroRequest createRequest = new CreateMacroRequest(
-                new MacroInput().setTitle(macroTitle).setActions([new ActionObject().setField("comment_value").setValue("Macro comment test")])
+                new MacroInput([new ActionObject().setField("comment_value").setValue("Macro comment test")], macroTitle)
         )
         Long createdMacroId = null
 
@@ -221,7 +221,7 @@ class MacrosClientSpec extends Z4jSpec {
 
         when: "updating the macro title"
         CreateMacroRequest updateRequest = new CreateMacroRequest(
-                new MacroInput().setTitle(macroTitle + " Updated").setActions([new ActionObject().setField("comment_value").setValue("Updated comment")])
+                new MacroInput([new ActionObject().setField("comment_value").setValue("Updated comment")], macroTitle + " Updated")
         )
         adminMacrosClient.updateMacro(createdMacroId, updateRequest).block()
 
