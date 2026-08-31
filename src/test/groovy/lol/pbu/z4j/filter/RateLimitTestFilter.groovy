@@ -19,13 +19,17 @@ class RateLimitTestFilter implements HttpClientFilter {
     @Override
     Publisher<? extends HttpResponse<?>> doFilter(MutableHttpRequest<?> request, ClientFilterChain chain) {
         return Mono.from(chain.proceed(request))
+                .flatMap { response ->
+                    if (response.status().code == 429) {
+                        return Mono.error(new RateLimitRetryException("Rate limit (429) encountered in test for ${request.path}"))
+                    }
+                    return Mono.just(response)
+                }
                 .retryWhen(Retry.fixedDelay(5, Duration.ofMinutes(1)).jitter(0.5d)
                         .filter { throwable ->
-                            if (throwable instanceof HttpClientResponseException) {
-                                if (throwable.status.code == 429) {
-                                    System.err.println("Rate limit (429) encountered in test for ${request.path}. Sleeping and retrying...")
-                                    return true
-                                }
+                            if (throwable instanceof RateLimitRetryException) {
+                                System.err.println(throwable.message + ". Sleeping and retrying...")
+                                return true
                             }
                             if (throwable instanceof ReadTimeoutException) {
                                 System.err.println("ReadTimeoutException encountered in test for ${request.path}. Retrying...")
@@ -33,5 +37,11 @@ class RateLimitTestFilter implements HttpClientFilter {
                             }
                             return false
                         })
+    }
+
+    static class RateLimitRetryException extends RuntimeException {
+        RateLimitRetryException(String message) {
+            super(message)
+        }
     }
 }
