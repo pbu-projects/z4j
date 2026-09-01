@@ -8,21 +8,21 @@
 - **Total Client Interfaces**: 98
 - **Clients with Active Tests**: 98 / 98 (100.0%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **265 / 629 (42.1%)**
-  - 👑 **Admin Level (`adminCtx`)**: 265 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 258 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 265 endpoints
+- **Endpoints Tested**: **282 / 629 (44.8%)**
+  - 👑 **Admin Level (`adminCtx`)**: 282 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 275 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 282 endpoints
 
 ---
 
 ## 📋 Client Breakdown
 
-### 🟡 `AccessClient` (1/2 endpoints — 50%)
+### 🟢 `AccessClient` (2/2 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `loginGet` | `GET /access/login` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `loginPost` | `POST /access/login` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `loginPost` | `POST /access/login` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟢 `AccountFeaturesClient` (1/1 endpoints — 100%)
 
@@ -30,12 +30,12 @@
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `listFeatures` | `GET /api/v2/account/features` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `AccountSettingsClient` (1/2 endpoints — 50%)
+### 🟢 `AccountSettingsClient` (2/2 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `showAccountSettings` | `GET /api/v2/account/settings` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `updateAccountSettings` | `PUT /api/v2/account/settings` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateAccountSettings` | `PUT /api/v2/account/settings` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟢 `ActivityStreamClient` (3/3 endpoints — 100%)
 
@@ -45,13 +45,13 @@
 | `listActivities` | `GET /api/v2/activities` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showActivity` | `GET /api/v2/activities/{activity_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `ApprovalRequestsClient` (1/3 endpoints — 33%)
+### 🟢 `ApprovalRequestsClient` (3/3 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `searchApprovals` | `POST /api/v2/approval_workflow_instances/{approval_workflow_instance_id}/approval_requests/search` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showApprovalRequest` | `GET /api/v2/approval_workflow_instances/{approval_workflow_instance_id}/approval_requests/{approval_request_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateDecisionApprovalRequest` | `PATCH /api/v2/approval_workflow_instances/{approval_workflow_instance_id}/approval_requests/{approval_request_id}/decision` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showApprovalRequest` | `GET /api/v2/approval_workflow_instances/{approval_workflow_instance_id}/approval_requests/{approval_request_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateDecisionApprovalRequest` | `PATCH /api/v2/approval_workflow_instances/{approval_workflow_instance_id}/approval_requests/{approval_request_id}/decision` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟢 `ArticleClient` (1/1 endpoints — 100%)
 
@@ -247,16 +247,16 @@
 | `showCustomRoleById` | `GET /api/v2/custom_roles/{custom_role_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateCustomRoleById` | `PUT /api/v2/custom_roles/{custom_role_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `CustomTicketStatusesClient` (2/6 endpoints — 33%)
+### 🟢 `CustomTicketStatusesClient` (6/6 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `bulkUpdateDefaultCustomStatus` | `PUT /api/v2/custom_status/default` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `createCustomStatus` | `POST /api/v2/custom_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `createTicketFormStatusesForCustomStatus` | `POST /api/v2/custom_statuses/{custom_status_id}/ticket_form_statuses` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `bulkUpdateDefaultCustomStatus` | `PUT /api/v2/custom_status/default` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `createCustomStatus` | `POST /api/v2/custom_statuses` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `createTicketFormStatusesForCustomStatus` | `POST /api/v2/custom_statuses/{custom_status_id}/ticket_form_statuses` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listCustomStatuses` | `GET /api/v2/custom_statuses` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showCustomStatus` | `GET /api/v2/custom_statuses/{custom_status_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `updateCustomStatus` | `PUT /api/v2/custom_statuses/{custom_status_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateCustomStatus` | `PUT /api/v2/custom_statuses/{custom_status_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `DeletionSchedulesClient` (1/5 endpoints — 20%)
 
@@ -520,20 +520,20 @@
 | `showCurrentToken` | `GET /api/v2/oauth/tokens/current` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 | `showToken` | `GET /api/v2/oauth/tokens/{oauth_token_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `ObjectTriggersClient` (1/10 endpoints — 10%)
+### 🟢 `ObjectTriggersClient` (10/10 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `createObjectTrigger` | `POST /api/v2/custom_objects/{custom_object_key}/triggers` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteManyObjectTriggers` | `DELETE /api/v2/custom_objects/{custom_object_key}/triggers/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteObjectTrigger` | `DELETE /api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `getObjectTrigger` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `listActiveObjectTriggers` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/active` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createObjectTrigger` | `POST /api/v2/custom_objects/{custom_object_key}/triggers` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteManyObjectTriggers` | `DELETE /api/v2/custom_objects/{custom_object_key}/triggers/destroy_many` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteObjectTrigger` | `DELETE /api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `getObjectTrigger` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `listActiveObjectTriggers` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/active` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listObjectTriggers` | `GET /api/v2/custom_objects/{custom_object_key}/triggers` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `listObjectTriggersDefinitions` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/definitions` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `searchObjectTriggers` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateManyObjectTriggers` | `PUT /api/v2/custom_objects/{custom_object_key}/triggers/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateObjectTrigger` | `PUT /api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listObjectTriggersDefinitions` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/definitions` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `searchObjectTriggers` | `GET /api/v2/custom_objects/{custom_object_key}/triggers/search` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateManyObjectTriggers` | `PUT /api/v2/custom_objects/{custom_object_key}/triggers/update_many` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateObjectTrigger` | `PUT /api/v2/custom_objects/{custom_object_key}/triggers/{trigger_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `OmnichannelRoutingQueuesClient` (3/7 endpoints — 43%)
 
