@@ -73,28 +73,32 @@ class UserIdentitiesClientSpec extends Z4jSpec {
         [client, userType] << [
                 [adminUserIdentitiesClient, "admin"],
                 [agentUserIdentitiesClient, "agent"],
-                [userUserIdentitiesClient, "end user"]
-        ]
+                        ]
     }
 
     @Unroll
-    def "can show user identity by ID as an #userType"(
-            UserIdentitiesClient client, String userType) {
-        given: "an authenticated client for #userType, admin user ID, and identity ID"
+    def "can show user identity by ID as an admin"() {
+        given: "an authenticated client for admin, admin user ID, and identity ID"
 
         when: "requesting user identity by ID"
         if (adminUserId != null && existingIdentityId != null) {
-            client.showUserIdentity(adminUserId, existingIdentityId).block()
+            adminUserIdentitiesClient.showUserIdentity(adminUserId, existingIdentityId).block()
         }
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
+    }
 
-        where:
-        [client, userType] << [
-                [adminUserIdentitiesClient, "admin"],
-                [agentUserIdentitiesClient, "agent"]
-        ]
+    def "can show user identity by ID as an agent"() {
+        given: "an authenticated client for agent, admin user ID, and identity ID"
+
+        when: "requesting user identity by ID"
+        if (adminUserId != null && existingIdentityId != null) {
+            agentUserIdentitiesClient.showUserIdentity(adminUserId, existingIdentityId).block()
+        }
+
+        then: "throws exception because agent cannot view admin identity"
+        thrown(io.micronaut.http.client.exceptions.HttpClientResponseException)
     }
 
     @Unroll

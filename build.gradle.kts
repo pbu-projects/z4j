@@ -30,6 +30,24 @@ plugins {
     id("org.sonarqube") version "latest.release"
 }
 
+
+val envFile = file(".env")
+if (envFile.exists()) {
+    envFile.readLines().forEach { line ->
+        if (line.startsWith("export ") && line.contains("=")) {
+            val keyValue = line.substringAfter("export ").split("=", limit = 2)
+            if (keyValue.size == 2) {
+                val key = keyValue[0].trim()
+                val value = keyValue[1].trim().removeSurrounding("\"").removeSurrounding("'")
+                tasks.withType<Test>().configureEach { environment(key, value) }
+                tasks.withType<JavaExec>().configureEach { environment(key, value) }
+                if (key == "SONAR_TOKEN") { System.setProperty("sonar.token", value) }
+            }
+        }
+    }
+}
+
+
 group = "lol.pbu"
 version = project.properties["z4jVersion"]!!
 
@@ -120,7 +138,22 @@ tasks.jacocoTestReport {
 }
 
 tasks.test {
-    enabled = false
+    doFirst {
+        if (!project.hasProperty("forceTest")) {
+            logger.warn("\n=======================================================")
+            logger.warn(" ⚠️ WARNING: Monolithic 'test' task is DISABLED")
+            logger.warn("=======================================================")
+            logger.warn("Running all tests at once triggers Cloudflare DDoS bans.")
+            logger.warn("Please use the partitioned test tasks:")
+            logger.warn("  ./gradlew ticketingTest userTest helpCenterTest adminTest")
+            logger.warn("To run anyway, use: ./gradlew test -PforceTest")
+            logger.warn("=======================================================\n")
+            throw StopExecutionException("Monolithic test task gracefully aborted to prevent API rate limits.")
+        } else {
+            logger.warn("\n⚠️ Running monolithic 'test' task because -PforceTest was passed! Prepare for Cloudflare rate limits!\n")
+        }
+    }
+    
     maxHeapSize = "2g"
     finalizedBy(tasks.jacocoTestReport)
 }
