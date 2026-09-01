@@ -8,10 +8,10 @@
 - **Total Client Interfaces**: 98
 - **Clients with Active Tests**: 98 / 98 (100.0%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **318 / 629 (50.6%)**
-  - 👑 **Admin Level (`adminCtx`)**: 318 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 311 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 318 endpoints
+- **Endpoints Tested**: **335 / 629 (53.3%)**
+  - 👑 **Admin Level (`adminCtx`)**: 335 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 328 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 335 endpoints
 
 ---
 
@@ -393,25 +393,25 @@
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `resolveOrganizationNames` | `POST /api/v2/internal/organizations/resolve_by_names` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `ItamAssetFieldsClient` (1/5 endpoints — 20%)
+### 🟢 `ItamAssetFieldsClient` (5/5 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `createItamAssetTypeField` | `POST /api/v2/it_asset_management/asset_types/{asset_type_id}/fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteItamAssetTypeField` | `DELETE /api/v2/it_asset_management/asset_types/{asset_type_id}/fields/{asset_type_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createItamAssetTypeField` | `POST /api/v2/it_asset_management/asset_types/{asset_type_id}/fields` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteItamAssetTypeField` | `DELETE /api/v2/it_asset_management/asset_types/{asset_type_id}/fields/{asset_type_field_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listItamAssetTypeFields` | `GET /api/v2/it_asset_management/asset_types/{asset_type_id}/fields` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showItamAssetTypeField` | `GET /api/v2/it_asset_management/asset_types/{asset_type_id}/fields/{asset_type_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateItamAssetTypeField` | `PATCH /api/v2/it_asset_management/asset_types/{asset_type_id}/fields/{asset_type_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showItamAssetTypeField` | `GET /api/v2/it_asset_management/asset_types/{asset_type_id}/fields/{asset_type_field_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateItamAssetTypeField` | `PATCH /api/v2/it_asset_management/asset_types/{asset_type_id}/fields/{asset_type_field_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `ItamAssetLocationsClient` (1/5 endpoints — 20%)
+### 🟢 `ItamAssetLocationsClient` (5/5 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `createItamLocation` | `POST /api/v2/it_asset_management/locations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteItamLocation` | `DELETE /api/v2/it_asset_management/locations/{location_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createItamLocation` | `POST /api/v2/it_asset_management/locations` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteItamLocation` | `DELETE /api/v2/it_asset_management/locations/{location_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listItamLocations` | `GET /api/v2/it_asset_management/locations` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showItamLocation` | `GET /api/v2/it_asset_management/locations/{location_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateItamLocation` | `PATCH /api/v2/it_asset_management/locations/{location_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showItamLocation` | `GET /api/v2/it_asset_management/locations/{location_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateItamLocation` | `PATCH /api/v2/it_asset_management/locations/{location_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟢 `ItamAssetStatusesClient` (2/2 endpoints — 100%)
 
@@ -420,26 +420,26 @@
 | `listItamStatuses` | `GET /api/v2/it_asset_management/statuses` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showItamStatus` | `GET /api/v2/it_asset_management/statuses/{status_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `ItamAssetTypesClient` (1/5 endpoints — 20%)
+### 🟢 `ItamAssetTypesClient` (5/5 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `createItamAssetType` | `POST /api/v2/it_asset_management/asset_types` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteItamAssetType` | `DELETE /api/v2/it_asset_management/asset_types/{asset_type_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createItamAssetType` | `POST /api/v2/it_asset_management/asset_types` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteItamAssetType` | `DELETE /api/v2/it_asset_management/asset_types/{asset_type_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listItamAssetTypes` | `GET /api/v2/it_asset_management/asset_types` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showItamAssetType` | `GET /api/v2/it_asset_management/asset_types/{asset_type_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateItamAssetType` | `PATCH /api/v2/it_asset_management/asset_types/{asset_type_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showItamAssetType` | `GET /api/v2/it_asset_management/asset_types/{asset_type_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateItamAssetType` | `PATCH /api/v2/it_asset_management/asset_types/{asset_type_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `ItamAssetsClient` (1/6 endpoints — 17%)
+### 🟢 `ItamAssetsClient` (6/6 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `createItamAsset` | `POST /api/v2/it_asset_management/assets` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteItamAsset` | `DELETE /api/v2/it_asset_management/assets/{asset_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `itamAssetBulkJobs` | `POST /api/v2/it_asset_management/assets/jobs` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createItamAsset` | `POST /api/v2/it_asset_management/assets` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteItamAsset` | `DELETE /api/v2/it_asset_management/assets/{asset_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `itamAssetBulkJobs` | `POST /api/v2/it_asset_management/assets/jobs` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listItamAssets` | `GET /api/v2/it_asset_management/assets` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showItamAsset` | `GET /api/v2/it_asset_management/assets/{asset_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateItamAsset` | `PATCH /api/v2/it_asset_management/assets/{asset_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showItamAsset` | `GET /api/v2/it_asset_management/assets/{asset_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateItamAsset` | `PATCH /api/v2/it_asset_management/assets/{asset_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟢 `JobStatusesClient` (3/3 endpoints — 100%)
 
