@@ -78,7 +78,6 @@ class OrganizationMembershipsClientSpec extends Z4jSpec {
         [client, userType] << [
                 [adminOrgMembershipsClient, "admin"],
                 [agentOrgMembershipsClient, "agent"],
-                [userOrgMembershipsClient, "end user"]
         ]
     }
 

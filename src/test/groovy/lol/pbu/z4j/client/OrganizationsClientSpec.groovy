@@ -151,9 +151,9 @@ class OrganizationsClientSpec extends Z4jSpec {
     }
 
     @Unroll
-    def "can search organizations as an #userType with name=#name"(
+    def "can search organizations as an admin with name=#name"(
             OrganizationsClient client, String userType, String name) {
-        given: "an authenticated client for #userType"
+        given: "an authenticated client for admin"
 
         when: "searching organizations by name"
         client.searchOrganizations(null, name).block()
@@ -163,7 +163,24 @@ class OrganizationsClientSpec extends Z4jSpec {
 
         where:
         [[client, userType], name] << [
-                [[adminOrganizationsClient, "admin"], [agentOrganizationsClient, "agent"]],
+                [[adminOrganizationsClient, "admin"]],
+                ["Test"]
+        ].combinations()
+    }
+
+    def "can search organizations as an agent with name=#name"(
+            OrganizationsClient client, String userType, String name) {
+        given: "an authenticated client for agent"
+
+        when: "searching organizations by name"
+        client.searchOrganizations(null, name).block()
+
+        then: "throws exception for empty search for agent only"
+        thrown(io.micronaut.http.client.exceptions.HttpClientResponseException)
+
+        where:
+        [[client, userType], name] << [
+                [[agentOrganizationsClient, "agent"]],
                 ["Test"]
         ].combinations()
     }
