@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -e # Stop on failure
+
+SUITES=("ticketingTest" "userTest" "helpCenterTest" "adminTest")
+TOTAL=${#SUITES[@]}
+
+# Z4J Colors
+Z4J_BLUE="#0785cb"
+Z4J_WHITE="#ffffff"
+Z4J_GREY="#505050"
+
+gum style --border normal --margin "1" --padding "1 2" --border-foreground "$Z4J_BLUE" --foreground "$Z4J_WHITE" "Starting Z4J Integration Test Suites"
+
+for i in "${!SUITES[@]}"; do
+    SUITE="${SUITES[$i]}"
+    STEP=$((i + 1))
+    
+    # Overall progress indicator
+    gum style --foreground "$Z4J_BLUE" "▶ [$STEP/$TOTAL] Running $SUITE..."
+    
+    # Run the test suite with a spinner
+    gum spin --spinner dot --spinner.foreground "$Z4J_BLUE" --title "Executing $SUITE... (this may take a while)" --title.foreground "$Z4J_WHITE" -- ./gradlew "$SUITE"
+    
+    # Print success for the suite
+    gum style --foreground "$Z4J_WHITE" "✔ $SUITE completed!"
+    
+    if [ $STEP -lt $TOTAL ]; then
+        # Show progress during timeout to prevent Cloudflare/Zendesk rate limits
+        gum spin --spinner meter --spinner.foreground "$Z4J_GREY" --title "Cooling down for 100s to prevent API rate limits..." --title.foreground "$Z4J_GREY" -- sleep 100
+    fi
+done
+
+gum style --border normal --margin "1" --padding "1 2" --border-foreground "$Z4J_BLUE" --foreground "$Z4J_WHITE" "All tests completed! Uploading fully aggregated coverage to SonarQube..."
+
+# Run sonar at the very end to upload the full combined jacoco report
+gum spin --spinner points --spinner.foreground "$Z4J_BLUE" --title "Uploading to SonarQube..." --title.foreground "$Z4J_WHITE" -- ./gradlew sonar
+
+gum style --foreground "$Z4J_BLUE" "✔ Full test coverage report uploaded successfully!"
