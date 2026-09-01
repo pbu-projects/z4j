@@ -70,6 +70,37 @@ class AccountSettingsClientSpec extends Z4jSpec {
     }
 
     @Unroll
+    def "can update account settings as an #userType"(AccountSettingsClient client, String userType) {
+        when: "updating account settings"
+        client.updateAccountSettings().block()
+
+        then: "a 400 Bad Request exception is thrown because of missing request body"
+        HttpClientResponseException e = thrown()
+        e.status == io.micronaut.http.HttpStatus.BAD_REQUEST
+
+        where:
+        [client, userType] << [
+                [adminAccountSettingsClient, "admin"]
+        ]
+    }
+
+    @Unroll
+    def "agent and end user cannot update account settings"(AccountSettingsClient client, String userType) {
+        when: "updating account settings"
+        client.updateAccountSettings().block()
+
+        then: "a 403 Forbidden exception is thrown as documented"
+        HttpClientResponseException e = thrown()
+        e.status == FORBIDDEN
+
+        where:
+        [client, userType] << [
+                [agentAccountSettingsClient, "agent"],
+                [userAccountSettingsClient, "user"]
+        ]
+    }
+
+    @Unroll
     def "calling account settings with #description throws HttpClientException"(
             String description, AccountSettingsClient client) {
         when: "requesting account settings with invalid client configuration"

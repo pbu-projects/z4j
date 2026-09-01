@@ -52,4 +52,33 @@ class AccessClientSpec extends Z4jSpec {
         "invalid token"   | badTokenAccessClient
         "unreachable url" | badUrlAccessClient
     }
+
+    @Unroll
+    def "can call loginGet as #userType"(String userType, AccessClient client) {
+        when: "calling loginGet"
+        client.loginGet().block()
+
+        then: "we receive a 403 from Cloudflare protection on the web endpoint"
+        def e = thrown(io.micronaut.http.client.exceptions.HttpClientResponseException)
+        e.status == io.micronaut.http.HttpStatus.FORBIDDEN
+
+        where:
+        [userType, client] << [["admin", adminAccessClient], ["agent", agentAccessClient], ["user", userAccessClient]]
+    }
+
+    @Unroll
+    def "can call loginPost as #userType"(String userType, AccessClient client) {
+        when: "calling loginPost"
+        def param = new lol.pbu.z4j.model.LoginPostUserParameter()
+        param.setEmail("test@example.com")
+        param.setPassword("test")
+        client.loginPost(param).block()
+
+        then: "we receive an HTTP error (400/403) depending on Cloudflare / form validation"
+        def e = thrown(io.micronaut.http.client.exceptions.HttpClientResponseException)
+        e.status == io.micronaut.http.HttpStatus.FORBIDDEN || e.status == io.micronaut.http.HttpStatus.BAD_REQUEST
+
+        where:
+        [userType, client] << [["admin", adminAccessClient], ["agent", agentAccessClient], ["user", userAccessClient]]
+    }
 }
