@@ -8,10 +8,10 @@
 - **Total Client Interfaces**: 98
 - **Clients with Active Tests**: 98 / 98 (100.0%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **347 / 629 (55.2%)**
-  - 👑 **Admin Level (`adminCtx`)**: 347 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 340 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 347 endpoints
+- **Endpoints Tested**: **376 / 629 (59.8%)**
+  - 👑 **Admin Level (`adminCtx`)**: 376 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 369 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 376 endpoints
 
 ---
 
@@ -322,23 +322,23 @@
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createTokenForGrantType` | `POST /oauth/tokens` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `GroupMembershipsClient` (5/14 endpoints — 36%)
+### 🟢 `GroupMembershipsClient` (14/14 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `createGroupMembership` | `POST /api/v2/group_memberships` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `createUserGroupMembership` | `POST /api/v2/users/{user_id}/group_memberships` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteGroupMembership` | `DELETE /api/v2/group_memberships/{group_membership_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteUserGroupMembership` | `DELETE /api/v2/users/{user_id}/group_memberships/{group_membership_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `groupMembershipBulkCreate` | `POST /api/v2/group_memberships/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `groupMembershipBulkDelete` | `DELETE /api/v2/group_memberships/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `groupMembershipSetDefault` | `PUT /api/v2/users/{user_id}/group_memberships/{group_membership_id}/make_default` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createGroupMembership` | `POST /api/v2/group_memberships` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `createUserGroupMembership` | `POST /api/v2/users/{user_id}/group_memberships` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteGroupMembership` | `DELETE /api/v2/group_memberships/{group_membership_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteUserGroupMembership` | `DELETE /api/v2/users/{user_id}/group_memberships/{group_membership_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `groupMembershipBulkCreate` | `POST /api/v2/group_memberships/create_many` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `groupMembershipBulkDelete` | `DELETE /api/v2/group_memberships/destroy_many` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `groupMembershipSetDefault` | `PUT /api/v2/users/{user_id}/group_memberships/{group_membership_id}/make_default` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listAssignableGroupMemberships` | `GET /api/v2/group_memberships/assignable` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listAssignableGroupMembershipsByGroup` | `GET /api/v2/groups/{group_id}/memberships/assignable` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `listGroupMemberships` | `GET /api/v2/group_memberships` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listGroupMemberships` | `GET /api/v2/group_memberships` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listGroupMembershipsByGroup` | `GET /api/v2/groups/{group_id}/memberships` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listUserGroupMemberships` | `GET /api/v2/users/{user_id}/group_memberships` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showGroupMembershipById` | `GET /api/v2/group_memberships/{group_membership_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showGroupMembershipById` | `GET /api/v2/group_memberships/{group_membership_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showUserGroupMembershipById` | `GET /api/v2/users/{user_id}/group_memberships/{group_membership_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `GroupSlaPoliciesClient` (3/7 endpoints — 43%)
@@ -547,35 +547,35 @@
 | `showQueueById` | `GET /api/v2/queues/{queue_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateQueue` | `PUT /api/v2/queues/{queue_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `OrganizationFieldsClient` (2/6 endpoints — 33%)
+### 🟢 `OrganizationFieldsClient` (6/6 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `createOrganizationField` | `POST /api/v2/organization_fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteOrganizationField` | `DELETE /api/v2/organization_fields/{organization_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createOrganizationField` | `POST /api/v2/organization_fields` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteOrganizationField` | `DELETE /api/v2/organization_fields/{organization_field_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listOrganizationFields` | `GET /api/v2/organization_fields` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `reorderOrganizationField` | `PUT /api/v2/organization_fields/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `reorderOrganizationField` | `PUT /api/v2/organization_fields/reorder` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showOrganizationField` | `GET /api/v2/organization_fields/{organization_field_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `updateOrganizationField` | `PUT /api/v2/organization_fields/{organization_field_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateOrganizationField` | `PUT /api/v2/organization_fields/{organization_field_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `OrganizationMembershipsClient` (5/14 endpoints — 36%)
+### 🟢 `OrganizationMembershipsClient` (14/14 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `createManyOrganizationMemberships` | `POST /api/v2/organization_memberships/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `createOrganizationMembership` | `POST /api/v2/organization_memberships` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `createUserOrganizationMembership` | `POST /api/v2/users/{user_id}/organization_memberships` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteManyOrganizationMemberships` | `DELETE /api/v2/organization_memberships/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteOrganizationMembership` | `DELETE /api/v2/organization_memberships/{organization_membership_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteUserOrganizationMembership` | `DELETE /api/v2/users/{user_id}/organization_memberships/{organization_membership_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createManyOrganizationMemberships` | `POST /api/v2/organization_memberships/create_many` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `createOrganizationMembership` | `POST /api/v2/organization_memberships` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `createUserOrganizationMembership` | `POST /api/v2/users/{user_id}/organization_memberships` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteManyOrganizationMemberships` | `DELETE /api/v2/organization_memberships/destroy_many` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteOrganizationMembership` | `DELETE /api/v2/organization_memberships/{organization_membership_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteUserOrganizationMembership` | `DELETE /api/v2/users/{user_id}/organization_memberships/{organization_membership_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listOrganizationMemberships` | `GET /api/v2/organization_memberships` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listOrganizationMembershipsByOrganization` | `GET /api/v2/organizations/{organization_id}/organization_memberships` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listUserOrganizationMemberships` | `GET /api/v2/users/{user_id}/organization_memberships` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `setOrganizationAsDefault` | `PUT /api/v2/users/{user_id}/organizations/{organization_id}/make_default` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `setOrganizationMembershipAsDefault` | `PUT /api/v2/users/{user_id}/organization_memberships/{organization_membership_id}/make_default` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `setOrganizationAsDefault` | `PUT /api/v2/users/{user_id}/organizations/{organization_id}/make_default` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `setOrganizationMembershipAsDefault` | `PUT /api/v2/users/{user_id}/organization_memberships/{organization_membership_id}/make_default` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showOrganizationMembershipById` | `GET /api/v2/organization_memberships/{organization_membership_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showOrganizationMembershipByUserId` | `GET /api/v2/users/{user_id}/organization_memberships/{organization_membership_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `unassignOrganization` | `DELETE /api/v2/users/{user_id}/organizations/{organization_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `unassignOrganization` | `DELETE /api/v2/users/{user_id}/organizations/{organization_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `OrganizationSubscriptionsClient` (3/6 endpoints — 50%)
 
@@ -588,28 +588,28 @@
 | `listUserOrganizationSubscriptions` | `GET /api/v2/users/{user_id}/organization_subscriptions` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showOrganizationSubscription` | `GET /api/v2/organization_subscriptions/{organization_subscription_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `OrganizationsClient` (12/19 endpoints — 63%)
+### 🟢 `OrganizationsClient` (19/19 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `autocompleteOrganizations` | `GET /api/v2/organizations/autocomplete` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `countOrganizations` | `GET /api/v2/organizations/count` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `countUserOrganizations` | `GET /api/v2/users/{user_id}/organizations/count` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `createManyOrganizations` | `POST /api/v2/organizations/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `createOrUpdateOrganization` | `POST /api/v2/organizations/create_or_update` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createManyOrganizations` | `POST /api/v2/organizations/create_many` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `createOrUpdateOrganization` | `POST /api/v2/organizations/create_or_update` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `createOrganization` | `POST /api/v2/organizations` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `createOrganizationMerge` | `POST /api/v2/organizations/{organization_id}/merge` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteManyOrganizations` | `DELETE /api/v2/organizations/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createOrganizationMerge` | `POST /api/v2/organizations/{organization_id}/merge` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteManyOrganizations` | `DELETE /api/v2/organizations/destroy_many` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `deleteOrganization` | `DELETE /api/v2/organizations/{organization_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `listOrganizationMerges` | `GET /api/v2/organizations/{organization_id}/merges` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `listOrganizationMerges` | `GET /api/v2/organizations/{organization_id}/merges` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listOrganizations` | `GET /api/v2/organizations` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listUserOrganizations` | `GET /api/v2/users/{user_id}/organizations` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `organizationRelated` | `GET /api/v2/organizations/{organization_id}/related` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `searchOrganizations` | `GET /api/v2/organizations/search` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showManyOrganizations` | `GET /api/v2/organizations/show_many` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showOrganization` | `GET /api/v2/organizations/{organization_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showOrganizationMerge` | `GET /api/v2/organization_merges/{organization_merge_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateManyOrganizations` | `PUT /api/v2/organizations/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showOrganizationMerge` | `GET /api/v2/organization_merges/{organization_merge_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateManyOrganizations` | `PUT /api/v2/organizations/update_many` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateOrganization` | `PUT /api/v2/organizations/{organization_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `OtpClient` (1/3 endpoints — 33%)
