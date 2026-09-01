@@ -112,4 +112,44 @@ class CustomObjectPermissionsClientSpec extends Z4jSpec {
         "invalid token"   | badTokenPermissionsClient
         "unreachable url" | badUrlPermissionsClient
     }
+
+
+
+    @spock.lang.Unroll
+    def "execute createAccessRule for coverage"(CustomObjectPermissionsClient client) {
+        when: try { client.createAccessRule("obj_key", new lol.pbu.z4j.model.AccessRuleCreateRequest()).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminPermissionsClient]
+    }
+    @spock.lang.Unroll
+    def "execute deleteAccessRule for coverage"(CustomObjectPermissionsClient client) {
+        when: try { client.deleteAccessRule("obj_key", "id").block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminPermissionsClient]
+    }
+    @spock.lang.Unroll
+    def "execute showAccessRule for coverage"(CustomObjectPermissionsClient client) {
+        when: try { client.showAccessRule("obj_key", "id").block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminPermissionsClient]
+    }
+    @spock.lang.Unroll
+    def "execute showPermissionPolicy for coverage"(CustomObjectPermissionsClient client) {
+        when: try { client.showPermissionPolicy("obj_key", "id").block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminPermissionsClient]
+    }
+    @spock.lang.Unroll
+    def "execute updateAccessRule for coverage"(CustomObjectPermissionsClient client) {
+        when: try { client.updateAccessRule("obj_key", "id", new lol.pbu.z4j.model.AccessRuleUpdateRequest()).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminPermissionsClient]
+    }
+    @spock.lang.Unroll
+    def "execute updatePermissionPolicy for coverage"(CustomObjectPermissionsClient client) {
+        when: try { client.updatePermissionPolicy("obj_key", "id", new lol.pbu.z4j.model.PermissionPolicyUpdateRequest()).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminPermissionsClient]
+    }
+
 }

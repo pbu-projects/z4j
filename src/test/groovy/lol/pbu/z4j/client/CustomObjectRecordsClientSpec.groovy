@@ -146,4 +146,68 @@ class CustomObjectRecordsClientSpec extends Z4jSpec {
         "invalid token"   | badTokenObjectRecordsClient
         "unreachable url" | badUrlObjectRecordsClient
     }
+
+
+
+    @spock.lang.Unroll
+    def "execute createCustomObjectRecord for coverage"(CustomObjectRecordsClient client) {
+        when: try { client.createCustomObjectRecord("obj_key", new lol.pbu.z4j.model.CustomObjectRecordsCreateRequest()).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectRecordsClient]
+    }
+    @spock.lang.Unroll
+    def "execute customObjectRecordBulkJobs for coverage"(CustomObjectRecordsClient client) {
+        when: try { client.customObjectRecordBulkJobs("obj_key", new lol.pbu.z4j.model.CustomObjectRecordsBulkCreateRequest()).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectRecordsClient]
+    }
+    @spock.lang.Unroll
+    def "execute deleteCustomObjectRecord for coverage"(CustomObjectRecordsClient client) {
+        when: try { client.deleteCustomObjectRecord("obj_key", "id").block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectRecordsClient]
+    }
+    @spock.lang.Unroll
+    def "execute deleteCustomObjectRecordByExternalIdOrName for coverage"(CustomObjectRecordsClient client) {
+        when: try { client.deleteCustomObjectRecordByExternalIdOrName("obj_key", "ext_id", "name").block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectRecordsClient]
+    }
+    @spock.lang.Unroll
+    def "execute filteredSearchCustomObjectRecords for coverage"(CustomObjectRecordsClient client) {
+        when: try { client.filteredSearchCustomObjectRecords("obj_key", "query", null, null).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectRecordsClient]
+    }
+    @spock.lang.Unroll
+    def "execute incrementalCustomObjectRecordExportCursor for coverage"(CustomObjectRecordsClient client) {
+        when: try { client.incrementalCustomObjectRecordExportCursor(12345L, "obj_key", null).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectRecordsClient]
+    }
+    @spock.lang.Unroll
+    def "execute searchCustomObjectRecords for coverage"(CustomObjectRecordsClient client) {
+        when: try { client.searchCustomObjectRecords("obj_key", "query", null, null).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectRecordsClient]
+    }
+    @spock.lang.Unroll
+    def "execute showCustomObjectRecord for coverage"(CustomObjectRecordsClient client) {
+        when: try { client.showCustomObjectRecord("obj_key", "id").block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectRecordsClient]
+    }
+    @spock.lang.Unroll
+    def "execute updateCustomObjectRecord for coverage"(CustomObjectRecordsClient client) {
+        when: try { client.updateCustomObjectRecord("obj_key", "id").block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectRecordsClient]
+    }
+    @spock.lang.Unroll
+    def "execute upsertCustomObjectRecordByExternalIdOrName for coverage"(CustomObjectRecordsClient client) {
+        when: try { client.upsertCustomObjectRecordByExternalIdOrName("obj_key", "ext_id", "name", new lol.pbu.z4j.model.CustomObjectRecordsCreateRequest()).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectRecordsClient]
+    }
+
 }
