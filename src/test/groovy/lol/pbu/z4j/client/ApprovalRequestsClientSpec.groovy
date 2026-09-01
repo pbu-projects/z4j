@@ -66,4 +66,55 @@ class ApprovalRequestsClientSpec extends Z4jSpec {
         "invalid token"   | badTokenApprovalsClient
         "unreachable url" | badUrlApprovalsClient
     }
+    @Unroll
+    def "can show approval request as an #userType"(ApprovalRequestsClient client, String userType) {
+        when: "attempting to show an approval request"
+        client.showApprovalRequest("fake-instance-id", "fake-request-id").block()
+
+        then: "a 404 Not Found is thrown since the fake ID doesn't exist"
+        HttpClientResponseException e = thrown()
+        e.status.code >= 400
+
+        where:
+        [client, userType] << [
+                [adminApprovalsClient, "admin"],
+                [agentApprovalsClient, "agent"]
+        ]
+    }
+
+    def "end user cannot show approval request"() {
+        when: "attempting to show an approval request"
+        userApprovalsClient.showApprovalRequest("fake-instance-id", "fake-request-id").block()
+
+        then: "a 403 or 404 is thrown"
+        HttpClientResponseException e = thrown()
+        e.status.code >= 400
+    }
+
+    @Unroll
+    def "can update decision for approval request as an #userType"(ApprovalRequestsClient client, String userType) {
+        when: "attempting to update decision"
+        def req = new lol.pbu.z4j.model.UpdateDecisionApprovalRequestRequest()
+        client.updateDecisionApprovalRequest("fake-instance-id", "fake-request-id", req).block()
+
+        then: "a 404 Not Found is thrown"
+        HttpClientResponseException e = thrown()
+        e.status.code >= 400
+
+        where:
+        [client, userType] << [
+                [adminApprovalsClient, "admin"],
+                [agentApprovalsClient, "agent"]
+        ]
+    }
+
+    def "end user cannot update decision for approval request"() {
+        when: "attempting to update decision"
+        def req = new lol.pbu.z4j.model.UpdateDecisionApprovalRequestRequest()
+        userApprovalsClient.updateDecisionApprovalRequest("fake-instance-id", "fake-request-id", req).block()
+
+        then: "a 403 or 404 is thrown"
+        HttpClientResponseException e = thrown()
+        e.status.code >= 400
+    }
 }

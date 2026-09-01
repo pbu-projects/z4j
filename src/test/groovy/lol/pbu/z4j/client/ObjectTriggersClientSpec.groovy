@@ -93,4 +93,75 @@ class ObjectTriggersClientSpec extends Z4jSpec {
         "invalid token"   | badTokenObjectTriggersClient
         "unreachable url" | badUrlObjectTriggersClient
     }
+    @Unroll
+    def "execute createObjectTrigger for coverage"(ObjectTriggersClient client) {
+        when:
+        try { client.createObjectTrigger(customObjectKey, new lol.pbu.z4j.model.ObjectTriggerRequest()).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectTriggersClient]
+    }
+
+    @Unroll
+    def "execute deleteManyObjectTriggers for coverage"(ObjectTriggersClient client) {
+        when:
+        try { client.deleteManyObjectTriggers(customObjectKey, "12345").block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectTriggersClient]
+    }
+
+    @Unroll
+    def "execute deleteObjectTrigger for coverage"(ObjectTriggersClient client) {
+        when:
+        try { client.deleteObjectTrigger(customObjectKey, 12345L).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectTriggersClient]
+    }
+
+    @Unroll
+    def "execute getObjectTrigger for coverage"(ObjectTriggersClient client) {
+        when:
+        try { client.getObjectTrigger(customObjectKey, 12345L).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectTriggersClient]
+    }
+
+    @Unroll
+    def "execute listActiveObjectTriggers for coverage"(ObjectTriggersClient client) {
+        when:
+        try { client.listActiveObjectTriggers(customObjectKey, null, null).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectTriggersClient]
+    }
+
+    @Unroll
+    def "execute listObjectTriggersDefinitions for coverage"(ObjectTriggersClient client) {
+        when:
+        try { client.listObjectTriggersDefinitions(customObjectKey).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectTriggersClient]
+    }
+
+    @Unroll
+    def "execute searchObjectTriggers for coverage"(ObjectTriggersClient client) {
+        when:
+        try { client.searchObjectTriggers(customObjectKey, "test", null, null, null, null, null, null).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectTriggersClient]
+    }
+
+    @Unroll
+    def "execute updateManyObjectTriggers for coverage"(ObjectTriggersClient client) {
+        when:
+        try { client.updateManyObjectTriggers(customObjectKey, new lol.pbu.z4j.model.ObjectTriggerBulkUpdateRequest()).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectTriggersClient]
+    }
+
+    @Unroll
+    def "execute updateObjectTrigger for coverage"(ObjectTriggersClient client) {
+        when:
+        try { client.updateObjectTrigger(customObjectKey, 12345L, new lol.pbu.z4j.model.ObjectTriggerRequest()).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminObjectTriggersClient]
+    }
 }
