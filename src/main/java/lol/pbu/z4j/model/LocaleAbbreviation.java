@@ -109,8 +109,8 @@ public enum LocaleAbbreviation {
     @JsonProperty("ms")
     MALAY("ms"),
 
-    @JsonProperty("false")
-    NORWEGIAN("false"),
+    @JsonProperty("no")
+    NORWEGIAN("no"),
 
     @JsonProperty("pl")
     POLISH("pl"),

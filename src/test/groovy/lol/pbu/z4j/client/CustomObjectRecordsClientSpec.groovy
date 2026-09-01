@@ -110,7 +110,7 @@ class CustomObjectRecordsClientSpec extends Z4jSpec {
         given: "an authenticated client for #userType"
 
         when: "requesting custom object records autocomplete"
-        client.autocompleteCustomObjectRecordSearch(customObjectKey, "test", null).block()
+        client.autocompleteCustomObjectRecordSearch(customObjectKey, "test", null, null, null, null, null, null, null, null, null).block()
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()

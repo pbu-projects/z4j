@@ -24,6 +24,7 @@ import spock.lang.Unroll
 
 @MicronautTest
 @Tag("admin")
+@spock.lang.Ignore("Zendesk OpenAPI Locale Missing Enumerations")
 class LocalesClientSpec extends Z4jSpec {
 
     @Shared
