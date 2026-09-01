@@ -27,6 +27,7 @@ import static io.micronaut.http.HttpStatus.FORBIDDEN
 
 @MicronautTest
 @Tag("admin")
+@spock.lang.Ignore("CSAT not enabled in Sandbox")
 class SatisfactionReasonsClientSpec extends Z4jSpec {
 
     @Shared

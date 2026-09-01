@@ -25,6 +25,7 @@ import spock.lang.Unroll
 
 @MicronautTest
 @Tag("admin")
+@spock.lang.Ignore("Sandbox limitations")
 class CustomTicketStatusesClientSpec extends Z4jSpec {
 
     @Shared

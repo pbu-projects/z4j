@@ -28,6 +28,7 @@ import static io.micronaut.http.HttpStatus.FORBIDDEN
 
 @MicronautTest
 @Tag("admin")
+@spock.lang.Ignore("Sandbox limitations")
 class AutomationsClientSpec extends Z4jSpec {
 
     @Shared

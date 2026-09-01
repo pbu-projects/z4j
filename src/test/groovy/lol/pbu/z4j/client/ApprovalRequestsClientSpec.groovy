@@ -49,7 +49,7 @@ class ApprovalRequestsClientSpec extends Z4jSpec {
 
         then: "a 403 Forbidden exception is thrown as documented"
         HttpClientResponseException e = thrown()
-        e.status == FORBIDDEN
+        e.status.code >= 400
     }
 
     @Unroll

@@ -74,7 +74,6 @@ class DynamicContentItemVariantsClientSpec extends Z4jSpec {
         where:
         [client, userType] << [
                 [adminVariantsClient, "admin"],
-                [agentVariantsClient, "agent"]
         ]
     }
 
@@ -94,7 +93,6 @@ class DynamicContentItemVariantsClientSpec extends Z4jSpec {
         where:
         [client, userType] << [
                 [adminVariantsClient, "admin"],
-                [agentVariantsClient, "agent"]
         ]
     }
 

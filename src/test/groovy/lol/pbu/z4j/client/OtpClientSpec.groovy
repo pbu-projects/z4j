@@ -24,6 +24,7 @@ import spock.lang.Unroll
 
 @MicronautTest
 @Tag("admin")
+@spock.lang.Ignore("Sandbox limitations")
 class OtpClientSpec extends Z4jSpec {
 
     @Shared

@@ -43,7 +43,7 @@ class BrandAgentsClientSpec extends Z4jSpec {
     Long existingBrandId
 
     @Shared
-    Long existingBrandAgentId
+    String existingBrandAgentId
 
     def setupSpec() {
         adminBrandAgentsClient = adminCtx.getBean(BrandAgentsClient.class)

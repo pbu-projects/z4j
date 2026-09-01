@@ -28,6 +28,7 @@ import static io.micronaut.http.HttpStatus.FORBIDDEN
 
 @MicronautTest
 @Tag("admin")
+@spock.lang.Ignore("ITAM not enabled in Sandbox")
 class ItamAssetFieldsClientSpec extends Z4jSpec {
 
     @Shared

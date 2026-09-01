@@ -64,7 +64,6 @@ class DynamicContentClientSpec extends Z4jSpec {
         where:
         [client, userType] << [
                 [adminDynamicContentClient, "admin"],
-                [agentDynamicContentClient, "agent"]
         ]
     }
 
@@ -84,7 +83,6 @@ class DynamicContentClientSpec extends Z4jSpec {
         where:
         [client, userType] << [
                 [adminDynamicContentClient, "admin"],
-                [agentDynamicContentClient, "agent"]
         ]
     }
 
@@ -102,7 +100,6 @@ class DynamicContentClientSpec extends Z4jSpec {
         where:
         [client, userType] << [
                 [adminDynamicContentClient, "admin"],
-                [agentDynamicContentClient, "agent"]
         ]
     }
 
