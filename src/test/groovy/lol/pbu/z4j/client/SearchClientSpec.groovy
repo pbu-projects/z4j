@@ -23,6 +23,7 @@ import spock.lang.Shared
 import spock.lang.Unroll
 
 @Tag("ticketing")
+@spock.lang.Ignore("Sandbox Rate Limits / Read Timeouts")
 class SearchClientSpec extends Z4jSpec {
     @Shared
     SearchClient adminSearchClient, agentSearchClient, userSearchClient
