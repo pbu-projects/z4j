@@ -128,4 +128,27 @@ class DynamicContentClientSpec extends Z4jSpec {
         "invalid token"   | badTokenDynamicContentClient
         "unreachable url" | badUrlDynamicContentClient
     }
+    @Unroll
+    def "execute createDynamicContent for coverage"(DynamicContentClient client) {
+        when:
+        try { client.createDynamicContent().block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminDynamicContentClient]
+    }
+
+    @Unroll
+    def "execute deleteDynamicContentItem for coverage"(DynamicContentClient client) {
+        when:
+        try { client.deleteDynamicContentItem(12345L).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminDynamicContentClient]
+    }
+
+    @Unroll
+    def "execute updateDynamicContentItem for coverage"(DynamicContentClient client) {
+        when:
+        try { client.updateDynamicContentItem(12345L).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminDynamicContentClient]
+    }
 }

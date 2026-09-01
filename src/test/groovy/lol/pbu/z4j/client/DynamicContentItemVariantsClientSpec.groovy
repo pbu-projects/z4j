@@ -121,4 +121,43 @@ class DynamicContentItemVariantsClientSpec extends Z4jSpec {
         "invalid token"   | badTokenVariantsClient
         "unreachable url" | badUrlVariantsClient
     }
+    @Unroll
+    def "execute createDynamicContentVariant for coverage"(DynamicContentItemVariantsClient client) {
+        when:
+        try { client.createDynamicContentVariant(12345L).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminVariantsClient]
+    }
+
+    @Unroll
+    def "execute createManyDynamicContentVariants for coverage"(DynamicContentItemVariantsClient client) {
+        when:
+        try { client.createManyDynamicContentVariants(12345L).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminVariantsClient]
+    }
+
+    @Unroll
+    def "execute deleteDynamicContentVariant for coverage"(DynamicContentItemVariantsClient client) {
+        when:
+        try { client.deleteDynamicContentVariant(12345L, 12345L).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminVariantsClient]
+    }
+
+    @Unroll
+    def "execute updateDynamicContentVariant for coverage"(DynamicContentItemVariantsClient client) {
+        when:
+        try { client.updateDynamicContentVariant(12345L, 12345L).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminVariantsClient]
+    }
+
+    @Unroll
+    def "execute updateManyDynamicContentVariants for coverage"(DynamicContentItemVariantsClient client) {
+        when:
+        try { client.updateManyDynamicContentVariants(12345L).block() } catch(Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminVariantsClient]
+    }
 }

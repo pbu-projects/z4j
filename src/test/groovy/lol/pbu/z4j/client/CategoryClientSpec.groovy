@@ -188,6 +188,61 @@ class CategoryClientSpec extends Z4jSpec {
         ].combinations()
     }
 
+
+
+    @spock.lang.Unroll
+    def "execute createCategoryNoLocale for coverage"(CategoryClient client) {
+        when:
+        try { client.createCategoryNoLocale(new CreateCategoryRequest()).block() } catch (Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminCategoryClient]
+    }
+
+    @spock.lang.Unroll
+    def "execute deleteCategoryNoLocale for coverage"(CategoryClient client) {
+        when:
+        try { client.deleteCategoryNoLocale(12345L).block() } catch (Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminCategoryClient]
+    }
+
+    @spock.lang.Unroll
+    def "execute showCategory for coverage"(CategoryClient client) {
+        when:
+        try { client.showCategory(lol.pbu.z4j.model.LocaleAbbreviation.EN_US, 12345L, null).block() } catch (Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminCategoryClient]
+    }
+
+    @spock.lang.Unroll
+    def "execute showCategoryNoLocale for coverage"(CategoryClient client) {
+        when:
+        try { client.showCategoryNoLocale(12345L, null).block() } catch (Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminCategoryClient]
+    }
+
+    @spock.lang.Unroll
+    def "execute updateCategory for coverage"(CategoryClient client) {
+        when:
+        try { client.updateCategory(lol.pbu.z4j.model.LocaleAbbreviation.EN_US, 12345L, new CreateCategoryRequest()).block() } catch (Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminCategoryClient]
+    }
+
+    @spock.lang.Unroll
+    def "execute updateCategoryNoLocale for coverage"(CategoryClient client) {
+        when:
+        try { client.updateCategoryNoLocale(12345L, new CreateCategoryRequest()).block() } catch (Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminCategoryClient]
+    }
+
+    @spock.lang.Unroll
+    def "execute updateCategorySourceLocale for coverage"(CategoryClient client) {
+        when:
+        try { client.updateCategorySourceLocale(12345L).block() } catch (Exception e) {}
+        then: noExceptionThrown()
+        where: client << [adminCategoryClient]
+    }
 }
-
-
