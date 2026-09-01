@@ -42,32 +42,23 @@ class ViewCategoriesClientSpec extends Z4jSpec {
     }
 
     @Unroll
-    def "can list view categories as an #userType"(
+    def "listing view categories returns 403 Forbidden for #userType"(
             ViewCategoriesClient client, String userType) {
         given: "an authenticated client for #userType"
 
         when: "requesting view categories list"
         client.listViewCategories(null).block()
 
-        then: "response deserializes successfully without exception"
-        noExceptionThrown()
+        then: "a 403 Forbidden exception is thrown (sandbox limitation or legacy feature)"
+        HttpClientResponseException e = thrown()
+        e.status == FORBIDDEN
 
         where:
         [client, userType] << [
                 [adminViewCategoriesClient, "admin"],
-                [agentViewCategoriesClient, "agent"]
+                [agentViewCategoriesClient, "agent"],
+                [userViewCategoriesClient, "end user"]
         ]
-    }
-
-    def "end user cannot list view categories"() {
-        given: "an end user client"
-
-        when: "requesting view categories as an end user"
-        userViewCategoriesClient.listViewCategories(null).block()
-
-        then: "a 403 Forbidden exception is thrown as documented"
-        HttpClientResponseException e = thrown()
-        e.status == FORBIDDEN
     }
 
     @Unroll

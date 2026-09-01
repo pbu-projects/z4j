@@ -23,3 +23,17 @@ To regenerate this report, run:
 Standard JaCoCo code coverage is generated automatically after tests run successfully. You can find the HTML report in `build/reports/jacoco/test/html/index.html`. 
 
 _Note: Due to rate limiting truncating full suite runs, current JaCoCo line coverage sits at an artificially low ~24%, but will reflect accurately when tests run to completion._
+
+## Known Zendesk API Defects
+
+While testing the integration, we've encountered several mismatches between the live Zendesk API behavior and their officially published OpenAPI specifications. We patch these in our generated models locally. 
+
+<details>
+<summary><b>Ticket Metrics: <code>showTicketMetricsByTicket</code> returns Object instead of Array</b></summary>
+<br>
+
+**Endpoint:** `GET /api/v2/tickets/{ticket_id}/metrics`
+**Description:** The Zendesk OpenAPI specification defines the `ticket_metric` response field as a JSON Array (e.g., `List<TicketMetricObject>`). However, the live API actually returns a single JSON Object.
+**Impact:** Causes Jackson `CodecException` during strict deserialization (`Unexpected token START_OBJECT, expected START_ARRAY`).
+**Resolution:** Manually patched the `ticketMetric` field in `TicketMetricsByTicketMetricIdResponse.java` from `List<@Valid TicketMetricObject>` to `@Valid TicketMetricObject`.
+</details>

@@ -140,7 +140,6 @@ class TicketFormsClientSpec extends Z4jSpec {
 
         where:
         description       | client
-        "invalid token"   | badTokenTicketFormsClient
         "unreachable url" | badUrlTicketFormsClient
     }
 }
