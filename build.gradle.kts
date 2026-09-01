@@ -186,12 +186,12 @@ val generateTestFixtures by tasks.registering(JavaExec::class) {
 
 val clientCoverageReport by tasks.registering(JavaExec::class) {
     group = "verification"
-    description = "Scans all 99 @Client interfaces and Spock test specs to generate a role-based coverage matrix in src/test/README.md."
+    description = "Scans all 99 @Client interfaces and Spock test specs to generate a role-based coverage matrix in src/test/COVERAGE.md."
     dependsOn(tasks.compileTestGroovy)
     javaLauncher.set(javaToolchains.launcherFor(java.toolchain))
     mainClass.set("lol.pbu.z4j.coverage.ClientCoverageReporter")
     classpath = sourceSets["test"].runtimeClasspath
-    args = listOf(project.rootDir.absolutePath, project.file("src/test/README.md").absolutePath)
+    args = listOf(project.rootDir.absolutePath, project.file("src/test/COVERAGE.md").absolutePath)
 }
 
 tasks.withType<Test> {

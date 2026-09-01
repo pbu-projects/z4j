@@ -57,7 +57,7 @@ class ClientCoverageReporter {
         File projectDir = args.length > 0 ? new File(args[0]) : new File(".")
         File clientDir = new File(projectDir, "src/main/java/lol/pbu/z4j/client")
         File testDir = new File(projectDir, "src/test/groovy/lol/pbu/z4j/client")
-        File outputFile = args.length > 1 ? new File(args[1]) : new File(projectDir, "src/test/README.md")
+        File outputFile = args.length > 1 ? new File(args[1]) : new File(projectDir, "src/test/COVERAGE.md")
 
         List<EndpointCoverage> allEndpoints = scanClients(clientDir)
         Map<String, String> specFiles = loadTestSpecs(testDir)
