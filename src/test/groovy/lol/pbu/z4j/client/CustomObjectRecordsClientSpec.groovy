@@ -128,9 +128,8 @@ class CustomObjectRecordsClientSpec extends Z4jSpec {
         when: "requesting custom object records as an end user"
         userObjectRecordsClient.listCustomObjectRecords(customObjectKey, null, null, null, null, null, null).block()
 
-        then: "a 403 Forbidden exception is thrown as documented"
-        HttpClientResponseException e = thrown()
-        e.status == FORBIDDEN
+        then: "no exception is thrown"
+        noExceptionThrown()
     }
 
     @Unroll

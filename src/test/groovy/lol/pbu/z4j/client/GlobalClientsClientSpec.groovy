@@ -44,8 +44,8 @@ class GlobalClientsClientSpec extends Z4jSpec {
         badUrlGlobalClientsClient = badUrlCtx.getBean(GlobalClientsClient.class)
 
         def clients = adminGlobalClientsClient.listGlobalOAuthClients().block()
-        if (clients?.clients && !clients.clients.isEmpty()) {
-            existingGlobalClientId = clients.clients.first().id
+        if (clients?.globalClients && !clients.globalClients.isEmpty()) {
+            existingGlobalClientId = clients.globalClients.first().id
         }
     }
 
