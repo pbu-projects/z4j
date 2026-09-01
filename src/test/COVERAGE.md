@@ -8,10 +8,10 @@
 - **Total Client Interfaces**: 98
 - **Clients with Active Tests**: 98 / 98 (100.0%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **297 / 629 (47.2%)**
-  - 👑 **Admin Level (`adminCtx`)**: 297 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 290 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 297 endpoints
+- **Endpoints Tested**: **318 / 629 (50.6%)**
+  - 👑 **Admin Level (`adminCtx`)**: 318 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 311 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 318 endpoints
 
 ---
 
@@ -172,31 +172,31 @@
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `listConversationLogForTicket` | `GET /api/v2/tickets/{ticket_id}/conversation_log` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `CustomObjectFieldsClient` (2/7 endpoints — 29%)
+### 🟢 `CustomObjectFieldsClient` (7/7 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `createCustomObjectField` | `POST /api/v2/custom_objects/{custom_object_key}/fields` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createCustomObjectField` | `POST /api/v2/custom_objects/{custom_object_key}/fields` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `customObjectFieldsLimit` | `GET /api/v2/custom_objects/{custom_object_key}/limits/field_limit` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `deleteCustomObjectField` | `DELETE /api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_key_or_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteCustomObjectField` | `DELETE /api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_key_or_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listCustomObjectFields` | `GET /api/v2/custom_objects/{custom_object_key}/fields` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `reorderCustomObjectFields` | `PUT /api/v2/custom_objects/{custom_object_key}/fields/reorder` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showCustomObjectField` | `GET /api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_key_or_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateCustomObjectField` | `PATCH /api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_key_or_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `reorderCustomObjectFields` | `PUT /api/v2/custom_objects/{custom_object_key}/fields/reorder` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showCustomObjectField` | `GET /api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_key_or_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateCustomObjectField` | `PATCH /api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_key_or_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `CustomObjectPermissionsClient` (3/9 endpoints — 33%)
+### 🟢 `CustomObjectPermissionsClient` (9/9 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `createAccessRule` | `POST /api/v2/custom_objects/{custom_object_key}/access_rules` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteAccessRule` | `DELETE /api/v2/custom_objects/{custom_object_key}/access_rules/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createAccessRule` | `POST /api/v2/custom_objects/{custom_object_key}/access_rules` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteAccessRule` | `DELETE /api/v2/custom_objects/{custom_object_key}/access_rules/{id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listAccessRuleDefinitions` | `GET /api/v2/custom_objects/{custom_object_key}/access_rules/definitions` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listAccessRules` | `GET /api/v2/custom_objects/{custom_object_key}/access_rules` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listPermissionPolicies` | `GET /api/v2/custom_objects/{custom_object_key}/permission_policies` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showAccessRule` | `GET /api/v2/custom_objects/{custom_object_key}/access_rules/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showPermissionPolicy` | `GET /api/v2/custom_objects/{custom_object_key}/permission_policies/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateAccessRule` | `PATCH /api/v2/custom_objects/{custom_object_key}/access_rules/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updatePermissionPolicy` | `PATCH /api/v2/custom_objects/{custom_object_key}/permission_policies/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showAccessRule` | `GET /api/v2/custom_objects/{custom_object_key}/access_rules/{id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showPermissionPolicy` | `GET /api/v2/custom_objects/{custom_object_key}/permission_policies/{id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateAccessRule` | `PATCH /api/v2/custom_objects/{custom_object_key}/access_rules/{id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updatePermissionPolicy` | `PATCH /api/v2/custom_objects/{custom_object_key}/permission_policies/{id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `CustomObjectRecordAttachmentsClient` (1/4 endpoints — 25%)
 
@@ -207,24 +207,24 @@
 | `listCustomObjectRecordAttachments` | `GET /api/v2/custom_objects/{custom_object_key}/records/{record_id}/attachments/{id}/download` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateCustomObjectRecordAttachment` | `PUT /api/v2/custom_objects/{custom_object_key}/records/{record_id}/attachments/{id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `CustomObjectRecordsClient` (4/14 endpoints — 29%)
+### 🟢 `CustomObjectRecordsClient` (14/14 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `autocompleteCustomObjectRecordSearch` | `GET /api/v2/custom_objects/{custom_object_key}/records/autocomplete` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `countCustomObjectRecords` | `GET /api/v2/custom_objects/{custom_object_key}/records/count` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `createCustomObjectRecord` | `POST /api/v2/custom_objects/{custom_object_key}/records` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `customObjectRecordBulkJobs` | `POST /api/v2/custom_objects/{custom_object_key}/jobs` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createCustomObjectRecord` | `POST /api/v2/custom_objects/{custom_object_key}/records` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `customObjectRecordBulkJobs` | `POST /api/v2/custom_objects/{custom_object_key}/jobs` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `customObjectRecordsLimit` | `GET /api/v2/custom_objects/limits/record_limit` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `deleteCustomObjectRecord` | `DELETE /api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteCustomObjectRecordByExternalIdOrName` | `DELETE /api/v2/custom_objects/{custom_object_key}/records` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `filteredSearchCustomObjectRecords` | `POST /api/v2/custom_objects/{custom_object_key}/records/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `incrementalCustomObjectRecordExportCursor` | `GET /api/v2/incremental/custom_objects/{custom_object_key}/cursor` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteCustomObjectRecord` | `DELETE /api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteCustomObjectRecordByExternalIdOrName` | `DELETE /api/v2/custom_objects/{custom_object_key}/records` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `filteredSearchCustomObjectRecords` | `POST /api/v2/custom_objects/{custom_object_key}/records/search` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `incrementalCustomObjectRecordExportCursor` | `GET /api/v2/incremental/custom_objects/{custom_object_key}/cursor` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listCustomObjectRecords` | `GET /api/v2/custom_objects/{custom_object_key}/records` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `searchCustomObjectRecords` | `GET /api/v2/custom_objects/{custom_object_key}/records/search` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showCustomObjectRecord` | `GET /api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateCustomObjectRecord` | `PATCH /api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `upsertCustomObjectRecordByExternalIdOrName` | `PATCH /api/v2/custom_objects/{custom_object_key}/records` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `searchCustomObjectRecords` | `GET /api/v2/custom_objects/{custom_object_key}/records/search` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showCustomObjectRecord` | `GET /api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateCustomObjectRecord` | `PATCH /api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `upsertCustomObjectRecordByExternalIdOrName` | `PATCH /api/v2/custom_objects/{custom_object_key}/records` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `CustomObjectsClient` (3/6 endpoints — 50%)
 
