@@ -8,10 +8,10 @@
 - **Total Client Interfaces**: 98
 - **Clients with Active Tests**: 98 / 98 (100.0%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **282 / 629 (44.8%)**
-  - 👑 **Admin Level (`adminCtx`)**: 282 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 275 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 282 endpoints
+- **Endpoints Tested**: **297 / 629 (47.2%)**
+  - 👑 **Admin Level (`adminCtx`)**: 297 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 290 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 297 endpoints
 
 ---
 
@@ -142,21 +142,21 @@
 | `showBrand` | `GET /api/v2/brands/{brand_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateBrand` | `PUT /api/v2/brands/{brand_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `CategoryClient` (4/11 endpoints — 36%)
+### 🟢 `CategoryClient` (11/11 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
 | `createCategory` | `POST /api/v2/help_center/{locale}/categories` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `createCategoryNoLocale` | `POST /api/v2/help_center/categories` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createCategoryNoLocale` | `POST /api/v2/help_center/categories` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `deleteCategory` | `DELETE /api/v2/help_center/{locale}/categories/{category_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `deleteCategoryNoLocale` | `DELETE /api/v2/help_center/categories/{category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteCategoryNoLocale` | `DELETE /api/v2/help_center/categories/{category_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listCategories` | `GET /api/v2/help_center/{locale}/categories` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listCategoriesNoLocale` | `GET /api/v2/help_center/categories` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showCategory` | `GET /api/v2/help_center/{locale}/categories/{category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showCategoryNoLocale` | `GET /api/v2/help_center/categories/{category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateCategory` | `PUT /api/v2/help_center/{locale}/categories/{category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateCategoryNoLocale` | `PUT /api/v2/help_center/categories/{category_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateCategorySourceLocale` | `PUT /api/v2/help_center/categories/{category_id}/source_locale` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showCategory` | `GET /api/v2/help_center/{locale}/categories/{category_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showCategoryNoLocale` | `GET /api/v2/help_center/categories/{category_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateCategory` | `PUT /api/v2/help_center/{locale}/categories/{category_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateCategoryNoLocale` | `PUT /api/v2/help_center/categories/{category_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateCategorySourceLocale` | `PUT /api/v2/help_center/categories/{category_id}/source_locale` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `ChannelFrameworkClient` (1/3 endpoints — 33%)
 
@@ -268,28 +268,28 @@
 | `listDeletionSchedules` | `GET /api/v2/deletion_schedules` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateDeletionSchedule` | `PUT /api/v2/deletion_schedules/{deletion_schedule_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `DynamicContentClient` (3/6 endpoints — 50%)
+### 🟢 `DynamicContentClient` (6/6 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `createDynamicContent` | `POST /api/v2/dynamic_content/items` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteDynamicContentItem` | `DELETE /api/v2/dynamic_content/items/{dynamic_content_item_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createDynamicContent` | `POST /api/v2/dynamic_content/items` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteDynamicContentItem` | `DELETE /api/v2/dynamic_content/items/{dynamic_content_item_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listDynamicContents` | `GET /api/v2/dynamic_content/items` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showDynamicContentItem` | `GET /api/v2/dynamic_content/items/{dynamic_content_item_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showManyDynamicContents` | `GET /api/v2/dynamic_content/items/show_many` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `updateDynamicContentItem` | `PUT /api/v2/dynamic_content/items/{dynamic_content_item_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateDynamicContentItem` | `PUT /api/v2/dynamic_content/items/{dynamic_content_item_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `DynamicContentItemVariantsClient` (2/7 endpoints — 29%)
+### 🟢 `DynamicContentItemVariantsClient` (7/7 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `createDynamicContentVariant` | `POST /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `createManyDynamicContentVariants` | `POST /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/create_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteDynamicContentVariant` | `DELETE /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createDynamicContentVariant` | `POST /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `createManyDynamicContentVariants` | `POST /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/create_many` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteDynamicContentVariant` | `DELETE /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `dynamicContentListVariants` | `GET /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showDynamicContentVariant` | `GET /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `updateDynamicContentVariant` | `PUT /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateManyDynamicContentVariants` | `PUT /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateDynamicContentVariant` | `PUT /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/{dynamic_content_variant_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateManyDynamicContentVariants` | `PUT /api/v2/dynamic_content/items/{dynamic_content_item_id}/variants/update_many` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `EmailNotificationsClient` (1/3 endpoints — 33%)
 
