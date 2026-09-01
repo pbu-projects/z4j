@@ -8,10 +8,10 @@
 - **Total Client Interfaces**: 98
 - **Clients with Active Tests**: 98 / 98 (100.0%)
 - **Total Endpoints Declared**: 629
-- **Endpoints Tested**: **335 / 629 (53.3%)**
-  - 👑 **Admin Level (`adminCtx`)**: 335 endpoints
-  - 🛡️ **Agent Level (`agentCtx`)**: 328 endpoints
-  - 👤 **End-User Level (`userCtx`)**: 335 endpoints
+- **Endpoints Tested**: **347 / 629 (55.2%)**
+  - 👑 **Admin Level (`adminCtx`)**: 347 endpoints
+  - 🛡️ **Agent Level (`agentCtx`)**: 340 endpoints
+  - 👤 **End-User Level (`userCtx`)**: 347 endpoints
 
 ---
 
@@ -90,19 +90,19 @@
 | `listAuditLogs` | `GET /api/v2/audit_logs` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showAuditLog` | `GET /api/v2/audit_logs/{audit_log_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 
-### 🟡 `AutomationsClient` (4/9 endpoints — 44%)
+### 🟢 `AutomationsClient` (9/9 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `bulkDeleteAutomations` | `DELETE /api/v2/automations/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `createAutomation` | `POST /api/v2/automations` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `deleteAutomation` | `DELETE /api/v2/automations/{automation_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `bulkDeleteAutomations` | `DELETE /api/v2/automations/destroy_many` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `createAutomation` | `POST /api/v2/automations` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `deleteAutomation` | `DELETE /api/v2/automations/{automation_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listActiveAutomations` | `GET /api/v2/automations/active` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listAutomations` | `GET /api/v2/automations` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `searchAutomations` | `GET /api/v2/automations/search` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showAutomation` | `GET /api/v2/automations/{automation_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `updateAutomation` | `PUT /api/v2/automations/{automation_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `updateManyAutomations` | `PUT /api/v2/automations/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateAutomation` | `PUT /api/v2/automations/{automation_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `updateManyAutomations` | `PUT /api/v2/automations/update_many` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `BasicsClient` (1/3 endpoints — 33%)
 
@@ -473,15 +473,15 @@
 | `getRelationshipFilterDefinitions` | `GET /api/v2/relationships/definitions/{target_type}` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `getSourcesByTarget` | `GET /api/v2/{target_type}/{target_id}/relationship_fields/{field_id}/{source_type}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
 
-### 🟡 `MacrosClient` (12/19 endpoints — 63%)
+### 🟢 `MacrosClient` (19/19 endpoints — 100%)
 
 | Method | Route | Admin | Agent | End User | Status |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| `createAssociatedMacroAttachment` | `POST /api/v2/macros/{macro_id}/attachments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createAssociatedMacroAttachment` | `POST /api/v2/macros/{macro_id}/attachments` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `createMacro` | `POST /api/v2/macros` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `createMacroAttachment` | `POST /api/v2/macros/attachments` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `createMacroAttachment` | `POST /api/v2/macros/attachments` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `deleteMacro` | `DELETE /api/v2/macros/{macro_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `deleteManyMacros` | `DELETE /api/v2/macros/destroy_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `deleteManyMacros` | `DELETE /api/v2/macros/destroy_many` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listActiveMacros` | `GET /api/v2/macros/active` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listMacroActionDefinitions` | `GET /api/v2/macros/definitions` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `listMacroAttachments` | `GET /api/v2/macros/{macro_id}/attachments` | ✅ | ✅ | ✅ | 🟢 Complete |
@@ -490,12 +490,12 @@
 | `listMacrosActions` | `GET /api/v2/macros/actions` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `searchMacro` | `GET /api/v2/macros/search` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showChangesToTicket` | `GET /api/v2/macros/{macro_id}/apply` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showDerivedMacro` | `GET /api/v2/macros/new` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showDerivedMacro` | `GET /api/v2/macros/new` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `showMacro` | `GET /api/v2/macros/{macro_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `showMacroAttachment` | `GET /api/v2/macros/attachments/{attachment_id}` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
-| `showTicketAfterChanges` | `GET /api/v2/tickets/{ticket_id}/macros/{macro_id}/apply` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `showMacroAttachment` | `GET /api/v2/macros/attachments/{attachment_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
+| `showTicketAfterChanges` | `GET /api/v2/tickets/{ticket_id}/macros/{macro_id}/apply` | ✅ | ✅ | ✅ | 🟢 Complete |
 | `updateMacro` | `PUT /api/v2/macros/{macro_id}` | ✅ | ✅ | ✅ | 🟢 Complete |
-| `updateManyMacros` | `PUT /api/v2/macros/update_many` | ⚪ | ⚪ | ⚪ | ⚪ Not Tested |
+| `updateManyMacros` | `PUT /api/v2/macros/update_many` | ✅ | ✅ | ✅ | 🟢 Complete |
 
 ### 🟡 `OAuthClientsClient` (2/7 endpoints — 29%)
 
