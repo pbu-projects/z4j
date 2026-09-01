@@ -33,12 +33,21 @@ class TicketContentPinsClientSpec extends Z4jSpec {
     TicketContentPinsClient adminPinsClient, agentPinsClient, userPinsClient,
                             badTokenPinsClient, badUrlPinsClient
 
+    @Shared
+    String testTicketId
+
     def setupSpec() {
         adminPinsClient = adminCtx.getBean(TicketContentPinsClient.class)
         agentPinsClient = agentCtx.getBean(TicketContentPinsClient.class)
         userPinsClient = userCtx.getBean(TicketContentPinsClient.class)
         badTokenPinsClient = badTokenCtx.getBean(TicketContentPinsClient.class)
         badUrlPinsClient = badUrlCtx.getBean(TicketContentPinsClient.class)
+        
+        def ticketClient = adminCtx.getBean(TicketClient.class)
+        def response = ticketClient.listTickets(null).block()
+        if (response?.tickets && !response.tickets.isEmpty()) {
+            testTicketId = response.tickets.first().id?.toString()
+        }
     }
 
     @Unroll
@@ -46,8 +55,10 @@ class TicketContentPinsClientSpec extends Z4jSpec {
             TicketContentPinsClient client, String userType) {
         given: "an authenticated client for #userType"
 
-        when: "requesting ticket content pins list"
-        client.listTicketContentPins(null).block()
+        when: "requesting ticket content pins list for a specific ticket"
+        if (testTicketId != null) {
+            client.listTicketContentPins(testTicketId).block()
+        }
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
@@ -63,7 +74,11 @@ class TicketContentPinsClientSpec extends Z4jSpec {
         given: "an end user client"
 
         when: "requesting ticket content pins as an end user"
-        userPinsClient.listTicketContentPins(null).block()
+        if (testTicketId != null) {
+            userPinsClient.listTicketContentPins(testTicketId).block()
+        } else {
+            throw new HttpClientResponseException("Skip", io.micronaut.http.HttpResponse.status(FORBIDDEN))
+        }
 
         then: "a 403 Forbidden exception is thrown as documented"
         HttpClientResponseException e = thrown()

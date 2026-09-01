@@ -15,15 +15,13 @@
  */
 package lol.pbu.z4j.coverage
 
-import io.micronaut.http.annotation.Delete
-import io.micronaut.http.annotation.Get
-import io.micronaut.http.annotation.Patch
-import io.micronaut.http.annotation.Post
-import io.micronaut.http.annotation.Put
 
-import java.lang.reflect.Method
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.Paths
 import java.util.regex.Pattern
 
+import static java.nio.charset.StandardCharsets.UTF_8
 /**
  * <h1>Client Coverage Reporter</h1>
  * Scans declarative {@code @Client} interfaces in {@code lol.pbu.z4j.client} and cross-references
@@ -68,11 +66,11 @@ class ClientCoverageReporter {
 
         String markdown = generateMarkdownReport(allEndpoints)
 
-        java.nio.file.Path outputPath = java.nio.file.Paths.get(outputFile.absolutePath)
+        Path outputPath = Paths.get(outputFile.absolutePath)
         if (outputPath.parent != null) {
-            java.nio.file.Files.createDirectories(outputPath.parent)
+            Files.createDirectories(outputPath.parent)
         }
-        java.nio.file.Files.writeString(outputPath, markdown, java.nio.charset.StandardCharsets.UTF_8)
+        Files.writeString(outputPath, markdown, UTF_8)
         println "✅ Coverage report successfully written to: ${outputPath.toAbsolutePath()}"
 
         printSummary(allEndpoints)

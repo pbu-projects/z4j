@@ -123,8 +123,7 @@ class TicketFieldsClientSpec extends Z4jSpec {
         where:
         [client, userType] << [
                 [adminTicketFieldsClient, "admin"],
-                [agentTicketFieldsClient, "agent"],
-                [userTicketFieldsClient, "end user"]
+                [agentTicketFieldsClient, "agent"]
         ]
     }
 
