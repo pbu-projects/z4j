@@ -41,40 +41,9 @@ import io.micronaut.core.annotation.Nullable;
  */
 @Accessors(chain = true)
 @NoArgsConstructor
-@AllArgsConstructor
 @Data
-@JsonPropertyOrder({
-    AccessRuleCreateRequestAccessRule.JSON_PROPERTY_CONDITIONS,
-    AccessRuleCreateRequestAccessRule.JSON_PROPERTY_DESCRIPTION,
-    AccessRuleCreateRequestAccessRule.JSON_PROPERTY_TITLE,
-})
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @Serdeable
-public class AccessRuleCreateRequestAccessRule {
-
-    public static final String JSON_PROPERTY_CONDITIONS = "conditions";
-    public static final String JSON_PROPERTY_DESCRIPTION = "description";
-    public static final String JSON_PROPERTY_TITLE = "title";
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_CONDITIONS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private AccessRuleConditions conditions;
-
-    /**
-     * <p>A description of what this access rule does</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DESCRIPTION)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String description;
-
-    /**
-     * <p>The title of the access rule</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TITLE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String title;
-
+public class AccessRuleCreateRequestAccessRule extends AccessRuleUpdateRequestAccessRule {
 }

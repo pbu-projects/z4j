@@ -22,8 +22,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.HashMap;
 import java.util.Map;
-import lol.pbu.z4j.model.ActivityObjectActor;
-import lol.pbu.z4j.model.ActivityObjectUser;
+
+
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Data;
@@ -80,7 +80,7 @@ public class ActivityObject {
     @Valid
     @JsonProperty(JSON_PROPERTY_ACTOR)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ActivityObjectActor actor;
+    private UserObject actor;
 
     /**
      * <p>The id of the user responsible for the ticket activity. An <code>actor_id</code> of \"-1\" is a Zendesk system user, such as an automations action.</p>
@@ -150,7 +150,7 @@ public class ActivityObject {
     @Valid
     @JsonProperty(JSON_PROPERTY_USER)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ActivityObjectUser user;
+    private UserObject user;
 
     /**
      * <p>The id of the agent making the request</p>

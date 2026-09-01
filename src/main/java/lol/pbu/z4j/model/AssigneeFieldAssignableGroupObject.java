@@ -42,17 +42,15 @@ import io.micronaut.core.annotation.Nullable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @JsonPropertyOrder({
     AssigneeFieldAssignableGroupObject.JSON_PROPERTY_DESCRIPTION,
-    AssigneeFieldAssignableGroupObject.JSON_PROPERTY_ID,
-    AssigneeFieldAssignableGroupObject.JSON_PROPERTY_NAME,
 })
 @Serdeable
-public class AssigneeFieldAssignableGroupObject {
+public class AssigneeFieldAssignableGroupObject extends AssigneeFieldAssignableSearchGroupObject {
 
     public static final String JSON_PROPERTY_DESCRIPTION = "description";
-    public static final String JSON_PROPERTY_ID = "id";
-    public static final String JSON_PROPERTY_NAME = "name";
 
     /**
      * <p>Description of the group</p>
@@ -61,21 +59,5 @@ public class AssigneeFieldAssignableGroupObject {
     @JsonProperty(JSON_PROPERTY_DESCRIPTION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private String description;
-
-    /**
-     * <p>Group ID</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    /**
-     * <p>Name of the group</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_NAME)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String name;
 
 }

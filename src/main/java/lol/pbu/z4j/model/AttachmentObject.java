@@ -46,143 +46,15 @@ import io.micronaut.core.annotation.Nullable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @JsonPropertyOrder({
-    AttachmentObject.JSON_PROPERTY_CONTENT_TYPE,
-    AttachmentObject.JSON_PROPERTY_CONTENT_URL,
-    AttachmentObject.JSON_PROPERTY_DELETED,
-    AttachmentObject.JSON_PROPERTY_FILE_NAME,
-    AttachmentObject.JSON_PROPERTY_HEIGHT,
-    AttachmentObject.JSON_PROPERTY_ID,
-    AttachmentObject.JSON_PROPERTY_INLINE,
-    AttachmentObject.JSON_PROPERTY_MALWARE_ACCESS_OVERRIDE,
-    AttachmentObject.JSON_PROPERTY_MALWARE_SCAN_RESULT,
-    AttachmentObject.JSON_PROPERTY_MAPPED_CONTENT_URL,
-    AttachmentObject.JSON_PROPERTY_SIZE,
-    AttachmentObject.JSON_PROPERTY_URL,
-    AttachmentObject.JSON_PROPERTY_WIDTH,
     AttachmentObject.JSON_PROPERTY_THUMBNAILS,
 })
 @Serdeable
-public class AttachmentObject {
+public class AttachmentObject extends AttachmentBaseObject {
 
-    public static final String JSON_PROPERTY_CONTENT_TYPE = "content_type";
-    public static final String JSON_PROPERTY_CONTENT_URL = "content_url";
-    public static final String JSON_PROPERTY_DELETED = "deleted";
-    public static final String JSON_PROPERTY_FILE_NAME = "file_name";
-    public static final String JSON_PROPERTY_HEIGHT = "height";
-    public static final String JSON_PROPERTY_ID = "id";
-    public static final String JSON_PROPERTY_INLINE = "inline";
-    public static final String JSON_PROPERTY_MALWARE_ACCESS_OVERRIDE = "malware_access_override";
-    public static final String JSON_PROPERTY_MALWARE_SCAN_RESULT = "malware_scan_result";
-    public static final String JSON_PROPERTY_MAPPED_CONTENT_URL = "mapped_content_url";
-    public static final String JSON_PROPERTY_SIZE = "size";
-    public static final String JSON_PROPERTY_URL = "url";
-    public static final String JSON_PROPERTY_WIDTH = "width";
     public static final String JSON_PROPERTY_THUMBNAILS = "thumbnails";
-
-    /**
-     * <p>The content type of the image. Example value: \"image/png\"</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CONTENT_TYPE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String contentType;
-
-    /**
-     * <p>A full URL where the attachment image file can be downloaded. The file may be hosted externally so take care not to inadvertently send Zendesk authentication credentials. See <a href=\"/documentation/api-basics/best-practices/working-with-url-properties/\">Working with url properties</a></p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CONTENT_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String contentUrl;
-
-    /**
-     * <p>If true, the attachment has been deleted</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DELETED)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean deleted;
-
-    /**
-     * <p>The name of the image file</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_FILE_NAME)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String fileName;
-
-    /**
-     * <p>The height of the image file in pixels. If height is unknown, returns null</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_HEIGHT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long height;
-
-    /**
-     * <p>Automatically assigned when created</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    /**
-     * <p>If true, the attachment is excluded from the attachment list and the attachment's URL can be referenced within the comment of a ticket. Default is false</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_INLINE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean inline;
-
-    /**
-     * <p>If true, you can download an attachment flagged as malware. If false, you can't download such an attachment.</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_MALWARE_ACCESS_OVERRIDE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean malwareAccessOverride;
-
-    /**
-     * <p>The result of the malware scan. There is a delay between the time the attachment is uploaded and when the malware scan is completed. Usually the scan is done within a few seconds, but high load conditions can delay the scan results. Possible values: \"malware_found\", \"malware_not_found\", \"failed_to_scan\", \"not_scanned\"</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_MALWARE_SCAN_RESULT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String malwareScanResult;
-
-    /**
-     * <p>The URL the attachment image file has been mapped to</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_MAPPED_CONTENT_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String mappedContentUrl;
-
-    /**
-     * <p>The size of the image file in bytes</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SIZE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long size;
-
-    /**
-     * <p>A URL to access the attachment details</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String url;
-
-    /**
-     * <p>The width of the image file in pixels. If width is unknown, returns null</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_WIDTH)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long width;
 
     /**
      * <p>An array of attachment objects. Note that photo thumbnails do not have thumbnails</p>
