@@ -7,7 +7,6 @@ import lol.pbu.z4j.model.Ticket
 import spock.lang.Shared
 
 @Tag("ticketing")
-@spock.lang.Ignore("Sandbox Rate Limits / Read Timeouts")
 class SearchServiceSpec extends Z4jSpec {
 
     @Shared
@@ -21,7 +20,7 @@ class SearchServiceSpec extends Z4jSpec {
 
     def "Can query tickets as #agentType using getTickets(query, pageSize)"(SearchService service, String agentType) {
         when: "The service queries for tickets"
-        List<Ticket> tickets = service.getTickets("", 1000).collectList().block()
+        List<Ticket> tickets = service.getTickets("", 10).take(5).collectList().block()
 
         then: "The result contains tickets"
         tickets.size() > 0
