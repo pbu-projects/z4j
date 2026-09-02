@@ -10,6 +10,7 @@ import lombok.experimental.Accessors;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@io.micronaut.serde.annotation.Serdeable
 public class TicketFieldCreateRequest {
     @JsonProperty("ticket_field")
     private TicketField ticketField;

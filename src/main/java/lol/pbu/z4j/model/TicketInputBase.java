@@ -85,17 +85,17 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ASSIGNEE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Integer assigneeId;
+    protected Long assigneeId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_ATTRIBUTE_VALUE_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@NotNull Integer> attributeValueIds;
+    protected List<@NotNull Long> attributeValueIds;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_COLLABORATOR_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@NotNull Integer> collaboratorIds;
+    protected List<@NotNull Long> collaboratorIds;
 
     @Nullable
     @Valid
@@ -111,7 +111,7 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Integer customStatusId;
+    protected Long customStatusId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_DUE_AT)
@@ -136,22 +136,22 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
     @Nullable
     @JsonProperty(JSON_PROPERTY_GROUP_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Integer groupId;
+    protected Long groupId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Integer organizationId;
+    protected Long organizationId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_PROBLEM_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Integer problemId;
+    protected Long problemId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_REQUESTER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Integer requesterId;
+    protected Long requesterId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_SAFE_UPDATE)
@@ -161,7 +161,7 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SHARING_AGREEMENT_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@NotNull Integer> sharingAgreementIds;
+    protected List<@NotNull Long> sharingAgreementIds;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_SUBJECT)
@@ -186,7 +186,7 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
         return (T) this;
     }
 
-    public T addAttributeValueIdsItem(Integer attributeValueIdsItem) {
+    public T addAttributeValueIdsItem(Long attributeValueIdsItem) {
         if (attributeValueIds == null) {
             attributeValueIds = new ArrayList<>();
         }
@@ -194,7 +194,7 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
         return (T) this;
     }
 
-    public T addCollaboratorIdsItem(Integer collaboratorIdsItem) {
+    public T addCollaboratorIdsItem(Long collaboratorIdsItem) {
         if (collaboratorIds == null) {
             collaboratorIds = new ArrayList<>();
         }
@@ -226,7 +226,7 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
         return (T) this;
     }
 
-    public T addSharingAgreementIdsItem(Integer sharingAgreementIdsItem) {
+    public T addSharingAgreementIdsItem(Long sharingAgreementIdsItem) {
         if (sharingAgreementIds == null) {
             sharingAgreementIds = new ArrayList<>();
         }

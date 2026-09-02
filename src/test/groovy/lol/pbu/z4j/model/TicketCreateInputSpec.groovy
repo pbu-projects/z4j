@@ -60,12 +60,12 @@ class TicketCreateInputSpec extends Z4jSpec {
         where:
         propertyName              | methodName                       | property
         'additionalCollaborators' | 'addAdditionalCollaboratorsItem' | collaborator1
-        'attributeValueIds'       | 'addAttributeValueIdsItem'       | 1
-        'collaboratorIds'         | 'addCollaboratorIdsItem'         | 2
+        'attributeValueIds'       | 'addAttributeValueIdsItem'       | 1L
+        'collaboratorIds'         | 'addCollaboratorIdsItem'         | 2L
         'customFields'            | 'addCustomFieldsItem'            | customField1
         'emailCcs'                | 'addEmailCcsItem'                | emailCc1
         'followers'               | 'addFollowersItem'               | follower1
-        'sharingAgreementIds'     | 'addSharingAgreementIdsItem'     | 3
+        'sharingAgreementIds'     | 'addSharingAgreementIdsItem'     | 3L
         'tags'                    | 'addTagsItem'                    | "tag1"
         'collaborators'           | 'addCollaboratorsItem'           | collaborator2
         'emailCcIds'              | 'addEmailCcIdsItem'              | 4L
@@ -90,12 +90,12 @@ class TicketCreateInputSpec extends Z4jSpec {
         where:
         propertyName              | methodName                       | existingProperty | property
         'additionalCollaborators' | 'addAdditionalCollaboratorsItem' | [collaborator1]  | collaborator2
-        'attributeValueIds'       | 'addAttributeValueIdsItem'       | [10]             | 1
-        'collaboratorIds'         | 'addCollaboratorIdsItem'         | [20]             | 2
+        'attributeValueIds'       | 'addAttributeValueIdsItem'       | [10L]            | 1L
+        'collaboratorIds'         | 'addCollaboratorIdsItem'         | [20L]            | 2L
         'customFields'            | 'addCustomFieldsItem'            | [customField1]   | customField2
         'emailCcs'                | 'addEmailCcsItem'                | [emailCc1]       | emailCc2
         'followers'               | 'addFollowersItem'               | [follower1]      | follower2
-        'sharingAgreementIds'     | 'addSharingAgreementIdsItem'     | [30]             | 3
+        'sharingAgreementIds'     | 'addSharingAgreementIdsItem'     | [30L]            | 3L
         'tags'                    | 'addTagsItem'                    | ["existing"]     | "tag"
         'collaborators'           | 'addCollaboratorsItem'           | [collaborator2]  | collaborator1
         'emailCcIds'              | 'addEmailCcIdsItem'              | [40L]            | 4L

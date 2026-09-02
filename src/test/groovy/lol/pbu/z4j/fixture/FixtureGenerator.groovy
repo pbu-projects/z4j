@@ -90,6 +90,53 @@ class FixtureGenerator {
         ]
         Files.writeString(outputDir.resolve("article_fixtures.yaml"), yaml.dump(articleFixtures))
 
+
+        // 5. User Fixtures
+        Map<String, Object> userFixtures = [
+            users: [
+                [email: "z4j-test-${UUID.randomUUID().toString().substring(0, 8)}@example.com".toString(), name: "${faker.name().fullName()} ${UUID.randomUUID().toString().substring(0, 8)}".toString()],
+                [email: "z4j-test-${UUID.randomUUID().toString().substring(0, 8)}@example.com".toString(), name: "${faker.name().fullName()} ${UUID.randomUUID().toString().substring(0, 8)}".toString()]
+            ]
+        ]
+        Files.writeString(outputDir.resolve("user_fixtures.yaml"), yaml.dump(userFixtures))
+
+        // 6. Ticket Form Fixtures
+        Map<String, Object> ticketFormFixtures = [
+            ticketForms: [
+                [name: "Form-${faker.app().name()} ${UUID.randomUUID().toString().substring(0, 8)}".toString()],
+                [name: "Form-${faker.app().name()} ${UUID.randomUUID().toString().substring(0, 8)}".toString()]
+            ]
+        ]
+        Files.writeString(outputDir.resolve("ticket_form_fixtures.yaml"), yaml.dump(ticketFormFixtures))
+
+        // 7. Custom Object Fixtures
+        Map<String, Object> customObjectFixtures = [
+            customObjects: [
+                [
+                    key: "z4j_obj_${UUID.randomUUID().toString().substring(0, 8)}".toString(),
+                    title: "Obj-${faker.color().name().capitalize()} ${UUID.randomUUID().toString().substring(0, 8)}".toString(),
+                    titlePluralized: "Objs-${faker.color().name().capitalize()}s ${UUID.randomUUID().toString().substring(0, 8)}".toString(),
+                    recordName: "Rec-${faker.ancient().god()} ${UUID.randomUUID().toString().substring(0, 8)}".toString()
+                ],
+                [
+                    key: "z4j_obj_${UUID.randomUUID().toString().substring(0, 8)}".toString(),
+                    title: "Obj-${faker.color().name().capitalize()} ${UUID.randomUUID().toString().substring(0, 8)}".toString(),
+                    titlePluralized: "Objs-${faker.color().name().capitalize()}s ${UUID.randomUUID().toString().substring(0, 8)}".toString(),
+                    recordName: "Rec-${faker.ancient().god()} ${UUID.randomUUID().toString().substring(0, 8)}".toString()
+                ]
+            ]
+        ]
+        Files.writeString(outputDir.resolve("custom_object_fixtures.yaml"), yaml.dump(customObjectFixtures))
+
+        // 8. Ticket Field Fixtures
+        Map<String, Object> ticketFieldFixtures = [
+            ticketFields: [
+                [title: "Field-${faker.commerce().productName()} ${UUID.randomUUID().toString().substring(0, 8)}".toString(), type: "text"],
+                [title: "Field-${faker.commerce().productName()} ${UUID.randomUUID().toString().substring(0, 8)}".toString(), type: "text"]
+            ]
+        ]
+        Files.writeString(outputDir.resolve("ticket_field_fixtures.yaml"), yaml.dump(ticketFieldFixtures))
+
         println "Successfully generated test data fixtures in ${outputDir.toAbsolutePath()}"
     }
 }
