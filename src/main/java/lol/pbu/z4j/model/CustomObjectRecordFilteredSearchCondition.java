@@ -15,28 +15,16 @@
  */
 package lol.pbu.z4j.model;
 
-import java.util.Objects;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.HashMap;
-import java.util.Map;
-import lol.pbu.z4j.model.CustomObjectRecordFilteredSearchConditionFieldKey;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-import com.fasterxml.jackson.annotation.*;
-import io.micronaut.serde.annotation.Serdeable;
-import jakarta.validation.constraints.*;
-import jakarta.validation.Valid;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.serde.annotation.Serdeable;
+import jakarta.validation.Valid;
+import lombok.*;
+import lombok.experimental.Accessors;
+
+import java.util.HashMap;
 
 /**
  * CustomObjectRecordFilteredSearchCondition

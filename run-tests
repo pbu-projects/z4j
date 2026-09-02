@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e # Stop on failure
 
-SUITES=("ticketingTest" "userTest" "helpCenterTest" "adminTest")
+SUITES=("ticketingTest" "userTest" "helpCenterTest" "accountSettingsTest" "routingWorkflowTest" "customObjectsItamTest")
 TOTAL=${#SUITES[@]}
 
 # Z4J Colors
