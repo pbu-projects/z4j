@@ -28,7 +28,7 @@ class CustomObjectsClientSpec extends Z4jSpec {
         // Create test custom object
         def fixtures = new Yaml().load(new File("src/test/resources/fixtures/custom_object_fixtures.yaml").text) as Map
         def objData = fixtures.customObjects[0] as Map
-        existingObjectKey = objData.key as String
+        existingObjectKey = (objData.key as String) + "_" + UUID.randomUUID().toString().substring(0, 8)
         def input = new CustomObjectCreateInput()
             .setKey(existingObjectKey)
             .setTitle(objData.title as String)

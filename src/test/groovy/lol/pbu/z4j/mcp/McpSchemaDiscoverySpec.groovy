@@ -26,7 +26,7 @@ class McpSchemaDiscoverySpec extends Z4jSpec {
         
         def fixtures = new Yaml().load(new File("src/test/resources/fixtures/custom_object_fixtures.yaml").text) as Map
         def objData = fixtures.customObjects[0] as Map
-        testObjectKey = objData.key as String
+        testObjectKey = (objData.key as String) + "_" + UUID.randomUUID().toString().substring(0, 8)
         
         def input = new CustomObjectCreateInput()
             .setKey(testObjectKey)

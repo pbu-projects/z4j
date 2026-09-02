@@ -29,7 +29,7 @@ class CustomObjectRecordsClientSpec extends Z4jSpec {
         // Create a custom object to test against
         def fixtures = new Yaml().load(new File("src/test/resources/fixtures/custom_object_fixtures.yaml").text) as Map
         def objData = fixtures.customObjects[1] as Map // use second one to avoid conflict
-        customObjectKey = objData.key as String
+        customObjectKey = (objData.key as String) + "_" + UUID.randomUUID().toString().substring(0, 8)
         def input = new CustomObjectCreateInput()
             .setKey(customObjectKey)
             .setTitle(objData.title as String)
