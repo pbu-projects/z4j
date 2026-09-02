@@ -1,25 +1,12 @@
-/*
- * Copyright 2026 Peanut Butter Unicorn, LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package lol.pbu.z4j.client
 
 import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
-import lol.pbu.z4j.model.TicketFieldsResponse
+import lol.pbu.z4j.model.TicketField
+import lol.pbu.z4j.model.TicketFieldCreateRequest
+import lol.pbu.z4j.model.TicketFieldTypeEnum
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -28,12 +15,8 @@ import static io.micronaut.http.HttpStatus.FORBIDDEN
 @MicronautTest
 class TicketFieldsClientSpec extends Z4jSpec {
 
-    @Shared
-    TicketFieldsClient adminTicketFieldsClient, agentTicketFieldsClient, userTicketFieldsClient,
-                       badTokenTicketFieldsClient, badUrlTicketFieldsClient
-
-    @Shared
-    Long existingFieldId
+    @Shared TicketFieldsClient adminTicketFieldsClient, agentTicketFieldsClient, userTicketFieldsClient, badTokenTicketFieldsClient, badUrlTicketFieldsClient
+    @Shared Long testFieldId
 
     def setupSpec() {
         adminTicketFieldsClient = adminCtx.getBean(TicketFieldsClient.class)
@@ -42,17 +25,26 @@ class TicketFieldsClientSpec extends Z4jSpec {
         badTokenTicketFieldsClient = badTokenCtx.getBean(TicketFieldsClient.class)
         badUrlTicketFieldsClient = badUrlCtx.getBean(TicketFieldsClient.class)
 
-        TicketFieldsResponse fields = adminTicketFieldsClient.listTicketFields(null, null).block()
-        if (fields?.ticketFields && !fields.ticketFields.isEmpty()) {
-            existingFieldId = fields.ticketFields.first().id
+        // Create test ticket field
+        def field = new TicketField("Test Field " + UUID.randomUUID().toString().substring(0, 8), "text")
+        def request = new TicketFieldCreateRequest().setTicketField(field)
+
+        def response = adminTicketFieldsClient.createTicketField(request).block()
+        testFieldId = response.ticketField.id
+        sleep(2000)
+    }
+
+    def cleanupSpec() {
+        if (testFieldId != null) {
+            try {
+                adminTicketFieldsClient.deleteTicketField(testFieldId, null).block()
+            } catch (Exception ignored) {}
         }
     }
 
     @Unroll
     def "can list ticket fields for all roles as #userType"(
             TicketFieldsClient client, String userType) {
-        given: "an authenticated client for #userType"
-
         when: "requesting ticket fields list"
         client.listTicketFields(null, null).block()
 
@@ -70,8 +62,6 @@ class TicketFieldsClientSpec extends Z4jSpec {
     @Unroll
     def "can count ticket fields as an #userType"(
             TicketFieldsClient client, String userType) {
-        given: "an authenticated client for #userType"
-
         when: "requesting ticket fields count"
         client.countTicketFields().block()
 
@@ -88,12 +78,8 @@ class TicketFieldsClientSpec extends Z4jSpec {
     @Unroll
     def "can show ticket field by ID as an #userType"(
             TicketFieldsClient client, String userType) {
-        given: "an authenticated client for #userType and existing field ID"
-
         when: "requesting ticket field by ID"
-        if (existingFieldId != null) {
-            client.showTicketfield(existingFieldId, null).block()
-        }
+        client.showTicketfield(testFieldId, null).block()
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
@@ -108,12 +94,8 @@ class TicketFieldsClientSpec extends Z4jSpec {
     @Unroll
     def "can show many ticket fields for all roles as #userType"(
             TicketFieldsClient client, String userType) {
-        given: "an authenticated client for #userType and existing field ID"
-
         when: "requesting multiple ticket fields by ID list"
-        if (existingFieldId != null) {
-            client.showManyTicketFields(existingFieldId.toString(), null, null, null).block()
-        }
+        client.showManyTicketFields(testFieldId.toString(), null, null, null).block()
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
@@ -126,8 +108,6 @@ class TicketFieldsClientSpec extends Z4jSpec {
     }
 
     def "end user cannot count ticket fields"() {
-        given: "an end user client"
-
         when: "requesting ticket fields count as an end user"
         userTicketFieldsClient.countTicketFields().block()
 

@@ -57,7 +57,7 @@ public interface TicketFormsClient {
      * @return <p>Created response</p> (status code 201)
      */
     @Post("/api/v2/ticket_forms")
-    Mono<@Valid TicketFormResponse> createTicketForm();
+    Mono<@Valid TicketFormResponse> createTicketForm(@Body @Nullable Object request);
 
     /**
      * {@summary Create Ticket Form Statuses}

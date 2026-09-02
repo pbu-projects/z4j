@@ -25,6 +25,7 @@ import reactor.core.publisher.Mono;
 import lol.pbu.z4j.model.TicketFieldCountResponse;
 import lol.pbu.z4j.model.TicketFieldResponse;
 import lol.pbu.z4j.model.TicketFieldsResponse;
+import lol.pbu.z4j.model.TicketFieldCreateRequest;
 import lol.pbu.z4j.model.TicketFieldsShowManyResponse;
 import io.micronaut.retry.annotation.Retryable;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public interface TicketFieldsClient {
      * @return <p>Created response</p> (status code 201)
      */
     @Post("/api/v2/ticket_fields")
-    Mono<TicketFieldResponse> createTicketField();
+    Mono<TicketFieldResponse> createTicketField(@Body @Nullable TicketFieldCreateRequest request);
 
     /**
      * {@summary Delete Ticket Field}
