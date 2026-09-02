@@ -76,7 +76,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "calling showTicket() succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         when:
-        client.showTicket(tickets.get(0).getId()).block()
+        client.showTicket(tickets.get(0).getId(), null).block()
 
         then:
         noExceptionThrown()
@@ -87,7 +87,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "calling showTicket() fails when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         when:
-        client.showTicket(tickets.get(0).getId()).block()
+        client.showTicket(tickets.get(0).getId(), null).block()
 
         then:
         thrown(HttpClientException)

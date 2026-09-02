@@ -37,7 +37,7 @@ class SearchClientSpec extends Z4jSpec {
     @Unroll("an #clientName user can run the list method with sortby: #sortBy, sortOrder: #sortOrder")
     void "can run the list method"(String clientName, SearchClient client, SortBy sortBy, SortOrder sortOrder) {
         when:
-        client.list("type:group", sortBy, sortOrder, null, null).block()
+        client.list("type:group", null, sortBy, sortOrder, null, null).block()
 
         then:
         noExceptionThrown()
@@ -59,10 +59,10 @@ class SearchClientSpec extends Z4jSpec {
         when:
         def page = 1
         List<SearchResponse> responses = []
-        SearchResponse response = adminSearchClient.list(ticketQuery, null, null, page, 2).block()
+        SearchResponse response = adminSearchClient.list(ticketQuery, null, null, null, page, 2).block()
         responses << response
         while (response.nextPage != null && page < 3) {
-            response = adminSearchClient.list(ticketQuery, null, null, page, 2).block()
+            response = adminSearchClient.list(ticketQuery, null, null, null, page, 2).block()
             page++
             responses << response
         }
@@ -74,7 +74,7 @@ class SearchClientSpec extends Z4jSpec {
     @Unroll("a simple user querying the list method fails with #sortBy and #sortOrder")
     void "cannot run searchClient.list()"(SearchClient client, SortBy sortBy, SortOrder sortOrder) {
         when:
-        client.list(faker.bluey().quote(), sortBy, sortOrder, null, null).block()
+        client.list(faker.bluey().quote(), null, sortBy, sortOrder, null, null).block()
 
         then:
         thrown(HttpClientResponseException)
