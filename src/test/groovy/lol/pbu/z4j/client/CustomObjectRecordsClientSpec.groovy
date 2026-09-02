@@ -5,6 +5,7 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.model.*
+import org.yaml.snakeyaml.Yaml
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -26,11 +27,13 @@ class CustomObjectRecordsClientSpec extends Z4jSpec {
         adminCustomObjectsClient = adminCtx.getBean(CustomObjectsClient.class)
 
         // Create a custom object to test against
-        customObjectKey = "test_rec_obj_" + UUID.randomUUID().toString().substring(0, 8)
+        def fixtures = new Yaml().load(new File("src/test/resources/fixtures/custom_object_fixtures.yaml").text) as Map
+        def objData = fixtures.customObjects[1] as Map // use second one to avoid conflict
+        customObjectKey = objData.key as String
         def input = new CustomObjectCreateInput()
             .setKey(customObjectKey)
-            .setTitle("Test Rec Object " + customObjectKey)
-            .setTitlePluralized("Test Rec Objects " + customObjectKey)
+            .setTitle(objData.title as String)
+            .setTitlePluralized(objData.titlePluralized as String)
 
         adminCustomObjectsClient.createCustomObject(new CustomObjectsCreateRequest().setCustomObject(input)).block()
         sleep(2000)
@@ -46,7 +49,9 @@ class CustomObjectRecordsClientSpec extends Z4jSpec {
 
     def "can perform custom object record CRUD lifecycle as an admin"() {
         given: "a payload for a new custom object record"
-        String recordName = "Test Record " + UUID.randomUUID().toString()
+        def fixtures = new Yaml().load(new File("src/test/resources/fixtures/custom_object_fixtures.yaml").text) as Map
+        def objData = fixtures.customObjects[1] as Map
+        String recordName = objData.recordName as String
         def createPayload = new CustomObjectRecordsCreateRequest().setCustomObjectRecord(
             new CustomObjectRecord().setName(recordName)
         )

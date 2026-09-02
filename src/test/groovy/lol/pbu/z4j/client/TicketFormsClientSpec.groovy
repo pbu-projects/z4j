@@ -4,6 +4,7 @@ import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.model.TicketFormObject
+import org.yaml.snakeyaml.Yaml
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -21,7 +22,9 @@ class TicketFormsClientSpec extends Z4jSpec {
         badUrlTicketFormsClient = badUrlCtx.getBean(TicketFormsClient.class)
 
         // Create test ticket form
-        def formObject = new TicketFormObject().setName("Test Form " + UUID.randomUUID().toString().substring(0, 8))
+        def fixtures = new Yaml().load(new File("src/test/resources/fixtures/ticket_form_fixtures.yaml").text) as Map
+        def formData = fixtures.ticketForms[0] as Map
+        def formObject = new TicketFormObject().setName(formData.name as String)
         def request = [ticket_form: formObject]
 
         def response = adminTicketFormsClient.createTicketForm(request).block()

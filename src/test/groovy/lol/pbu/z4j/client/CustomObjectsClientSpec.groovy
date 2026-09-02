@@ -6,6 +6,7 @@ import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.model.CustomObjectsCreateRequest
 import lol.pbu.z4j.model.CustomObjectCreateInput
+import org.yaml.snakeyaml.Yaml
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -25,11 +26,13 @@ class CustomObjectsClientSpec extends Z4jSpec {
         badUrlCustomObjectsClient = badUrlCtx.getBean(CustomObjectsClient.class)
 
         // Create test custom object
-        existingObjectKey = "test_obj_" + UUID.randomUUID().toString().substring(0, 8)
+        def fixtures = new Yaml().load(new File("src/test/resources/fixtures/custom_object_fixtures.yaml").text) as Map
+        def objData = fixtures.customObjects[0] as Map
+        existingObjectKey = objData.key as String
         def input = new CustomObjectCreateInput()
             .setKey(existingObjectKey)
-            .setTitle("Test Object " + existingObjectKey)
-            .setTitlePluralized("Test Objects " + existingObjectKey)
+            .setTitle(objData.title as String)
+            .setTitlePluralized(objData.titlePluralized as String)
 
         adminCustomObjectsClient.createCustomObject(new CustomObjectsCreateRequest().setCustomObject(input)).block()
         sleep(2000)

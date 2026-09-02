@@ -7,6 +7,7 @@ import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.model.TicketField
 import lol.pbu.z4j.model.TicketFieldCreateRequest
 import lol.pbu.z4j.model.TicketFieldTypeEnum
+import org.yaml.snakeyaml.Yaml
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -26,7 +27,9 @@ class TicketFieldsClientSpec extends Z4jSpec {
         badUrlTicketFieldsClient = badUrlCtx.getBean(TicketFieldsClient.class)
 
         // Create test ticket field
-        def field = new TicketField("Test Field " + UUID.randomUUID().toString().substring(0, 8), "text")
+        def fixtures = new Yaml().load(new File("src/test/resources/fixtures/ticket_field_fixtures.yaml").text) as Map
+        def fieldData = fixtures.ticketFields[0] as Map
+        def field = new TicketField(fieldData.title as String, fieldData.type as String)
         def request = new TicketFieldCreateRequest().setTicketField(field)
 
         def response = adminTicketFieldsClient.createTicketField(request).block()

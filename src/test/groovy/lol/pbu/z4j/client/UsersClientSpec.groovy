@@ -23,6 +23,7 @@ import lol.pbu.z4j.model.CurrentUserResponse
 import lol.pbu.z4j.model.UserInput
 import lol.pbu.z4j.model.UserRequest
 import lol.pbu.z4j.model.UserResponse
+import org.yaml.snakeyaml.Yaml
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -177,8 +178,10 @@ class UsersClientSpec extends Z4jSpec {
     
     def "can perform user CRUD lifecycle as an admin"() {
         given: "a user payload with unique email"
-        String userEmail = "z4j-test-" + UUID.randomUUID().toString().substring(0, 8) + "@example.com"
-        String userName = faker.name().fullName() + " " + UUID.randomUUID().toString().substring(0, 8)
+        def fixtures = new Yaml().load(new File("src/test/resources/fixtures/user_fixtures.yaml").text) as Map
+        def userData = fixtures.users[0] as Map
+        String userEmail = userData.email
+        String userName = userData.name
         UserRequest createRequest = new UserRequest(new UserInput(userEmail, userName))
         Long createdUserId = null
 
