@@ -1,39 +1,24 @@
-/*
- * Copyright 2026 Peanut Butter Unicorn, LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package lol.pbu.z4j.client
 
 import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
-import lol.pbu.z4j.model.TicketsResponse
+import lol.pbu.z4j.model.TicketCreateRequest
+import lol.pbu.z4j.model.TicketCreateInput
+import lol.pbu.z4j.model.TicketComment
 import spock.lang.Shared
 import spock.lang.Unroll
+import org.yaml.snakeyaml.Yaml
 
 import static io.micronaut.http.HttpStatus.FORBIDDEN
 
 @MicronautTest
 class TicketCommentsClientSpec extends Z4jSpec {
 
-    @Shared
-    TicketCommentsClient adminTicketCommentsClient, agentTicketCommentsClient, userTicketCommentsClient,
-                         badTokenTicketCommentsClient, badUrlTicketCommentsClient
-
-    @Shared
-    Long testTicketId
+    @Shared TicketCommentsClient adminTicketCommentsClient, agentTicketCommentsClient, userTicketCommentsClient, badTokenTicketCommentsClient, badUrlTicketCommentsClient
+    @Shared TicketClient ticketClient
+    @Shared Long testTicketId
 
     def setupSpec() {
         adminTicketCommentsClient = adminCtx.getBean(TicketCommentsClient.class)
@@ -41,22 +26,40 @@ class TicketCommentsClientSpec extends Z4jSpec {
         userTicketCommentsClient = userCtx.getBean(TicketCommentsClient.class)
         badTokenTicketCommentsClient = badTokenCtx.getBean(TicketCommentsClient.class)
         badUrlTicketCommentsClient = badUrlCtx.getBean(TicketCommentsClient.class)
+        ticketClient = adminCtx.getBean(TicketClient.class)
 
-        TicketClient ticketClient = adminCtx.getBean(TicketClient.class)
-        TicketsResponse response = ticketClient.listTickets(null).block()
-        if (response?.tickets && !response.tickets.isEmpty()) {
-            testTicketId = response.tickets.first().id
+        // Load fixtures
+        def yaml = new Yaml()
+        def fixtureFile = new File("src/test/resources/fixtures/ticket_fixtures.yaml")
+        def fixtures = yaml.load(fixtureFile.text) as Map
+        def ticketData = fixtures.ticketData[0] as Map
+
+        // Create test ticket
+        def ticketPayload = new TicketCreateInput()
+            .setSubject(ticketData.subject as String + " " + UUID.randomUUID().toString())
+            .setComment(new TicketComment().setBody(ticketData.comment as String))
+            
+        def createResponse = ticketClient.createTicket(new TicketCreateRequest().setTicket(ticketPayload)).block()
+        testTicketId = createResponse.ticket.id
+        
+        // Wait briefly for index consistency (eventual consistency)
+        sleep(2000)
+    }
+
+    def cleanupSpec() {
+        if (testTicketId != null) {
+            try {
+                ticketClient.deleteTicket(testTicketId).block()
+            } catch (Exception ignored) {
+                // Defensive cleanup
+            }
         }
     }
 
     @Unroll
     def "can count ticket comments as an #userType"(TicketCommentsClient client, String userType) {
-        given: "an authenticated client for #userType and test ticket ID"
-
         when: "requesting ticket comments count"
-        if (testTicketId != null) {
-            client.countTicketComments(testTicketId).block()
-        }
+        client.countTicketComments(testTicketId).block()
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
@@ -71,12 +74,8 @@ class TicketCommentsClientSpec extends Z4jSpec {
     @Unroll
     def "can list ticket comments as an #userType with includeInlineImages=#includeInlineImages"(
             TicketCommentsClient client, String userType, Boolean includeInlineImages) {
-        given: "an authenticated client for #userType and test ticket ID"
-
         when: "requesting ticket comments list"
-        if (testTicketId != null) {
-            client.listTicketComments(testTicketId, includeInlineImages, null).block()
-        }
+        client.listTicketComments(testTicketId, includeInlineImages, null).block()
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
@@ -89,12 +88,8 @@ class TicketCommentsClientSpec extends Z4jSpec {
     }
 
     def "end user cannot list ticket comments"() {
-        given: "an end user client and test ticket ID"
-
         when: "requesting ticket comments count as an end user"
-        if (testTicketId != null) {
-            userTicketCommentsClient.countTicketComments(testTicketId).block()
-        }
+        userTicketCommentsClient.countTicketComments(testTicketId).block()
 
         then: "a 403 Forbidden exception is thrown as documented"
         HttpClientResponseException e = thrown()
@@ -105,9 +100,7 @@ class TicketCommentsClientSpec extends Z4jSpec {
     def "calling ticket comments client with #description throws HttpClientException"(
             String description, TicketCommentsClient client) {
         when: "requesting ticket comments with invalid client configuration"
-        if (testTicketId != null) {
-            client.countTicketComments(testTicketId).block()
-        }
+        client.countTicketComments(testTicketId).block()
 
         then: "an http client exception is thrown"
         thrown(HttpClientException)

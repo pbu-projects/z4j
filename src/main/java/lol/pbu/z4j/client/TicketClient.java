@@ -132,4 +132,12 @@ public interface TicketClient {
      */
     @Put("/api/v2/tickets/{ticket_id}")
     Mono<@Valid TicketUpdateResponse> updateTicket(@PathVariable("ticket_id") @NotNull Long ticketId, @Body @Nullable @Valid TicketUpdateRequest ticketUpdateRequest);
+
+    /**
+     * {@summary Delete Ticket}
+     * @param ticketId The ID of the ticket (required)
+     * @return Success (status code 204)
+     */
+    @Delete("/api/v2/tickets/{ticket_id}")
+    Mono<Void> deleteTicket(@PathVariable("ticket_id") @NotNull Long ticketId);
 }

@@ -36,12 +36,13 @@ import lombok.experimental.Accessors;
 @Setter
 @JsonPropertyOrder(UserRequest.JSON_PROPERTY_USER)
 @Serdeable
+@io.micronaut.core.annotation.Introspected
 public class UserRequest implements UpdateManyUsersRequest {
 
     public static final String JSON_PROPERTY_USER = "user";
 
     @NotNull
-    @Valid
+    
     @JsonProperty(JSON_PROPERTY_USER)
     private UserInput user;
 

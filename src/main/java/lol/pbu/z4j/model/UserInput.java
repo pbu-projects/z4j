@@ -54,6 +54,7 @@ import java.util.List;
     UserInput.JSON_PROPERTY_ID,
 })
 @Serdeable
+@io.micronaut.core.annotation.Introspected
 public class UserInput extends HashMap<String, Object> {
 
     public static final String JSON_PROPERTY_EMAIL = "email";
@@ -123,8 +124,8 @@ public class UserInput extends HashMap<String, Object> {
     private Long id;
 
     public UserInput(String email, String name) {
-        this.email = email;
-        this.name = name;
+        this.email = email; this.put("email", email);
+        this.name = name; this.put("name", name);
     }
 
     /**

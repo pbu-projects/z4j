@@ -287,7 +287,8 @@ public interface CustomObjectRecordsClient {
     @Patch("/api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}")
     Mono<@Valid CustomObjectRecordResponse> updateCustomObjectRecord(
         @PathVariable("custom_object_key") @NotNull String customObjectKey,
-        @PathVariable("custom_object_record_id") @NotNull String customObjectRecordId
+        @PathVariable("custom_object_record_id") @NotNull String customObjectRecordId,
+        @Body @Nullable @Valid CustomObjectRecordsCreateRequest customObjectRecordsCreateRequest
     );
 
     /**

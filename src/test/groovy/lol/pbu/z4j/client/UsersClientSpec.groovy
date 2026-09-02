@@ -174,7 +174,7 @@ class UsersClientSpec extends Z4jSpec {
         ]
     }
 
-    @spock.lang.Ignore("Sandbox 422 Unprocessable Entity")
+    
     def "can perform user CRUD lifecycle as an admin"() {
         given: "a user payload with unique email"
         String userEmail = "z4j-test-" + UUID.randomUUID().toString().substring(0, 8) + "@example.com"
@@ -197,7 +197,8 @@ class UsersClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         when: "updating the user name"
-        UserRequest updateRequest = new UserRequest(new UserInput().setName(userName + " Updated"))
+        UserInput input = new UserInput(null, userName + " Updated");
+        UserRequest updateRequest = new UserRequest(input)
         adminUsersClient.updateUser(createdUserId, updateRequest).block()
 
         then: "user updates successfully"
