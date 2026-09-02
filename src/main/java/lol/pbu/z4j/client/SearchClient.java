@@ -26,13 +26,16 @@ import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.*;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
+
 /**
  * <h1>{@summary Zendesk Search API}</h1>
  * <p>Reactive client for performing searches in Zendesk. These methods provide low-level access to the search endpoints.</p>
+ * <p>Search queries can be dynamically built using {@link SearchQueryBuilder} to ensure syntax correctness.</p>
  * <ul>
  *     <li>Show Search Result Counts with {@link #count(String)}</li>
  *     <li>Export Search Results with {@link #exportTicket(String, Integer, String)}</li>
- *     <li>List Search Results with{@link #list}</li>
+ *     <li>List Search Results with {@link #list}</li>
  * </ul>
  *
  * @author Jonathan-Zollinger
@@ -44,51 +47,35 @@ public interface SearchClient {
 
     /**
      * <h1>{@summary Show Search Results Count}</h1>
-     * Returns the number of items matching the query rather than returning the items. The search string works the same as a regular search. <h4>Allowed For Agents</h4>
+     * <p>Returns the number of items matching the query rather than returning the items themselves.</p>
+     * <p>See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#show-results-count'>Zendesk API Docs</a>.</p>
      *
-     * @param query Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href='https://support.zendesk.com/hc/en-us/articles/203663226'>Zendesk Support search reference</a>. (required)
-     * @return Success response (status code 200)
-     * or Error response (status code 400)
+     * <h4>Allowed For:</h4>
+     * <ul>
+     *   <li>Agents</li>
+     * </ul>
+     *
+     * @param query The search query string. See <a href='https://support.zendesk.com/hc/en-us/articles/203663226'>Zendesk Support search reference</a>. (required)
+     * @return Success response (status code 200) containing the count.
      */
     @Get("/api/v2/search/count")
     Mono<@Valid SearchResponse> count(@QueryValue("query") @NotNull String query);
 
     /**
      * <h1>{@summary Export Search Results}</h1>
-     * <p>Exports a set of Tickets. See <a
-     * href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query
-     * syntax</a> for the syntax of the {@code query} parameter.</p> <p>Use this endpoint for search queries that will
-     * return more than 1000 results. The result set is ordered only by the {@code created_at} attribute.</p> <p>The search
-     * only returns results of a single object type. The following object types are supported: ticket, organization, user,
-     * or group.</p> <p>You must specify the type in the {@code filter[type]} parameter. Searches with type in the query
-     * string will result in an error.</p> Allowed for Agents <h4>Pagination</h4>
-     * <ul>
-     *     <li>Cursor
-     *         pagination
-     *     </li>
-     * </ul> <p>See <a href='https://developer.zendesk.com/api-reference/introduction/pagination/'>Pagination</a>.</p> <p>
-     *     Returns a maximum of 1000 records per page. The number of results shown in a page is determined by the {@code
-     *     page[size]} parameter.</p> <p><strong>Note</strong>: You may experience a speed reduction or a timeout if you
-     *     request 1000 results per page and you have many archived tickets in the results. Try reducing the number of results
-     *     per page. We recommend 100 results per page.</p> <p>The cursor specified by the {@code after_cursor} property in a
-     *     response expires after one hour.</p> <p>For more information on cursor-based pagination, see the following
-     *     articles:</p>
-     * <ul>
-     *     <li>
-     *         <a href='https://developer.zendesk.com/documentation/developer-tools/pagination/comparing-cursor-pagination-and-offset-pagination'>Comparing
-     *             cursor pagination and offset pagination</a></li>
-     *     <li>
-     *         <a href='https://developer.zendesk.com/documentation/developer-tools/pagination/paginating-through-lists-using-cursor-pagination'>Paginating
-     *             through lists using cursor pagination</a></li>
-     * </ul> <h4>Export Search Results Limits</h4> <p>This API endpoint is rate-limited to 100 requests per minute per account.
-     *     The limit also counts towards the global API rate
-     *     limit.</p>
+     * <p>Exports a set of Tickets using cursor-based pagination. Best for queries that return more than 1000 results.</p>
+     * <p>See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#export-search-results'>Zendesk API Docs</a>.</p>
      *
-     * @param query      Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href='https://support.zendesk.com/hc/en-us/articles/203663226'>Zendesk Support search reference</a>. (required)
-     * @param pageSize   The number of results shown in a page. (required)
-     * @param pageAfter  The cursor token for fetching the next page of results. (required)
-     * @return Success response (status code 200)
-     * or Error response (status code 400)
+     * <h4>Pagination</h4>
+     * <p>Uses Cursor Pagination. Returns a maximum of 1000 records per page. The result set is ordered only by the {@code created_at} attribute.</p>
+     * 
+     * <h4>Rate Limits</h4>
+     * <p>Rate-limited to 100 requests per minute per account.</p>
+     *
+     * @param query      The search query string. (required)
+     * @param pageSize   The number of results shown in a page, max 1000. (optional)
+     * @param pageAfter  The cursor token for fetching the next page of results. (optional)
+     * @return Success response (status code 200) containing a cursor-paginated list of tickets.
      */
     @Get("/api/v2/search/export?filter[type]=ticket")
     Mono<@Valid ExportResponse<Ticket>> exportTicket(
@@ -99,25 +86,29 @@ public interface SearchClient {
 
     /**
      * <h1>{@summary List Search Results}</h1>
-     * <p>Returns the search results. See <a
-     * href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query
-     * syntax</a> for details on the {@code query} parameter.</p>
+     * <p>Returns the search results matching the query.</p>
+     * <p>See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#list-search-results'>Zendesk API Docs</a>.</p>
      *
-     * <p>This endpoint has its own rate limit. The rate limit counts towards the global API rate
-     * limit. See <a href='https://developer.zendesk.com/api-reference/ticketing/introduction/#limits'>Limits</a>.</p><h4>
-     * Allowed For Agents</h4>
+     * <h4>Sideloading</h4>
+     * <p>You can sideload related records using the {@code include} parameter. For tickets, you might sideload {@code users} or {@code groups}.</p>
      *
-     * @param query     Returns the search results. See <a href='https://developer.zendesk.com/api-reference/ticketing/ticket-management/search/#query-syntax'>Query syntax</a> for details on the {@code query} parameter. For details on the query syntax, see the <a href='https://support.zendesk.com/hc/en-us/articles/203663226'>Zendesk Support search reference</a>. (required)
-     * @param sortBy    One of {@code updated_at}, {@code created_at}, {@code priority}, {@code status}, or {@code ticket_type}. Defaults to sorting by relevance (optional)
-     * @param sortOrder Defaults to descending (optional)
-     * @param page      The page number to retrieve. (optional)
-     * @param perPage   The count of results to include in each page. (optional)
-     * @return Success response (status code 200)
-     * or Error response (status code 400)
+     * <h4>Allowed For:</h4>
+     * <ul>
+     *   <li>Agents</li>
+     * </ul>
+     *
+     * @param query     The search query string. (required)
+     * @param include   A list of entities to sideload (e.g. "users", "groups"). Use {@link TicketSideload} or {@link UserSideload}. (optional)
+     * @param sortBy    One of {@code updated_at}, {@code created_at}, {@code priority}, {@code status}, or {@code ticket_type}. (optional)
+     * @param sortOrder Defaults to descending. (optional)
+     * @param page      The offset page number to retrieve. (optional)
+     * @param perPage   The count of results to include in each offset page (max 100). (optional)
+     * @return Success response (status code 200) containing search results.
      */
     @Get("/api/v2/search")
     Mono<@Valid SearchResponse> list(
             @QueryValue("query") @NotNull String query,
+            @QueryValue("include") @Nullable List<String> include,
             @QueryValue("sort_by") @Nullable SortBy sortBy,
             @QueryValue("sort_order") @Nullable SortOrder sortOrder,
             @QueryValue("page") @Nullable Integer page,

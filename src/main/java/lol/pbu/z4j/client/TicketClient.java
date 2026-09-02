@@ -111,7 +111,7 @@ public interface TicketClient {
      * @return List tickets (status code 200)
      */
     @Get("/api/v2/tickets")
-    Mono<@Valid TicketsResponse> listTickets(@QueryValue("external_id") @Nullable String externalId);
+    Mono<@Valid TicketsResponse> listTickets(@QueryValue("external_id") @Nullable String externalId, @QueryValue("include") @Nullable java.util.List<lol.pbu.z4j.model.TicketSideload> include);
 
     /**
      * <h1>{@summary Show Ticket}</h1>
@@ -121,7 +121,7 @@ public interface TicketClient {
      * @return Ticket (status code 200)
      */
     @Get("/api/v2/tickets/{ticket_id}")
-    Mono<@Valid TicketResponse> showTicket(@PathVariable("ticket_id") @NotNull Long ticketId);
+    Mono<@Valid TicketResponse> showTicket(@PathVariable("ticket_id") @NotNull Long ticketId, @QueryValue("include") @Nullable java.util.List<lol.pbu.z4j.model.TicketSideload> include);
 
     /**
      * <h1>{@summary Update Ticket}</h1>

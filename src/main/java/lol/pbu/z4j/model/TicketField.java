@@ -227,7 +227,7 @@ public class TicketField {
     @Nullable
     @JsonProperty(JSON_PROPERTY_POSITION)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer position;
+    private Long position;
 
     /**
      * The dynamic content placeholder if present, or the <code>description</code> value if not. See <a href=\"/api-reference/ticketing/ticket-management/dynamic_content/\">Dynamic Content</a>
@@ -307,7 +307,7 @@ public class TicketField {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SUB_TYPE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer subTypeId;
+    private Long subTypeId;
 
     /**
      * Presented for a system ticket field of type \"tickettype\", \"priority\" or \"status\"
