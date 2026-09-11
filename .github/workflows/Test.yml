@@ -13,10 +13,12 @@
 # limitations under the License.
 name: Test
 on:
+  push:
+    branches:
+      - "main"
   pull_request:
     branches:
       - "main"
-      - "[0-9]+.[0-9]+.[0-9]+" # release branches
 jobs:
   build-and-analyze:
     runs-on: ubuntu-latest
@@ -39,11 +41,8 @@ jobs:
           distribution: 'graalvm-community'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@50e97c2cd7a37755bbfafc9c5b7cafaece252f6e # 6.1.0
-      - name: Build and run tests
-        if: ${{ github.event.pull_request.base.ref != 'main' && github.event.action != 'closed' }}
-        run: ./gradlew build
-      - name: Sonar Scan
-        if: ${{ github.event.pull_request.base.ref == 'main' && github.event.action != 'closed' }} # Only run SonarQube on PRs to main
+      - name: Build and Sonar Scan
+        if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed') }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew build sonar
