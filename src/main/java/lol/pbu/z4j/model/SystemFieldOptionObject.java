@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * SystemFieldOptionObject
@@ -40,6 +41,7 @@ import lombok.experimental.Accessors;
         SystemFieldOptionObject.JSON_PROPERTY_VALUE,
 })
 @Serdeable
+@Generated
 public class SystemFieldOptionObject {
 
     public static final String JSON_PROPERTY_NAME = "name";

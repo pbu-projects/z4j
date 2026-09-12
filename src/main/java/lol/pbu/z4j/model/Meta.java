@@ -20,6 +20,7 @@ import io.micronaut.serde.annotation.Serdeable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * Meta response found in cursor paginated responses.
@@ -31,6 +32,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode
 @Accessors(chain = true)
 @Serdeable
+@Generated
 public class Meta {
     @JsonProperty("has_more")
     private Boolean hasMore;

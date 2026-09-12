@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * A file represented as an Attachment object.
@@ -51,6 +52,7 @@ import java.util.List;
         "malware_scan_result"
 })
 @Serdeable
+@Generated
 public class AttachmentObject {
 
     @Nullable

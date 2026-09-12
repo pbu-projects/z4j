@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * AttachmentBase
@@ -51,6 +52,7 @@ import lombok.experimental.Accessors;
         AttachmentBase.JSON_PROPERTY_WIDTH,
 })
 @Serdeable
+@Generated
 public class AttachmentBase {
 
     public static final String JSON_PROPERTY_CONTENT_TYPE = "content_type";

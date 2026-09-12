@@ -8,7 +8,14 @@ By participating in this project, you agree to abide our
 
 Below are some instructions on best practices and standards used when contributing to this project!
 
+## Where to Contribute
+Looking for opportunities to help? Check out our active development priorities:
+* <!-- lychee-ignore --> **[Zenith & z4j Platform Roadmap](https://github.com/orgs/pbu-projects/projects/2)**: Our central GitHub Project board tracking overarching features and goals across both repositories.
+* **[Repository Issues](https://github.com/pbu-projects/z4j/issues)**: Browse our open issues for bugs, enhancements, and "good first issue" opportunities specific to the API wrapper.
+
 ## Style Guide
+For an in-depth understanding of the target personas and design philosophy driving this project, refer to the [Target Personas](docs/personas.adoc) documentation.
+
 - This project uses [google's java style guide].
 - We follow (and enforce) [conventional commits] in this repo.
 ## Set up your machine

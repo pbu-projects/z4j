@@ -27,6 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * Response model for the ticket audits endpoint ({@code GET /api/v2/tickets/{ticket_id}/audits}).
@@ -45,6 +46,7 @@ import java.util.List;
         TicketAuditsResponse.JSON_PROPERTY_PREVIOUS_PAGE,
 })
 @Serdeable
+@Generated
 public class TicketAuditsResponse {
 
     public static final String JSON_PROPERTY_AUDITS = "audits";

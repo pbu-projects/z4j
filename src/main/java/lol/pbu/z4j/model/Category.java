@@ -28,6 +28,7 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.time.ZonedDateTime;
+import lol.pbu.z4j.Generated;
 
 /**
  * Category
@@ -54,6 +55,7 @@ import java.time.ZonedDateTime;
         Category.JSON_PROPERTY_URL,
 })
 @Serdeable
+@Generated
 public class Category {
 
     public static final String JSON_PROPERTY_NAME = "name";

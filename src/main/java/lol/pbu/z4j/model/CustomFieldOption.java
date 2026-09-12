@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * CustomFieldOptionObject
@@ -47,6 +48,7 @@ import lombok.experimental.Accessors;
         CustomFieldOption.JSON_PROPERTY_URL,
 })
 @Serdeable
+@Generated
 public class CustomFieldOption {
 
     public static final String JSON_PROPERTY_NAME = "name";

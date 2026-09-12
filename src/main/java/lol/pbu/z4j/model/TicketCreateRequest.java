@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * TicketCreateRequest
@@ -37,6 +38,7 @@ import lombok.experimental.Accessors;
 @Data
 @JsonPropertyOrder(TicketCreateRequest.JSON_PROPERTY_TICKET)
 @Serdeable
+@Generated
 public class TicketCreateRequest {
 
     public static final String JSON_PROPERTY_TICKET = "ticket";

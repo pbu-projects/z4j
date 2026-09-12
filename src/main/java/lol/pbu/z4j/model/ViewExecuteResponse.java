@@ -8,11 +8,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 @Accessors(chain = true)
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Serdeable
+@Generated
 public class ViewExecuteResponse extends OffsetPaginationResponse {
     @Nullable @JsonProperty("rows") @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private List<ViewRow> rows;

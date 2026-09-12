@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lol.pbu.z4j.Generated;
 
 /**
  * The status category the custom ticket status belongs to
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Getter(onMethod_ = {@JsonValue})
 @Serdeable
+@Generated
 public enum TicketFieldCustomStatusObjectStatusCategory {
 
     @JsonProperty("new")

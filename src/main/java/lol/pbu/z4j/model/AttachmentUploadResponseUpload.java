@@ -27,6 +27,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * Upload details including token and attachment objects.
@@ -43,6 +44,7 @@ import java.util.List;
         "attachments"
 })
 @Serdeable
+@Generated
 public class AttachmentUploadResponseUpload {
 
     @Nullable

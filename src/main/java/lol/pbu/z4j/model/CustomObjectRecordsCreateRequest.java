@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * CustomObjectRecordsCreateRequest
@@ -37,6 +38,7 @@ import lombok.experimental.Accessors;
 @Data
 @JsonPropertyOrder(CustomObjectRecordsCreateRequest.JSON_PROPERTY_CUSTOM_OBJECT_RECORD)
 @Serdeable
+@Generated
 public class CustomObjectRecordsCreateRequest {
 
     public static final String JSON_PROPERTY_CUSTOM_OBJECT_RECORD = "custom_object_record";

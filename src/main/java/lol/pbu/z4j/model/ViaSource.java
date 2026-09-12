@@ -25,6 +25,7 @@ import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.util.HashMap;
+import lol.pbu.z4j.Generated;
 
 /**
  * For some channels a source object gives more information about how or why the ticket or event was created
@@ -44,6 +45,7 @@ import java.util.HashMap;
         ViaSource.JSON_PROPERTY_TO,
 })
 @Serdeable
+@Generated
 public class ViaSource extends HashMap<String, Object> {
 
     public static final String JSON_PROPERTY_FROM = "from";

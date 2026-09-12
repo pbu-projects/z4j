@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * Top-level response for Zendesk upload endpoint.
@@ -36,6 +37,7 @@ import lombok.experimental.Accessors;
 @Data
 @JsonPropertyOrder("upload")
 @Serdeable
+@Generated
 public class AttachmentUploadResponse {
 
     @Nullable

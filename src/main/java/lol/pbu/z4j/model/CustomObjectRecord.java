@@ -28,6 +28,7 @@ import lombok.experimental.Accessors;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import lol.pbu.z4j.Generated;
 
 /**
  * CustomObjectRecord
@@ -52,6 +53,7 @@ import java.util.Map;
     CustomObjectRecord.JSON_PROPERTY_UPDATED_AT,
 })
 @Serdeable
+@Generated
 public class CustomObjectRecord {
 
     public static final String JSON_PROPERTY_ID = "id";

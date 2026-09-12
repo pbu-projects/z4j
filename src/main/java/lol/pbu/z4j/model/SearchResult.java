@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * SearchResult
@@ -47,6 +48,7 @@ import lombok.experimental.Accessors;
         SearchResult.JSON_PROPERTY_URL,
 })
 @Serdeable
+@Generated
 public class SearchResult {
 
     public static final String JSON_PROPERTY_CREATED_AT = "created_at";

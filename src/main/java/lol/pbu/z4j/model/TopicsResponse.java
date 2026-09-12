@@ -28,6 +28,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * TopicsResponse
@@ -40,6 +41,7 @@ import java.util.List;
 @Data
 @JsonPropertyOrder(TopicsResponse.JSON_PROPERTY_TOPICS)
 @Serdeable
+@Generated
 public class TopicsResponse {
 
     public static final String JSON_PROPERTY_TOPICS = "topics";

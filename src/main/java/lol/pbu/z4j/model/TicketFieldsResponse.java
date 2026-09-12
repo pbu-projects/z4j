@@ -28,6 +28,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * TicketFieldsResponse
@@ -44,6 +45,7 @@ import java.util.List;
         TicketFieldsResponse.JSON_PROPERTY_LINKS
 })
 @Serdeable
+@Generated
 public class TicketFieldsResponse {
 
     public static final String JSON_PROPERTY_TICKET_FIELDS = "ticket_fields";

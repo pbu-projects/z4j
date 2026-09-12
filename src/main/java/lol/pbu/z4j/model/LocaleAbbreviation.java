@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lol.pbu.z4j.Generated;
 
 /**
  * The locale of the translation
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Getter(onMethod = @__(@JsonValue))
 @Serdeable
+@Generated
 public enum LocaleAbbreviation {
 
     @JsonProperty("ar")

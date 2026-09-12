@@ -27,6 +27,7 @@ import lombok.experimental.Accessors;
 
 import java.util.HashMap;
 import java.util.Map;
+import lol.pbu.z4j.Generated;
 
 /**
  * For more information, see the <a href=\"/documentation/ticketing/reference-guides/via-object-reference\">Via object reference</a>
@@ -43,6 +44,7 @@ import java.util.Map;
         TicketVia.JSON_PROPERTY_SOURCE,
 })
 @Serdeable
+@Generated
 public class TicketVia {
 
     public static final String JSON_PROPERTY_CHANNEL = "channel";

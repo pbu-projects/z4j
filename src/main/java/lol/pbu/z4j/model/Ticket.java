@@ -31,6 +31,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import lol.pbu.z4j.Generated;
 
 /**
  * Ticket object in the Zendesk Support Api
@@ -98,6 +99,7 @@ import java.util.Map;
         Ticket.JSON_PROPERTY_VOICE_COMMENT,
 })
 @Serdeable
+@Generated
 public class Ticket implements Exportable {
 
     public static final String JSON_PROPERTY_REQUESTER_ID = "requester_id";

@@ -29,6 +29,7 @@ import lombok.experimental.Accessors;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import lol.pbu.z4j.Generated;
 
 /**
  * CustomObjectRecordsResponse
@@ -45,6 +46,7 @@ import java.util.Map;
     CustomObjectRecordsResponse.JSON_PROPERTY_LINKS,
 })
 @Serdeable
+@Generated
 public class CustomObjectRecordsResponse {
 
     public static final String JSON_PROPERTY_CUSTOM_OBJECT_RECORDS = "custom_object_records";
