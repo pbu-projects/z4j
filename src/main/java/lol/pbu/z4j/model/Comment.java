@@ -24,6 +24,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * Comment
@@ -52,6 +53,7 @@ import lombok.experimental.Accessors;
         CommentBase.JSON_PROPERTY_VOTE_SUM,
 })
 @Serdeable
+@Generated
 public class Comment extends CommentBase {
 
     public static final String JSON_PROPERTY_SOURCE_ID = "source_id";

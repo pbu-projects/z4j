@@ -16,8 +16,10 @@
 package lol.pbu.z4j.model;
 
 import io.micronaut.serde.annotation.Serdeable;
+import lol.pbu.z4j.Generated;
 
 @Serdeable
+@Generated
 public interface SearchResultsInner {
 
 }

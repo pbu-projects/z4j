@@ -24,6 +24,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * PostComment
@@ -51,6 +52,7 @@ import lombok.experimental.Accessors;
         CommentBase.JSON_PROPERTY_VOTE_SUM,
 })
 @Serdeable
+@Generated
 public class PostComment extends CommentBase implements SearchResultsInner {
 
     public static final String JSON_PROPERTY_OFFICIAL = "official";

@@ -28,6 +28,7 @@ import lombok.experimental.Accessors;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * Audit
@@ -49,6 +50,7 @@ import java.util.List;
         Audit.JSON_PROPERTY_VIA,
 })
 @Serdeable
+@Generated
 public class Audit {
 
     public static final String JSON_PROPERTY_AUTHOR_ID = "author_id";

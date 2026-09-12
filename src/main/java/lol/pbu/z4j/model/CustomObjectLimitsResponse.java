@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * CustomObjectLimitsResponse
@@ -39,6 +40,7 @@ import lombok.experimental.Accessors;
     CustomObjectLimitsResponse.JSON_PROPERTY_LIMIT,
 })
 @Serdeable
+@Generated
 public class CustomObjectLimitsResponse {
 
     public static final String JSON_PROPERTY_COUNT = "count";

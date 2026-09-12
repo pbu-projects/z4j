@@ -16,10 +16,12 @@
 package lol.pbu.z4j.model;
 
 import io.micronaut.serde.annotation.Serdeable;
+import lol.pbu.z4j.Generated;
 
 /**
  * placeholder for Group objects
  */
 @Serdeable
+@Generated
 public class Group implements Exportable {
 }

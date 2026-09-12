@@ -28,6 +28,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * A file represented as an <a href=\"developer.zendesk.com/api-reference/ticketing/tickets/ticket-attachments/\">Attachment</a> object
@@ -57,6 +58,7 @@ import java.util.List;
         Attachment.JSON_PROPERTY_THUMBNAILS,
 })
 @Serdeable
+@Generated
 public class Attachment extends AttachmentBase {
 
     public static final String JSON_PROPERTY_THUMBNAILS = "thumbnails";

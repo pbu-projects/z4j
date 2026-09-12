@@ -20,6 +20,7 @@ import io.micronaut.serde.annotation.Serdeable;
 import java.util.List;
 
 import io.micronaut.core.annotation.Nullable;
+import lol.pbu.z4j.Generated;
 
 /**
  * TicketCustomField

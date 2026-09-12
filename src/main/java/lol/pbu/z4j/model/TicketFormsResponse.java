@@ -28,6 +28,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * TicketFormsResponse
@@ -40,6 +41,7 @@ import java.util.List;
 @Data
 @JsonPropertyOrder(TicketFormsResponse.JSON_PROPERTY_TICKET_FORMS)
 @Serdeable
+@Generated
 public class TicketFormsResponse {
 
     public static final String JSON_PROPERTY_TICKET_FORMS = "ticket_forms";

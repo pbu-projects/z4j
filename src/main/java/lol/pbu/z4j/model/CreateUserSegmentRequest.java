@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * CreateUserSegmentRequest
@@ -37,6 +38,7 @@ import lombok.experimental.Accessors;
 @Data
 @JsonPropertyOrder(CreateUserSegmentRequest.JSON_PROPERTY_USER_SEGMENT)
 @Serdeable
+@Generated
 public class CreateUserSegmentRequest {
 
     public static final String JSON_PROPERTY_USER_SEGMENT = "user_segment";

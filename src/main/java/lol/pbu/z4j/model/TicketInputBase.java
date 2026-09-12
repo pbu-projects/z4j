@@ -31,6 +31,7 @@ import lombok.experimental.Accessors;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * Base abstract class for Ticket creation and update payload models to eliminate duplication.
@@ -44,6 +45,7 @@ import java.util.List;
 @Setter
 @Serdeable
 @SuppressWarnings("unchecked")
+@Generated
 public abstract class TicketInputBase<T extends TicketInputBase<T>> {
 
     public static final String JSON_PROPERTY_COMMENT = "comment";

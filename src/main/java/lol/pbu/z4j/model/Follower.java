@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * Follower
@@ -42,6 +43,7 @@ import lombok.experimental.Accessors;
         Follower.JSON_PROPERTY_USER_ID,
 })
 @Serdeable
+@Generated
 public class Follower {
 
     public static final String JSON_PROPERTY_ACTION = "action";

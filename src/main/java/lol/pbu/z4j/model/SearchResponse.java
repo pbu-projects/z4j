@@ -27,6 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * SearchResponse
@@ -48,6 +49,7 @@ import java.util.List;
         SearchResponse.JSON_PROPERTY_GROUPS,
 })
 @Serdeable
+@Generated
 public class SearchResponse {
 
     public static final String JSON_PROPERTY_COUNT = "count";

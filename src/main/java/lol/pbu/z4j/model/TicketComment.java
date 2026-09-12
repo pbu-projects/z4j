@@ -31,6 +31,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import lol.pbu.z4j.Generated;
 
 /**
  * TicketComment
@@ -58,6 +59,7 @@ import java.util.Map;
         TicketComment.JSON_PROPERTY_VIA,
 })
 @Serdeable
+@Generated
 public class TicketComment {
 
     public static final String JSON_PROPERTY_ATTACHMENTS = "attachments";

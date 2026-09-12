@@ -25,6 +25,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * TicketUpdateInput
@@ -64,6 +65,7 @@ import lombok.experimental.Accessors;
         TicketInputBase.JSON_PROPERTY_UPDATED_STAMP,
 })
 @Serdeable
+@Generated
 public class TicketUpdateInput extends TicketInputBase<TicketUpdateInput> {
 
     @Nullable

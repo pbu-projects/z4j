@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * ViaSourceTo
@@ -40,6 +41,7 @@ import lombok.experimental.Accessors;
         ViaSourceTo.JSON_PROPERTY_NAME,
 })
 @Serdeable
+@Generated
 public class ViaSourceTo {
 
     public static final String JSON_PROPERTY_ADDRESS = "address";

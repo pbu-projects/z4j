@@ -21,12 +21,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 @Getter
 @Accessors(chain = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Serdeable
+@Generated
 public class JobStatusResponse {
 
     @JsonProperty("job_status")

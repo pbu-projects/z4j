@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.*;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 @Accessors(chain = true)
 @EqualsAndHashCode
@@ -27,6 +28,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Serdeable
+@Generated
 public class TicketFieldCreateRequest {
     @JsonProperty("ticket_field")
     private TicketField ticketField;

@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lol.pbu.z4j.Generated;
 
 /**
  * Provides the 'sort by' options when querying Articles. <br>
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Getter(onMethod_ = {@JsonValue})
 @Serdeable
+@Generated
 public enum SortArticleBy {
     /**
      * Order set manually using the Arrange Content page.

@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * TopicUpdateRequest
@@ -38,6 +39,7 @@ import lombok.experimental.Accessors;
 @Data
 @JsonPropertyOrder(TopicUpdateRequest.JSON_PROPERTY_TOPIC)
 @Serdeable
+@Generated
 public class TopicUpdateRequest {
 
     public static final String JSON_PROPERTY_TOPIC = "topic";

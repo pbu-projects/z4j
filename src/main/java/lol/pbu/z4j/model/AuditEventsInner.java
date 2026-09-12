@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * AuditEventsInner
@@ -47,6 +48,7 @@ import lombok.experimental.Accessors;
         AuditEventsInner.JSON_PROPERTY_RECIPIENTS,
 })
 @Serdeable
+@Generated
 public class AuditEventsInner {
 
     public static final String JSON_PROPERTY_BODY = "body";
