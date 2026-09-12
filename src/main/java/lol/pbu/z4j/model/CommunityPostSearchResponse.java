@@ -28,6 +28,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * CommunityPostSearchResponse
@@ -40,6 +41,7 @@ import java.util.List;
 @Data
 @JsonPropertyOrder(CommunityPostSearchResponse.JSON_PROPERTY_RESULTS)
 @Serdeable
+@Generated
 public class CommunityPostSearchResponse {
 
     public static final String JSON_PROPERTY_RESULTS = "results";

@@ -26,12 +26,14 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.time.ZonedDateTime;
+import lol.pbu.z4j.Generated;
 
 @Accessors(chain = true)
 @EqualsAndHashCode
 @ToString
 @Data
 @Serdeable
+@Generated
 public class CommentBase {
 
     public static final String JSON_PROPERTY_BODY = "body";

@@ -28,6 +28,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * Search
@@ -42,6 +43,7 @@ import java.util.List;
 @Setter
 @JsonPropertyOrder(Search.JSON_PROPERTY_RESULTS)
 @Serdeable
+@Generated
 public class Search {
 
     public static final String JSON_PROPERTY_RESULTS = "results";

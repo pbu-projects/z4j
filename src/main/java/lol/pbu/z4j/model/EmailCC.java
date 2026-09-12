@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * EmailCC
@@ -42,6 +43,7 @@ import lombok.experimental.Accessors;
         EmailCC.JSON_PROPERTY_USER_NAME,
 })
 @Serdeable
+@Generated
 public class EmailCC {
 
     public static final String JSON_PROPERTY_ACTION = "action";

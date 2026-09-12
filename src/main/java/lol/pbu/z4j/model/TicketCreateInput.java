@@ -30,6 +30,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * TicketCreateInput
@@ -80,6 +81,7 @@ import java.util.List;
         TicketCreateInput.JSON_PROPERTY_VIA_FOLLOWUP_SOURCE_ID,
 })
 @Serdeable
+@Generated
 public class TicketCreateInput extends TicketInputBase<TicketCreateInput> {
 
     public static final String JSON_PROPERTY_BRAND_ID = "brand_id";

@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import lol.pbu.z4j.Generated;
 
 /**
  * The state of the ticket.  If your account has activated custom ticket statuses, this is the ticket's status category. See <a href=\"#custom-ticket-statuses\">custom ticket statuses</a>
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Getter(onMethod_ = {@JsonValue})
 @Serdeable
+@Generated
 public enum TicketStatus {
 
     @JsonProperty("new")

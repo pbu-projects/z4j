@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.time.ZonedDateTime;
+import lol.pbu.z4j.Generated;
 
 /**
  * TicketFieldCustomStatusObject
@@ -50,6 +51,7 @@ import java.time.ZonedDateTime;
         TicketFieldCustomStatusObject.JSON_PROPERTY_UPDATED_AT,
 })
 @Serdeable
+@Generated
 public class TicketFieldCustomStatusObject {
 
     public static final String JSON_PROPERTY_ACTIVE = "active";

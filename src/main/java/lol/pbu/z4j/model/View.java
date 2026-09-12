@@ -7,10 +7,12 @@ import io.micronaut.serde.annotation.Serdeable;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import java.time.OffsetDateTime;
+import lol.pbu.z4j.Generated;
 
 @Accessors(chain = true)
 @Data
 @Serdeable
+@Generated
 public class View {
     @Nullable @JsonProperty("id") @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private Long id;

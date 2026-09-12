@@ -30,6 +30,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import lol.pbu.z4j.Generated;
 
 /**
  * Represents a Zendesk Ticket Form.
@@ -60,6 +61,7 @@ import java.util.Map;
     TicketForm.JSON_PROPERTY_UPDATED_AT,
 })
 @Serdeable
+@Generated
 public class TicketForm {
 
     public static final String JSON_PROPERTY_ID = "id";

@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * CategoryResponse
@@ -37,6 +38,7 @@ import lombok.experimental.Accessors;
 @Data
 @JsonPropertyOrder(CategoryResponse.JSON_PROPERTY_CATEGORY)
 @Serdeable
+@Generated
 public class CategoryResponse {
 
     public static final String JSON_PROPERTY_CATEGORY = "category";

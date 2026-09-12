@@ -28,6 +28,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * LocalesResponse
@@ -40,6 +41,7 @@ import java.util.List;
 @Data
 @JsonPropertyOrder(LocalesResponse.JSON_PROPERTY_LOCALES)
 @Serdeable
+@Generated
 public class LocalesResponse {
 
     public static final String JSON_PROPERTY_LOCALES = "locales";

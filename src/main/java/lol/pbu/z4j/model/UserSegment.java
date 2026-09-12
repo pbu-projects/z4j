@@ -29,6 +29,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * <p>The <code>user_type</code> attribute takes one of the following values:</p> <table> <thead> <tr> <th>Value</th> <th>Users</th> </tr> </thead> <tbody> <tr> <td>signed_in_users</td> <td>only authenticated users</td> </tr> <tr> <td>staff</td> <td>only agents and Help Center managers</td> </tr> </tbody> </table> <p>For <code>group_ids</code>, <code>organization_ids</code>, <code>tags</code>, and <code>or_tags</code>, an empty array means that access is not restricted by the attribute. For example, if no group ids are specified, then users don't have to be in any specific group to have access.</p> <p>For <code>tags</code>, a user must have all the listed tags to have access. For <code>or_tags</code>, a user must have at least one of the listed tags to have access.</p>
@@ -55,6 +56,7 @@ import java.util.List;
         UserSegment.JSON_PROPERTY_UPDATED_AT,
 })
 @Serdeable
+@Generated
 public class UserSegment {
 
     public static final String JSON_PROPERTY_NAME = "name";

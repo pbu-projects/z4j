@@ -9,10 +9,12 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import java.util.HashMap;
 import java.util.Map;
+import lol.pbu.z4j.Generated;
 
 @Accessors(chain = true)
 @Data
 @Serdeable
+@Generated
 public class ViewRow {
     @Nullable @JsonProperty("ticket") @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private Ticket ticket;

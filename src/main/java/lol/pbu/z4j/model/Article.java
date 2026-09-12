@@ -29,6 +29,7 @@ import lombok.experimental.Accessors;
 
 import java.util.ArrayList;
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * Article
@@ -69,6 +70,7 @@ import java.util.List;
         Article.JSON_PROPERTY_VOTE_SUM,
 })
 @Serdeable
+@Generated
 public class Article implements SearchResultsInner {
 
     public static final String JSON_PROPERTY_LOCALE = "locale";

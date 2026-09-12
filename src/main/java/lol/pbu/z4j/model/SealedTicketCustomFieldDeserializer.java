@@ -23,6 +23,7 @@ import jakarta.inject.Singleton;
 
 import java.io.IOException;
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * SealedTicketCustomFieldDeserializer
@@ -31,6 +32,7 @@ import java.util.List;
  * @since 0.1.1
  */
 @Singleton
+@Generated
 public class SealedTicketCustomFieldDeserializer implements Deserializer<TicketCustomField> {
 
     @Override

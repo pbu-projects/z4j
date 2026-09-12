@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * <p>The <code>manageable_by</code> attribute takes one of the following values:</p> <table> <thead> <tr> <th>Value</th> <th>Users</th> </tr> </thead> <tbody> <tr> <td>staff</td> <td>agents and managers</td> </tr> <tr> <td>managers</td> <td>only Help Center managers</td> </tr> </tbody> </table> <p>Note that <code>manageable_by</code> is only displayed to users who can manage the topic.</p>
@@ -52,6 +53,7 @@ import lombok.experimental.Accessors;
         Topic.JSON_PROPERTY_USER_SEGMENT_ID,
 })
 @Serdeable
+@Generated
 public class Topic {
 
     public static final String JSON_PROPERTY_NAME = "name";

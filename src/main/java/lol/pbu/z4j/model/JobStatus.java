@@ -27,6 +27,7 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 import java.util.Map;
+import lol.pbu.z4j.Generated;
 
 @Accessors(chain = true)
 @NoArgsConstructor
@@ -43,6 +44,7 @@ import java.util.Map;
         "results"
 })
 @Serdeable
+@Generated
 public class JobStatus {
 
     @Nullable

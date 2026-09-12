@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.time.ZonedDateTime;
+import lol.pbu.z4j.Generated;
 
 /**
  * Locale
@@ -46,6 +47,7 @@ import java.time.ZonedDateTime;
         Locale.JSON_PROPERTY_URL,
 })
 @Serdeable
+@Generated
 public class Locale {
 
     public static final String JSON_PROPERTY_CREATED_AT = "created_at";

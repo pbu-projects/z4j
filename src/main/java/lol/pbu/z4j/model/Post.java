@@ -30,6 +30,7 @@ import lombok.experimental.Accessors;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lol.pbu.z4j.Generated;
 
 /**
  * Post
@@ -65,6 +66,7 @@ import java.util.List;
         Post.JSON_PROPERTY_VOTE_SUM,
 })
 @Serdeable
+@Generated
 public class Post {
 
     public static final String JSON_PROPERTY_TITLE = "title";

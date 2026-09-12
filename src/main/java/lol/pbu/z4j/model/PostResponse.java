@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * PostResponse
@@ -37,6 +38,7 @@ import lombok.experimental.Accessors;
 @Data
 @JsonPropertyOrder(PostResponse.JSON_PROPERTY_POST)
 @Serdeable
+@Generated
 public class PostResponse {
 
     public static final String JSON_PROPERTY_POST = "post";

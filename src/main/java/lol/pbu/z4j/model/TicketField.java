@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.NoArgsConstructor;
+import lol.pbu.z4j.Generated;
 
 /**
  * TicketFieldObject
@@ -80,6 +81,7 @@ import lombok.NoArgsConstructor;
         TicketField.JSON_PROPERTY_VISIBLE_IN_PORTAL,
 })
 @Serdeable
+@Generated
 public class TicketField {
 
     public static final String JSON_PROPERTY_TITLE = "title";

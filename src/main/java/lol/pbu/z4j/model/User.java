@@ -16,10 +16,12 @@
 package lol.pbu.z4j.model;
 
 import io.micronaut.serde.annotation.Serdeable;
+import lol.pbu.z4j.Generated;
 
 /**
  * Placeholder for user objects
  */
 @Serdeable
+@Generated
 public class User implements Exportable {
 }

@@ -27,6 +27,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.time.ZonedDateTime;
+import lol.pbu.z4j.Generated;
 
 /**
  * CustomObject
@@ -55,6 +56,7 @@ import java.time.ZonedDateTime;
     CustomObject.JSON_PROPERTY_UPDATED_AT,
 })
 @Serdeable
+@Generated
 public class CustomObject {
 
     public static final String JSON_PROPERTY_KEY = "key";

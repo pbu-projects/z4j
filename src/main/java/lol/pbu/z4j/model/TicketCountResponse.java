@@ -25,6 +25,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * TicketCountResponse
@@ -37,6 +38,7 @@ import lombok.experimental.Accessors;
 @Data
 @JsonPropertyOrder(TicketCountResponse.JSON_PROPERTY_COUNT)
 @Serdeable
+@Generated
 public class TicketCountResponse {
 
     public static final String JSON_PROPERTY_COUNT = "count";

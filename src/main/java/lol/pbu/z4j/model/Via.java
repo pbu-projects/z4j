@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * An object explaining how the ticket was created. See the <a href=\"/documentation/ticketing/reference-guides/via-object-reference\">Via object reference</a>
@@ -40,6 +41,7 @@ import lombok.experimental.Accessors;
         Via.JSON_PROPERTY_SOURCE,
 })
 @Serdeable
+@Generated
 public class Via {
 
     public static final String JSON_PROPERTY_CHANNEL = "channel";

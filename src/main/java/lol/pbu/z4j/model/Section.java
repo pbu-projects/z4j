@@ -26,6 +26,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lol.pbu.z4j.Generated;
 
 /**
  * Section
@@ -55,6 +56,7 @@ import lombok.experimental.Accessors;
         Section.JSON_PROPERTY_URL,
 })
 @Serdeable
+@Generated
 public class Section {
 
     public static final String JSON_PROPERTY_LOCALE = "locale";

@@ -26,6 +26,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.time.ZonedDateTime;
+import lol.pbu.z4j.Generated;
 
 /**
  * TicketCountResponseCount
@@ -41,6 +42,7 @@ import java.time.ZonedDateTime;
         TicketCountResponseCount.JSON_PROPERTY_VALUE,
 })
 @Serdeable
+@Generated
 public class TicketCountResponseCount {
 
     public static final String JSON_PROPERTY_REFRESHED_AT = "refreshed_at";

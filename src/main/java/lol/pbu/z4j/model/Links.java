@@ -6,11 +6,13 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.net.URL;
+import lol.pbu.z4j.Generated;
 
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode
 @Serdeable
+@Generated
 public class Links {
     private URL prev;
     private URL next;
