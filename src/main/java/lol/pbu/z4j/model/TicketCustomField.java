@@ -30,6 +30,7 @@ import lol.pbu.z4j.Generated;
  */
 @Serdeable
 @Introspected
+@Generated
 public sealed interface TicketCustomField
     permits TicketCustomField.Text,
             TicketCustomField.Numeric,
@@ -41,10 +42,10 @@ public sealed interface TicketCustomField
     Long id();
     Object value();
 
-    @Serdeable record Text(Long id, String value) implements TicketCustomField {}
-    @Serdeable record Numeric(Long id, Long value) implements TicketCustomField {}
-    @Serdeable record Decimal(Long id, Float value) implements TicketCustomField {}
-    @Serdeable record Checkbox(Long id, Boolean value) implements TicketCustomField {}
-    @Serdeable record TagList(Long id, List<String> value) implements TicketCustomField {}
-    @Serdeable record Raw(Long id, @Nullable Object value) implements TicketCustomField {}
+    @Generated @Serdeable record Text(Long id, String value) implements TicketCustomField {}
+    @Generated @Serdeable record Numeric(Long id, Long value) implements TicketCustomField {}
+    @Generated @Serdeable record Decimal(Long id, Float value) implements TicketCustomField {}
+    @Generated @Serdeable record Checkbox(Long id, Boolean value) implements TicketCustomField {}
+    @Generated @Serdeable record TagList(Long id, List<String> value) implements TicketCustomField {}
+    @Generated @Serdeable record Raw(Long id, @Nullable Object value) implements TicketCustomField {}
 }
