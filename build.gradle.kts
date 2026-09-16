@@ -103,6 +103,7 @@ sonarqube {
 }
 
 tasks.jacocoTestReport {
+    dependsOn(tasks.classes)
     reports {
         xml.required.set(true)
         html.required.set(true)
