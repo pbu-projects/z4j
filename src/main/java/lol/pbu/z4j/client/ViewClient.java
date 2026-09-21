@@ -28,4 +28,7 @@ public interface ViewClient {
     @Get("/api/v2/views/{id}/count")
     Mono<@Valid ViewCountResponse> countView(@PathVariable("id") @NotNull Long id);
 
+    @Get("/api/v2/views/{id}/tickets.json")
+    Mono<@Valid TicketsResponse> listTicketsForView(@PathVariable("id") @NotNull Long id);
+
 }
