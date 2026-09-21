@@ -65,5 +65,53 @@ class ArticleClientSpec extends Z4jSpec {
                 [null] //TODO add article labels and validate 1 or more labels can be passed
         ].combinations()
     }
-}
+    def "can create, show, update, and delete an article"() {
+        given: "an existing section and permission group from an existing article"
+        def existingArticles = adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, null, null, null, null).block().articles
+        if (existingArticles == null || existingArticles.isEmpty()) {
+            return
+        }
+        def sectionId = existingArticles.get(0).sectionId
+        def permissionGroupId = existingArticles.get(0).permissionGroupId
 
+        and: "a new article request"
+        def articleReq = new lol.pbu.z4j.model.ArticleCreateRequest(
+                new lol.pbu.z4j.model.Article()
+                        .setTitle("Test Article")
+                        .setBody("Test Body")
+                        .setPermissionGroupId(permissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+
+        when: "creating the article"
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, sectionId, articleReq).block()
+        def createdArticle = createResponse.article
+
+        then: "it should be created"
+        createdArticle.id != null
+        createdArticle.title == "Test Article"
+
+        when: "showing the article"
+        def showResponse = adminArticleClient.showArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticle.id).block()
+
+        then: "it should return the same article"
+        showResponse.article.id == createdArticle.id
+        showResponse.article.title == "Test Article"
+
+        when: "updating the article"
+        def updateReq = new lol.pbu.z4j.model.ArticleUpdateRequest(
+                new lol.pbu.z4j.model.Article().setTitle("Updated Test Article")
+        )
+        def updateResponse = adminArticleClient.updateArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticle.id, updateReq).block()
+
+        then: "it should be updated"
+        updateResponse.article.title == "Updated Test Article"
+
+        when: "deleting the article"
+        adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticle.id).block()
+
+        then: "it should no longer exist"
+        true
+    }
+
+}
