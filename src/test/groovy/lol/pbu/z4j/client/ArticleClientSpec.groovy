@@ -21,7 +21,6 @@ import lol.pbu.z4j.model.ArticlesResponse
 import lol.pbu.z4j.model.LocaleAbbreviation
 import lol.pbu.z4j.model.SortArticleBy
 import lol.pbu.z4j.model.SortOrder
-import org.opentest4j.TestAbortedException
 import reactor.core.publisher.Mono
 import spock.lang.Shared
 
@@ -70,7 +69,7 @@ class ArticleClientSpec extends Z4jSpec {
     def "can create, show, update, and delete an article"() {
         given: "an existing section and permission group from an existing article"
         def existingArticles = adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, null, null, null, null).block().articles
-        if (existingArticles == null || existingArticles.isEmpty()) throw new TestAbortedException("No articles exist to test against")
+        if (existingArticles == null || existingArticles.isEmpty()) throw new IllegalStateException("CRITICAL SETUP ERROR: No articles exist to test against! Contributors MUST configure their Help Center sandbox with articles and ensure another locale is added to the Help Center in order for integration tests to pass.")
         
         def sectionId = existingArticles.get(0).sectionId
         def permissionGroupId = existingArticles.get(0).permissionGroupId
