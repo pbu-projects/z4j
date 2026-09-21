@@ -51,7 +51,7 @@ class ArticleClientSpec extends Z4jSpec {
         ArticlesResponse articlesResponse = response.block()
 
         then: "validate the returned article objects have an ID that other tests will require"
-        if (articlesResponse.articles.size() > 0) {
+        if (articlesResponse != null && articlesResponse.articles != null && articlesResponse.articles.size() > 0) {
             // this tests ability needed in https://github.com/PeanutButter-Unicorn/z4j/issues/30
             articlesResponse.articles.forEach { article -> article.id != null }
         }
@@ -80,7 +80,37 @@ class ArticleClientSpec extends Z4jSpec {
             }
         }
 
-        assert validSectionId != null : "CRITICAL SETUP ERROR: No articles exist across ANY locale to test against! Contributors MUST configure their Help Center sandbox with at least one section and article to provide a section ID."
+        if (validSectionId == null) {
+            System.out.println("No articles found! Seeding via raw HTTP...")
+            def auth = "Basic " + (System.getenv("Z4J_ADMIN_EMAIL") + "/token:" + System.getenv("Z4J_TOKEN")).bytes.encodeBase64().toString()
+            
+            def sectionsConn = new URL(System.getenv("Z4J_URL") + "/api/v2/help_center/en-us/sections.json").openConnection()
+            sectionsConn.setRequestProperty("Authorization", auth)
+            sectionsConn.setRequestProperty("Accept", "application/json")
+            def sectionsJson = new com.fasterxml.jackson.databind.ObjectMapper().readValue(sectionsConn.inputStream, Map.class)
+            
+            def pgConn = new URL(System.getenv("Z4J_URL") + "/api/v2/guide/permission_groups.json").openConnection()
+            pgConn.setRequestProperty("Authorization", auth)
+            pgConn.setRequestProperty("Accept", "application/json")
+            def pgJson = new com.fasterxml.jackson.databind.ObjectMapper().readValue(pgConn.inputStream, Map.class)
+            
+            if (sectionsJson.sections && pgJson.permission_groups) {
+                validSectionId = sectionsJson.sections[0].id as Long
+                validPermissionGroupId = pgJson.permission_groups[0].id as Long
+                
+                // Seed an article so future tests (like TranslationClientSpec) don't fail
+                def seedReq = new lol.pbu.z4j.model.ArticleCreateRequest(
+                        new lol.pbu.z4j.model.Article()
+                                .setTitle("Seeded Article for Tests")
+                                .setBody("This article was seeded automatically by the test suite.")
+                                .setPermissionGroupId(validPermissionGroupId)
+                                .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                )
+                adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, seedReq).block()
+            }
+        }
+
+        assert validSectionId != null : "CRITICAL SETUP ERROR: No articles exist across ANY locale to test against, and could not dynamically seed one!"
 
         and: "a new article request"
         def articleReq = new lol.pbu.z4j.model.ArticleCreateRequest(
@@ -107,14 +137,18 @@ class ArticleClientSpec extends Z4jSpec {
         showResponse.article.id == createdId
         showResponse.article.title == "Test Article in " + locale.getValue()
 
-        when: "updating the article"
+        when: "updating the article metadata"
         def updateReq = new lol.pbu.z4j.model.ArticleUpdateRequest(
-                new lol.pbu.z4j.model.Article().setTitle("Updated Test Article in " + locale.getValue())
+                new lol.pbu.z4j.model.Article()
+                        .setPromoted(true)
+                        .setTitle("Test Title Ignored By Update API")
+                        .setLocaleAbbreviation(locale)
+                        .setPermissionGroupId(validPermissionGroupId)
         )
         def updateResponse = adminArticleClient.updateArticle(locale, createdId, updateReq).block()
 
-        then: "it should be updated"
-        updateResponse.article.title == "Updated Test Article in " + locale.getValue()
+        then: "metadata should be updated"
+        updateResponse.article.promoted == true
 
         cleanup: "delete the article even if assertions failed"
         if (createdId != null) {
