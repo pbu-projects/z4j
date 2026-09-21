@@ -66,55 +66,66 @@ class ArticleClientSpec extends Z4jSpec {
                 [null] //TODO add article labels and validate 1 or more labels can be passed
         ].combinations()
     }
-    def "can create, show, update, and delete an article"() {
-        given: "an existing section and permission group from an existing article"
-        def existingArticles = adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, null, null, null, null).block().articles
-        if (existingArticles == null || existingArticles.isEmpty()) throw new IllegalStateException("CRITICAL SETUP ERROR: No articles exist to test against! Contributors MUST configure their Help Center sandbox with articles and ensure another locale is added to the Help Center in order for integration tests to pass.")
-        
-        def sectionId = existingArticles.get(0).sectionId
-        def permissionGroupId = existingArticles.get(0).permissionGroupId
+    def "can create, show, update, and delete an article in #locale"() {
+        given: "a valid sectionId and permissionGroupId found from existing articles across all locales"
+        Long validSectionId = null
+        Long validPermissionGroupId = null
+
+        for (LocaleAbbreviation loc : allLocales) {
+            def articles = adminArticleClient.listArticles(loc, null, null, null, null).block()?.articles
+            if (articles != null && !articles.isEmpty()) {
+                validSectionId = articles.get(0).sectionId
+                validPermissionGroupId = articles.get(0).permissionGroupId
+                break
+            }
+        }
+
+        assert validSectionId != null : "CRITICAL SETUP ERROR: No articles exist across ANY locale to test against! Contributors MUST configure their Help Center sandbox with at least one section and article to provide a section ID."
 
         and: "a new article request"
         def articleReq = new lol.pbu.z4j.model.ArticleCreateRequest(
                 new lol.pbu.z4j.model.Article()
-                        .setTitle("Test Article")
+                        .setTitle("Test Article in " + locale.getValue())
                         .setBody("Test Body")
-                        .setPermissionGroupId(permissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(locale)
         )
 
         when: "creating the article"
-        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, sectionId, articleReq).block()
+        def createResponse = adminArticleClient.createArticle(locale, validSectionId, articleReq).block()
         def createdArticle = createResponse.article
         def createdId = createdArticle?.id
 
         then: "it should be created"
         createdId != null
-        createdArticle.title == "Test Article"
+        createdArticle.title == "Test Article in " + locale.getValue()
 
         when: "showing the article"
-        def showResponse = adminArticleClient.showArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
+        def showResponse = adminArticleClient.showArticle(locale, createdId).block()
 
         then: "it should return the same article"
         showResponse.article.id == createdId
-        showResponse.article.title == "Test Article"
+        showResponse.article.title == "Test Article in " + locale.getValue()
 
         when: "updating the article"
         def updateReq = new lol.pbu.z4j.model.ArticleUpdateRequest(
-                new lol.pbu.z4j.model.Article().setTitle("Updated Test Article")
+                new lol.pbu.z4j.model.Article().setTitle("Updated Test Article in " + locale.getValue())
         )
-        def updateResponse = adminArticleClient.updateArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId, updateReq).block()
+        def updateResponse = adminArticleClient.updateArticle(locale, createdId, updateReq).block()
 
         then: "it should be updated"
-        updateResponse.article.title == "Updated Test Article"
+        updateResponse.article.title == "Updated Test Article in " + locale.getValue()
 
         cleanup: "delete the article even if assertions failed"
         if (createdId != null) {
             try {
-                adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
+                adminArticleClient.deleteArticle(locale, createdId).block()
             } catch (Exception e) {
             }
         }
+        
+        where:
+        locale << allLocales
     }
 
 }
