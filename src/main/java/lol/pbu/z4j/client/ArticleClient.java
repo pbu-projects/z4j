@@ -17,6 +17,10 @@ package lol.pbu.z4j.client;
 
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.Put;
+import io.micronaut.http.annotation.Delete;
+import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.client.annotation.Client;
@@ -73,11 +77,11 @@ public interface ArticleClient {
      * @param body               {@link ArticleCreateRequest} (required)
      * @return Created (status code 201)
      */
-    @io.micronaut.http.annotation.Post("/api/v2/help_center/{locale}/sections/{section_id}/articles")
+    @Post("/api/v2/help_center/{locale}/sections/{section_id}/articles")
     Mono<@Valid ArticleResponse> createArticle(
             @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
             @PathVariable("section_id") @NotNull Long sectionId,
-            @io.micronaut.http.annotation.Body @NotNull @Valid ArticleCreateRequest body
+            @Body @NotNull @Valid ArticleCreateRequest body
     );
 
     /**
@@ -88,11 +92,11 @@ public interface ArticleClient {
      * @param body               {@link ArticleUpdateRequest} (required)
      * @return OK (status code 200)
      */
-    @io.micronaut.http.annotation.Put("/api/v2/help_center/{locale}/articles/{article_id}")
+    @Put("/api/v2/help_center/{locale}/articles/{article_id}")
     Mono<@Valid ArticleResponse> updateArticle(
             @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
             @PathVariable("article_id") @NotNull Long articleId,
-            @io.micronaut.http.annotation.Body @NotNull @Valid ArticleUpdateRequest body
+            @Body @NotNull @Valid ArticleUpdateRequest body
     );
 
     /**
@@ -115,7 +119,7 @@ public interface ArticleClient {
      * @param articleId          The unique ID of the article (required)
      * @return No Content (status code 204)
      */
-    @io.micronaut.http.annotation.Delete("/api/v2/help_center/{locale}/articles/{article_id}")
+    @Delete("/api/v2/help_center/{locale}/articles/{article_id}")
     Mono<Void> deleteArticle(
             @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
             @PathVariable("article_id") @NotNull Long articleId

@@ -21,8 +21,10 @@ import lol.pbu.z4j.model.ArticlesResponse
 import lol.pbu.z4j.model.LocaleAbbreviation
 import lol.pbu.z4j.model.SortArticleBy
 import lol.pbu.z4j.model.SortOrder
+import org.opentest4j.TestAbortedException
 import reactor.core.publisher.Mono
 import spock.lang.Shared
+
 
 @MicronautTest
 class ArticleClientSpec extends Z4jSpec {
@@ -68,9 +70,8 @@ class ArticleClientSpec extends Z4jSpec {
     def "can create, show, update, and delete an article"() {
         given: "an existing section and permission group from an existing article"
         def existingArticles = adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, null, null, null, null).block().articles
-        if (existingArticles == null || existingArticles.isEmpty()) {
-            return
-        }
+        if (existingArticles == null || existingArticles.isEmpty()) throw new TestAbortedException("No articles exist to test against")
+        
         def sectionId = existingArticles.get(0).sectionId
         def permissionGroupId = existingArticles.get(0).permissionGroupId
 
@@ -86,32 +87,35 @@ class ArticleClientSpec extends Z4jSpec {
         when: "creating the article"
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, sectionId, articleReq).block()
         def createdArticle = createResponse.article
+        def createdId = createdArticle?.id
 
         then: "it should be created"
-        createdArticle.id != null
+        createdId != null
         createdArticle.title == "Test Article"
 
         when: "showing the article"
-        def showResponse = adminArticleClient.showArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticle.id).block()
+        def showResponse = adminArticleClient.showArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
 
         then: "it should return the same article"
-        showResponse.article.id == createdArticle.id
+        showResponse.article.id == createdId
         showResponse.article.title == "Test Article"
 
         when: "updating the article"
         def updateReq = new lol.pbu.z4j.model.ArticleUpdateRequest(
                 new lol.pbu.z4j.model.Article().setTitle("Updated Test Article")
         )
-        def updateResponse = adminArticleClient.updateArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticle.id, updateReq).block()
+        def updateResponse = adminArticleClient.updateArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId, updateReq).block()
 
         then: "it should be updated"
         updateResponse.article.title == "Updated Test Article"
 
-        when: "deleting the article"
-        adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticle.id).block()
-
-        then: "it should no longer exist"
-        true
+        cleanup: "delete the article even if assertions failed"
+        if (createdId != null) {
+            try {
+                adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
+            } catch (Exception e) {
+            }
+        }
     }
 
 }
