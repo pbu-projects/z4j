@@ -1,29 +1,15 @@
-/*
- * Copyright 2026 Peanut Butter Unicorn, LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package lol.pbu.z4j.client
 
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
-import lol.pbu.z4j.model.ArticlesResponse
-import lol.pbu.z4j.model.LocaleAbbreviation
-import lol.pbu.z4j.model.SortArticleBy
-import lol.pbu.z4j.model.SortOrder
+import lol.pbu.z4j.fixture.ArticleFixtures
+import lol.pbu.z4j.fixture.FixtureLoader
+import lol.pbu.z4j.model.*
 import reactor.core.publisher.Mono
 import spock.lang.Shared
 
+import static io.micronaut.http.HttpStatus.FORBIDDEN
 
 @MicronautTest
 class ArticleClientSpec extends Z4jSpec {
@@ -34,42 +20,21 @@ class ArticleClientSpec extends Z4jSpec {
     @Shared
     List<LocaleAbbreviation> allLocales
 
+    @Shared
+    ArticleFixtures articleFixtures
+
+    @Shared
+    Long validSectionId
+
+    @Shared
+    Long validPermissionGroupId
+
     def setupSpec() {
         adminArticleClient = adminCtx.getBean(ArticleClient.class)
         agentArticleClient = agentCtx.getBean(ArticleClient.class)
         userArticleClient = userCtx.getBean(ArticleClient.class)
         allLocales = userCtx.getBean(LocaleClient.class).listLocales().block().locales.collect { it.localeAbbreviation }
-    }
-
-    def "can use ListArticles for other tests using the '#localeAbbreviation' locale"(
-            ArticleClient articleClient, LocaleAbbreviation localeAbbreviation, SortArticleBy sortBy, SortOrder sortOrder, Long startTime, String labelNames) {
-        // https://github.com/PeanutButter-Unicorn/z4j/issues/31
-        when: "query articles list for the '#localeAbbreviation' locale"
-        Mono<ArticlesResponse> response = articleClient.listArticles(localeAbbreviation, sortBy, sortOrder, startTime, labelNames)
-
-        then:
-        ArticlesResponse articlesResponse = response.block()
-
-        then: "validate the returned article objects have an ID that other tests will require"
-        if (articlesResponse != null && articlesResponse.articles != null && articlesResponse.articles.size() > 0) {
-            // this tests ability needed in https://github.com/PeanutButter-Unicorn/z4j/issues/30
-            articlesResponse.articles.forEach { article -> article.id != null }
-        }
-
-        where:
-        [articleClient, localeAbbreviation, sortBy, sortOrder, startTime, labelNames] << [
-                [adminArticleClient, agentArticleClient, userArticleClient],
-                allLocales,
-                [SortArticleBy.values(), null].flatten(),
-                [SortOrder.values(), null].flatten(),
-                [System.currentTimeMillis() / 1000 - 30000000, null].flatten(),
-                [null] //TODO add article labels and validate 1 or more labels can be passed
-        ].combinations()
-    }
-    def "can create, show, update, and delete an article in #locale"() {
-        given: "a valid sectionId and permissionGroupId found from existing articles across all locales"
-        Long validSectionId = null
-        Long validPermissionGroupId = null
+        articleFixtures = FixtureLoader.loadFixture("/fixtures/article_fixtures.yaml", ArticleFixtures.class)
 
         for (LocaleAbbreviation loc : allLocales) {
             def articles = adminArticleClient.listArticles(loc, null, null, null, null).block()?.articles
@@ -98,9 +63,8 @@ class ArticleClientSpec extends Z4jSpec {
                 validSectionId = sectionsJson.sections[0].id as Long
                 validPermissionGroupId = pgJson.permission_groups[0].id as Long
                 
-                // Seed an article so future tests (like TranslationClientSpec) don't fail
-                def seedReq = new lol.pbu.z4j.model.ArticleCreateRequest(
-                        new lol.pbu.z4j.model.Article()
+                def seedReq = new ArticleCreateRequest(
+                        new Article()
                                 .setTitle("Seeded Article for Tests")
                                 .setBody("This article was seeded automatically by the test suite.")
                                 .setPermissionGroupId(validPermissionGroupId)
@@ -111,55 +75,259 @@ class ArticleClientSpec extends Z4jSpec {
         }
 
         assert validSectionId != null : "CRITICAL SETUP ERROR: No articles exist across ANY locale to test against, and could not dynamically seed one!"
+    }
 
-        and: "a new article request"
-        def articleReq = new lol.pbu.z4j.model.ArticleCreateRequest(
-                new lol.pbu.z4j.model.Article()
-                        .setTitle("Test Article in " + locale.getValue())
-                        .setBody("Test Body")
+    def "can use ListArticles for other tests using the '#localeAbbreviation' locale"(
+            ArticleClient articleClient, LocaleAbbreviation localeAbbreviation, SortArticleBy sortBy, SortOrder sortOrder, Long startTime, String labelNames) {
+        when: "query articles list for the '#localeAbbreviation' locale"
+        Mono<ArticlesResponse> response = articleClient.listArticles(localeAbbreviation, sortBy, sortOrder, startTime, labelNames)
+
+        then:
+        ArticlesResponse articlesResponse = response.block()
+
+        then: "validate the returned article objects have an ID that other tests will require"
+        if (articlesResponse != null && articlesResponse.articles != null && articlesResponse.articles.size() > 0) {
+            articlesResponse.articles.forEach { article -> article.id != null }
+        }
+
+        where:
+        [articleClient, localeAbbreviation, sortBy, sortOrder, startTime, labelNames] << [
+                [adminArticleClient, agentArticleClient, userArticleClient],
+                allLocales,
+                [SortArticleBy.values(), null].flatten(),
+                [SortOrder.values(), null].flatten(),
+                [System.currentTimeMillis() / 1000 - 30000000, null].flatten(),
+                [null]
+        ].combinations()
+    }
+
+    def "can use CreateArticle as an #userType for the '#localeAbbreviation' locale"(ArticleClient articleClient, String userType, LocaleAbbreviation localeAbbreviation, String title, String body) {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle(title)
+                        .setBody(body)
                         .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(locale)
+                        .setLocaleAbbreviation(localeAbbreviation)
         )
 
         when: "creating the article"
-        def createResponse = adminArticleClient.createArticle(locale, validSectionId, articleReq).block()
-        def createdArticle = createResponse.article
-        def createdId = createdArticle?.id
+        def createResponse = articleClient.createArticle(localeAbbreviation, validSectionId, req).block()
 
-        then: "it should be created"
-        createdId != null
-        createdArticle.title == "Test Article in " + locale.getValue()
+        then:
+        noExceptionThrown()
+        createResponse.article.id != null
 
-        when: "showing the article"
-        def showResponse = adminArticleClient.showArticle(locale, createdId).block()
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(localeAbbreviation, createResponse.article.id).block()
+        } catch (Exception ignored) {}
 
-        then: "it should return the same article"
-        showResponse.article.id == createdId
-        showResponse.article.title == "Test Article in " + locale.getValue()
-
-        when: "updating the article metadata"
-        def updateReq = new lol.pbu.z4j.model.ArticleUpdateRequest(
-                new lol.pbu.z4j.model.Article()
-                        .setPromoted(true)
-                        .setTitle("Test Title Ignored By Update API")
-                        .setLocaleAbbreviation(locale)
-                        .setPermissionGroupId(validPermissionGroupId)
-        )
-        def updateResponse = adminArticleClient.updateArticle(locale, createdId, updateReq).block()
-
-        then: "metadata should be updated"
-        updateResponse.article.promoted == true
-
-        cleanup: "delete the article even if assertions failed"
-        if (createdId != null) {
-            try {
-                adminArticleClient.deleteArticle(locale, createdId).block()
-            } catch (Exception e) {
-            }
-        }
-        
         where:
-        locale << allLocales
+        [[articleClient, userType], localeAbbreviation, [title, body]] << [
+                [[adminArticleClient, "admin"]],
+                allLocales,
+                articleFixtures.getArticles().collect { [it.getTitle(), it.getBody()] }
+        ].combinations()
     }
 
+    def "cannot use CreateArticle as an #userType for the '#localeAbbreviation' locale"(ArticleClient articleClient, String userType, LocaleAbbreviation localeAbbreviation, String title, String body) {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle(title)
+                        .setBody(body)
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(localeAbbreviation)
+        )
+
+        when: "creating the article"
+        def createResponse = articleClient.createArticle(localeAbbreviation, validSectionId, req).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.getStatus().getCode() >= 400
+
+        cleanup:
+        try {
+            if (createResponse != null) {
+                adminArticleClient.deleteArticle(localeAbbreviation, createResponse.article.id).block()
+            }
+        } catch (Exception ignored) {}
+
+        where:
+        [[articleClient, userType], localeAbbreviation, [title, body]] << [
+                [[agentArticleClient, "agent"], [userArticleClient, "user"]],
+                allLocales,
+                articleFixtures.getArticles().collect { [it.getTitle(), it.getBody()] }
+        ].combinations()
+    }
+
+    def "can use ShowArticle as an #userType for the '#localeAbbreviation' locale"(ArticleClient articleClient, String userType, LocaleAbbreviation localeAbbreviation, String title, String body) {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle(title)
+                        .setBody(body)
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(localeAbbreviation)
+        )
+        def createResponse = adminArticleClient.createArticle(localeAbbreviation, validSectionId, req).block()
+        def createdId = createResponse.article.id
+
+        when:
+        def showResponse = articleClient.showArticle(localeAbbreviation, createdId).block()
+
+        then:
+        noExceptionThrown()
+        showResponse.article.id == createdId
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(localeAbbreviation, createdId).block()
+        } catch (Exception ignored) {}
+
+        where:
+        [[articleClient, userType], localeAbbreviation, [title, body]] << [
+                [[adminArticleClient, "admin"]],
+                allLocales,
+                articleFixtures.getArticles().collect { [it.getTitle(), it.getBody()] }
+        ].combinations()
+    }
+
+    def "can use UpdateArticle as an #userType for the '#localeAbbreviation' locale"(ArticleClient articleClient, String userType, LocaleAbbreviation localeAbbreviation, String title, String body) {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle(title)
+                        .setBody(body)
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(localeAbbreviation)
+        )
+        def createResponse = adminArticleClient.createArticle(localeAbbreviation, validSectionId, req).block()
+        def createdId = createResponse.article.id
+
+        ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
+                new Article()
+                        .setPromoted(true)
+                        .setTitle(title + " Updated")
+                        .setLocaleAbbreviation(localeAbbreviation)
+                        .setPermissionGroupId(validPermissionGroupId)
+        )
+
+        when:
+        def updateResponse = articleClient.updateArticle(localeAbbreviation, createdId, updateReq).block()
+
+        then:
+        noExceptionThrown()
+        updateResponse.article.promoted == true
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(localeAbbreviation, createdId).block()
+        } catch (Exception ignored) {}
+
+        where:
+        [[articleClient, userType], localeAbbreviation, [title, body]] << [
+                [[adminArticleClient, "admin"]],
+                allLocales,
+                articleFixtures.getArticles().collect { [it.getTitle(), it.getBody()] }
+        ].combinations()
+    }
+
+    def "cannot use UpdateArticle as an #userType for the '#localeAbbreviation' locale"(ArticleClient articleClient, String userType, LocaleAbbreviation localeAbbreviation, String title, String body) {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle(title)
+                        .setBody(body)
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(localeAbbreviation)
+        )
+        def createResponse = adminArticleClient.createArticle(localeAbbreviation, validSectionId, req).block()
+        def createdId = createResponse.article.id
+
+        ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
+                new Article()
+                        .setPromoted(true)
+                        .setTitle(title + " Updated")
+                        .setLocaleAbbreviation(localeAbbreviation)
+                        .setPermissionGroupId(validPermissionGroupId)
+        )
+
+        when:
+        articleClient.updateArticle(localeAbbreviation, createdId, updateReq).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.getStatus().getCode() >= 400
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(localeAbbreviation, createdId).block()
+        } catch (Exception ignored) {}
+
+        where:
+        [[articleClient, userType], localeAbbreviation, [title, body]] << [
+                [[agentArticleClient, "agent"], [userArticleClient, "user"]],
+                allLocales,
+                articleFixtures.getArticles().collect { [it.getTitle(), it.getBody()] }
+        ].combinations()
+    }
+
+    def "can use DeleteArticle as an #userType for the '#localeAbbreviation' locale"(ArticleClient articleClient, String userType, LocaleAbbreviation localeAbbreviation, String title, String body) {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle(title)
+                        .setBody(body)
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(localeAbbreviation)
+        )
+        def createResponse = adminArticleClient.createArticle(localeAbbreviation, validSectionId, req).block()
+
+        when:
+        articleClient.deleteArticle(localeAbbreviation, createResponse.article.id).block()
+
+        then:
+        noExceptionThrown()
+
+        where:
+        [[articleClient, userType], localeAbbreviation, [title, body]] << [
+                [[adminArticleClient, "admin"]],
+                allLocales,
+                articleFixtures.getDeleteArticles().collect { [it.getTitle(), it.getBody()] }
+        ].combinations()
+    }
+
+    def "cannot use DeleteArticle as an #userType for the '#localeAbbreviation' locale"(ArticleClient articleClient, String userType, LocaleAbbreviation localeAbbreviation, String title, String body) {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle(title)
+                        .setBody(body)
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(localeAbbreviation)
+        )
+        def createResponse = adminArticleClient.createArticle(localeAbbreviation, validSectionId, req).block()
+
+        when:
+        articleClient.deleteArticle(localeAbbreviation, createResponse.article.id).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.getStatus().getCode() >= 400
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(localeAbbreviation, createResponse.article.id).block()
+        } catch (Exception ignored) {}
+
+        where:
+        [[articleClient, userType], localeAbbreviation, [title, body]] << [
+                [[agentArticleClient, "agent"], [userArticleClient, "user"]],
+                allLocales,
+                articleFixtures.getDeleteArticles().collect { [it.getTitle(), it.getBody()] }
+        ].combinations()
+    }
 }

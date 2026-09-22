@@ -1,3 +1,32 @@
+articles:
+- userType: admin
+  title: Article Fame Is the Spur 6ac1f486
+  body: Minima repellendus omnis dignissimos animi nostrum esse voluptatem. Tempore
+    hic quia aliquam voluptatibus sed quas quis. Et cupiditate earum consectetur vel.
+    Rerum pariatur delectus quis. Eaque incidunt ad vitae ipsam.
+- userType: agent
+  title: Article The Moving Toyshop f43145df
+  body: Corrupti ipsum blanditiis itaque qui voluptas atque. Dicta earum incidunt
+    quibusdam quaerat pariatur pariatur laudantium. At corporis doloremque.
+- userType: user
+  title: Article Behold the Man bb7e54ba
+  body: Pariatur quod expedita praesentium id ad. Vitae reiciendis corrupti. Dolorum
+    amet earum eius laboriosam tenetur quaerat itaque.
+deleteArticles:
+- userType: admin
+  title: Del-Art In a Dry Season e0c7773e
+  body: Praesentium quis aspernatur. Modi voluptas nesciunt voluptatibus eos vitae.
+    Doloremque dolores maxime sunt vitae laborum asperiores.
+- userType: agent
+  title: Del-Art The Lathe of Heaven ae4378b9
+  body: Totam harum est commodi quisquam dolorum. Maiores nisi consectetur placeat
+    non neque eos ut. Quisquam doloribus sequi eos dignissimos accusamus non eum.
+    Eos ratione quo. Vitae delectus tempore.
+- userType: user
+  title: Del-Art Things Fall Apart 5d76487d
+  body: Voluptatem cum praesentium fugiat asperiores. Necessitatibus ipsa distinctio.
+    Quia odit nesciunt dicta. Fugiat laborum voluptatem. Perferendis temporibus sint
+    alias delectus.
 articleQueries:
 - sortBy: TITLE
   sortOrder: ASC
