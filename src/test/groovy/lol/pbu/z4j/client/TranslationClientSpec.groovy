@@ -52,7 +52,8 @@ class TranslationClientSpec extends Z4jSpec {
         def createResponse = null
         try {
             createResponse = adminTranslationClient.createArticleTranslation(validArticleId, req).block()
-        } catch (Exception e) {
+        } catch (Exception ignored) {
+            // translation might already exist, ignore failure
         }
         
         def createdTranslation = createResponse?.translation
@@ -90,7 +91,8 @@ class TranslationClientSpec extends Z4jSpec {
         if (createdId != null) {
             try {
                 adminTranslationClient.deleteTranslation(createdId).block()
-            } catch (Exception e) {
+            } catch (Exception ignored) {
+                // Ignore failure if already deleted
             }
         }
         
