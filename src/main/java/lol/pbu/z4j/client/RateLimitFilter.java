@@ -69,19 +69,37 @@ public class RateLimitFilter implements HttpClientFilter {
 
     @Override
     public Publisher<? extends HttpResponse<?>> doFilter(MutableHttpRequest<?> request, ClientFilterChain chain) {
-        Publisher<? extends HttpResponse<?>> resultPublisher;
+        return executeWithRetry(request, chain, 0);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Publisher<HttpResponse<?>> executeWithRetry(MutableHttpRequest<?> request, ClientFilterChain chain, int attempt) {
+        Publisher<HttpResponse<?>> resultPublisher;
         if (config.isAutoWaitEnabled() && tracker.isApproachingLimit(config.getApproachThreshold())) {
             log.warn("Rate limit approaching threshold (<= {}). Auto-wait enabled. Pausing for {} seconds before sending request to {}", 
                     config.getApproachThreshold(), config.getWaitDurationSeconds(), request.getPath());
             resultPublisher = Mono.delay(Duration.ofSeconds(config.getWaitDurationSeconds()))
-                    .flatMapMany(v -> chain.proceed(request));
+                    .flatMapMany(v -> (Publisher<HttpResponse<?>>) chain.proceed(request));
         } else {
-            resultPublisher = chain.proceed(request);
+            resultPublisher = (Publisher<HttpResponse<?>>) chain.proceed(request);
         }
 
-        return Flux.from(resultPublisher)
+        return Flux.<HttpResponse<?>>from(resultPublisher)
                 .doOnNext(response -> handleResponse(request, response))
-                .doOnError(HttpClientResponseException.class, ex -> handleResponse(request, ex.getResponse()));
+                .onErrorResume(HttpClientResponseException.class, ex -> {
+                    handleResponse(request, ex.getResponse());
+                    if (ex.getStatus().getCode() == 429 && attempt < 5) {
+                        HttpHeaders headers = ex.getResponse().getHeaders();
+                        Integer retryAfter = parseIntegerHeader(headers, HEADER_RETRY_AFTER);
+                        long waitTime = (retryAfter != null && retryAfter > 0) ? retryAfter : config.getWaitDurationSeconds();
+                        if (waitTime <= 0) waitTime = 5;
+                        log.warn("HTTP 429 received for {} {}. Retrying (attempt {}) after {} seconds...", 
+                                request.getMethodName(), request.getPath(), attempt + 1, waitTime);
+                        return Mono.delay(Duration.ofSeconds(waitTime))
+                                .flatMapMany(v -> executeWithRetry(request, chain, attempt + 1));
+                    }
+                    return Flux.error(ex);
+                });
     }
 
     public void handleResponse(MutableHttpRequest<?> request, HttpResponse<?> response) {
