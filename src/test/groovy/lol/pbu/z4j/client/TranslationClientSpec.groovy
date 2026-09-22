@@ -1,102 +1,376 @@
 package lol.pbu.z4j.client
 
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
-import lol.pbu.z4j.model.LocaleAbbreviation
-import lol.pbu.z4j.model.Translation
-import lol.pbu.z4j.model.TranslationCreateRequest
-import lol.pbu.z4j.model.TranslationUpdateRequest
+import lol.pbu.z4j.fixture.ArticleFixtures
+import lol.pbu.z4j.fixture.FixtureLoader
+import lol.pbu.z4j.model.*
+import reactor.core.publisher.Mono
 import spock.lang.Shared
+
+import static io.micronaut.http.HttpStatus.FORBIDDEN
 
 @MicronautTest
 class TranslationClientSpec extends Z4jSpec {
 
     @Shared
     ArticleClient adminArticleClient
+
     @Shared
-    TranslationClient adminTranslationClient
+    TranslationClient adminTranslationClient, agentTranslationClient, userTranslationClient
+
     @Shared
     List<LocaleAbbreviation> allLocales
+
+    @Shared
+    ArticleFixtures articleFixtures
+
+    @Shared
+    Long validSectionId
+    
+    @Shared
+    Long validPermissionGroupId
 
     def setupSpec() {
         adminArticleClient = adminCtx.getBean(ArticleClient.class)
         adminTranslationClient = adminCtx.getBean(TranslationClient.class)
+        agentTranslationClient = agentCtx.getBean(TranslationClient.class)
+        userTranslationClient = userCtx.getBean(TranslationClient.class)
         allLocales = userCtx.getBean(LocaleClient.class).listLocales().block().locales.collect { it.localeAbbreviation }
-    }
-
-    def "can create, show, update, and delete a translation in #locale"() {
-        given: "an existing article across all locales"
-        Long validArticleId = null
-        LocaleAbbreviation existingArticleLocale = null
+        articleFixtures = FixtureLoader.loadFixture("/fixtures/article_fixtures.yaml", ArticleFixtures.class)
 
         for (LocaleAbbreviation loc : allLocales) {
             def articles = adminArticleClient.listArticles(loc, null, null, null, null).block()?.articles
             if (articles != null && !articles.isEmpty()) {
-                validArticleId = articles.get(0).id
-                existingArticleLocale = loc
+                validSectionId = articles.get(0).sectionId
+                validPermissionGroupId = articles.get(0).permissionGroupId
                 break
             }
         }
-        
-        assert validArticleId != null : "CRITICAL SETUP ERROR: No articles exist across ANY locale to test against!"
 
-        and: "a new translation request"
-        def req = new TranslationCreateRequest(
-                new Translation()
-                        .setLocale(locale)
-                        .setTitle("Test Translation in " + locale.getValue())
-                        .setBody("Test Body")
-        )
-
-        when: "creating the translation"
-        def createResponse = null
-        try {
-            createResponse = adminTranslationClient.createArticleTranslation(validArticleId, req).block()
-        } catch (Exception ignored) {
-            // translation might already exist, ignore failure
-        }
-        
-        def createdTranslation = createResponse?.translation
-        def createdId = createdTranslation?.id
-
-        then: "it should be created or already exist"
-        true
-
-        when: "showing the translation"
-        def showResponse = null
-        if (createdId != null) {
-            showResponse = adminTranslationClient.showArticleTranslation(validArticleId, locale).block()
-        }
-
-        then: "it should return the same translation"
-        if (createdId != null) {
-            assert showResponse.translation.id == createdId
-        }
-
-        when: "updating the translation"
-        def updateResponse = null
-        if (createdId != null) {
-            def updateReq = new TranslationUpdateRequest(
-                    new Translation().setTitle("Updated Test Translation in " + locale.getValue())
-            )
-            updateResponse = adminTranslationClient.updateArticleTranslation(validArticleId, locale, updateReq).block()
-        }
-
-        then: "it should be updated"
-        if (createdId != null) {
-            assert updateResponse.translation.title == "Updated Test Translation in " + locale.getValue()
-        }
-
-        cleanup: "delete the translation"
-        if (createdId != null) {
-            try {
-                adminTranslationClient.deleteTranslation(createdId).block()
-            } catch (Exception ignored) {
-                // Ignore failure if already deleted
+        if (validSectionId == null) {
+            def auth = "Basic " + (System.getenv("Z4J_ADMIN_EMAIL") + "/token:" + System.getenv("Z4J_TOKEN")).bytes.encodeBase64().toString()
+            def sectionsConn = new URL(System.getenv("Z4J_URL") + "/api/v2/help_center/en-us/sections.json").openConnection()
+            sectionsConn.setRequestProperty("Authorization", auth)
+            sectionsConn.setRequestProperty("Accept", "application/json")
+            def sectionsJson = new com.fasterxml.jackson.databind.ObjectMapper().readValue(sectionsConn.inputStream, Map.class)
+            
+            def pgConn = new URL(System.getenv("Z4J_URL") + "/api/v2/guide/permission_groups.json").openConnection()
+            pgConn.setRequestProperty("Authorization", auth)
+            pgConn.setRequestProperty("Accept", "application/json")
+            def pgJson = new com.fasterxml.jackson.databind.ObjectMapper().readValue(pgConn.inputStream, Map.class)
+            
+            if (sectionsJson.sections && pgJson.permission_groups) {
+                validSectionId = sectionsJson.sections[0].id as Long
+                validPermissionGroupId = pgJson.permission_groups[0].id as Long
             }
         }
         
+        assert validSectionId != null : "CRITICAL SETUP ERROR: No sections exist in sandbox!"
+    }
+
+    def "can use CreateTranslation as an #userType for the '#localeAbbreviation' locale"(TranslationClient translationClient, String userType, LocaleAbbreviation localeAbbreviation, String title, String body) {
+        given: "an isolated test article created by admin"
+        ArticleCreateRequest artReq = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Base Article for Translation")
+                        .setBody("Base Body")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, artReq).block()
+        def createdArticleId = createResponse.article.id
+        
+        and: "a new translation request"
+        def req = new TranslationCreateRequest(
+                new Translation()
+                        .setLocale(localeAbbreviation)
+                        .setTitle(title)
+                        .setBody(body)
+        )
+
+        when: "creating the translation"
+        def response = translationClient.createTranslation("articles", createdArticleId, req).block()
+
+        then:
+        noExceptionThrown()
+        response.translation.id != null
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
+        } catch (Exception ignored) {}
+
         where:
-        locale << allLocales
+        [[translationClient, userType], localeAbbreviation, [title, body]] << [
+                [[adminTranslationClient, "admin"]],
+                allLocales.findAll { it != LocaleAbbreviation.ENGLISH_UNITED_STATES }.take(2),
+                articleFixtures.getArticles().take(1).collect { [it.getTitle(), it.getBody()] }
+        ].combinations()
+    }
+
+    def "cannot use CreateTranslation as an #userType for the '#localeAbbreviation' locale"(TranslationClient translationClient, String userType, LocaleAbbreviation localeAbbreviation, String title, String body) {
+        given: "an isolated test article created by admin"
+        ArticleCreateRequest artReq = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Base Article for Translation")
+                        .setBody("Base Body")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, artReq).block()
+        def createdArticleId = createResponse.article.id
+        
+        and: "a new translation request"
+        def req = new TranslationCreateRequest(
+                new Translation()
+                        .setLocale(localeAbbreviation)
+                        .setTitle(title)
+                        .setBody(body)
+        )
+
+        when: "creating the translation"
+        translationClient.createTranslation("articles", createdArticleId, req).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.getStatus().getCode() >= 400
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
+        } catch (Exception ignored) {}
+
+        where:
+        [[translationClient, userType], localeAbbreviation, [title, body]] << [
+                [[agentTranslationClient, "agent"], [userTranslationClient, "user"]],
+                allLocales.findAll { it != LocaleAbbreviation.ENGLISH_UNITED_STATES }.take(2),
+                articleFixtures.getArticles().take(1).collect { [it.getTitle(), it.getBody()] }
+        ].combinations()
+    }
+
+    def "can use ShowTranslation and ListTranslations as an admin for the '#localeAbbreviation' locale"(TranslationClient translationClient, String userType, LocaleAbbreviation localeAbbreviation, String title, String body) {
+        given: "an isolated test article created by admin"
+        ArticleCreateRequest artReq = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Base Article for Translation")
+                        .setBody("Base Body")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, artReq).block()
+        def createdArticleId = createResponse.article.id
+        
+        and: "a new translation request"
+        def req = new TranslationCreateRequest(
+                new Translation()
+                        .setLocale(localeAbbreviation)
+                        .setTitle(title)
+                        .setBody(body)
+        )
+        def transResponse = adminTranslationClient.createTranslation("articles", createdArticleId, req).block()
+
+        when: "showing the translation"
+        def showResponse = translationClient.showTranslation("articles", createdArticleId, localeAbbreviation).block()
+
+        then:
+        noExceptionThrown()
+        showResponse.translation.id == transResponse.translation.id
+        
+        when: "listing translations"
+        def listResponse = translationClient.listTranslations("articles", createdArticleId).block()
+        
+        then:
+        noExceptionThrown()
+        listResponse.translations.size() >= 1
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
+        } catch (Exception ignored) {}
+
+        where:
+        [[translationClient, userType], localeAbbreviation, [title, body]] << [
+                [[adminTranslationClient, "admin"]],
+                allLocales.findAll { it != LocaleAbbreviation.ENGLISH_UNITED_STATES }.take(2),
+                articleFixtures.getArticles().take(1).collect { [it.getTitle(), it.getBody()] }
+        ].combinations()
+    }
+    
+    def "can use UpdateTranslation as an #userType for the '#localeAbbreviation' locale"(TranslationClient translationClient, String userType, LocaleAbbreviation localeAbbreviation, String title, String body) {
+        given: "an isolated test article created by admin"
+        ArticleCreateRequest artReq = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Base Article for Translation")
+                        .setBody("Base Body")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, artReq).block()
+        def createdArticleId = createResponse.article.id
+        
+        and: "a new translation"
+        def req = new TranslationCreateRequest(
+                new Translation()
+                        .setLocale(localeAbbreviation)
+                        .setTitle(title)
+                        .setBody(body)
+        )
+        def transResponse = adminTranslationClient.createTranslation("articles", createdArticleId, req).block()
+
+        when: "updating the translation"
+        def updateReq = new TranslationUpdateRequest(
+                new Translation()
+                        .setTitle(title + " Updated")
+        )
+        def updateResponse = translationClient.updateTranslation("articles", createdArticleId, localeAbbreviation, updateReq).block()
+
+        then:
+        noExceptionThrown()
+        updateResponse.translation.title == title + " Updated"
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
+        } catch (Exception ignored) {}
+
+        where:
+        [[translationClient, userType], localeAbbreviation, [title, body]] << [
+                [[adminTranslationClient, "admin"]],
+                allLocales.findAll { it != LocaleAbbreviation.ENGLISH_UNITED_STATES }.take(2),
+                articleFixtures.getArticles().take(1).collect { [it.getTitle(), it.getBody()] }
+        ].combinations()
+    }
+    
+    def "cannot use UpdateTranslation as an #userType for the '#localeAbbreviation' locale"(TranslationClient translationClient, String userType, LocaleAbbreviation localeAbbreviation, String title, String body) {
+        given: "an isolated test article created by admin"
+        ArticleCreateRequest artReq = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Base Article for Translation")
+                        .setBody("Base Body")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, artReq).block()
+        def createdArticleId = createResponse.article.id
+        
+        and: "a new translation"
+        def req = new TranslationCreateRequest(
+                new Translation()
+                        .setLocale(localeAbbreviation)
+                        .setTitle(title)
+                        .setBody(body)
+        )
+        def transResponse = adminTranslationClient.createTranslation("articles", createdArticleId, req).block()
+
+        when: "updating the translation"
+        def updateReq = new TranslationUpdateRequest(
+                new Translation()
+                        .setTitle(title + " Updated")
+        )
+        translationClient.updateTranslation("articles", createdArticleId, localeAbbreviation, updateReq).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.getStatus().getCode() >= 400
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
+        } catch (Exception ignored) {}
+
+        where:
+        [[translationClient, userType], localeAbbreviation, [title, body]] << [
+                [[agentTranslationClient, "agent"], [userTranslationClient, "user"]],
+                allLocales.findAll { it != LocaleAbbreviation.ENGLISH_UNITED_STATES }.take(2),
+                articleFixtures.getArticles().take(1).collect { [it.getTitle(), it.getBody()] }
+        ].combinations()
+    }
+
+
+    
+    def "can use DeleteTranslation as an #userType for the '#localeAbbreviation' locale"(TranslationClient translationClient, String userType, LocaleAbbreviation localeAbbreviation, String title, String body) {
+        given: "an isolated test article created by admin"
+        ArticleCreateRequest artReq = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Base Article for Translation")
+                        .setBody("Base Body")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, artReq).block()
+        def createdArticleId = createResponse.article.id
+        
+        and: "a new translation"
+        def req = new TranslationCreateRequest(
+                new Translation()
+                        .setLocale(localeAbbreviation)
+                        .setTitle(title)
+                        .setBody(body)
+        )
+        def transResponse = adminTranslationClient.createTranslation("articles", createdArticleId, req).block()
+        def createdTranslationId = transResponse.translation.id
+
+        when: "deleting the translation"
+        translationClient.deleteTranslation(createdTranslationId).block()
+
+        then:
+        noExceptionThrown()
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
+        } catch (Exception ignored) {}
+
+        where:
+        [[translationClient, userType], localeAbbreviation, [title, body]] << [
+                [[adminTranslationClient, "admin"]],
+                allLocales.findAll { it != LocaleAbbreviation.ENGLISH_UNITED_STATES }.take(2),
+                articleFixtures.getArticles().take(1).collect { [it.getTitle(), it.getBody()] }
+        ].combinations()
+    }
+
+
+    def "cannot use DeleteTranslation as an #userType for the '#localeAbbreviation' locale"(TranslationClient translationClient, String userType, LocaleAbbreviation localeAbbreviation, String title, String body) {
+        given: "an isolated test article created by admin"
+        ArticleCreateRequest artReq = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Base Article for Translation")
+                        .setBody("Base Body")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, artReq).block()
+        def createdArticleId = createResponse.article.id
+        
+        and: "a new translation"
+        def req = new TranslationCreateRequest(
+                new Translation()
+                        .setLocale(localeAbbreviation)
+                        .setTitle(title)
+                        .setBody(body)
+        )
+        def transResponse = adminTranslationClient.createTranslation("articles", createdArticleId, req).block()
+        def createdTranslationId = transResponse.translation.id
+
+        when: "deleting the translation"
+        translationClient.deleteTranslation(createdTranslationId).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.getStatus().getCode() >= 400
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
+        } catch (Exception ignored) {}
+
+        where:
+        [[translationClient, userType], localeAbbreviation, [title, body]] << [
+                [[agentTranslationClient, "agent"], [userTranslationClient, "user"]],
+                allLocales.findAll { it != LocaleAbbreviation.ENGLISH_UNITED_STATES }.take(2),
+                articleFixtures.getArticles().take(1).collect { [it.getTitle(), it.getBody()] }
+        ].combinations()
     }
 }

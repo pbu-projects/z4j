@@ -210,7 +210,7 @@ class ArticleClientSpec extends Z4jSpec {
         ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
                 new Article()
                         .setPromoted(true)
-                        .setTitle(title + " Updated")
+                        // title cannot be updated via Article API, must use Translation API
                         .setLocaleAbbreviation(localeAbbreviation)
                         .setPermissionGroupId(validPermissionGroupId)
         )
@@ -250,7 +250,7 @@ class ArticleClientSpec extends Z4jSpec {
         ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
                 new Article()
                         .setPromoted(true)
-                        .setTitle(title + " Updated")
+                        // title cannot be updated via Article API, must use Translation API
                         .setLocaleAbbreviation(localeAbbreviation)
                         .setPermissionGroupId(validPermissionGroupId)
         )
