@@ -96,8 +96,8 @@ class Z4jSpec extends Specification {
         properties = ["micronaut.http.services.zendesk.email": System.getenv(authUser),
          "micronaut.http.services.zendesk.url"  : System.getenv("Z4J_URL"),
          "micronaut.http.services.zendesk.token": System.getenv("Z4J_TOKEN"),
-         "micronaut.http.client.read-timeout": "3m",
-         "micronaut.http.services.zendesk.read-timeout": "3m"
+         "micronaut.http.client.read-timeout": java.time.Duration.ofMinutes(5),
+         "micronaut.http.services.zendesk.read-timeout": java.time.Duration.ofMinutes(5)
         ] + properties
         ApplicationContext.builder(EmbeddedServer).properties(properties).build().start()
     }
