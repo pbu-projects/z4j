@@ -1,0 +1,5 @@
+micronaut:
+  http:
+    client:
+      # 5m read timeout to accommodate HTTP 429 rate limit retries and exponential backoff
+      read-timeout: 5m

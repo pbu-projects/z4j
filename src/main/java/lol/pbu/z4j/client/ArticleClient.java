@@ -16,13 +16,20 @@
 package lol.pbu.z4j.client;
 
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.annotation.Body;
+import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
+import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.Put;
 import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lol.pbu.z4j.model.ArticleCreateRequest;
+import lol.pbu.z4j.model.ArticleResponse;
+import lol.pbu.z4j.model.ArticleUpdateRequest;
 import lol.pbu.z4j.model.ArticlesResponse;
 import lol.pbu.z4j.model.LocaleAbbreviation;
 import lol.pbu.z4j.model.SortArticleBy;
@@ -60,5 +67,61 @@ public interface ArticleClient {
             @QueryValue("sort_order") @Nullable SortOrder sortOrder,
             @QueryValue("start_time") @Nullable Long startTime,
             @QueryValue("label_names") @Nullable String labelNames
+    );
+
+    /**
+     * <h1>{@summary Create Article}</h1>
+     *
+     * @param localeAbbreviation The locale in which the article is displayed (required)
+     * @param sectionId          The ID of the section to which the article belongs (required)
+     * @param body               {@link ArticleCreateRequest} (required)
+     * @return Created (status code 201)
+     */
+    @Post("/api/v2/help_center/{locale}/sections/{section_id}/articles")
+    Mono<@Valid ArticleResponse> createArticle(
+            @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
+            @PathVariable("section_id") @NotNull Long sectionId,
+            @Body @NotNull @Valid ArticleCreateRequest body
+    );
+
+    /**
+     * <h1>{@summary Update Article}</h1>
+     *
+     * @param localeAbbreviation The locale in which the article is displayed (required)
+     * @param articleId          The unique ID of the article (required)
+     * @param body               {@link ArticleUpdateRequest} (required)
+     * @return OK (status code 200)
+     */
+    @Put("/api/v2/help_center/{locale}/articles/{article_id}")
+    Mono<@Valid ArticleResponse> updateArticle(
+            @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
+            @PathVariable("article_id") @NotNull Long articleId,
+            @Body @NotNull @Valid ArticleUpdateRequest body
+    );
+
+    /**
+     * <h1>{@summary Show Article}</h1>
+     *
+     * @param localeAbbreviation The locale in which the article is displayed (required)
+     * @param articleId          The unique ID of the article (required)
+     * @return OK (status code 200)
+     */
+    @Get("/api/v2/help_center/{locale}/articles/{article_id}")
+    Mono<@Valid ArticleResponse> showArticle(
+            @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
+            @PathVariable("article_id") @NotNull Long articleId
+    );
+
+    /**
+     * <h1>{@summary Delete Article}</h1>
+     *
+     * @param localeAbbreviation The locale in which the article is displayed (required)
+     * @param articleId          The unique ID of the article (required)
+     * @return No Content (status code 204)
+     */
+    @Delete("/api/v2/help_center/{locale}/articles/{article_id}")
+    Mono<Void> deleteArticle(
+            @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
+            @PathVariable("article_id") @NotNull Long articleId
     );
 }

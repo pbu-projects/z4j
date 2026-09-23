@@ -22,22 +22,19 @@ import io.micronaut.http.annotation.ClientFilter;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import lol.pbu.z4j.ratelimit.EndpointRateLimit;
+import lol.pbu.z4j.ratelimit.RateLimitConfiguration;
 import lol.pbu.z4j.ratelimit.RateLimitSnapshot;
 import lol.pbu.z4j.ratelimit.RateLimitTracker;
-
-import lol.pbu.z4j.ratelimit.RateLimitConfiguration;
-import java.time.Duration;
-import reactor.core.publisher.Mono;
-
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
-
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
+import reactor.core.publisher.Mono;
 
 /**
  * Client filter that intercepts Zendesk HTTP responses to capture rate limit metrics,
@@ -69,19 +66,40 @@ public class RateLimitFilter implements HttpClientFilter {
 
     @Override
     public Publisher<? extends HttpResponse<?>> doFilter(MutableHttpRequest<?> request, ClientFilterChain chain) {
-        Publisher<? extends HttpResponse<?>> resultPublisher;
-        if (config.isAutoWaitEnabled() && tracker.isApproachingLimit(config.getApproachThreshold())) {
-            log.warn("Rate limit approaching threshold (<= {}). Auto-wait enabled. Pausing for {} seconds before sending request to {}", 
-                    config.getApproachThreshold(), config.getWaitDurationSeconds(), request.getPath());
-            resultPublisher = Mono.delay(Duration.ofSeconds(config.getWaitDurationSeconds()))
-                    .flatMapMany(v -> chain.proceed(request));
-        } else {
-            resultPublisher = chain.proceed(request);
-        }
+        return executeWithRetry(request, chain, 0);
+    }
 
-        return Flux.from(resultPublisher)
+    @SuppressWarnings("unchecked")
+    private Flux<HttpResponse<?>> executeWithRetry(MutableHttpRequest<?> request, ClientFilterChain chain, int attempt) {
+        Flux<HttpResponse<?>> proceedFlux = Flux.defer(() -> {
+            if (attempt == 0 && config.isAutoWaitEnabled() && tracker.isApproachingLimit(config.getApproachThreshold())) {
+                log.warn("Rate limit approaching threshold (<= {}). Auto-wait enabled. Pausing for {} seconds before sending request to {}",
+                        config.getApproachThreshold(), config.getWaitDurationSeconds(), request.getPath());
+                return Mono.delay(Duration.ofSeconds(config.getWaitDurationSeconds()))
+                        .flatMapMany(v -> (Publisher<HttpResponse<?>>) chain.proceed(request));
+            }
+            return (Publisher<HttpResponse<?>>) chain.proceed(request);
+        });
+
+        return proceedFlux
                 .doOnNext(response -> handleResponse(request, response))
-                .doOnError(HttpClientResponseException.class, ex -> handleResponse(request, ex.getResponse()));
+                .onErrorResume(HttpClientResponseException.class, ex -> {
+                    handleResponse(request, ex.getResponse());
+                    if (ex.getResponse() != null && ex.getStatus() != null
+                            && ex.getStatus().getCode() == 429
+                            && attempt < 5) {
+                        HttpHeaders headers = ex.getResponse().getHeaders();
+                        Integer retryAfter = parseIntegerHeader(headers, HEADER_RETRY_AFTER);
+                        long waitTime = (retryAfter != null && retryAfter > 0) ? retryAfter : config.getWaitDurationSeconds();
+                        if (waitTime <= 0) waitTime = 5;
+                        log.warn("HTTP 429 received for {} {}. Retrying (attempt {}) after {} seconds...",
+                                request.getMethodName(), request.getPath(), attempt + 1, waitTime);
+                        final long finalWait = waitTime;
+                        return Mono.delay(Duration.ofSeconds(finalWait))
+                                .flatMapMany(v -> executeWithRetry(request, chain, attempt + 1));
+                    }
+                    return Flux.error(ex);
+                });
     }
 
     public void handleResponse(MutableHttpRequest<?> request, HttpResponse<?> response) {
@@ -122,7 +140,7 @@ public class RateLimitFilter implements HttpClientFilter {
         if (snapshot.isRateLimited()) {
             log.warn("Zendesk Rate Limit Exceeded (HTTP 429) for {} {}. Retry after: {} seconds",
                     request.getMethodName(), request.getPath(), retryAfterSeconds);
-        } else if (snapshot.isApproachingLimit(50)) {
+        } else if (snapshot.isApproachingLimit(config.getApproachThreshold())) {
             log.warn("Zendesk Rate Limit approaching threshold for {} {}: global remaining={}, endpoint limits={}",
                     request.getMethodName(), request.getPath(), globalRemaining, endpointLimits);
         } else {

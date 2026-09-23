@@ -18,6 +18,7 @@ package lol.pbu.z4j
 import io.micronaut.context.ApplicationContext
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import java.time.Duration
 import lol.pbu.z4j.client.LocaleClient
 import lol.pbu.z4j.client.TicketClient
 import lol.pbu.z4j.model.*
@@ -95,7 +96,10 @@ class Z4jSpec extends Specification {
         }
         properties = ["micronaut.http.services.zendesk.email": System.getenv(authUser),
          "micronaut.http.services.zendesk.url"  : System.getenv("Z4J_URL"),
-         "micronaut.http.services.zendesk.token": System.getenv("Z4J_TOKEN")
+         "micronaut.http.services.zendesk.token": System.getenv("Z4J_TOKEN"),
+         // 5-minute read timeout to accommodate HTTP 429 rate limit retries and exponential backoffs
+         "micronaut.http.client.read-timeout": Duration.ofMinutes(5),
+         "micronaut.http.services.zendesk.read-timeout": Duration.ofMinutes(5)
         ] + properties
         ApplicationContext.builder(EmbeddedServer).properties(properties).build().start()
     }

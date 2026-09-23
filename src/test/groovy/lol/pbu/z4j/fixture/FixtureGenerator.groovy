@@ -81,6 +81,16 @@ class FixtureGenerator {
 
         // 4. Article Fixtures
         Map<String, Object> articleFixtures = [
+            articles: [
+                [userType: "admin", title: "Article ${faker.book().title()} ${UUID.randomUUID().toString().substring(0, 8)}".toString(), body: faker.lorem().paragraph()],
+                [userType: "agent", title: "Article ${faker.book().title()} ${UUID.randomUUID().toString().substring(0, 8)}".toString(), body: faker.lorem().paragraph()],
+                [userType: "user", title: "Article ${faker.book().title()} ${UUID.randomUUID().toString().substring(0, 8)}".toString(), body: faker.lorem().paragraph()]
+            ],
+            deleteArticles: [
+                [userType: "admin", title: "Del-Art ${faker.book().title()} ${UUID.randomUUID().toString().substring(0, 8)}".toString(), body: faker.lorem().paragraph()],
+                [userType: "agent", title: "Del-Art ${faker.book().title()} ${UUID.randomUUID().toString().substring(0, 8)}".toString(), body: faker.lorem().paragraph()],
+                [userType: "user", title: "Del-Art ${faker.book().title()} ${UUID.randomUUID().toString().substring(0, 8)}".toString(), body: faker.lorem().paragraph()]
+            ],
             articleQueries: [
                 [sortBy: "TITLE", sortOrder: "ASC"],
                 [sortBy: "POSITION", sortOrder: "DESC"],

@@ -12,13 +12,13 @@ categories:
     you, or anybody else on this planet is gonna make me change my mind.
 deleteCategories:
 - userType: admin
-  categoryName: This is trifficult! 9d4ffbe7
+  categoryName: This is trifficult! c22a5dde
   description: Orthanc
 - userType: agent
-  categoryName: It's a good thing you're tough. 8c7af699
+  categoryName: It's a good thing you're tough. 924b6991
   description: Nargothrond
 - userType: user
-  categoryName: Biscuits! 33729b90
+  categoryName: Biscuits! ab149769
   description: Crack of Doom
 sortOptions:
 - sortBy: TITLE

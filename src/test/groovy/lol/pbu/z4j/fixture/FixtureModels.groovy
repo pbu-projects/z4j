@@ -71,7 +71,17 @@ class UserSegmentFixtures {
 
 @CompileStatic
 @Canonical
+class ArticleItem {
+    String userType
+    String title
+    String body
+}
+
+@CompileStatic
+@Canonical
 class ArticleFixtures {
+    List<ArticleItem> articles = []
+    List<ArticleItem> deleteArticles = []
     List<SortOptionItem> articleQueries = []
 }
 
