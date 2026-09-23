@@ -210,9 +210,6 @@ class ArticleClientSpec extends Z4jSpec {
         ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
                 new Article()
                         .setPromoted(true)
-                        .setTitle("ignored by zendesk api") // title cannot be updated via Article API, must use Translation API
-                        .setLocaleAbbreviation(localeAbbreviation)
-                        .setPermissionGroupId(validPermissionGroupId)
         )
 
         when:
@@ -250,9 +247,6 @@ class ArticleClientSpec extends Z4jSpec {
         ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
                 new Article()
                         .setPromoted(true)
-                        .setTitle("ignored by zendesk api") // title cannot be updated via Article API, must use Translation API
-                        .setLocaleAbbreviation(localeAbbreviation)
-                        .setPermissionGroupId(validPermissionGroupId)
         )
 
         when:
