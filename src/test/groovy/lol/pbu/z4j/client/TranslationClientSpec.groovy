@@ -25,8 +25,6 @@ import lol.pbu.z4j.model.*
 import reactor.core.publisher.Mono
 import spock.lang.Shared
 
-import static io.micronaut.http.HttpStatus.FORBIDDEN
-
 @MicronautTest
 class TranslationClientSpec extends Z4jSpec {
 
@@ -116,7 +114,9 @@ class TranslationClientSpec extends Z4jSpec {
         cleanup:
         try {
             adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
 
         where:
         [[translationClient, userType], localeAbbreviation, [title, body]] << [
@@ -156,7 +156,9 @@ class TranslationClientSpec extends Z4jSpec {
         cleanup:
         try {
             adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
 
         where:
         [[translationClient, userType], localeAbbreviation, [title, body]] << [
@@ -204,7 +206,9 @@ class TranslationClientSpec extends Z4jSpec {
         cleanup:
         try {
             adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
 
         where:
         [[translationClient, userType], localeAbbreviation, [title, body]] << [
@@ -249,7 +253,9 @@ class TranslationClientSpec extends Z4jSpec {
         cleanup:
         try {
             adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
 
         where:
         [[translationClient, userType], localeAbbreviation, [title, body]] << [
@@ -294,7 +300,9 @@ class TranslationClientSpec extends Z4jSpec {
         cleanup:
         try {
             adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
 
         where:
         [[translationClient, userType], localeAbbreviation, [title, body]] << [
@@ -337,7 +345,9 @@ class TranslationClientSpec extends Z4jSpec {
         cleanup:
         try {
             adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
 
         where:
         [[translationClient, userType], localeAbbreviation, [title, body]] << [
@@ -380,7 +390,9 @@ class TranslationClientSpec extends Z4jSpec {
         cleanup:
         try {
             adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
 
         where:
         [[translationClient, userType], localeAbbreviation, [title, body]] << [

@@ -21,15 +21,11 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpRequest
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.http.filter.ClientFilterChain
-import io.micronaut.http.simple.SimpleHttpRequest
 import lol.pbu.z4j.ratelimit.RateLimitConfiguration
-import lol.pbu.z4j.ratelimit.RateLimitSnapshot
 import lol.pbu.z4j.ratelimit.RateLimitTracker
-import org.reactivestreams.Publisher
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import spock.lang.Specification
-import java.time.Duration
 
 class RateLimitFilterSpec extends Specification {
 
