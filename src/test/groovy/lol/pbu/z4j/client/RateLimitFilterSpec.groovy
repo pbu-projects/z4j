@@ -104,4 +104,105 @@ class RateLimitFilterSpec extends Specification {
         result == response
         duration < 1000 // Should not wait
     }
+
+    def "filter retries on HTTP 429 using Retry-After header and succeeds on retry"() {
+        given:
+        def tracker = new RateLimitTracker()
+        def config = new RateLimitConfiguration()
+        config.setAutoWaitEnabled(false)
+        def filter = new RateLimitFilter(tracker, config)
+
+        def request = Mock(MutableHttpRequest)
+        request.getPath() >> "/api/v2/articles"
+        request.getMethodName() >> "GET"
+        request.getUri() >> URI.create("https://z.com/api/v2/articles")
+
+        def response429 = HttpResponse.status(io.micronaut.http.HttpStatus.TOO_MANY_REQUESTS).header("Retry-After", "1")
+        def exception429 = new HttpClientResponseException("Rate limit exceeded", response429)
+        def responseOk = HttpResponse.ok("success")
+
+        def chain = Mock(ClientFilterChain)
+        def attempts = 0
+        chain.proceed(request) >> {
+            attempts++
+            if (attempts == 1) {
+                return Flux.error(exception429)
+            } else {
+                return Flux.just(responseOk)
+            }
+        }
+
+        when:
+        def start = System.currentTimeMillis()
+        def result = Mono.from(filter.doFilter(request, chain)).block()
+        def duration = System.currentTimeMillis() - start
+
+        then:
+        result.status == io.micronaut.http.HttpStatus.OK
+        attempts == 2
+        duration >= 900 // waited for the 1 second Retry-After
+    }
+
+    def "filter terminates retry and propagates exception when 5 attempts are exceeded"() {
+        given:
+        def tracker = new RateLimitTracker()
+        def config = new RateLimitConfiguration()
+        config.setAutoWaitEnabled(false)
+        config.setWaitDurationSeconds(0)
+        def filter = new RateLimitFilter(tracker, config)
+
+        def request = Mock(MutableHttpRequest)
+        request.getPath() >> "/api/v2/articles"
+        request.getMethodName() >> "GET"
+        request.getUri() >> URI.create("https://z.com/api/v2/articles")
+
+        def response429 = HttpResponse.status(io.micronaut.http.HttpStatus.TOO_MANY_REQUESTS).header("Retry-After", "0")
+        def exception429 = new HttpClientResponseException("Rate limit exceeded", response429)
+
+        def chain = Mock(ClientFilterChain)
+        def attempts = 0
+        chain.proceed(request) >> {
+            attempts++
+            return Flux.error(exception429)
+        }
+
+        when:
+        Mono.from(filter.doFilter(request, chain)).block()
+
+        then:
+        def err = thrown(HttpClientResponseException)
+        err.status == io.micronaut.http.HttpStatus.TOO_MANY_REQUESTS
+        attempts == 6 // initial attempt (attempt 0) + 5 retries (attempts 1 to 5)
+    }
+
+    def "filter propagates non-429 exceptions immediately without retrying"() {
+        given:
+        def tracker = new RateLimitTracker()
+        def config = new RateLimitConfiguration()
+        config.setAutoWaitEnabled(false)
+        def filter = new RateLimitFilter(tracker, config)
+
+        def request = Mock(MutableHttpRequest)
+        request.getPath() >> "/api/v2/articles"
+        request.getMethodName() >> "GET"
+        request.getUri() >> URI.create("https://z.com/api/v2/articles")
+
+        def response500 = HttpResponse.serverError()
+        def exception500 = new HttpClientResponseException("Server error", response500)
+
+        def chain = Mock(ClientFilterChain)
+        def attempts = 0
+        chain.proceed(request) >> {
+            attempts++
+            return Flux.error(exception500)
+        }
+
+        when:
+        Mono.from(filter.doFilter(request, chain)).block()
+
+        then:
+        def err = thrown(HttpClientResponseException)
+        err.status == io.micronaut.http.HttpStatus.INTERNAL_SERVER_ERROR
+        attempts == 1
+    }
 }
