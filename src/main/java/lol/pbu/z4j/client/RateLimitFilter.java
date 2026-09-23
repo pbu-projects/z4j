@@ -22,22 +22,19 @@ import io.micronaut.http.annotation.ClientFilter;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import lol.pbu.z4j.ratelimit.EndpointRateLimit;
+import lol.pbu.z4j.ratelimit.RateLimitConfiguration;
 import lol.pbu.z4j.ratelimit.RateLimitSnapshot;
 import lol.pbu.z4j.ratelimit.RateLimitTracker;
-
-import lol.pbu.z4j.ratelimit.RateLimitConfiguration;
-import java.time.Duration;
-import reactor.core.publisher.Mono;
-
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
-
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
+import reactor.core.publisher.Mono;
 
 /**
  * Client filter that intercepts Zendesk HTTP responses to capture rate limit metrics,
@@ -143,7 +140,7 @@ public class RateLimitFilter implements HttpClientFilter {
         if (snapshot.isRateLimited()) {
             log.warn("Zendesk Rate Limit Exceeded (HTTP 429) for {} {}. Retry after: {} seconds",
                     request.getMethodName(), request.getPath(), retryAfterSeconds);
-        } else if (snapshot.isApproachingLimit(50)) {
+        } else if (snapshot.isApproachingLimit(config.getApproachThreshold())) {
             log.warn("Zendesk Rate Limit approaching threshold for {} {}: global remaining={}, endpoint limits={}",
                     request.getMethodName(), request.getPath(), globalRemaining, endpointLimits);
         } else {

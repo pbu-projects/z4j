@@ -16,21 +16,21 @@
 package lol.pbu.z4j.client;
 
 import io.micronaut.core.annotation.Nullable;
+import io.micronaut.http.annotation.Body;
+import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
-import io.micronaut.http.annotation.Delete;
-import io.micronaut.http.annotation.Body;
-import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import lol.pbu.z4j.model.ArticlesResponse;
-import lol.pbu.z4j.model.ArticleResponse;
 import lol.pbu.z4j.model.ArticleCreateRequest;
+import lol.pbu.z4j.model.ArticleResponse;
 import lol.pbu.z4j.model.ArticleUpdateRequest;
+import lol.pbu.z4j.model.ArticlesResponse;
 import lol.pbu.z4j.model.LocaleAbbreviation;
 import lol.pbu.z4j.model.SortArticleBy;
 import lol.pbu.z4j.model.SortOrder;
