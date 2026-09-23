@@ -46,15 +46,14 @@ class ArticleClientSpec extends Z4jSpec {
         }
 
         if (validSectionId == null) {
-            System.out.println("No articles found! Seeding via raw HTTP...")
             def auth = "Basic " + (System.getenv("Z4J_ADMIN_EMAIL") + "/token:" + System.getenv("Z4J_TOKEN")).bytes.encodeBase64().toString()
             
-            def sectionsConn = new URL(System.getenv("Z4J_URL") + "/api/v2/help_center/en-us/sections.json").openConnection()
+            def sectionsConn = URI.create(System.getenv("Z4J_URL") + "/api/v2/help_center/en-us/sections.json").toURL().openConnection()
             sectionsConn.setRequestProperty("Authorization", auth)
             sectionsConn.setRequestProperty("Accept", "application/json")
             def sectionsJson = new com.fasterxml.jackson.databind.ObjectMapper().readValue(sectionsConn.inputStream, Map.class)
             
-            def pgConn = new URL(System.getenv("Z4J_URL") + "/api/v2/guide/permission_groups.json").openConnection()
+            def pgConn = URI.create(System.getenv("Z4J_URL") + "/api/v2/guide/permission_groups.json").toURL().openConnection()
             pgConn.setRequestProperty("Authorization", auth)
             pgConn.setRequestProperty("Accept", "application/json")
             def pgJson = new com.fasterxml.jackson.databind.ObjectMapper().readValue(pgConn.inputStream, Map.class)
