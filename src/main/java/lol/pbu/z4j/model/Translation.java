@@ -15,30 +15,171 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lol.pbu.z4j.Generated;
 
+/**
+ * Translation
+ *
+ * @author Jonathan-Zollinger
+ * @since 0.2.5
+ */
 @Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
+@JsonPropertyOrder({
+        Translation.JSON_PROPERTY_ID,
+        Translation.JSON_PROPERTY_URL,
+        Translation.JSON_PROPERTY_HTML_URL,
+        Translation.JSON_PROPERTY_SOURCE_ID,
+        Translation.JSON_PROPERTY_SOURCE_TYPE,
+        Translation.JSON_PROPERTY_LOCALE,
+        Translation.JSON_PROPERTY_TITLE,
+        Translation.JSON_PROPERTY_BODY,
+        Translation.JSON_PROPERTY_OUTDATED,
+        Translation.JSON_PROPERTY_DRAFT,
+        Translation.JSON_PROPERTY_CREATED_AT,
+        Translation.JSON_PROPERTY_UPDATED_AT,
+        Translation.JSON_PROPERTY_UPDATED_BY_ID,
+        Translation.JSON_PROPERTY_CREATED_BY_ID
+})
 @Serdeable
 @Generated
 public class Translation {
-    @Nullable @JsonProperty("id") private Long id;
-    @Nullable @JsonProperty("url") private String url;
-    @Nullable @JsonProperty("html_url") private String htmlUrl;
-    @Nullable @JsonProperty("source_id") private Long sourceId;
-    @Nullable @JsonProperty("source_type") private String sourceType;
-    @Nullable @JsonProperty("locale") private LocaleAbbreviation locale;
-    @Nullable @JsonProperty("title") private String title;
-    @Nullable @JsonProperty("body") private String body;
-    @Nullable @JsonProperty("outdated") private Boolean outdated;
-    @Nullable @JsonProperty("draft") private Boolean draft;
-    @Nullable @JsonProperty("created_at") private String createdAt;
-    @Nullable @JsonProperty("updated_at") private String updatedAt;
-    @Nullable @JsonProperty("updated_by_id") private Long updatedById;
-    @Nullable @JsonProperty("created_by_id") private Long createdById;
+
+    public static final String JSON_PROPERTY_ID = "id";
+    public static final String JSON_PROPERTY_URL = "url";
+    public static final String JSON_PROPERTY_HTML_URL = "html_url";
+    public static final String JSON_PROPERTY_SOURCE_ID = "source_id";
+    public static final String JSON_PROPERTY_SOURCE_TYPE = "source_type";
+    public static final String JSON_PROPERTY_LOCALE = "locale";
+    public static final String JSON_PROPERTY_TITLE = "title";
+    public static final String JSON_PROPERTY_BODY = "body";
+    public static final String JSON_PROPERTY_OUTDATED = "outdated";
+    public static final String JSON_PROPERTY_DRAFT = "draft";
+    public static final String JSON_PROPERTY_CREATED_AT = "created_at";
+    public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
+    public static final String JSON_PROPERTY_UPDATED_BY_ID = "updated_by_id";
+    public static final String JSON_PROPERTY_CREATED_BY_ID = "created_by_id";
+
+    /**
+     * Automatically assigned when creating translations
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Long id;
+
+    /**
+     * The API url of this translation
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_URL)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String url;
+
+    /**
+     * The url of this translation in Help Center
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_HTML_URL)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String htmlUrl;
+
+    /**
+     * The id of the item that is translated
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_SOURCE_ID)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Long sourceId;
+
+    /**
+     * The type of the item that is translated
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_SOURCE_TYPE)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String sourceType;
+
+    /**
+     * The locale of the translation
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_LOCALE)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private LocaleAbbreviation locale;
+
+    /**
+     * The title of the translation
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_TITLE)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String title;
+
+    /**
+     * The body of the translation
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_BODY)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String body;
+
+    /**
+     * True if the translation is outdated; false otherwise
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_OUTDATED)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Boolean outdated;
+
+    /**
+     * True if the translation is in draft status; false otherwise
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_DRAFT)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Boolean draft;
+
+    /**
+     * The time at which the translation was created
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_CREATED_AT)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String createdAt;
+
+    /**
+     * The time at which the translation was updated
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_UPDATED_AT)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String updatedAt;
+
+    /**
+     * The id of the user who updated the translation
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_UPDATED_BY_ID)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Long updatedById;
+
+    /**
+     * The id of the user who created the translation
+     */
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_CREATED_BY_ID)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Long createdById;
 }
