@@ -15,6 +15,7 @@
  */
 package lol.pbu.z4j.client
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
@@ -69,12 +70,12 @@ class TranslationClientSpec extends Z4jSpec {
             def sectionsConn = URI.create(System.getenv("Z4J_URL") + "/api/v2/help_center/en-us/sections.json").toURL().openConnection()
             sectionsConn.setRequestProperty("Authorization", auth)
             sectionsConn.setRequestProperty("Accept", "application/json")
-            def sectionsJson = new com.fasterxml.jackson.databind.ObjectMapper().readValue(sectionsConn.inputStream, Map.class)
+            def sectionsJson = new ObjectMapper().readValue(sectionsConn.inputStream, Map.class)
             
             def pgConn = URI.create(System.getenv("Z4J_URL") + "/api/v2/guide/permission_groups.json").toURL().openConnection()
             pgConn.setRequestProperty("Authorization", auth)
             pgConn.setRequestProperty("Accept", "application/json")
-            def pgJson = new com.fasterxml.jackson.databind.ObjectMapper().readValue(pgConn.inputStream, Map.class)
+            def pgJson = new ObjectMapper().readValue(pgConn.inputStream, Map.class)
             
             if (sectionsJson.sections && pgJson.permission_groups) {
                 validSectionId = sectionsJson.sections[0].id as Long

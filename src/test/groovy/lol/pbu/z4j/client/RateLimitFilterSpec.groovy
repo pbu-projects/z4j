@@ -15,7 +15,9 @@
  */
 package lol.pbu.z4j.client
 
+import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpRequest
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.http.filter.ClientFilterChain
@@ -55,11 +57,11 @@ class RateLimitFilterSpec extends Specification {
         
         def response = Mock(HttpResponse)
         
-        def headers = Mock(io.micronaut.http.HttpHeaders)
+        def headers = Mock(HttpHeaders)
         headers.names() >> ([] as Set)
         response.getHeaders() >> headers
 
-        response.getStatus() >> io.micronaut.http.HttpStatus.OK
+        response.getStatus() >> HttpStatus.OK
 
         
 
@@ -99,11 +101,11 @@ class RateLimitFilterSpec extends Specification {
         def chain = Mock(ClientFilterChain)
         def response = Mock(HttpResponse)
         
-        def headers = Mock(io.micronaut.http.HttpHeaders)
+        def headers = Mock(HttpHeaders)
         headers.names() >> ([] as Set)
         response.getHeaders() >> headers
 
-        response.getStatus() >> io.micronaut.http.HttpStatus.OK
+        response.getStatus() >> HttpStatus.OK
 
         // Even if approaching limit, should not wait because disabled
         
@@ -132,7 +134,7 @@ class RateLimitFilterSpec extends Specification {
         request.getMethodName() >> "GET"
         request.getUri() >> URI.create("https://z.com/api/v2/articles")
 
-        def response429 = HttpResponse.status(io.micronaut.http.HttpStatus.TOO_MANY_REQUESTS).header("Retry-After", "1")
+        def response429 = HttpResponse.status(HttpStatus.TOO_MANY_REQUESTS).header("Retry-After", "1")
         def exception429 = new HttpClientResponseException("Rate limit exceeded", response429)
         def responseOk = HttpResponse.ok("success")
 
@@ -153,7 +155,7 @@ class RateLimitFilterSpec extends Specification {
         def duration = System.currentTimeMillis() - start
 
         then:
-        result.status == io.micronaut.http.HttpStatus.OK
+        result.status == HttpStatus.OK
         attempts == 2
         duration >= 900 // waited for the 1 second Retry-After
     }
@@ -171,7 +173,7 @@ class RateLimitFilterSpec extends Specification {
         request.getMethodName() >> "GET"
         request.getUri() >> URI.create("https://z.com/api/v2/articles")
 
-        def response429 = HttpResponse.status(io.micronaut.http.HttpStatus.TOO_MANY_REQUESTS).header("Retry-After", "0")
+        def response429 = HttpResponse.status(HttpStatus.TOO_MANY_REQUESTS).header("Retry-After", "0")
         def exception429 = new HttpClientResponseException("Rate limit exceeded", response429)
 
         def chain = Mock(ClientFilterChain)
@@ -186,7 +188,7 @@ class RateLimitFilterSpec extends Specification {
 
         then:
         def err = thrown(HttpClientResponseException)
-        err.status == io.micronaut.http.HttpStatus.TOO_MANY_REQUESTS
+        err.status == HttpStatus.TOO_MANY_REQUESTS
         attempts == 6 // initial attempt (attempt 0) + 5 retries (attempts 1 to 5)
     }
 
@@ -217,7 +219,7 @@ class RateLimitFilterSpec extends Specification {
 
         then:
         def err = thrown(HttpClientResponseException)
-        err.status == io.micronaut.http.HttpStatus.INTERNAL_SERVER_ERROR
+        err.status == HttpStatus.INTERNAL_SERVER_ERROR
         attempts == 1
     }
 }
