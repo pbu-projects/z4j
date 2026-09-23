@@ -279,12 +279,18 @@ class ArticleClientSpec extends Z4jSpec {
                         .setLocaleAbbreviation(localeAbbreviation)
         )
         def createResponse = adminArticleClient.createArticle(localeAbbreviation, validSectionId, req).block()
+        def createdId = createResponse.article.id
 
         when:
-        articleClient.deleteArticle(localeAbbreviation, createResponse.article.id).block()
+        articleClient.deleteArticle(localeAbbreviation, createdId).block()
 
         then:
         noExceptionThrown()
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(localeAbbreviation, createdId).block()
+        } catch (Exception ignored) {}
 
         where:
         [[articleClient, userType], localeAbbreviation, [title, body]] << [
