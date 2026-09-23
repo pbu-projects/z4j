@@ -16,18 +16,35 @@
 package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.Data;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import lol.pbu.z4j.Generated;
 
+/**
+ * TranslationUpdateRequest
+ *
+ * @author Jonathan-Zollinger
+ * @since 0.2.5
+ */
+@Accessors(chain = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonPropertyOrder(TranslationUpdateRequest.JSON_PROPERTY_TRANSLATION)
 @Serdeable
 @Generated
 public class TranslationUpdateRequest {
-    @JsonProperty("translation")
+
+    public static final String JSON_PROPERTY_TRANSLATION = "translation";
+
+    @NotNull
+    @Valid
+    @JsonProperty(JSON_PROPERTY_TRANSLATION)
     private Translation translation;
 }
