@@ -20,6 +20,7 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import java.util.List;
@@ -31,29 +32,14 @@ import lol.pbu.z4j.Generated;
  * @since 0.3.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Serdeable
 @Generated
-public class IncrementalTicketEventTimeResponse {
+public class IncrementalTicketEventTimeResponse extends IncrementalTimePaginationResponse {
     @Nullable
     @JsonProperty("ticket_events")
     private List<TicketEvent> ticketEvents;
-
-    @Nullable
-    @JsonProperty("end_time")
-    private Long endTime;
-
-    @Nullable
-    @JsonProperty("next_page")
-    private String nextPage;
-
-    @Nullable
-    @JsonProperty("end_of_stream")
-    private Boolean endOfStream;
-
-    @Nullable
-    @JsonProperty("count")
-    private Integer count;
 }

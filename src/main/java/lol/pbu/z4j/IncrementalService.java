@@ -129,34 +129,8 @@ public class IncrementalService {
             return this;
         }
 
-        @SuppressWarnings("unchecked")
         public Mono<IncrementalPage<T>> fetchPage() {
-            if (resourceType == ResourceType.TICKET) {
-                return client.exportTickets(startTime, cursor, perPage)
-                        .map(res -> {
-                            IncrementalPage<T> page = new IncrementalPage<>();
-                            page.setResults((List<T>) res.getTickets());
-                            page.setCursor(res.getCursor() != null ? res.getCursor() : res.getAfterCursor());
-                            page.setAfterCursor(res.getAfterCursor());
-                            page.setBeforeCursor(res.getBeforeCursor());
-                            page.setEndOfStream(res.getEndOfStream());
-                            page.setCount(res.getCount());
-                            return page;
-                        });
-            } else if (resourceType == ResourceType.USER) {
-                return client.exportUsers(startTime, cursor, perPage)
-                        .map(res -> {
-                            IncrementalPage<T> page = new IncrementalPage<>();
-                            page.setResults((List<T>) res.getUsers());
-                            page.setCursor(res.getCursor() != null ? res.getCursor() : res.getAfterCursor());
-                            page.setAfterCursor(res.getAfterCursor());
-                            page.setBeforeCursor(res.getBeforeCursor());
-                            page.setEndOfStream(res.getEndOfStream());
-                            page.setCount(res.getCount());
-                            return page;
-                        });
-            }
-            return Mono.error(new IllegalStateException("Unsupported resource type for cursor export: " + resourceType));
+            return fetchPageForCursor(startTime, cursor, perPage);
         }
 
         public Flux<T> flux() {
@@ -182,32 +156,29 @@ public class IncrementalService {
 
         @SuppressWarnings("unchecked")
         private Mono<IncrementalPage<T>> fetchPageForCursor(Long st, String cur, Integer sz) {
+            Mono<? extends IncrementalCursorPaginationResponse> mono;
             if (resourceType == ResourceType.TICKET) {
-                return client.exportTickets(st, cur, sz)
-                        .map(res -> {
-                            IncrementalPage<T> page = new IncrementalPage<>();
-                            page.setResults((List<T>) res.getTickets());
-                            page.setCursor(res.getCursor() != null ? res.getCursor() : res.getAfterCursor());
-                            page.setAfterCursor(res.getAfterCursor());
-                            page.setBeforeCursor(res.getBeforeCursor());
-                            page.setEndOfStream(res.getEndOfStream());
-                            page.setCount(res.getCount());
-                            return page;
-                        });
+                mono = client.exportTickets(st, cur, sz);
             } else if (resourceType == ResourceType.USER) {
-                return client.exportUsers(st, cur, sz)
-                        .map(res -> {
-                            IncrementalPage<T> page = new IncrementalPage<>();
-                            page.setResults((List<T>) res.getUsers());
-                            page.setCursor(res.getCursor() != null ? res.getCursor() : res.getAfterCursor());
-                            page.setAfterCursor(res.getAfterCursor());
-                            page.setBeforeCursor(res.getBeforeCursor());
-                            page.setEndOfStream(res.getEndOfStream());
-                            page.setCount(res.getCount());
-                            return page;
-                        });
+                mono = client.exportUsers(st, cur, sz);
+            } else {
+                return Mono.error(new IllegalStateException("Unsupported resource type for cursor export: " + resourceType));
             }
-            return Mono.error(new IllegalStateException("Unsupported resource type"));
+
+            return mono.map(res -> {
+                IncrementalPage<T> page = new IncrementalPage<>();
+                if (res instanceof IncrementalTicketCursorResponse tr) {
+                    page.setResults((List<T>) tr.getTickets());
+                } else if (res instanceof IncrementalUserCursorResponse ur) {
+                    page.setResults((List<T>) ur.getUsers());
+                }
+                page.setCursor(res.getCursor() != null ? res.getCursor() : res.getAfterCursor());
+                page.setAfterCursor(res.getAfterCursor());
+                page.setBeforeCursor(res.getBeforeCursor());
+                page.setEndOfStream(res.getEndOfStream());
+                page.setCount(res.getCount());
+                return page;
+            });
         }
     }
 
@@ -251,35 +222,11 @@ public class IncrementalService {
             return this;
         }
 
-        @SuppressWarnings("unchecked")
         public Mono<IncrementalTimePage<T>> fetchPage() {
             if (startTime == null) {
                 return Mono.error(new IllegalArgumentException("since() must be specified for time-based incremental exports"));
             }
-            if (resourceType == ResourceType.ORGANIZATION) {
-                return client.exportOrganizations(startTime, perPage)
-                        .map(res -> {
-                            IncrementalTimePage<T> page = new IncrementalTimePage<>();
-                            page.setResults((List<T>) res.getOrganizations());
-                            page.setEndTime(res.getEndTime());
-                            page.setNextPage(res.getNextPage());
-                            page.setEndOfStream(res.getEndOfStream());
-                            page.setCount(res.getCount());
-                            return page;
-                        });
-            } else if (resourceType == ResourceType.TICKET_EVENT) {
-                return client.exportTicketEvents(startTime)
-                        .map(res -> {
-                            IncrementalTimePage<T> page = new IncrementalTimePage<>();
-                            page.setResults((List<T>) res.getTicketEvents());
-                            page.setEndTime(res.getEndTime());
-                            page.setNextPage(res.getNextPage());
-                            page.setEndOfStream(res.getEndOfStream());
-                            page.setCount(res.getCount());
-                            return page;
-                        });
-            }
-            return Mono.error(new IllegalStateException("Unsupported resource type for time export: " + resourceType));
+            return fetchPageAtTime(startTime, perPage);
         }
 
         public Flux<T> flux() {
@@ -337,52 +284,45 @@ public class IncrementalService {
 
         @SuppressWarnings("unchecked")
         private Mono<IncrementalTimePage<T>> fetchPageAtTime(long st, Integer sz) {
+            Mono<? extends IncrementalTimePaginationResponse> mono;
             if (resourceType == ResourceType.ORGANIZATION) {
-                return client.exportOrganizations(st, sz)
-                        .map(res -> {
-                            IncrementalTimePage<T> page = new IncrementalTimePage<>();
-                            page.setResults((List<T>) res.getOrganizations());
-                            page.setEndTime(res.getEndTime());
-                            page.setNextPage(res.getNextPage());
-                            page.setEndOfStream(res.getEndOfStream());
-                            page.setCount(res.getCount());
-                            return page;
-                        });
+                mono = client.exportOrganizations(st, sz);
             } else if (resourceType == ResourceType.TICKET_EVENT) {
-                return client.exportTicketEvents(st)
-                        .map(res -> {
-                            IncrementalTimePage<T> page = new IncrementalTimePage<>();
-                            page.setResults((List<T>) res.getTicketEvents());
-                            page.setEndTime(res.getEndTime());
-                            page.setNextPage(res.getNextPage());
-                            page.setEndOfStream(res.getEndOfStream());
-                            page.setCount(res.getCount());
-                            return page;
-                        });
+                mono = client.exportTicketEvents(st);
+            } else {
+                return Mono.error(new IllegalStateException("Unsupported resource type for time export: " + resourceType));
             }
-            return Mono.error(new IllegalStateException("Unsupported resource type"));
+
+            return mono.map(res -> {
+                IncrementalTimePage<T> page = new IncrementalTimePage<>();
+                if (res instanceof IncrementalOrganizationTimeResponse or) {
+                    page.setResults((List<T>) or.getOrganizations());
+                } else if (res instanceof IncrementalTicketEventTimeResponse er) {
+                    page.setResults((List<T>) er.getTicketEvents());
+                }
+                page.setEndTime(res.getEndTime());
+                page.setNextPage(res.getNextPage());
+                page.setEndOfStream(res.getEndOfStream());
+                page.setCount(res.getCount());
+                return page;
+            });
         }
     }
 
-    private static Object getRecordId(Object record) {
-        if (record instanceof Organization) {
-            return ((Organization) record).getId();
-        } else if (record instanceof TicketEvent) {
-            return ((TicketEvent) record).getId();
-        } else if (record instanceof Ticket) {
-            return ((Ticket) record).getId();
-        } else if (record instanceof User) {
-            return ((User) record).getId();
+    static Object getRecordId(Object record) {
+        if (record instanceof Organization org) {
+            return org.getId();
+        } else if (record instanceof TicketEvent event) {
+            return event.getId();
+        } else if (record instanceof Ticket ticket) {
+            return ticket.getId();
+        } else if (record instanceof User user) {
+            return user.getId();
         }
-        try {
-            var method = record.getClass().getMethod("getId");
-            return method.invoke(record);
-        } catch (Exception e) {
-            return null;
-        }
+        return null;
     }
 
-    private static Long extractStartTimeFromUrl(String url) {
+    static Long extractStartTimeFromUrl(String url) {
         if (url == null) {
             return null;
         }
@@ -393,7 +333,7 @@ public class IncrementalService {
                 String val = ampersandIdx != -1 ? url.substring(idx + 11, ampersandIdx) : url.substring(idx + 11);
                 return Long.parseLong(val);
             }
-        } catch (Exception ignored) {
+        } catch (NumberFormatException ignored) {
         }
         return null;
     }
