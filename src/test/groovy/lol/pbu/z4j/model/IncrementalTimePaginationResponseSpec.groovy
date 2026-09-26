@@ -19,11 +19,19 @@ import spock.lang.Specification
 
 class IncrementalTimePaginationResponseSpec extends Specification {
 
-    static class SampleTimeResponse extends IncrementalTimePaginationResponse {}
+    static class SampleTimeResponse extends IncrementalTimePaginationResponse<String> {
+        List<String> items = []
+
+        @Override
+        List<String> getResults() {
+            return items
+        }
+    }
 
     def "time pagination response properties work as expected"() {
         given:
         def response = new SampleTimeResponse()
+        response.items = ["time_item1"]
 
         when:
         response.setEndTime(123456789L)
@@ -36,5 +44,6 @@ class IncrementalTimePaginationResponseSpec extends Specification {
         response.getNextPage() == "https://example.zendesk.com/api/v2/incremental/orgs.json?start_time=123456789"
         response.getEndOfStream() == true
         response.getCount() == 5
+        response.getResults() == ["time_item1"]
     }
 }

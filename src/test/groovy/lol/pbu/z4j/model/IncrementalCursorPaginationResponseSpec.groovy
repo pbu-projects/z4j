@@ -19,11 +19,19 @@ import spock.lang.Specification
 
 class IncrementalCursorPaginationResponseSpec extends Specification {
 
-    static class SampleCursorResponse extends IncrementalCursorPaginationResponse {}
+    static class SampleCursorResponse extends IncrementalCursorPaginationResponse<String> {
+        List<String> items = []
+
+        @Override
+        List<String> getResults() {
+            return items
+        }
+    }
 
     def "cursor pagination response properties work as expected"() {
         given:
         def response = new SampleCursorResponse()
+        response.items = ["item1", "item2"]
 
         when:
         response.setCursor("cur1")
@@ -38,5 +46,6 @@ class IncrementalCursorPaginationResponseSpec extends Specification {
         response.getBeforeCursor() == "before1"
         response.getEndOfStream() == true
         response.getCount() == 10
+        response.getResults() == ["item1", "item2"]
     }
 }

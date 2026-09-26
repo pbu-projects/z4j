@@ -35,6 +35,7 @@ class IncrementalTicketCursorResponseSpec extends Z4jSpec {
         then:
         response.tickets.size() == 1
         response.tickets[0] == ticket
+        response.results == [ticket]
         response.cursor == "cursor_abc"
         response.afterCursor == "after_abc"
         response.beforeCursor == "before_abc"

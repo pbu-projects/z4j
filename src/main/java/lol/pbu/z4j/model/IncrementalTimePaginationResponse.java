@@ -15,12 +15,15 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lol.pbu.z4j.Generated;
+
+import java.util.List;
 
 /**
  * Base class for time-based incremental export responses.
@@ -32,7 +35,7 @@ import lol.pbu.z4j.Generated;
 @Accessors(chain = true)
 @Serdeable
 @Generated
-public abstract class IncrementalTimePaginationResponse {
+public abstract class IncrementalTimePaginationResponse<T> {
     @Nullable
     @JsonProperty("end_time")
     private Long endTime;
@@ -48,4 +51,7 @@ public abstract class IncrementalTimePaginationResponse {
     @Nullable
     @JsonProperty("count")
     private Integer count;
+
+    @JsonIgnore
+    public abstract List<T> getResults();
 }

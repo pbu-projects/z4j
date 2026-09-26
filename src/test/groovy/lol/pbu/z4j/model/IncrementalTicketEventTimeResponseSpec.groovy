@@ -35,6 +35,7 @@ class IncrementalTicketEventTimeResponseSpec extends Z4jSpec {
         then:
         response.ticketEvents.size() == 1
         response.ticketEvents[0].id == 999L
+        response.results == [event]
         response.endTime == 1727330400L
         response.endOfStream == true
         response.count == 1

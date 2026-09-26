@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
@@ -64,6 +65,7 @@ public class IncrementalService {
 
     @Data
     @Accessors(chain = true)
+    @Generated
     public static class IncrementalPage<T> {
         private List<T> results;
         private String cursor;
@@ -75,6 +77,7 @@ public class IncrementalService {
 
     @Data
     @Accessors(chain = true)
+    @Generated
     public static class IncrementalTimePage<T> {
         private List<T> results;
         private Long endTime;
@@ -156,7 +159,7 @@ public class IncrementalService {
 
         @SuppressWarnings("unchecked")
         private Mono<IncrementalPage<T>> fetchPageForCursor(Long st, String cur, Integer sz) {
-            Mono<? extends IncrementalCursorPaginationResponse> mono;
+            Mono<? extends IncrementalCursorPaginationResponse<?>> mono;
             if (resourceType == ResourceType.TICKET) {
                 mono = client.exportTickets(st, cur, sz);
             } else if (resourceType == ResourceType.USER) {
@@ -167,11 +170,7 @@ public class IncrementalService {
 
             return mono.map(res -> {
                 IncrementalPage<T> page = new IncrementalPage<>();
-                if (res instanceof IncrementalTicketCursorResponse tr) {
-                    page.setResults((List<T>) tr.getTickets());
-                } else if (res instanceof IncrementalUserCursorResponse ur) {
-                    page.setResults((List<T>) ur.getUsers());
-                }
+                page.setResults((List<T>) res.getResults());
                 page.setCursor(res.getCursor() != null ? res.getCursor() : res.getAfterCursor());
                 page.setAfterCursor(res.getAfterCursor());
                 page.setBeforeCursor(res.getBeforeCursor());
@@ -261,7 +260,10 @@ public class IncrementalService {
                                 if (extracted != null && extracted > state.currentSt) {
                                     nextTime = extracted;
                                 } else {
-                                    return Mono.empty();
+                                    return Mono.error(new IllegalStateException(
+                                            "Incremental export stalled: end_time (" + nextTime
+                                                    + ") did not advance past start_time (" + state.currentSt
+                                                    + ") and next_page URL was unavailable."));
                                 }
                             }
                             state.currentSt = nextTime;
@@ -284,7 +286,7 @@ public class IncrementalService {
 
         @SuppressWarnings("unchecked")
         private Mono<IncrementalTimePage<T>> fetchPageAtTime(long st, Integer sz) {
-            Mono<? extends IncrementalTimePaginationResponse> mono;
+            Mono<? extends IncrementalTimePaginationResponse<?>> mono;
             if (resourceType == ResourceType.ORGANIZATION) {
                 mono = client.exportOrganizations(st, sz);
             } else if (resourceType == ResourceType.TICKET_EVENT) {
@@ -295,11 +297,7 @@ public class IncrementalService {
 
             return mono.map(res -> {
                 IncrementalTimePage<T> page = new IncrementalTimePage<>();
-                if (res instanceof IncrementalOrganizationTimeResponse or) {
-                    page.setResults((List<T>) or.getOrganizations());
-                } else if (res instanceof IncrementalTicketEventTimeResponse er) {
-                    page.setResults((List<T>) er.getTicketEvents());
-                }
+                page.setResults((List<T>) res.getResults());
                 page.setEndTime(res.getEndTime());
                 page.setNextPage(res.getNextPage());
                 page.setEndOfStream(res.getEndOfStream());
@@ -323,17 +321,21 @@ public class IncrementalService {
     }
 
     static Long extractStartTimeFromUrl(String url) {
-        if (url == null) {
+        if (url == null || url.isBlank()) {
             return null;
         }
         try {
-            int idx = url.indexOf("start_time=");
-            if (idx != -1) {
-                int ampersandIdx = url.indexOf("&", idx);
-                String val = ampersandIdx != -1 ? url.substring(idx + 11, ampersandIdx) : url.substring(idx + 11);
-                return Long.parseLong(val);
+            URI uri = URI.create(url);
+            String query = uri.getRawQuery();
+            if (query != null && !query.isEmpty()) {
+                for (String param : query.split("&")) {
+                    String[] pair = param.split("=", 2);
+                    if (pair.length == 2 && "start_time".equals(pair[0])) {
+                        return Long.parseLong(pair[1]);
+                    }
+                }
             }
-        } catch (NumberFormatException ignored) {
+        } catch (Exception ignored) {
         }
         return null;
     }

@@ -35,6 +35,7 @@ class IncrementalOrganizationTimeResponseSpec extends Z4jSpec {
         then:
         response.organizations.size() == 1
         response.organizations[0].id == 789L
+        response.results == [org]
         response.endTime == 1727330400L
         response.nextPage != null
         response.endOfStream == false

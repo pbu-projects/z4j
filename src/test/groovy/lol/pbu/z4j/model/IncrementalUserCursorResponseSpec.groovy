@@ -36,6 +36,7 @@ class IncrementalUserCursorResponseSpec extends Z4jSpec {
         then:
         response.users.size() == 1
         response.users[0].id == 456L
+        response.results == [user]
         response.cursor == "user_cursor"
         response.afterCursor == "user_after"
         response.beforeCursor == "user_before"

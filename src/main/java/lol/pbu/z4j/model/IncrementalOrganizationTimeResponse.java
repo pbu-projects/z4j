@@ -15,6 +15,7 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
@@ -38,8 +39,14 @@ import lol.pbu.z4j.Generated;
 @AllArgsConstructor
 @Serdeable
 @Generated
-public class IncrementalOrganizationTimeResponse extends IncrementalTimePaginationResponse {
+public class IncrementalOrganizationTimeResponse extends IncrementalTimePaginationResponse<Organization> {
     @Nullable
     @JsonProperty("organizations")
     private List<Organization> organizations;
+
+    @Override
+    @JsonIgnore
+    public List<Organization> getResults() {
+        return organizations;
+    }
 }
