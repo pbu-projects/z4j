@@ -29,7 +29,7 @@ import java.util.List;
  * Base class for cursor-based incremental export responses.
  *
  * @author Jonathan-Zollinger
- * @since 0.3.0
+ * @since 0.2.7
  */
 @Data
 @Accessors(chain = true)

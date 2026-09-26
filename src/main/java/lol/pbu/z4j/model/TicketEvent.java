@@ -28,7 +28,7 @@ import lombok.experimental.Accessors;
 /**
  * TicketEvent
  * @author Jonathan-Zollinger
- * @since 0.3.0
+ * @since 0.2.7
  */
 @Data
 @Accessors(chain = true)

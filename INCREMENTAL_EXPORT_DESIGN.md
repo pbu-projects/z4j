@@ -1,7 +1,7 @@
 # Incremental Export Architecture & Design Specification
 
 **Status**: Approved for Implementation  
-**Target Release**: `0.3.0`  
+**Target Release**: `0.2.7`  
 **Tracking Issue**: [#151 Add support for the Incremental Export endpoints](https://github.com/pbu-projects/z4j/issues/151)  
 **Future Improvement Issues**:
 - [#158 Support sideloading in Incremental Exports via composite envelope / batch streaming](https://github.com/pbu-projects/z4j/issues/158)

@@ -31,7 +31,7 @@ import reactor.core.publisher.Mono;
 /**
  * <h1>Incremental Export Client in Zendesk.</h1>
  *
- * @since 0.3.0
+ * @since 0.2.7
  */
 @Retryable
 @Client("zendesk")

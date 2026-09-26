@@ -42,7 +42,7 @@ import reactor.core.publisher.Mono;
  * Service for high-level incremental export streaming and fetching.
  *
  * @author Jonathan-Zollinger
- * @since 0.3.0
+ * @since 0.2.7
  */
 @Slf4j
 @Singleton

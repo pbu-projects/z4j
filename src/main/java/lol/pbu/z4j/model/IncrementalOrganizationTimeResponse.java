@@ -30,7 +30,7 @@ import lombok.experimental.Accessors;
 /**
  * IncrementalOrganizationTimeResponse
  * @author Jonathan-Zollinger
- * @since 0.3.0
+ * @since 0.2.7
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
