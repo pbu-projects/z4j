@@ -15,13 +15,26 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import lol.pbu.z4j.Generated;
 
 /**
  * Placeholder for user objects
  */
+@Data
+@Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Serdeable
 @Generated
 public class User implements Exportable {
+    @Nullable
+    @JsonProperty("id")
+    private Long id;
 }

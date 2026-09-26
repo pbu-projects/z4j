@@ -22,10 +22,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import java.util.List;
 import lol.pbu.z4j.Generated;
 
 /**
- * Placeholder for organization objects
+ * IncrementalOrganizationTimeResponse
+ * @author Jonathan-Zollinger
+ * @since 0.3.0
  */
 @Data
 @Accessors(chain = true)
@@ -33,8 +36,24 @@ import lol.pbu.z4j.Generated;
 @AllArgsConstructor
 @Serdeable
 @Generated
-public class Organization implements Exportable {
+public class IncrementalOrganizationTimeResponse {
     @Nullable
-    @JsonProperty("id")
-    private Long id;
+    @JsonProperty("organizations")
+    private List<Organization> organizations;
+
+    @Nullable
+    @JsonProperty("end_time")
+    private Long endTime;
+
+    @Nullable
+    @JsonProperty("next_page")
+    private String nextPage;
+
+    @Nullable
+    @JsonProperty("end_of_stream")
+    private Boolean endOfStream;
+
+    @Nullable
+    @JsonProperty("count")
+    private Integer count;
 }
