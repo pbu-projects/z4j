@@ -16,6 +16,9 @@
 package lol.pbu.z4j
 
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import lol.pbu.z4j.IncrementalService.CursorIncrementalBuilder
+import lol.pbu.z4j.IncrementalService.ResourceType
+import lol.pbu.z4j.IncrementalService.TimeIncrementalBuilder
 import lol.pbu.z4j.model.Organization
 import lol.pbu.z4j.model.Ticket
 import lol.pbu.z4j.model.TicketEvent
@@ -259,7 +262,7 @@ class IncrementalServiceSpec extends Z4jSpec {
 
     def "unsupported resource type in CursorIncrementalBuilder throws error"() {
         given:
-        def builder = new IncrementalService.CursorIncrementalBuilder(IncrementalService.ResourceType.ORGANIZATION, incrementalService.incrementalClient)
+        def builder = new CursorIncrementalBuilder(ResourceType.ORGANIZATION, incrementalService.incrementalClient)
 
         when:
         builder.fetchPage().block()
@@ -270,7 +273,7 @@ class IncrementalServiceSpec extends Z4jSpec {
 
     def "unsupported resource type in TimeIncrementalBuilder throws error"() {
         given:
-        def builder = new IncrementalService.TimeIncrementalBuilder(IncrementalService.ResourceType.TICKET, incrementalService.incrementalClient)
+        def builder = new TimeIncrementalBuilder(ResourceType.TICKET, incrementalService.incrementalClient)
                 .since(Instant.now().minusSeconds(120))
 
         when:

@@ -28,7 +28,16 @@ import static io.micronaut.http.HttpStatus.FORBIDDEN
 class IncrementalClientSpec extends Z4jSpec {
 
     @Shared
-    IncrementalClient adminClient, agentClient, userClient, badTokenClient
+    IncrementalClient adminClient
+
+    @Shared
+    IncrementalClient agentClient
+
+    @Shared
+    IncrementalClient userClient
+
+    @Shared
+    IncrementalClient badTokenClient
 
     def setupSpec() {
         adminClient = adminCtx.getBean(IncrementalClient.class)

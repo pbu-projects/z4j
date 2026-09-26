@@ -17,18 +17,26 @@ package lol.pbu.z4j;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.net.URI;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import lol.pbu.z4j.client.IncrementalClient;
-import lol.pbu.z4j.model.*;
+import lol.pbu.z4j.model.IncrementalCursorPaginationResponse;
+import lol.pbu.z4j.model.IncrementalTimePaginationResponse;
+import lol.pbu.z4j.model.Organization;
+import lol.pbu.z4j.model.Ticket;
+import lol.pbu.z4j.model.TicketEvent;
+import lol.pbu.z4j.model.User;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.net.URI;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.*;
 
 /**
  * Service for high-level incremental export streaming and fetching.
