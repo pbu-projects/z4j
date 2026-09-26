@@ -15,26 +15,38 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import java.util.List;
+import lol.pbu.z4j.Generated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
 /**
- * Placeholder for organization objects
+ * IncrementalUserCursorResponse
+ * @author Jonathan-Zollinger
+ * @since 0.3.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Serdeable
 @Generated
-public class Organization implements Exportable {
+public class IncrementalUserCursorResponse extends IncrementalCursorPaginationResponse<User> {
     @Nullable
-    @JsonProperty("id")
-    private Long id;
+    @JsonProperty("users")
+    private List<User> users;
+
+    @Override
+    @JsonIgnore
+    public List<User> getResults() {
+        return users;
+    }
 }

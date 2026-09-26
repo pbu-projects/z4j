@@ -15,26 +15,43 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lol.pbu.z4j.Generated;
 
+import java.util.List;
+
 /**
- * Placeholder for organization objects
+ * Base class for time-based incremental export responses.
+ *
+ * @author Jonathan-Zollinger
+ * @since 0.3.0
  */
 @Data
 @Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Serdeable
 @Generated
-public class Organization implements Exportable {
+public abstract class IncrementalTimePaginationResponse<T> {
     @Nullable
-    @JsonProperty("id")
-    private Long id;
+    @JsonProperty("end_time")
+    private Long endTime;
+
+    @Nullable
+    @JsonProperty("next_page")
+    private String nextPage;
+
+    @Nullable
+    @JsonProperty("end_of_stream")
+    private Boolean endOfStream;
+
+    @Nullable
+    @JsonProperty("count")
+    private Integer count;
+
+    @JsonIgnore
+    public abstract List<T> getResults();
 }

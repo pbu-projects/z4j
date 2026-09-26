@@ -18,14 +18,17 @@ package lol.pbu.z4j.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import java.util.Map;
+import lol.pbu.z4j.Generated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
 /**
- * Placeholder for organization objects
+ * TicketEvent
+ * @author Jonathan-Zollinger
+ * @since 0.3.0
  */
 @Data
 @Accessors(chain = true)
@@ -33,8 +36,36 @@ import lol.pbu.z4j.Generated;
 @AllArgsConstructor
 @Serdeable
 @Generated
-public class Organization implements Exportable {
+public class TicketEvent implements Exportable {
     @Nullable
     @JsonProperty("id")
     private Long id;
+
+    @Nullable
+    @JsonProperty("ticket_id")
+    private Long ticketId;
+
+    @Nullable
+    @JsonProperty("event_type")
+    private String eventType;
+
+    @Nullable
+    @JsonProperty("via")
+    private Object via;
+
+    @Nullable
+    @JsonProperty("created_at")
+    private String createdAt;
+
+    @Nullable
+    @JsonProperty("author_id")
+    private Long authorId;
+
+    @Nullable
+    @JsonProperty("value")
+    private Object value;
+
+    @Nullable
+    @JsonProperty("metadata")
+    private Map<String, Object> metadata;
 }
