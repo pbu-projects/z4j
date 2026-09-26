@@ -63,10 +63,13 @@ import lol.pbu.z4j.Generated;
         TicketInputBase.JSON_PROPERTY_TAGS,
         TicketInputBase.JSON_PROPERTY_TYPE,
         TicketInputBase.JSON_PROPERTY_UPDATED_STAMP,
+        TicketUpdateInput.JSON_PROPERTY_TICKET_FORM_ID,
 })
 @Serdeable
 @Generated
 public class TicketUpdateInput extends TicketInputBase<TicketUpdateInput> {
+
+    public static final String JSON_PROPERTY_TICKET_FORM_ID = "ticket_form_id";
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_PRIORITY)
@@ -82,5 +85,19 @@ public class TicketUpdateInput extends TicketInputBase<TicketUpdateInput> {
     @JsonProperty(JSON_PROPERTY_TYPE)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private TicketUpdateInputType type;
+
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_TICKET_FORM_ID)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Long ticketFormId;
+
+    public @Nullable Long getTicketFormId() {
+        return ticketFormId;
+    }
+
+    public TicketUpdateInput setTicketFormId(@Nullable Long ticketFormId) {
+        this.ticketFormId = ticketFormId;
+        return this;
+    }
 
 }
