@@ -113,7 +113,7 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
     @Nullable
     @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Integer customStatusId;
+    protected Long customStatusId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_DUE_AT)
@@ -241,6 +241,20 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
             tags = new ArrayList<>();
         }
         tags.add(tagsItem);
+        return (T) this;
+    }
+
+    public @Nullable Long getCustomStatusId() {
+        return customStatusId;
+    }
+
+    public T setCustomStatusId(@Nullable Long customStatusId) {
+        this.customStatusId = customStatusId;
+        return (T) this;
+    }
+
+    public T setCustomStatusId(@Nullable Integer customStatusId) {
+        this.customStatusId = customStatusId != null ? customStatusId.longValue() : null;
         return (T) this;
     }
 }
