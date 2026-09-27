@@ -312,7 +312,7 @@ public class TicketField {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SUB_TYPE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer subTypeId;
+    private Long subTypeId;
 
     /**
      * Presented for a system ticket field of type \"tickettype\", \"priority\" or \"status\"

@@ -87,17 +87,17 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ASSIGNEE_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Integer assigneeId;
+    protected Long assigneeId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_ATTRIBUTE_VALUE_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@NotNull Integer> attributeValueIds;
+    protected List<@NotNull Long> attributeValueIds;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_COLLABORATOR_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@NotNull Integer> collaboratorIds;
+    protected List<@NotNull Long> collaboratorIds;
 
     @Nullable
     @Valid
@@ -138,22 +138,22 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
     @Nullable
     @JsonProperty(JSON_PROPERTY_GROUP_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Integer groupId;
+    protected Long groupId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Integer organizationId;
+    protected Long organizationId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_PROBLEM_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Integer problemId;
+    protected Long problemId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_REQUESTER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Integer requesterId;
+    protected Long requesterId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_SAFE_UPDATE)
@@ -163,7 +163,7 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
     @Nullable
     @JsonProperty(JSON_PROPERTY_SHARING_AGREEMENT_IDS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@NotNull Integer> sharingAgreementIds;
+    protected List<@NotNull Long> sharingAgreementIds;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_SUBJECT)
@@ -188,7 +188,7 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
         return (T) this;
     }
 
-    public T addAttributeValueIdsItem(Integer attributeValueIdsItem) {
+    public T addAttributeValueIdsItem(Long attributeValueIdsItem) {
         if (attributeValueIds == null) {
             attributeValueIds = new ArrayList<>();
         }
@@ -196,7 +196,7 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
         return (T) this;
     }
 
-    public T addCollaboratorIdsItem(Integer collaboratorIdsItem) {
+    public T addCollaboratorIdsItem(Long collaboratorIdsItem) {
         if (collaboratorIds == null) {
             collaboratorIds = new ArrayList<>();
         }
@@ -228,7 +228,7 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
         return (T) this;
     }
 
-    public T addSharingAgreementIdsItem(Integer sharingAgreementIdsItem) {
+    public T addSharingAgreementIdsItem(Long sharingAgreementIdsItem) {
         if (sharingAgreementIds == null) {
             sharingAgreementIds = new ArrayList<>();
         }
@@ -253,8 +253,48 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
         return (T) this;
     }
 
-    public T setCustomStatusId(@Nullable Integer customStatusId) {
-        this.customStatusId = customStatusId != null ? customStatusId.longValue() : null;
+    public @Nullable Long getAssigneeId() {
+        return assigneeId;
+    }
+
+    public T setAssigneeId(@Nullable Long assigneeId) {
+        this.assigneeId = assigneeId;
+        return (T) this;
+    }
+
+    public @Nullable Long getGroupId() {
+        return groupId;
+    }
+
+    public T setGroupId(@Nullable Long groupId) {
+        this.groupId = groupId;
+        return (T) this;
+    }
+
+    public @Nullable Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public T setOrganizationId(@Nullable Long organizationId) {
+        this.organizationId = organizationId;
+        return (T) this;
+    }
+
+    public @Nullable Long getProblemId() {
+        return problemId;
+    }
+
+    public T setProblemId(@Nullable Long problemId) {
+        this.problemId = problemId;
+        return (T) this;
+    }
+
+    public @Nullable Long getRequesterId() {
+        return requesterId;
+    }
+
+    public T setRequesterId(@Nullable Long requesterId) {
+        this.requesterId = requesterId;
         return (T) this;
     }
 }

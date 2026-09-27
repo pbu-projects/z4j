@@ -90,7 +90,7 @@ public class TicketComment {
     @Nullable
     @JsonProperty(JSON_PROPERTY_AUDIT_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer auditId;
+    private Long auditId;
 
     /**
      * The id of the comment author. See <a href=\"#author-id\">Author id</a>
@@ -98,7 +98,7 @@ public class TicketComment {
     @Nullable
     @JsonProperty(JSON_PROPERTY_AUTHOR_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer authorId;
+    private Long authorId;
 
     /**
      * The comment string. See <a href=\"#bodies\">Bodies</a>
@@ -130,7 +130,7 @@ public class TicketComment {
     @Nullable
     @JsonProperty(JSON_PROPERTY_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer id;
+    private Long id;
 
     /**
      * System information (web client, IP address, etc.) and comment flags, if any. See <a href=\"#comment-flags\">Comment flags</a>
