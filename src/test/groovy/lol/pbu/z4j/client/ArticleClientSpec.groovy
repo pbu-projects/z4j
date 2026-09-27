@@ -357,4 +357,136 @@ class ArticleClientSpec extends Z4jSpec {
                 articleFixtures.getDeleteArticles().collect { [it.getTitle(), it.getBody()] }
         ].combinations()
     }
+
+    def "can use associateAttachmentsInBulkNoLocale as an #userType"(ArticleClient articleClient, String userType) {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article for Bulk Attachments " + UUID.randomUUID())
+                        .setBody("Body for Bulk Attachments")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+
+        BulkAttachmentsRequest bulkReq = new BulkAttachmentsRequest(List.of(123456789L))
+
+        when:
+        articleClient.associateAttachmentsInBulkNoLocale(createdId, bulkReq).block()
+
+        then:
+        noExceptionThrown()
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+
+        where:
+        [articleClient, userType] << [
+                [adminArticleClient, "admin"]
+        ]
+    }
+
+    def "cannot use associateAttachmentsInBulkNoLocale as an #userType"(ArticleClient articleClient, String userType) {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article for Bulk Attachments " + UUID.randomUUID())
+                        .setBody("Body for Bulk Attachments")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+
+        BulkAttachmentsRequest bulkReq = new BulkAttachmentsRequest(List.of(123456789L))
+
+        when:
+        articleClient.associateAttachmentsInBulkNoLocale(createdId, bulkReq).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.getStatus().getCode() >= 400
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+
+        where:
+        [articleClient, userType] << [
+                [agentArticleClient, "agent"],
+                [userArticleClient, "user"]
+        ]
+    }
+
+    def "can use archiveArticle without locale as an #userType"(ArticleClient articleClient, String userType) {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article to Archive " + UUID.randomUUID())
+                        .setBody("Body of article to archive")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+
+        when:
+        articleClient.archiveArticle(createdId).block()
+
+        then:
+        noExceptionThrown()
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+
+        where:
+        [articleClient, userType] << [
+                [adminArticleClient, "admin"]
+        ]
+    }
+
+    def "cannot use archiveArticle without locale as an #userType"(ArticleClient articleClient, String userType) {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article to Archive " + UUID.randomUUID())
+                        .setBody("Body of article to archive")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+
+        when:
+        articleClient.archiveArticle(createdId).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.getStatus().getCode() >= 400
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+
+        where:
+        [articleClient, userType] << [
+                [agentArticleClient, "agent"],
+                [userArticleClient, "user"]
+        ]
+    }
 }

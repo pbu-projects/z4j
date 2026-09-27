@@ -401,4 +401,90 @@ class TranslationClientSpec extends Z4jSpec {
                 articleFixtures.getArticles().take(1).collect { [it.getTitle(), it.getBody()] }
         ].combinations()
     }
+
+    def "can use ListHelpCenterLocales as an #userType"(TranslationClient translationClient, String userType) {
+        when: "listing help center locales"
+        def response = translationClient.listHelpCenterLocales().block()
+
+        then:
+        noExceptionThrown()
+        response != null
+        response.locales != null
+        !response.locales.isEmpty()
+        response.defaultLocale != null
+
+        where:
+        [translationClient, userType] << [
+                [adminTranslationClient, "admin"],
+                [agentTranslationClient, "agent"],
+                [userTranslationClient, "user"]
+        ]
+    }
+
+    def "can use ListMissingTranslations as an #userType"(TranslationClient translationClient, String userType) {
+        given: "an isolated test article created by admin"
+        ArticleCreateRequest artReq = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article for Missing Translations " + UUID.randomUUID())
+                        .setBody("Missing Translations Body")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, artReq).block()
+        def createdArticleId = createResponse.article.id
+
+        when: "listing missing translations"
+        def response = translationClient.listMissingTranslations("articles", createdArticleId).block()
+
+        then:
+        noExceptionThrown()
+        response != null
+        response.locales != null
+        !response.locales.isEmpty()
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+
+        where:
+        [translationClient, userType] << [
+                [adminTranslationClient, "admin"],
+                [agentTranslationClient, "agent"]
+        ]
+    }
+
+    def "cannot use ListMissingTranslations as an #userType"(TranslationClient translationClient, String userType) {
+        given: "an isolated test article created by admin"
+        ArticleCreateRequest artReq = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article for Missing Translations " + UUID.randomUUID())
+                        .setBody("Missing Translations Body")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, artReq).block()
+        def createdArticleId = createResponse.article.id
+
+        when: "listing missing translations"
+        translationClient.listMissingTranslations("articles", createdArticleId).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.getStatus().getCode() >= 400
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+
+        where:
+        [translationClient, userType] << [
+                [userTranslationClient, "user"]
+        ]
+    }
 }

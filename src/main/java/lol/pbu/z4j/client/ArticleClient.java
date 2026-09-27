@@ -31,6 +31,7 @@ import lol.pbu.z4j.model.ArticleCreateRequest;
 import lol.pbu.z4j.model.ArticleResponse;
 import lol.pbu.z4j.model.ArticleUpdateRequest;
 import lol.pbu.z4j.model.ArticlesResponse;
+import lol.pbu.z4j.model.BulkAttachmentsRequest;
 import lol.pbu.z4j.model.LocaleAbbreviation;
 import lol.pbu.z4j.model.SortArticleBy;
 import lol.pbu.z4j.model.SortOrder;
@@ -124,4 +125,62 @@ public interface ArticleClient {
             @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
             @PathVariable("article_id") @NotNull Long articleId
     );
+
+    /**
+     * <h1>{@summary Associate Attachments In Bulk}</h1>
+     *
+     * @param localeAbbreviation The locale in which the article is displayed (required)
+     * @param articleId          The unique ID of the article (required)
+     * @param body               {@link BulkAttachmentsRequest} (required)
+     * @return No Content (status code 204)
+     */
+    @Post("/api/v2/help_center/{locale}/articles/{article_id}/bulk_attachments")
+    Mono<Void> associateAttachmentsInBulk(
+            @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
+            @PathVariable("article_id") @NotNull Long articleId,
+            @Body @NotNull @Valid BulkAttachmentsRequest body
+    );
+
+    /**
+     * <h1>{@summary Associate Attachments In Bulk (No Locale)}</h1>
+     *
+     * @param articleId The unique ID of the article (required)
+     * @param body      {@link BulkAttachmentsRequest} (required)
+     * @return No Content (status code 204)
+     */
+    @Post("/api/v2/help_center/articles/{article_id}/bulk_attachments")
+    Mono<Void> associateAttachmentsInBulkNoLocale(
+            @PathVariable("article_id") @NotNull Long articleId,
+            @Body @NotNull @Valid BulkAttachmentsRequest body
+    );
+
+    /**
+     * <h1>{@summary Delete Article (No Locale)}</h1>
+     *
+     * @param articleId The unique ID of the article (required)
+     * @return No Content (status code 204)
+     */
+    @Delete("/api/v2/help_center/articles/{article_id}")
+    Mono<Void> deleteArticleNoLocale(@PathVariable("article_id") @NotNull Long articleId);
+
+    /**
+     * <h1>{@summary Archive Article}</h1>
+     *
+     * @param localeAbbreviation The locale in which the article is displayed (required)
+     * @param articleId          The unique ID of the article (required)
+     * @return No Content (status code 204)
+     */
+    default Mono<Void> archiveArticle(LocaleAbbreviation localeAbbreviation, Long articleId) {
+        return deleteArticle(localeAbbreviation, articleId);
+    }
+
+    /**
+     * <h1>{@summary Archive Article (No Locale)}</h1>
+     *
+     * @param articleId The unique ID of the article (required)
+     * @return No Content (status code 204)
+     */
+    default Mono<Void> archiveArticle(Long articleId) {
+        return deleteArticleNoLocale(articleId);
+    }
 }
