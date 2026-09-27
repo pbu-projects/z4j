@@ -20,9 +20,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
@@ -35,6 +36,8 @@ import lol.pbu.z4j.Generated;
  * @since 0.1.1
  */
 @Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 @ToString
 @Getter
@@ -77,15 +80,17 @@ public class Section {
     /**
      * The locale in which the section is displayed
      */
-    @NotNull
+    @Nullable
     @JsonProperty(JSON_PROPERTY_LOCALE)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private LocaleAbbreviation localeAbbreviation;
 
     /**
      * The name of the section
      */
-    @NotNull
+    @Nullable
     @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private String name;
 
     /**
@@ -183,6 +188,10 @@ public class Section {
     @JsonProperty(JSON_PROPERTY_URL)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private String url;
+
+    public Section(String name) {
+        this.name = name;
+    }
 
     public Section(LocaleAbbreviation localeAbbreviation, String name) {
         this.localeAbbreviation = localeAbbreviation;

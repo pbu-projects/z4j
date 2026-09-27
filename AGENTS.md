@@ -67,7 +67,9 @@ Welcome to `z4j`! This document establishes baseline context, coding standards, 
 ## 3. Development & Workflow Rules
 
 - **Code Style**: Adhere to the Google Java Style Guide.
+- **Java Imports**: **NEVER** use fully qualified domain/class names (FQDN / FQCN, e.g., `java.util.List` or `jakarta.validation.constraints.NotNull`) inline in Java code bodies, method signatures, return types, field definitions, or annotations. **ALWAYS** declare appropriate, explicit `import` statements at the top of the Java file (the sole exception is resolving an unavoidable simple-name collision in the same file).
 - **Commit Messages**: Follow [Conventional Commits](file:///home/jimmy/git/pbu/z4j/build.gradle.kts#L20) format (`feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`).
+- **Sonar Analysis & Feedback**: Prior to submitting a PR or concluding an implementation batch, subagents MUST run Sonar analysis (`source .env && ./gradlew sonar -Dsonar.token="$SONAR_TOKEN"`) and query SonarCloud for feedback (`curl -s -u "$SONAR_TOKEN:" "https://sonarcloud.io/api/issues/search?componentKeys=PeanutButter-Unicorn_z4j:<file-path>&resolved=false"`). All issues, unused imports, or code smells on modified and newly created files MUST be addressed before submitting a PR.
 - **Verification**:
   - Always execute verification using `./gradlew check` or `./gradlew test` before marking work as complete.
   - Fix any failures at the root cause; do not swallow errors or weaken assertions to pass builds.

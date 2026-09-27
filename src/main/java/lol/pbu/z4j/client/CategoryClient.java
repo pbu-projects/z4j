@@ -198,9 +198,44 @@ public interface CategoryClient {
      * <p>The endpoint updates the category <code>source_locale</code> property</p>
      * <h4>Allowed for Agents</h4>
      *
+     * @param localeAbbreviation The locale to set as the source locale (required)
+     * @param categoryId         The unique ID of the category (required)
+     * @param body               The {@link CategorySourceLocaleRequest} specifying the new source locale (required)
+     * @return Void (status code 200)
+     */
+    @Put("/api/v2/help_center/{locale}/categories/{category_id}/source_locale")
+    Mono<Void> updateCategorySourceLocale(
+            @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
+            @PathVariable("category_id") @NotNull Long categoryId,
+            @Body @NotNull @Valid CategorySourceLocaleRequest body
+    );
+
+    default Mono<Void> updateCategorySourceLocale(
+            @NotNull LocaleAbbreviation localeAbbreviation,
+            @NotNull Long categoryId
+    ) {
+        return updateCategorySourceLocale(localeAbbreviation, categoryId, new CategorySourceLocaleRequest(localeAbbreviation));
+    }
+
+    /**
+     * <h1>{@summary Update Category Source Locale}</h1>
+     * <p>The endpoint updates the category <code>source_locale</code> property</p>
+     * <h4>Allowed for Agents</h4>
+     *
      * @param categoryId The unique ID of the category (required)
-     * @return <p>OK Response</p> (status code 200)
+     * @param body       The {@link CategorySourceLocaleRequest} specifying the new source locale (required)
+     * @return Void (status code 200)
      */
     @Put("/api/v2/help_center/categories/{category_id}/source_locale")
-    Mono<@Valid CategoryResponse> updateCategorySourceLocale(@PathVariable("category_id") @NotNull Long categoryId);
+    Mono<Void> updateCategorySourceLocaleNoLocale(
+            @PathVariable("category_id") @NotNull Long categoryId,
+            @Body @NotNull @Valid CategorySourceLocaleRequest body
+    );
+
+    default Mono<Void> updateCategorySourceLocaleNoLocale(
+            @NotNull LocaleAbbreviation localeAbbreviation,
+            @NotNull Long categoryId
+    ) {
+        return updateCategorySourceLocaleNoLocale(categoryId, new CategorySourceLocaleRequest(localeAbbreviation));
+    }
 }
