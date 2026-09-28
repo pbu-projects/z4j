@@ -296,18 +296,18 @@ public interface TicketClient {
      * <h1>{@summary Restore Deleted Tickets In Bulk}</h1>
      *
      * @param ids Comma-separated list of ticket IDs (required)
-     * @return Empty response (status code 200)
+     * @return Job status response (status code 200)
      */
     @Put("/api/v2/deleted_tickets/restore_many")
-    Mono<Void> restoreDeletedTicketsInBulk(@QueryValue("ids") @NotNull String ids);
+    Mono<@Valid JobStatusResponse> restoreDeletedTicketsInBulk(@QueryValue("ids") @NotNull String ids);
 
     /**
      * <h1>{@summary Restore Deleted Tickets In Bulk}</h1>
      *
      * @param ids List of ticket IDs (required)
-     * @return Empty response (status code 200)
+     * @return Job status response (status code 200)
      */
-    default Mono<Void> restoreDeletedTicketsInBulk(@NotNull List<Long> ids) {
+    default Mono<@Valid JobStatusResponse> restoreDeletedTicketsInBulk(@NotNull List<Long> ids) {
         return restoreDeletedTicketsInBulk(ids.stream().map(String::valueOf).collect(Collectors.joining(",")));
     }
 

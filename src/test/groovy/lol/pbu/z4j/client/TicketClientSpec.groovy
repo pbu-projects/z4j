@@ -15,14 +15,11 @@
  */
 package lol.pbu.z4j.client
 
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.json.JsonMapper
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
-import java.nio.charset.StandardCharsets
-import java.util.Base64
 import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.fixture.FixtureLoader
 import lol.pbu.z4j.fixture.TicketFixtures
@@ -673,10 +670,12 @@ class TicketClientSpec extends Z4jSpec {
 
         when: "restoring deleted tickets in bulk using comma-separated string"
         sleep(2000)
-        ticketsAdminClient.restoreDeletedTicketsInBulk(ids.join(",")).block()
+        JobStatusResponse restoreJob = ticketsAdminClient.restoreDeletedTicketsInBulk(ids.join(",")).block()
 
         then: "bulk restore succeeds without error"
         noExceptionThrown()
+        restoreJob != null
+        restoreJob.getJobStatus() != null
 
         when: "soft deleting tickets again then permanently deleting them in bulk"
         sleep(2000)
@@ -786,14 +785,10 @@ class TicketClientSpec extends Z4jSpec {
     private Long createDisposableEndUser() {
         String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
         String email = "disposable-${entropy}@example.com"
-        String auth = Base64.encoder.encodeToString("${System.getenv('Z4J_ADMIN_EMAIL')}/token:${System.getenv('Z4J_TOKEN')}".getBytes(StandardCharsets.UTF_8))
-        HttpRequest req = HttpRequest.newBuilder()
-                .uri(URI.create("${System.getenv('Z4J_URL')}/api/v2/users.json"))
-                .header("Authorization", "Basic ${auth}")
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString("{\"user\":{\"name\":\"Disposable ${entropy}\",\"email\":\"${email}\",\"role\":\"end-user\"}}"))
-                .build()
-        HttpResponse<String> res = HttpClient.newHttpClient().send(req, HttpResponse.BodyHandlers.ofString())
+        HttpClient httpClient = adminCtx.getBean(HttpClient.class)
+        String body = "{\"user\":{\"name\":\"Disposable ${entropy}\",\"email\":\"${email}\",\"role\":\"end-user\"}}"
+        HttpRequest<?> req = HttpRequest.POST("${System.getenv('Z4J_URL')}/api/v2/users.json", body)
+        HttpResponse<String> res = httpClient.toBlocking().exchange(req, String.class)
         Map responseMap = jsonMapper.readValue(res.body(), Map.class)
         return (responseMap.get("user")["id"] as Number).longValue()
     }
@@ -801,13 +796,9 @@ class TicketClientSpec extends Z4jSpec {
     private void deleteUserSafely(Long userId) {
         if (userId == null) return
         try {
-            String auth = Base64.encoder.encodeToString("${System.getenv('Z4J_ADMIN_EMAIL')}/token:${System.getenv('Z4J_TOKEN')}".getBytes(StandardCharsets.UTF_8))
-            HttpRequest req = HttpRequest.newBuilder()
-                    .uri(URI.create("${System.getenv('Z4J_URL')}/api/v2/users/${userId}.json"))
-                    .header("Authorization", "Basic ${auth}")
-                    .DELETE()
-                    .build()
-            HttpClient.newHttpClient().send(req, HttpResponse.BodyHandlers.ofString())
+            HttpClient httpClient = adminCtx.getBean(HttpClient.class)
+            HttpRequest<?> req = HttpRequest.DELETE("${System.getenv('Z4J_URL')}/api/v2/users/${userId}.json")
+            httpClient.toBlocking().exchange(req, String.class)
         } catch (Exception ignored) {
         }
     }

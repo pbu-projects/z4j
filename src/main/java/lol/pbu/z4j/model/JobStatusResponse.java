@@ -15,23 +15,62 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.core.annotation.Creator;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import lol.pbu.z4j.Generated;
 
 @Getter
+@Setter
 @Accessors(chain = true)
-@AllArgsConstructor
-@NoArgsConstructor
 @Serdeable
 @Generated
 public class JobStatusResponse {
 
+    @Nullable
     @JsonProperty("job_status")
     private JobStatus jobStatus;
 
+    @Nullable
+    @JsonProperty("message")
+    private String message;
+
+    public JobStatusResponse() {
+    }
+
+    @Creator
+    @JsonCreator
+    public JobStatusResponse(
+            @JsonProperty("job_status") @Nullable JobStatus jobStatus,
+            @JsonProperty("message") @Nullable String message
+    ) {
+        if (jobStatus != null) {
+            this.jobStatus = jobStatus;
+        } else {
+            this.jobStatus = new JobStatus().setStatus("completed");
+            if (message != null) {
+                this.jobStatus.setMessage(message);
+            }
+        }
+        this.message = message;
+    }
+
+    public JobStatusResponse(JobStatus jobStatus) {
+        this(jobStatus, null);
+    }
+
+    public JobStatus getJobStatus() {
+        if (jobStatus == null) {
+            jobStatus = new JobStatus().setStatus("completed");
+            if (message != null) {
+                jobStatus.setMessage(message);
+            }
+        }
+        return jobStatus;
+    }
 }
