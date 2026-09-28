@@ -31,7 +31,7 @@ import lol.pbu.z4j.Generated;
  * CreatePermissionGroupRequest
  *
  * @author Jonathan-Zollinger
- * @since 0.2.7
+ * @since 0.3.0
  */
 @Accessors(chain = true)
 @NoArgsConstructor

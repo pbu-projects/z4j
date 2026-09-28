@@ -51,7 +51,7 @@ import reactor.core.publisher.Mono;
  * </ul>
  *
  * @author Jonathan-Zollinger
- * @since 0.1.1
+ * @since 0.3.0
  */
 @Retryable
 @Client("zendesk")

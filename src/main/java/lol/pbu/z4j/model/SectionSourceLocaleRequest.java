@@ -29,7 +29,7 @@ import lol.pbu.z4j.Generated;
  * Request payload for updating the section source locale.
  *
  * @author Jonathan-Zollinger
- * @since 0.1.1
+ * @since 0.3.0
  */
 @Accessors(chain = true)
 @NoArgsConstructor

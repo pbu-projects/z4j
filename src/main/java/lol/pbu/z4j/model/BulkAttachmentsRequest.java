@@ -30,7 +30,7 @@ import lombok.experimental.Accessors;
  * BulkAttachmentsRequest
  *
  * @author Jonathan-Zollinger
- * @since 0.2.6
+ * @since 0.3.0
  */
 @Accessors(chain = true)
 @NoArgsConstructor
