@@ -41,7 +41,7 @@ import reactor.core.publisher.Mono;
  * </ul>
  *
  * @author Jonathan-Zollinger
- * @since 0.2.7
+ * @since 0.3.0
  */
 @Retryable
 @Client("zendesk")
@@ -54,7 +54,7 @@ public interface PermissionGroupClient {
      *
      * @return OK response (status code 200)
      */
-    @Get("/api/v2/guide/permission_groups.json")
+    @Get("/api/v2/guide/permission_groups")
     Mono<@Valid PermissionGroupsResponse> listPermissionGroups();
 
     /**
@@ -65,7 +65,7 @@ public interface PermissionGroupClient {
      * @param id The unique ID of the permission group (required)
      * @return OK response (status code 200)
      */
-    @Get("/api/v2/guide/permission_groups/{id}.json")
+    @Get("/api/v2/guide/permission_groups/{id}")
     Mono<@Valid PermissionGroupResponse> showPermissionGroup(
             @PathVariable("id") @NotNull Long id
     );
@@ -78,7 +78,7 @@ public interface PermissionGroupClient {
      * @param body The permission group creation request (required)
      * @return Created response (status code 201)
      */
-    @Post("/api/v2/guide/permission_groups.json")
+    @Post("/api/v2/guide/permission_groups")
     Mono<@Valid PermissionGroupResponse> createPermissionGroup(
             @Body @NotNull @Valid CreatePermissionGroupRequest body
     );
@@ -92,7 +92,7 @@ public interface PermissionGroupClient {
      * @param body The permission group update request (required)
      * @return OK response (status code 200)
      */
-    @Put("/api/v2/guide/permission_groups/{id}.json")
+    @Put("/api/v2/guide/permission_groups/{id}")
     Mono<@Valid PermissionGroupResponse> updatePermissionGroup(
             @PathVariable("id") @NotNull Long id,
             @Body @NotNull @Valid CreatePermissionGroupRequest body
@@ -106,7 +106,7 @@ public interface PermissionGroupClient {
      * @param id The unique ID of the permission group to delete (required)
      * @return Response when deleted (status code 204)
      */
-    @Delete("/api/v2/guide/permission_groups/{id}.json")
+    @Delete("/api/v2/guide/permission_groups/{id}")
     Mono<Void> deletePermissionGroup(
             @PathVariable("id") @NotNull Long id
     );

@@ -15,13 +15,13 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import lol.pbu.z4j.Generated;
 
@@ -33,17 +33,18 @@ import lol.pbu.z4j.Generated;
  */
 @Accessors(chain = true)
 @NoArgsConstructor
-@AllArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @JsonPropertyOrder(SectionSourceLocaleRequest.JSON_PROPERTY_SECTION_LOCALE)
 @Serdeable
 @Generated
-public class SectionSourceLocaleRequest {
+public class SectionSourceLocaleRequest extends SourceLocaleRequest {
 
     public static final String JSON_PROPERTY_SECTION_LOCALE = "section_locale";
 
-    @NotNull
-    @JsonProperty(JSON_PROPERTY_SECTION_LOCALE)
-    private LocaleAbbreviation sectionLocale;
+    public SectionSourceLocaleRequest(@NotNull LocaleAbbreviation sectionLocale) {
+        super(null, sectionLocale);
+    }
 
 }
