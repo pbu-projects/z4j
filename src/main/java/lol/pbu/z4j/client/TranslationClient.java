@@ -25,7 +25,9 @@ import io.micronaut.http.client.annotation.Client;
 import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lol.pbu.z4j.model.HelpCenterLocalesResponse;
 import lol.pbu.z4j.model.LocaleAbbreviation;
+import lol.pbu.z4j.model.MissingTranslationsResponse;
 import lol.pbu.z4j.model.TranslationCreateRequest;
 import lol.pbu.z4j.model.TranslationResponse;
 import lol.pbu.z4j.model.TranslationUpdateRequest;
@@ -115,4 +117,55 @@ public interface TranslationClient {
     Mono<Void> deleteTranslation(
             @PathVariable("translation_id") @NotNull Long translationId
     );
+
+    /**
+     * <h1>{@summary List Missing Translations}</h1>
+     *
+     * @param resourceType The resource type (e.g. "articles", "sections", "categories") (required)
+     * @param resourceId   The ID of the parent resource (required)
+     * @return OK (status code 200)
+     */
+    @Get("/api/v2/help_center/{resource_type}/{resource_id}/translations/missing")
+    Mono<@Valid MissingTranslationsResponse> listMissingTranslations(
+            @PathVariable("resource_type") @NotNull String resourceType,
+            @PathVariable("resource_id") @NotNull Long resourceId
+    );
+
+    /**
+     * <h1>{@summary List Missing Article Translations}</h1>
+     *
+     * @param articleId The ID of the article (required)
+     * @return Missing translations response (status code 200)
+     */
+    default Mono<@Valid MissingTranslationsResponse> listMissingArticleTranslations(@NotNull Long articleId) {
+        return listMissingTranslations("articles", articleId);
+    }
+
+    /**
+     * <h1>{@summary List Missing Section Translations}</h1>
+     *
+     * @param sectionId The ID of the section (required)
+     * @return Missing translations response (status code 200)
+     */
+    default Mono<@Valid MissingTranslationsResponse> listMissingSectionTranslations(@NotNull Long sectionId) {
+        return listMissingTranslations("sections", sectionId);
+    }
+
+    /**
+     * <h1>{@summary List Missing Category Translations}</h1>
+     *
+     * @param categoryId The ID of the category (required)
+     * @return Missing translations response (status code 200)
+     */
+    default Mono<@Valid MissingTranslationsResponse> listMissingCategoryTranslations(@NotNull Long categoryId) {
+        return listMissingTranslations("categories", categoryId);
+    }
+
+    /**
+     * <h1>{@summary List Help Center Locales}</h1>
+     *
+     * @return OK (status code 200)
+     */
+    @Get("/api/v2/help_center/locales")
+    Mono<@Valid HelpCenterLocalesResponse> listHelpCenterLocales();
 }
