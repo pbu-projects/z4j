@@ -57,6 +57,9 @@ public enum TicketStatus {
 
     @JsonProperty("closed")
     CLOSED("closed"),
+
+    @JsonProperty("deleted")
+    DELETED("deleted"),
     ;
 
     public static final Map<String, TicketStatus> VALUE_MAPPING = Map.copyOf(Arrays.stream(values())
