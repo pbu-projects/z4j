@@ -226,6 +226,52 @@ class VoteClientSpec extends Z4jSpec {
         }
     }
 
+    def "can upvote and downvote article with locale directly"() {
+        given: "the test article and locale"
+        Long voteId = null
+
+        when: "upvoting the article directly with locale"
+        VoteResponse upResp = adminVoteClient.upvoteArticle(defaultLocale, testArticle.id).block()
+        voteId = upResp?.vote?.id
+
+        then: "upvote response has value 1"
+        noExceptionThrown()
+        upResp?.vote != null
+        upResp.vote.id != null
+        upResp.vote.value == 1
+
+        when: "downvoting the article directly with locale"
+        VoteResponse downResp = adminVoteClient.downvoteArticle(defaultLocale, testArticle.id).block()
+
+        then: "downvote response has value -1"
+        noExceptionThrown()
+        downResp?.vote != null
+        downResp.vote.value == -1
+
+        cleanup: "delete created vote"
+        if (voteId != null) {
+            try {
+                adminVoteClient.deleteVote(voteId).block()
+            } catch (Exception ignored) {
+                // Defensive cleanup
+            }
+        }
+    }
+
+    def "createVoteOnArticle validates vote value is 1 or -1"() {
+        when: "calling createVoteOnArticle with invalid value 0"
+        adminVoteClient.createVoteOnArticle(testArticle.id, 0).block()
+
+        then: "IllegalArgumentException is thrown"
+        thrown(IllegalArgumentException)
+
+        when: "calling createVoteOnArticle with invalid value 5"
+        adminVoteClient.createVoteOnArticle(testArticle.id, 5).block()
+
+        then: "IllegalArgumentException is thrown"
+        thrown(IllegalArgumentException)
+    }
+
     def "calling vote client with bad url fails"() {
         when: "calling with bad url"
         badUrlVoteClient.showVote(12345L).block()

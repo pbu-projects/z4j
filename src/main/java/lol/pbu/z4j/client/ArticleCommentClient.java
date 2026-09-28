@@ -153,7 +153,7 @@ public interface ArticleCommentClient {
      * @param localeAbbreviation The locale in which the article is displayed (required)
      * @param articleId          The unique ID of the article (required)
      * @param commentId          The unique ID of the comment (required)
-     * @param body               {@link CommentCreateRequest} (required)
+     * @param body               {@link CommentUpdateRequest} (required)
      * @return Updated Comment (status code 200)
      */
     @Put("/api/v2/help_center/{locale}/articles/{article_id}/comments/{comment_id}")
@@ -161,7 +161,7 @@ public interface ArticleCommentClient {
             @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
             @PathVariable("article_id") @NotNull Long articleId,
             @PathVariable("comment_id") @NotNull Long commentId,
-            @Body @NotNull @Valid CommentCreateRequest body
+            @Body @NotNull @Valid CommentUpdateRequest body
     );
 
     /**
@@ -169,14 +169,14 @@ public interface ArticleCommentClient {
      *
      * @param articleId The unique ID of the article (required)
      * @param commentId The unique ID of the comment (required)
-     * @param body      {@link CommentCreateRequest} (required)
+     * @param body      {@link CommentUpdateRequest} (required)
      * @return Updated Comment (status code 200)
      */
     @Put("/api/v2/help_center/articles/{article_id}/comments/{comment_id}")
     Mono<@Valid CommentResponse> updateCommentNoLocale(
             @PathVariable("article_id") @NotNull Long articleId,
             @PathVariable("comment_id") @NotNull Long commentId,
-            @Body @NotNull @Valid CommentCreateRequest body
+            @Body @NotNull @Valid CommentUpdateRequest body
     );
 
     /**
@@ -243,16 +243,16 @@ public interface ArticleCommentClient {
      * @param localeAbbreviation The locale in which the article is displayed (required)
      * @param articleId          The unique ID of the article (required)
      * @param commentId          The unique ID of the comment (required)
-     * @param body               {@link CommentUpdateRequest} (required)
+     * @param comment            {@link Comment} (required)
      * @return Updated Comment (status code 200)
      */
     default Mono<@Valid CommentResponse> updateComment(
             LocaleAbbreviation localeAbbreviation,
             Long articleId,
             Long commentId,
-            CommentUpdateRequest body
+            Comment comment
     ) {
-        return updateComment(localeAbbreviation, articleId, commentId, body != null ? new CommentCreateRequest(body.getComment()) : null);
+        return updateComment(localeAbbreviation, articleId, commentId, new CommentUpdateRequest(comment));
     }
 
     /**
@@ -260,15 +260,15 @@ public interface ArticleCommentClient {
      *
      * @param articleId The unique ID of the article (required)
      * @param commentId The unique ID of the comment (required)
-     * @param body      {@link CommentUpdateRequest} (required)
+     * @param comment   {@link Comment} (required)
      * @return Updated Comment (status code 200)
      */
     default Mono<@Valid CommentResponse> updateCommentNoLocale(
             Long articleId,
             Long commentId,
-            CommentUpdateRequest body
+            Comment comment
     ) {
-        return updateCommentNoLocale(articleId, commentId, body != null ? new CommentCreateRequest(body.getComment()) : null);
+        return updateCommentNoLocale(articleId, commentId, new CommentUpdateRequest(comment));
     }
 
 }

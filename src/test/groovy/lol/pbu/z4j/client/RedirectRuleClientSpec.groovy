@@ -44,7 +44,14 @@ class RedirectRuleClientSpec extends Z4jSpec {
         then: "response is returned"
         noExceptionThrown()
         response != null
-        response.records != null || response.redirectRules != null
+        response.getRecords() != null
+        if (!response.getRecords().isEmpty()) {
+            RedirectRule rule = response.getRecords().first()
+            rule.getId() != null
+            rule.getRedirectFrom() != null
+            rule.getRedirectTo() != null
+            rule.getRedirectStatus() != null
+        }
     }
 
     def "can create, show, and delete redirect rule"() {
@@ -62,7 +69,9 @@ class RedirectRuleClientSpec extends Z4jSpec {
 
         and: "finding created redirect rule in list"
         RedirectRulesResponse listResp = adminRedirectRuleClient.searchRedirectRules().block()
-        RedirectRule createdRule = listResp?.records?.find { it.redirectFrom == redirectFrom }
+        listResp != null
+        listResp.getRecords() != null
+        RedirectRule createdRule = listResp.getRecords().find { it.redirectFrom == redirectFrom }
         ruleId = createdRule?.id
 
         then: "rule is created successfully"
@@ -80,6 +89,8 @@ class RedirectRuleClientSpec extends Z4jSpec {
         shown?.redirectRule != null
         shown.redirectRule.id == ruleId
         shown.redirectRule.redirectFrom == redirectFrom
+        shown.redirectRule.redirectTo == redirectTo
+        shown.redirectRule.redirectStatus == status
 
         when: "deleting redirect rule"
         adminRedirectRuleClient.deleteRedirectRule(ruleId).block()

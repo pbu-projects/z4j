@@ -24,6 +24,7 @@ import io.micronaut.http.client.annotation.Client;
 import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lol.pbu.z4j.model.LocaleAbbreviation;
 import lol.pbu.z4j.model.Vote;
 import lol.pbu.z4j.model.VoteCreateRequest;
 import lol.pbu.z4j.model.VoteResponse;
@@ -95,6 +96,32 @@ public interface VoteClient {
     Mono<@Valid VoteResponse> downvoteArticle(@PathVariable("article_id") @NotNull Long articleId);
 
     /**
+     * <h1>{@summary Upvote Article (Locale-Aware)}</h1>
+     *
+     * @param localeAbbreviation The locale in which the article is displayed (required)
+     * @param articleId          The unique ID of the article (required)
+     * @return Vote (status code 200)
+     */
+    @Post("/api/v2/help_center/{locale}/articles/{article_id}/up")
+    Mono<@Valid VoteResponse> upvoteArticle(
+            @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
+            @PathVariable("article_id") @NotNull Long articleId
+    );
+
+    /**
+     * <h1>{@summary Downvote Article (Locale-Aware)}</h1>
+     *
+     * @param localeAbbreviation The locale in which the article is displayed (required)
+     * @param articleId          The unique ID of the article (required)
+     * @return Vote (status code 200)
+     */
+    @Post("/api/v2/help_center/{locale}/articles/{article_id}/down")
+    Mono<@Valid VoteResponse> downvoteArticle(
+            @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
+            @PathVariable("article_id") @NotNull Long articleId
+    );
+
+    /**
      * <h1>{@summary Create Vote on Article}</h1>
      *
      * @param articleId The unique ID of the article (required)
@@ -105,7 +132,10 @@ public interface VoteClient {
             @NotNull Long articleId,
             @NotNull @Valid VoteCreateRequest body
     ) {
-        if (body.getVote() != null && body.getVote().getValue() != null && body.getVote().getValue() < 0) {
+        if (body.getVote() == null || body.getVote().getValue() == null || (body.getVote().getValue() != 1 && body.getVote().getValue() != -1)) {
+            throw new IllegalArgumentException("Vote value must be 1 (upvote) or -1 (downvote)");
+        }
+        if (body.getVote().getValue() == -1) {
             return downvoteArticle(articleId);
         }
         return upvoteArticle(articleId);

@@ -24,6 +24,7 @@ import lol.pbu.z4j.model.ArticleCreateRequest
 import lol.pbu.z4j.model.Comment
 import lol.pbu.z4j.model.CommentCreateRequest
 import lol.pbu.z4j.model.CommentResponse
+import lol.pbu.z4j.model.CommentUpdateRequest
 import lol.pbu.z4j.model.CommentsResponse
 import lol.pbu.z4j.model.Locale
 import lol.pbu.z4j.model.LocaleAbbreviation
@@ -229,14 +230,14 @@ class ArticleCommentClientSpec extends Z4jSpec {
                 defaultLocale,
                 testArticle.id,
                 commentId,
-                new CommentCreateRequest(new Comment(updatedBody1, defaultLocale))
+                new CommentUpdateRequest(new Comment(updatedBody1, defaultLocale))
         ).block()
 
         and: "updating comment without locale"
         CommentResponse updatedNoLoc = adminCommentClient.updateCommentNoLocale(
                 testArticle.id,
                 commentId,
-                new CommentCreateRequest(new Comment(updatedBody2, defaultLocale))
+                new CommentUpdateRequest(new Comment(updatedBody2, defaultLocale))
         ).block()
 
         then: "comments are updated successfully"
