@@ -20,8 +20,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import lol.pbu.z4j.Generated;
@@ -33,6 +35,8 @@ import lol.pbu.z4j.Generated;
  * @since 0.1.1
  */
 @Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @Data
@@ -79,4 +83,8 @@ public class Comment extends CommentBase {
         setBody(body);
     }
 
+    public Comment(String body, LocaleAbbreviation localeAbbreviation) {
+        setBody(body);
+        setLocaleAbbreviation(localeAbbreviation);
+    }
 }
