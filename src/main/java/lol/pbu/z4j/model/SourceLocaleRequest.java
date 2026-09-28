@@ -49,15 +49,18 @@ public class SourceLocaleRequest {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private LocaleAbbreviation sectionLocale;
 
+    @Generated
     public SourceLocaleRequest(LocaleAbbreviation locale) {
         this.categoryLocale = locale;
         this.sectionLocale = locale;
     }
 
+    @Generated
     public LocaleAbbreviation getSourceLocale() {
         return categoryLocale != null ? categoryLocale : sectionLocale;
     }
 
+    @Generated
     public SourceLocaleRequest setSourceLocale(LocaleAbbreviation locale) {
         this.categoryLocale = locale;
         this.sectionLocale = locale;
