@@ -186,6 +186,68 @@ class CategoryClientSpec extends Z4jSpec {
         ].combinations()
     }
 
+    def "can update category source locale as admin"() {
+        given: "a category created in the default source locale"
+        LocaleAbbreviation targetLocale = allLocales.find { it != LocaleAbbreviation.ENGLISH_UNITED_STATES }
+        assert targetLocale != null : "Test requires at least one non-en-us locale active in sandbox"
+
+        CreateCategoryRequest req = new CreateCategoryRequest(
+                new Category("Source Locale Test " + UUID.randomUUID())
+                        .setDescription("Test category for source locale update")
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        CategoryResponse created = adminCategoryClient.createCategory(LocaleAbbreviation.ENGLISH_UNITED_STATES, req).block()
+        Long catId = created.category.id
+
+        and: "a translation added for the target locale"
+        TranslationClient translationClient = adminCtx.getBean(TranslationClient.class)
+        translationClient.createTranslation("categories", catId, new TranslationCreateRequest(
+                new Translation()
+                        .setLocale(targetLocale)
+                        .setTitle("Translation " + UUID.randomUUID())
+        )).block()
+
+        when: "updating source locale to the target locale"
+        adminCategoryClient.updateCategorySourceLocale(targetLocale, catId).block()
+
+        then: "source locale is updated"
+        CategoryResponse fetched = adminCategoryClient.showCategory(LocaleAbbreviation.ENGLISH_UNITED_STATES, catId).block()
+        fetched.category.sourceLocale == targetLocale.toString()
+
+        cleanup:
+        try {
+            adminCategoryClient.deleteCategory(LocaleAbbreviation.ENGLISH_UNITED_STATES, catId).block()
+        } catch (Exception ignored) {
+        }
+    }
+
+    def "end user cannot update category source locale"() {
+        given: "a category created by admin"
+        LocaleAbbreviation targetLocale = allLocales.find { it != LocaleAbbreviation.ENGLISH_UNITED_STATES }
+        assert targetLocale != null : "Test requires at least one non-en-us locale active in sandbox"
+
+        CreateCategoryRequest req = new CreateCategoryRequest(
+                new Category("User Source Locale Test " + UUID.randomUUID())
+                        .setDescription("Test category for forbidden source locale update")
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        CategoryResponse created = adminCategoryClient.createCategory(LocaleAbbreviation.ENGLISH_UNITED_STATES, req).block()
+        Long catId = created.category.id
+
+        when: "end user attempts to update category source locale"
+        userCategoryClient.updateCategorySourceLocale(targetLocale, catId).block()
+
+        then: "forbidden exception is thrown"
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.status == FORBIDDEN
+
+        cleanup:
+        try {
+            adminCategoryClient.deleteCategory(LocaleAbbreviation.ENGLISH_UNITED_STATES, catId).block()
+        } catch (Exception ignored) {
+        }
+    }
+
 }
 
 

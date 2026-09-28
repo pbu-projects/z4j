@@ -26,6 +26,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lol.pbu.z4j.Generated;
 
+import java.util.List;
+
 /**
  * AuditEventsInner
  *
@@ -104,6 +106,6 @@ public class AuditEventsInner {
     @Nullable
     @JsonProperty(JSON_PROPERTY_RECIPIENTS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private java.util.List<Long> recipients;
+    private List<Long> recipients;
 
 }
