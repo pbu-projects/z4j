@@ -16,15 +16,40 @@
 package lol.pbu.z4j.client;
 
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.http.annotation.*;
+import io.micronaut.http.annotation.Body;
+import io.micronaut.http.annotation.Delete;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.Put;
+import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
-import lol.pbu.z4j.model.*;
+import lol.pbu.z4j.model.CreateManyTicketsRequest;
+import lol.pbu.z4j.model.DeletedTicketsResponse;
+import lol.pbu.z4j.model.JobStatusResponse;
+import lol.pbu.z4j.model.LocaleAbbreviation;
+import lol.pbu.z4j.model.MergeTicketsRequest;
+import lol.pbu.z4j.model.TicketAuditsResponse;
+import lol.pbu.z4j.model.TicketCountResponse;
+import lol.pbu.z4j.model.TicketCreateInput;
+import lol.pbu.z4j.model.TicketCreateRequest;
+import lol.pbu.z4j.model.TicketFieldCreateRequest;
+import lol.pbu.z4j.model.TicketFieldResponse;
+import lol.pbu.z4j.model.TicketFieldsResponse;
+import lol.pbu.z4j.model.TicketRelatedResponse;
+import lol.pbu.z4j.model.TicketResponse;
+import lol.pbu.z4j.model.TicketUpdateRequest;
+import lol.pbu.z4j.model.TicketUpdateResponse;
+import lol.pbu.z4j.model.TicketsResponse;
+import lol.pbu.z4j.model.UsersResponse;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <h1>Work with Tickets in Zendesk.</h1>
@@ -56,7 +81,7 @@ public interface TicketClient {
     /**
      * <h1>{@summary Create Custom Ticket Field}</h1>
      * See{@link TicketFieldTypeEnum} and <a href="https://support.zendesk.com/hc/articles/4408883152794">Adding custom ticket fields to your tickets and forms</a>
-     <p>See <a
+     * <p>See <a
      *         href='https://support.zendesk.com/hc/en-us/articles/203661866'>About custom field types</a> in the Zendesk Help
      *     Center.</p> <h4 id=\"allowed-for'>Allowed For</h4>
      * <ul>
@@ -146,6 +171,25 @@ public interface TicketClient {
     Mono<@Valid TicketResponse> showTicket(@PathVariable("ticket_id") @NotNull Long ticketId);
 
     /**
+     * <h1>{@summary Show Multiple Tickets}</h1>
+     *
+     * @param ids Comma-separated list of ticket IDs (required)
+     * @return Tickets response (status code 200)
+     */
+    @Get("/api/v2/tickets/show_many")
+    Mono<@Valid TicketsResponse> showMultipleTickets(@QueryValue("ids") @NotNull String ids);
+
+    /**
+     * <h1>{@summary Show Multiple Tickets}</h1>
+     *
+     * @param ids List of ticket IDs (required)
+     * @return Tickets response (status code 200)
+     */
+    default Mono<@Valid TicketsResponse> showMultipleTickets(@NotNull List<Long> ids) {
+        return showMultipleTickets(ids.stream().map(String::valueOf).collect(Collectors.joining(",")));
+    }
+
+    /**
      * <h1>{@summary Update Ticket}</h1>
      *
      * @param ticketId            The ID of the ticket (required)
@@ -171,6 +215,240 @@ public interface TicketClient {
     );
 
     /**
+     * <h1>{@summary Update Many Tickets}</h1>
+     *
+     * @param ids List of ticket IDs (required)
+     * @param ticketUpdateRequest Ticket update parameters (required)
+     * @return Job status response (status code 200)
+     */
+    default Mono<@Valid JobStatusResponse> updateManyTickets(
+            @NotNull List<Long> ids,
+            @NotNull @Valid TicketUpdateRequest ticketUpdateRequest
+    ) {
+        return updateManyTickets(ids.stream().map(String::valueOf).collect(Collectors.joining(",")), ticketUpdateRequest);
+    }
+
+    /**
+     * <h1>{@summary Create Many Tickets}</h1>
+     *
+     * @param body Create many tickets request (required)
+     * @return Job status response (status code 200)
+     */
+    @Post("/api/v2/tickets/create_many")
+    Mono<@Valid JobStatusResponse> createManyTickets(@Body @NotNull @Valid CreateManyTicketsRequest body);
+
+    /**
+     * <h1>{@summary Create Many Tickets}</h1>
+     *
+     * @param tickets List of ticket create inputs (required)
+     * @return Job status response (status code 200)
+     */
+    default Mono<@Valid JobStatusResponse> createManyTickets(@NotNull List<TicketCreateInput> tickets) {
+        return createManyTickets(new CreateManyTicketsRequest(tickets));
+    }
+
+    /**
+     * <h1>{@summary Delete Ticket}</h1>
+     *
+     * @param ticketId The ID of the ticket (required)
+     * @return No content response (status code 204)
+     */
+    @Delete("/api/v2/tickets/{ticket_id}")
+    Mono<Void> deleteTicket(@PathVariable("ticket_id") @NotNull Long ticketId);
+
+    /**
+     * <h1>{@summary Bulk Delete Tickets}</h1>
+     *
+     * @param ids Comma-separated list of ticket IDs (required)
+     * @return Job status response (status code 200)
+     */
+    @Delete("/api/v2/tickets/destroy_many")
+    Mono<@Valid JobStatusResponse> bulkDeleteTickets(@QueryValue("ids") @NotNull String ids);
+
+    /**
+     * <h1>{@summary Bulk Delete Tickets}</h1>
+     *
+     * @param ids List of ticket IDs (required)
+     * @return Job status response (status code 200)
+     */
+    default Mono<@Valid JobStatusResponse> bulkDeleteTickets(@NotNull List<Long> ids) {
+        return bulkDeleteTickets(ids.stream().map(String::valueOf).collect(Collectors.joining(",")));
+    }
+
+    /**
+     * <h1>{@summary List Deleted Tickets}</h1>
+     *
+     * @return Deleted tickets response (status code 200)
+     */
+    @Get("/api/v2/deleted_tickets")
+    Mono<@Valid DeletedTicketsResponse> listDeletedTickets();
+
+    /**
+     * <h1>{@summary Restore Deleted Ticket}</h1>
+     *
+     * @param ticketId The ID of the deleted ticket (required)
+     * @return Empty response (status code 200)
+     */
+    @Put("/api/v2/deleted_tickets/{ticket_id}/restore")
+    Mono<Void> restoreDeletedTicket(@PathVariable("ticket_id") @NotNull Long ticketId);
+
+    /**
+     * <h1>{@summary Restore Deleted Tickets In Bulk}</h1>
+     *
+     * @param ids Comma-separated list of ticket IDs (required)
+     * @return Job status response (status code 200)
+     */
+    @Put("/api/v2/deleted_tickets/restore_many")
+    Mono<@Valid JobStatusResponse> restoreDeletedTicketsInBulk(@QueryValue("ids") @NotNull String ids);
+
+    /**
+     * <h1>{@summary Restore Deleted Tickets In Bulk}</h1>
+     *
+     * @param ids List of ticket IDs (required)
+     * @return Job status response (status code 200)
+     */
+    default Mono<@Valid JobStatusResponse> restoreDeletedTicketsInBulk(@NotNull List<Long> ids) {
+        return restoreDeletedTicketsInBulk(ids.stream().map(String::valueOf).collect(Collectors.joining(",")));
+    }
+
+    /**
+     * <h1>{@summary Delete Ticket Permanently}</h1>
+     *
+     * @param ticketId The ID of the deleted ticket (required)
+     * @return Job status response (status code 200)
+     */
+    @Delete("/api/v2/deleted_tickets/{ticket_id}")
+    Mono<@Valid JobStatusResponse> deleteTicketPermanently(@PathVariable("ticket_id") @NotNull Long ticketId);
+
+    /**
+     * <h1>{@summary Delete Multiple Tickets Permanently}</h1>
+     *
+     * @param ids Comma-separated list of ticket IDs (required)
+     * @return Job status response (status code 200)
+     */
+    @Delete("/api/v2/deleted_tickets/destroy_many")
+    Mono<@Valid JobStatusResponse> deleteMultipleTicketsPermanently(@QueryValue("ids") @NotNull String ids);
+
+    /**
+     * <h1>{@summary Delete Multiple Tickets Permanently}</h1>
+     *
+     * @param ids List of ticket IDs (required)
+     * @return Job status response (status code 200)
+     */
+    default Mono<@Valid JobStatusResponse> deleteMultipleTicketsPermanently(@NotNull List<Long> ids) {
+        return deleteMultipleTicketsPermanently(ids.stream().map(String::valueOf).collect(Collectors.joining(",")));
+    }
+
+    /**
+     * <h1>{@summary Mark Ticket as Spam}</h1>
+     *
+     * @param ticketId The ID of the ticket (required)
+     * @return Empty response (status code 200)
+     */
+    @Put("/api/v2/tickets/{ticket_id}/mark_as_spam")
+    Mono<Void> markTicketAsSpam(@PathVariable("ticket_id") @NotNull Long ticketId);
+
+    /**
+     * <h1>{@summary Bulk Mark Tickets as Spam}</h1>
+     *
+     * @param ids Comma-separated list of ticket IDs (required)
+     * @return Job status response (status code 200)
+     */
+    @Put("/api/v2/tickets/mark_many_as_spam")
+    Mono<@Valid JobStatusResponse> bulkMarkTicketsAsSpam(@QueryValue("ids") @NotNull String ids);
+
+    /**
+     * <h1>{@summary Bulk Mark Tickets as Spam}</h1>
+     *
+     * @param ids List of ticket IDs (required)
+     * @return Job status response (status code 200)
+     */
+    default Mono<@Valid JobStatusResponse> bulkMarkTicketsAsSpam(@NotNull List<Long> ids) {
+        return bulkMarkTicketsAsSpam(ids.stream().map(String::valueOf).collect(Collectors.joining(",")));
+    }
+
+    /**
+     * <h1>{@summary Merge Tickets}</h1>
+     *
+     * @param ticketId Target ticket ID (required)
+     * @param body Merge request containing source ticket IDs and comments (required)
+     * @return Job status response (status code 200)
+     */
+    @Post("/api/v2/tickets/{ticket_id}/merge")
+    Mono<@Valid JobStatusResponse> mergeTickets(
+            @PathVariable("ticket_id") @NotNull Long ticketId,
+            @Body @NotNull @Valid MergeTicketsRequest body
+    );
+
+    /**
+     * <h1>{@summary Merge Tickets}</h1>
+     *
+     * @param ticketId Target ticket ID (required)
+     * @param sourceTicketIds List of source ticket IDs to merge into target (required)
+     * @return Job status response (status code 200)
+     */
+    default Mono<@Valid JobStatusResponse> mergeTickets(
+            @NotNull Long ticketId,
+            @NotNull List<Long> sourceTicketIds
+    ) {
+        return mergeTickets(ticketId, new MergeTicketsRequest(sourceTicketIds));
+    }
+
+    /**
+     * <h1>{@summary Get Ticket Related Information}</h1>
+     *
+     * @param ticketId The ID of the ticket (required)
+     * @return Ticket related response (status code 200)
+     */
+    @Get("/api/v2/tickets/{ticket_id}/related")
+    Mono<@Valid TicketRelatedResponse> getTicketRelatedInformation(@PathVariable("ticket_id") @NotNull Long ticketId);
+
+    /**
+     * <h1>{@summary List Collaborators for a Ticket}</h1>
+     *
+     * @param ticketId The ID of the ticket (required)
+     * @return Users response (status code 200)
+     */
+    @Get("/api/v2/tickets/{ticket_id}/collaborators")
+    Mono<@Valid UsersResponse> listCollaboratorsForTicket(@PathVariable("ticket_id") @NotNull Long ticketId);
+
+    /**
+     * <h1>{@summary List Followers for a Ticket}</h1>
+     *
+     * @param ticketId The ID of the ticket (required)
+     * @return Users response (status code 200)
+     */
+    @Get("/api/v2/tickets/{ticket_id}/followers")
+    Mono<@Valid UsersResponse> listFollowersForTicket(@PathVariable("ticket_id") @NotNull Long ticketId);
+
+    /**
+     * <h1>{@summary List Email CCs for a Ticket}</h1>
+     *
+     * @param ticketId The ID of the ticket (required)
+     * @return Users response (status code 200)
+     */
+    @Get("/api/v2/tickets/{ticket_id}/email_ccs")
+    Mono<@Valid UsersResponse> listEmailCcsForTicket(@PathVariable("ticket_id") @NotNull Long ticketId);
+
+    /**
+     * <h1>{@summary List Ticket Incidents}</h1>
+     *
+     * @param ticketId The ID of the problem ticket (required)
+     * @return Tickets response (status code 200)
+     */
+    @Get("/api/v2/tickets/{ticket_id}/incidents")
+    Mono<@Valid TicketsResponse> listTicketIncidents(@PathVariable("ticket_id") @NotNull Long ticketId);
+
+    /**
+     * <h1>{@summary Autocomplete Problems}</h1>
+     *
+     * @param text Text to autocomplete (required)
+     * @return Tickets response (status code 200)
+     */
+    @Post("/api/v2/problems/autocomplete")
+    Mono<@Valid TicketsResponse> autocompleteProblems(@QueryValue("text") @NotNull String text);
+
+    /**
      * <h1>{@summary List Audits for a Ticket}</h1>
      * <p>Lists the audits for a specified ticket, showing all changes, comments, notifications,
      * and trigger/rule executions (via {@code via.source.from.title} and {@code via.source.rel: "trigger"}).</p>
@@ -184,3 +462,4 @@ public interface TicketClient {
             @PathVariable("ticket_id") @NotNull Long ticketId
     );
 }
+

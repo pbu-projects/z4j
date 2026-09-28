@@ -15,7 +15,11 @@
  */
 package lol.pbu.z4j.client
 
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.exceptions.HttpClientException
+import io.micronaut.json.JsonMapper
 import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.fixture.FixtureLoader
 import lol.pbu.z4j.fixture.TicketFixtures
@@ -27,6 +31,12 @@ class TicketClientSpec extends Z4jSpec {
 
     @Shared
     TicketClient ticketsAgentClient, ticketsUserClient, ticketBadEmailClient, ticketBadUrlClient
+
+    @Shared
+    JobStatusClient jobStatusClient
+
+    @Shared
+    JsonMapper jsonMapper
 
     @Shared
     List<Ticket> tickets
@@ -43,6 +53,8 @@ class TicketClientSpec extends Z4jSpec {
         ticketsAgentClient = agentCtx.getBean(TicketClient.class)
         ticketsAdminClient = ticketsAdminClient ?: adminCtx.getBean(TicketClient.class)
         ticketsUserClient = userCtx.getBean(TicketClient.class)
+        jobStatusClient = agentCtx.getBean(JobStatusClient.class)
+        jsonMapper = adminCtx.getBean(JsonMapper.class)
         tickets = ticketsAgentClient.listTickets(null).block().getTickets()
         ticketFixtures = FixtureLoader.loadFixture("/fixtures/ticket_fixtures.yaml", TicketFixtures.class)
         clientTestMatrix = [[client: ticketsAgentClient, clientType: "Agent", shouldSucceed: true, expectedTitle: "should"],
@@ -387,5 +399,407 @@ class TicketClientSpec extends Z4jSpec {
         response.getJobStatus() != null
         response.getJobStatus().getId() != null
         response.getJobStatus().getStatus() != null
+    }
+
+    def "can show multiple tickets by comma-separated string IDs as #clientType"(TicketClient client, String clientType) {
+        given: "two ticket IDs from the existing ticket list"
+        String ids = tickets.take(2)*.id.join(",")
+
+        when: "calling showMultipleTickets"
+        TicketsResponse response = client.showMultipleTickets(ids).block()
+
+        then: "tickets are returned"
+        noExceptionThrown()
+        response != null
+        response.getTickets() != null
+        !response.getTickets().isEmpty()
+        response.getTickets()*.id.contains(tickets.first().getId())
+
+        where:
+        [client, clientType] << [[ticketsAgentClient, "Agent"], [ticketsAdminClient, "Admin"]]
+    }
+
+    def "can show multiple tickets by list of IDs as agent"() {
+        given: "ticket IDs as a list"
+        List<Long> ids = tickets.take(2)*.id
+
+        when: "calling showMultipleTickets with a list"
+        TicketsResponse response = ticketsAgentClient.showMultipleTickets(ids).block()
+
+        then: "tickets are returned"
+        noExceptionThrown()
+        response != null
+        response.getTickets() != null
+        !response.getTickets().isEmpty()
+        response.getTickets()*.id.contains(tickets.first().getId())
+    }
+
+    def "calling showMultipleTickets fails when used with a(n) #clientType client"(TicketClient client, String clientType) {
+        when: "calling showMultipleTickets with unauthorized or bad client"
+        client.showMultipleTickets(tickets.take(2)*.id.join(",")).block()
+
+        then: "an HttpClientException is thrown"
+        thrown(HttpClientException)
+
+        where:
+        [client, clientType] << [[ticketsUserClient, "simple user"], [ticketBadEmailClient, "bad email"], [ticketBadUrlClient, "bad url"]]
+    }
+
+    def "can get ticket related information as agent"() {
+        given: "an existing ticket ID"
+        Long ticketId = tickets.first().getId()
+
+        when: "fetching ticket related information"
+        TicketRelatedResponse response = ticketsAgentClient.getTicketRelatedInformation(ticketId).block()
+
+        then: "related information is returned"
+        noExceptionThrown()
+        response != null
+        response.getTicketRelated() != null
+        response.getTicketRelated().getUrl() != null
+        response.getTicketRelated().getUrl().contains(ticketId.toString())
+    }
+
+    def "calling getTicketRelatedInformation fails when used with bad credentials"() {
+        when: "calling with bad credentials"
+        ticketBadEmailClient.getTicketRelatedInformation(tickets.first().getId()).block()
+
+        then: "an HttpClientException is thrown"
+        thrown(HttpClientException)
+    }
+
+    def "can list collaborators for a ticket as agent"() {
+        given: "an existing ticket ID"
+        Long ticketId = tickets.first().getId()
+
+        when: "listing collaborators"
+        UsersResponse response = ticketsAgentClient.listCollaboratorsForTicket(ticketId).block()
+
+        then: "users response is returned"
+        noExceptionThrown()
+        response != null
+        response.getUsers() != null
+    }
+
+    def "calling listCollaboratorsForTicket fails when used with bad credentials"() {
+        when: "calling with bad credentials"
+        ticketBadEmailClient.listCollaboratorsForTicket(tickets.first().getId()).block()
+
+        then: "an HttpClientException is thrown"
+        thrown(HttpClientException)
+    }
+
+    def "can list followers for a ticket as agent"() {
+        given: "an existing ticket ID"
+        Long ticketId = tickets.first().getId()
+
+        when: "listing followers"
+        UsersResponse response = ticketsAgentClient.listFollowersForTicket(ticketId).block()
+
+        then: "users response is returned"
+        noExceptionThrown()
+        response != null
+        response.getUsers() != null
+    }
+
+    def "calling listFollowersForTicket fails when used with bad credentials"() {
+        when: "calling with bad credentials"
+        ticketBadEmailClient.listFollowersForTicket(tickets.first().getId()).block()
+
+        then: "an HttpClientException is thrown"
+        thrown(HttpClientException)
+    }
+
+    def "can list email CCs for a ticket as agent"() {
+        given: "an existing ticket ID"
+        Long ticketId = tickets.first().getId()
+
+        when: "listing email CCs"
+        UsersResponse response = ticketsAgentClient.listEmailCcsForTicket(ticketId).block()
+
+        then: "users response is returned"
+        noExceptionThrown()
+        response != null
+        response.getUsers() != null
+    }
+
+    def "calling listEmailCcsForTicket fails when used with bad credentials"() {
+        when: "calling with bad credentials"
+        ticketBadEmailClient.listEmailCcsForTicket(tickets.first().getId()).block()
+
+        then: "an HttpClientException is thrown"
+        thrown(HttpClientException)
+    }
+
+    def "can list ticket incidents as agent"() {
+        given: "an existing ticket ID"
+        Long ticketId = tickets.first().getId()
+
+        when: "listing ticket incidents"
+        TicketsResponse response = ticketsAgentClient.listTicketIncidents(ticketId).block()
+
+        then: "tickets response is returned"
+        noExceptionThrown()
+        response != null
+        response.getTickets() != null
+    }
+
+    def "calling listTicketIncidents fails when used with bad credentials"() {
+        when: "calling with bad credentials"
+        ticketBadEmailClient.listTicketIncidents(tickets.first().getId()).block()
+
+        then: "an HttpClientException is thrown"
+        thrown(HttpClientException)
+    }
+
+    def "can autocomplete problems as agent"() {
+        when: "calling autocomplete problems"
+        TicketsResponse response = ticketsAgentClient.autocompleteProblems("test").block()
+
+        then: "tickets response is returned"
+        noExceptionThrown()
+        response != null
+        response.getTickets() != null
+    }
+
+    def "calling autocompleteProblems fails when used with bad credentials"() {
+        when: "calling with bad credentials"
+        ticketBadEmailClient.autocompleteProblems("test").block()
+
+        then: "an HttpClientException is thrown"
+        thrown(HttpClientException)
+    }
+
+    def "can create many tickets as agent"() {
+        given: "two ticket create inputs with unique entropy"
+        String entropy1 = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
+        String entropy2 = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
+        TicketCreateInput input1 = new TicketCreateInput(new TicketComment().setBody("Body 1 ${entropy1}"))
+                .setRawSubject("CreateMany 1 ${entropy1}")
+        TicketCreateInput input2 = new TicketCreateInput(new TicketComment().setBody("Body 2 ${entropy2}"))
+                .setRawSubject("CreateMany 2 ${entropy2}")
+        String jobId = null
+
+        when: "calling createManyTickets"
+        JobStatusResponse response = ticketsAgentClient.createManyTickets([input1, input2]).block()
+        jobId = response?.getJobStatus()?.getId()
+
+        then: "job status is returned"
+        noExceptionThrown()
+        response != null
+        response.getJobStatus() != null
+        response.getJobStatus().getId() != null
+
+        cleanup: "wait for job completion and delete created tickets"
+        try {
+            if (jobId != null) {
+                JobStatus status = null
+                for (int i = 0; i < 10; i++) {
+                    sleep(1000)
+                    status = jobStatusClient.showJobStatus(jobId).block()?.getJobStatus()
+                    if (status?.getStatus() == "completed" || status?.getStatus() == "failed") {
+                        break
+                    }
+                }
+                List<Long> createdIds = status?.getResults()?.collect { (it.id as Number)?.longValue() }?.findAll { it != null }
+                if (createdIds) {
+                    ticketsAdminClient.bulkDeleteTickets(createdIds).block()
+                    sleep(2000)
+                    ticketsAdminClient.deleteMultipleTicketsPermanently(createdIds).block()
+                }
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    def "can delete and restore a ticket as admin"() {
+        given: "a newly created ticket in the sandbox"
+        TicketResponse created = createTicketForTest()
+        Long ticketId = created.getTicket().getId()
+
+        when: "deleting the ticket"
+        ticketsAdminClient.deleteTicket(ticketId).block()
+
+        then: "deletion succeeds without error"
+        noExceptionThrown()
+
+        and: "the ticket appears in deleted tickets list"
+        DeletedTicketsResponse deletedResponse = ticketsAdminClient.listDeletedTickets().block()
+        deletedResponse != null
+        deletedResponse.getDeletedTickets() != null
+        deletedResponse.getDeletedTickets().any { it.getId() == ticketId }
+
+        when: "restoring the deleted ticket"
+        ticketsAdminClient.restoreDeletedTicket(ticketId).block()
+
+        then: "restoration succeeds"
+        noExceptionThrown()
+
+        and: "the ticket can be shown again"
+        TicketResponse restored = ticketsAdminClient.showTicket(ticketId).block()
+        restored != null
+        restored.getTicket() != null
+        restored.getTicket().getId() == ticketId
+
+        cleanup: "defensively delete and permanently remove the test ticket"
+        try {
+            if (ticketId != null) {
+                ticketsAdminClient.deleteTicket(ticketId).block()
+                ticketsAdminClient.deleteTicketPermanently(ticketId).block()
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    def "can bulk delete, restore in bulk, and permanently delete tickets in bulk as admin"() {
+        given: "two newly created tickets"
+        TicketResponse t1 = createTicketForTest()
+        TicketResponse t2 = createTicketForTest()
+        Long id1 = t1.getTicket().getId()
+        Long id2 = t2.getTicket().getId()
+        List<Long> ids = [id1, id2]
+
+        when: "bulk deleting tickets using List<Long>"
+        JobStatusResponse deleteJob = ticketsAdminClient.bulkDeleteTickets(ids).block()
+
+        then: "bulk delete job status is returned"
+        noExceptionThrown()
+        deleteJob != null
+        deleteJob.getJobStatus() != null
+        deleteJob.getJobStatus().getId() != null
+
+        when: "restoring deleted tickets in bulk using comma-separated string"
+        sleep(2000)
+        JobStatusResponse restoreJob = ticketsAdminClient.restoreDeletedTicketsInBulk(ids.join(",")).block()
+
+        then: "bulk restore succeeds without error"
+        noExceptionThrown()
+        restoreJob != null
+        restoreJob.getJobStatus() != null
+
+        when: "soft deleting tickets again then permanently deleting them in bulk"
+        sleep(2000)
+        ticketsAdminClient.bulkDeleteTickets(ids).block()
+        sleep(2000)
+        JobStatusResponse permDeleteJob = ticketsAdminClient.deleteMultipleTicketsPermanently(ids).block()
+
+        then: "permanent delete job status is returned"
+        noExceptionThrown()
+        permDeleteJob != null
+        permDeleteJob.getJobStatus() != null
+        permDeleteJob.getJobStatus().getId() != null
+
+        cleanup: "defensive permanent deletion if needed"
+        try {
+            ticketsAdminClient.deleteMultipleTicketsPermanently(ids).block()
+        } catch (Exception ignored) {
+        }
+    }
+
+    def "can permanently delete a single soft-deleted ticket as admin"() {
+        given: "a soft-deleted ticket"
+        TicketResponse created = createTicketForTest()
+        Long ticketId = created.getTicket().getId()
+        ticketsAdminClient.deleteTicket(ticketId).block()
+
+        when: "permanently deleting the ticket"
+        JobStatusResponse response = ticketsAdminClient.deleteTicketPermanently(ticketId).block()
+
+        then: "job status response is returned"
+        noExceptionThrown()
+        response != null
+        response.getJobStatus() != null
+        response.getJobStatus().getId() != null
+    }
+
+    def "can mark ticket as spam and bulk mark tickets as spam as admin"() {
+        given: "two tickets created with disposable end user requesters"
+        Long user1Id = createDisposableEndUser()
+        Long user2Id = createDisposableEndUser()
+        TicketComment comment1 = new TicketComment().setBody("Spam ticket body 1")
+        TicketCreateInput input1 = new TicketCreateInput(comment1)
+                .setRawSubject("Spam ticket 1 " + UUID.randomUUID().toString())
+                .setRequesterId(user1Id)
+        TicketComment comment2 = new TicketComment().setBody("Spam ticket body 2")
+        TicketCreateInput input2 = new TicketCreateInput(comment2)
+                .setRawSubject("Spam ticket 2 " + UUID.randomUUID().toString())
+                .setRequesterId(user2Id)
+        TicketResponse t1 = ticketsAdminClient.createTicket(new TicketCreateRequest(input1)).block()
+        TicketResponse t2 = ticketsAdminClient.createTicket(new TicketCreateRequest(input2)).block()
+        Long id1 = t1.getTicket().getId()
+        Long id2 = t2.getTicket().getId()
+
+        when: "marking a single ticket as spam"
+        ticketsAdminClient.markTicketAsSpam(id1).block()
+
+        then: "marking as spam succeeds"
+        noExceptionThrown()
+
+        when: "bulk marking tickets as spam"
+        JobStatusResponse bulkSpamJob = ticketsAdminClient.bulkMarkTicketsAsSpam([id2]).block()
+
+        then: "bulk mark spam job status is returned"
+        noExceptionThrown()
+        bulkSpamJob != null
+        bulkSpamJob.getJobStatus() != null
+        bulkSpamJob.getJobStatus().getId() != null
+
+        cleanup: "permanently delete tickets and disposable users"
+        try {
+            ticketsAdminClient.deleteMultipleTicketsPermanently([id1, id2]).block()
+        } catch (Exception ignored) {
+        }
+        deleteUserSafely(user1Id)
+        deleteUserSafely(user2Id)
+    }
+
+    def "can merge tickets as admin"() {
+        given: "target and source tickets created for merge"
+        TicketResponse target = createTicketForTest()
+        TicketResponse source = createTicketForTest()
+        Long targetId = target.getTicket().getId()
+        Long sourceId = source.getTicket().getId()
+        String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
+        MergeTicketsRequest mergeRequest = new MergeTicketsRequest([sourceId])
+                .setTargetComment("Target merge comment ${entropy}")
+                .setSourceComment("Source merge comment ${entropy}")
+
+        when: "merging tickets"
+        JobStatusResponse job = ticketsAdminClient.mergeTickets(targetId, mergeRequest).block()
+
+        then: "job status response is returned"
+        noExceptionThrown()
+        job != null
+        job.getJobStatus() != null
+        job.getJobStatus().getId() != null
+
+        cleanup: "delete the merged tickets"
+        try {
+            ticketsAdminClient.bulkDeleteTickets([targetId, sourceId]).block()
+            sleep(2000)
+            ticketsAdminClient.deleteMultipleTicketsPermanently([targetId, sourceId]).block()
+        } catch (Exception ignored) {
+        }
+    }
+
+    private Long createDisposableEndUser() {
+        String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
+        String email = "disposable-${entropy}@example.com"
+        HttpClient httpClient = adminCtx.getBean(HttpClient.class)
+        String body = "{\"user\":{\"name\":\"Disposable ${entropy}\",\"email\":\"${email}\",\"role\":\"end-user\"}}"
+        HttpRequest<?> req = HttpRequest.POST("${System.getenv('Z4J_URL')}/api/v2/users.json", body)
+        HttpResponse<String> res = httpClient.toBlocking().exchange(req, String.class)
+        Map responseMap = jsonMapper.readValue(res.body(), Map.class)
+        return (responseMap.get("user")["id"] as Number).longValue()
+    }
+
+    private void deleteUserSafely(Long userId) {
+        if (userId == null) return
+        try {
+            HttpClient httpClient = adminCtx.getBean(HttpClient.class)
+            HttpRequest<?> req = HttpRequest.DELETE("${System.getenv('Z4J_URL')}/api/v2/users/${userId}.json")
+            httpClient.toBlocking().exchange(req, String.class)
+        } catch (Exception ignored) {
+        }
     }
 }
