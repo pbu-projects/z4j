@@ -132,6 +132,36 @@ public interface TranslationClient {
     );
 
     /**
+     * <h1>{@summary List Missing Article Translations}</h1>
+     *
+     * @param articleId The ID of the article (required)
+     * @return Missing translations response (status code 200)
+     */
+    default Mono<@Valid MissingTranslationsResponse> listMissingArticleTranslations(@NotNull Long articleId) {
+        return listMissingTranslations("articles", articleId);
+    }
+
+    /**
+     * <h1>{@summary List Missing Section Translations}</h1>
+     *
+     * @param sectionId The ID of the section (required)
+     * @return Missing translations response (status code 200)
+     */
+    default Mono<@Valid MissingTranslationsResponse> listMissingSectionTranslations(@NotNull Long sectionId) {
+        return listMissingTranslations("sections", sectionId);
+    }
+
+    /**
+     * <h1>{@summary List Missing Category Translations}</h1>
+     *
+     * @param categoryId The ID of the category (required)
+     * @return Missing translations response (status code 200)
+     */
+    default Mono<@Valid MissingTranslationsResponse> listMissingCategoryTranslations(@NotNull Long categoryId) {
+        return listMissingTranslations("categories", categoryId);
+    }
+
+    /**
      * <h1>{@summary List Help Center Locales}</h1>
      *
      * @return OK (status code 200)

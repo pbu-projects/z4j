@@ -456,6 +456,35 @@ class TranslationClientSpec extends Z4jSpec {
         ]
     }
 
+    def "can use listMissingArticleTranslations convenience method as admin"() {
+        given: "an isolated test article created by admin"
+        ArticleCreateRequest artReq = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article for Missing Translations Convenience " + UUID.randomUUID())
+                        .setBody("Missing Translations Body")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, artReq).block()
+        def createdArticleId = createResponse.article.id
+
+        when: "listing missing article translations using convenience method"
+        MissingTranslationsResponse response = adminTranslationClient.listMissingArticleTranslations(createdArticleId).block()
+
+        then:
+        noExceptionThrown()
+        response != null
+        response.getLocales() != null
+        !response.getLocales().isEmpty()
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+    }
+
     def "cannot use ListMissingTranslations as an #userType"(TranslationClient translationClient, String userType) {
         given: "an isolated test article created by admin"
         ArticleCreateRequest artReq = new ArticleCreateRequest(
