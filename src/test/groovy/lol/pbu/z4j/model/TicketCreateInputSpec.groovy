@@ -71,6 +71,8 @@ class TicketCreateInputSpec extends Z4jSpec {
         'followers'               | 'addFollowersItem'               | follower1
         'sharingAgreementIds'     | 'addSharingAgreementIdsItem'     | 3L
         'tags'                    | 'addTagsItem'                    | "tag1"
+        'additionalTags'          | 'addAdditionalTagsItem'          | "add1"
+        'removeTags'              | 'addRemoveTagsItem'              | "rem1"
         'collaborators'           | 'addCollaboratorsItem'           | collaborator2
         'emailCcIds'              | 'addEmailCcIdsItem'              | 4L
         'followerIds'             | 'addFollowerIdsItem'             | 5L
@@ -101,6 +103,8 @@ class TicketCreateInputSpec extends Z4jSpec {
         'followers'               | 'addFollowersItem'               | [follower1]      | follower2
         'sharingAgreementIds'     | 'addSharingAgreementIdsItem'     | [30L]            | 3L
         'tags'                    | 'addTagsItem'                    | ["existing"]     | "tag"
+        'additionalTags'          | 'addAdditionalTagsItem'          | ["existing_add"] | "new_add"
+        'removeTags'              | 'addRemoveTagsItem'              | ["existing_rem"] | "new_rem"
         'collaborators'           | 'addCollaboratorsItem'           | [collaborator2]  | collaborator1
         'emailCcIds'              | 'addEmailCcIdsItem'              | [40L]            | 4L
         'followerIds'             | 'addFollowerIdsItem'             | [50L]            | 5L
@@ -185,5 +189,37 @@ class TicketCreateInputSpec extends Z4jSpec {
         deserialized.getGroupId() == largeGroupId
         deserialized.getOrganizationId() == largeOrgId
         deserialized.getAssigneeId() == largeAssigneeId
+    }
+
+    def "should serialize and deserialize additional_tags and remove_tags directly and within TicketCreateRequest"() {
+        given:
+        def input = new TicketCreateInput(ticketComment)
+                .addAdditionalTagsItem("tag_to_add")
+                .addRemoveTagsItem("tag_to_remove")
+                .addTagsItem("base_tag")
+
+        when: "serializing TicketCreateInput directly"
+        String json = objectMapper.writeValueAsString(input)
+        Map parsedMap = objectMapper.readValue(json, Map.class)
+        def deserialized = objectMapper.readValue(json, TicketCreateInput.class)
+
+        then:
+        parsedMap["additional_tags"] == ["tag_to_add"]
+        parsedMap["remove_tags"] == ["tag_to_remove"]
+        parsedMap["tags"] == ["base_tag"]
+        deserialized.getAdditionalTags() == ["tag_to_add"]
+        deserialized.getRemoveTags() == ["tag_to_remove"]
+        deserialized.getTags() == ["base_tag"]
+
+        when: "serializing within TicketCreateRequest wrapper"
+        def req = new TicketCreateRequest(input)
+        String reqJson = objectMapper.writeValueAsString(req)
+        Map reqMap = objectMapper.readValue(reqJson, Map.class)
+
+        then:
+        reqMap["ticket"] instanceof Map
+        ((Map) reqMap["ticket"])["additional_tags"] == ["tag_to_add"]
+        ((Map) reqMap["ticket"])["remove_tags"] == ["tag_to_remove"]
+        ((Map) reqMap["ticket"])["tags"] == ["base_tag"]
     }
 }
