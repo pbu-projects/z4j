@@ -57,4 +57,73 @@ class JobStatusSpec extends Z4jSpec {
         response.jobStatus.id == "job_abc"
         response.jobStatus.status == "completed"
     }
+
+    def "should instantiate and manipulate JobStatusResult"() {
+        given:
+        def result = new JobStatusResult()
+
+        when:
+        result.setId(42L)
+              .setAction("update")
+              .setStatus("Updated")
+              .setSuccess(true)
+              .setTitle("Ticket title")
+              .setError(null)
+              .setDetails("All good")
+
+        then:
+        result.id == 42L
+        result.action == "update"
+        result.status == "Updated"
+        result.success == true
+        result.title == "Ticket title"
+        result.error == null
+        result.details == "All good"
+    }
+
+    def "should convert raw map results to typed JobStatusResult and vice versa"() {
+        given: "a JobStatus with raw map results"
+        def job = new JobStatus()
+        job.setResults([
+                [id: 101L, action: "create", status: "Created", success: true, title: "T1", details: "ok"],
+                [id: "102", action: "update", status: "Failed", success: false, error: "Validation failed"]
+        ])
+
+        when: "getting typed job status results"
+        List<JobStatusResult> typedResults = job.getJobStatusResults()
+
+        then: "results are converted to strongly-typed models"
+        typedResults != null
+        typedResults.size() == 2
+        typedResults[0].id == 101L
+        typedResults[0].action == "create"
+        typedResults[0].status == "Created"
+        typedResults[0].success == true
+        typedResults[0].title == "T1"
+        typedResults[0].details == "ok"
+        typedResults[1].id == 102L
+        typedResults[1].action == "update"
+        typedResults[1].status == "Failed"
+        typedResults[1].success == false
+        typedResults[1].error == "Validation failed"
+
+        when: "setting typed job status results back"
+        def newJob = new JobStatus()
+        newJob.setJobStatusResults(typedResults)
+
+        then: "underlying map results are populated properly"
+        newJob.results != null
+        newJob.results.size() == 2
+        newJob.results[0].id == 101L
+        newJob.results[1].id == 102L
+        newJob.getJobStatusResults().size() == 2
+
+        when: "handling null results"
+        job.setResults(null)
+        newJob.setJobStatusResults(null)
+
+        then:
+        job.getJobStatusResults() == null
+        newJob.results == null
+    }
 }
