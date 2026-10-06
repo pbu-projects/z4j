@@ -21,11 +21,16 @@ import io.micronaut.http.client.annotation.Client;
 import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lol.pbu.z4j.model.JobStatus;
 import lol.pbu.z4j.model.JobStatusResponse;
 import reactor.core.publisher.Mono;
 
 /**
  * <h1>Work with Background Job Statuses in Zendesk.</h1>
+ * <p>Enables polling and querying the progress of asynchronous operations such as batch ticket creation,
+ * updates, and imports.</p>
+ * <p>When a background job reaches {@code "completed"}, inspect {@link JobStatus#getJobStatusResults()}
+ * to access child operation results.</p>
  * <ul>
  *     <li>Show Job Status {@link #showJobStatus}</li>
  * </ul>
@@ -38,11 +43,11 @@ public interface JobStatusClient {
 
     /**
      * <h1>{@summary Show Job Status}</h1>
-     * <p>Returns the status of a background job.</p>
+     * <p>Returns the status and child results of an asynchronous background job.</p>
      * <h4>Allowed For</h4> <ul> <li>Agents</li> </ul>
      *
      * @param jobStatusId The ID of the job status (required)
-     * @return Job status (status code 200)
+     * @return Job status response containing progress, completion state, and results (status code 200)
      */
     @Get("/api/v2/job_statuses/{job_status_id}")
     Mono<@Valid JobStatusResponse> showJobStatus(@PathVariable("job_status_id") @NotNull String jobStatusId);

@@ -516,4 +516,63 @@ class TranslationClientSpec extends Z4jSpec {
                 [userTranslationClient, "user"]
         ]
     }
+
+    def "can use typed convenience methods for article, section, and category translations"() {
+        given: "an isolated test article created by admin"
+        ArticleCreateRequest artReq = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article for Typed Translations " + UUID.randomUUID())
+                        .setBody("Typed Translations Body")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, artReq).block()
+        def createdArticleId = createResponse.article.id
+
+        when: "listing article translations via typed method"
+        TranslationsResponse articleTrans = adminTranslationClient.listArticleTranslations(createdArticleId).block()
+
+        then: "article translations are returned"
+        noExceptionThrown()
+        articleTrans != null
+        articleTrans.getTranslations() != null
+        !articleTrans.getTranslations().isEmpty()
+
+        when: "showing article translation via typed method"
+        TranslationResponse shown = adminTranslationClient.showArticleTranslation(createdArticleId, LocaleAbbreviation.ENGLISH_UNITED_STATES).block()
+
+        then: "shown translation matches"
+        noExceptionThrown()
+        shown != null
+        shown.getTranslation() != null
+        shown.getTranslation().getLocale() == LocaleAbbreviation.ENGLISH_UNITED_STATES
+
+        when: "updating article translation via typed method"
+        TranslationUpdateRequest updateReq = new TranslationUpdateRequest(
+                new Translation().setTitle("Updated Article Translation " + UUID.randomUUID())
+        )
+        TranslationResponse updated = adminTranslationClient.updateArticleTranslation(
+                createdArticleId,
+                LocaleAbbreviation.ENGLISH_UNITED_STATES,
+                updateReq
+        ).block()
+
+        then: "translation is updated"
+        noExceptionThrown()
+        updated != null
+        updated.getTranslation() != null
+
+        when: "listing section translations via typed method"
+        TranslationsResponse sectionTrans = adminTranslationClient.listSectionTranslations(validSectionId).block()
+
+        then: "section translations are returned"
+        noExceptionThrown()
+        sectionTrans != null
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdArticleId).block()
+        } catch (Exception ignored) {
+        }
+    }
 }

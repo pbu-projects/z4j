@@ -25,6 +25,14 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import lol.pbu.z4j.Generated;
 
+/**
+ * <h1>Zendesk Background Job Status Response.</h1>
+ * <p>Wraps a {@link JobStatus} instance returned by asynchronous batch and bulk operations.</p>
+ * <p>Inspect {@link #getJobStatus()} to determine execution state and extract child operation results.</p>
+ *
+ * @author Jonathan-Zollinger
+ * @since 0.2.3
+ */
 @Getter
 @Setter
 @Accessors(chain = true)
