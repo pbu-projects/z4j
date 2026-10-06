@@ -70,6 +70,8 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
     public static final String JSON_PROPERTY_STATUS = "status";
     public static final String JSON_PROPERTY_SUBJECT = "subject";
     public static final String JSON_PROPERTY_TAGS = "tags";
+    public static final String JSON_PROPERTY_ADDITIONAL_TAGS = "additional_tags";
+    public static final String JSON_PROPERTY_REMOVE_TAGS = "remove_tags";
     public static final String JSON_PROPERTY_TYPE = "type";
     public static final String JSON_PROPERTY_UPDATED_STAMP = "updated_stamp";
 
@@ -176,6 +178,16 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
     protected List<@NotNull String> tags;
 
     @Nullable
+    @JsonProperty(JSON_PROPERTY_ADDITIONAL_TAGS)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    protected List<@NotNull String> additionalTags;
+
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_REMOVE_TAGS)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    protected List<@NotNull String> removeTags;
+
+    @Nullable
     @JsonProperty(JSON_PROPERTY_UPDATED_STAMP)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     protected ZonedDateTime updatedStamp;
@@ -241,6 +253,22 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
             tags = new ArrayList<>();
         }
         tags.add(tagsItem);
+        return (T) this;
+    }
+
+    public T addAdditionalTagsItem(String additionalTagsItem) {
+        if (additionalTags == null) {
+            additionalTags = new ArrayList<>();
+        }
+        additionalTags.add(additionalTagsItem);
+        return (T) this;
+    }
+
+    public T addRemoveTagsItem(String removeTagsItem) {
+        if (removeTags == null) {
+            removeTags = new ArrayList<>();
+        }
+        removeTags.add(removeTagsItem);
         return (T) this;
     }
 
