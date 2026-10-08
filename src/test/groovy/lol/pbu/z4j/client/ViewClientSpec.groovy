@@ -80,4 +80,32 @@ class ViewClientSpec extends Z4jSpec {
         response.getViewCount() != null
         response.getViewCount().getViewId() == firstActiveViewId
     }
+
+    def "can list tickets for a view"() {
+        setup:
+        if (firstActiveViewId == null) return
+
+        when:
+        def response = adminViewClient.listTicketsForView(firstActiveViewId).block()
+
+        then:
+        noExceptionThrown()
+        response != null
+        response.getTickets() != null
+    }
+
+    def "can list tickets for a view with cursor pagination"() {
+        setup:
+        if (firstActiveViewId == null) return
+
+        when:
+        def response = adminViewClient.listTicketsForView(firstActiveViewId, null, 10).block()
+
+        then:
+        noExceptionThrown()
+        response != null
+        if (response.getTickets() != null && !response.getTickets().isEmpty()) {
+            response.getMeta() != null
+        }
+    }
 }

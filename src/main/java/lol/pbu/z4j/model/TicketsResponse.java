@@ -39,17 +39,40 @@ import lol.pbu.z4j.Generated;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@JsonPropertyOrder(TicketsResponse.JSON_PROPERTY_TICKETS)
+@JsonPropertyOrder({
+        TicketsResponse.JSON_PROPERTY_TICKETS,
+        TicketsResponse.JSON_PROPERTY_META,
+        TicketsResponse.JSON_PROPERTY_LINKS,
+        TicketsResponse.JSON_PROPERTY_COUNT
+})
 @Serdeable
 @Generated
 public class TicketsResponse {
 
     public static final String JSON_PROPERTY_TICKETS = "tickets";
+    public static final String JSON_PROPERTY_META = "meta";
+    public static final String JSON_PROPERTY_LINKS = "links";
+    public static final String JSON_PROPERTY_COUNT = "count";
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_TICKETS)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private List<@Valid Ticket> tickets;
+
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_META)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Meta meta;
+
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_LINKS)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Links links;
+
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_COUNT)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Integer count;
 
     /**
      * Add an item to the tickets property in a chainable fashion.
