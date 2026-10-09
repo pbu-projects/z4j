@@ -46,6 +46,7 @@ import lol.pbu.z4j.Generated;
 @JsonPropertyOrder({
         TicketInputBase.JSON_PROPERTY_COMMENT,
         TicketInputBase.JSON_PROPERTY_ADDITIONAL_COLLABORATORS,
+        TicketInputBase.JSON_PROPERTY_ADDITIONAL_TAGS,
         TicketInputBase.JSON_PROPERTY_ASSIGNEE_EMAIL,
         TicketInputBase.JSON_PROPERTY_ASSIGNEE_ID,
         TicketInputBase.JSON_PROPERTY_ATTRIBUTE_VALUE_IDS,
@@ -60,6 +61,7 @@ import lol.pbu.z4j.Generated;
         TicketInputBase.JSON_PROPERTY_ORGANIZATION_ID,
         TicketInputBase.JSON_PROPERTY_PRIORITY,
         TicketInputBase.JSON_PROPERTY_PROBLEM_ID,
+        TicketInputBase.JSON_PROPERTY_REMOVE_TAGS,
         TicketInputBase.JSON_PROPERTY_REQUESTER_ID,
         TicketInputBase.JSON_PROPERTY_SAFE_UPDATE,
         TicketInputBase.JSON_PROPERTY_SHARING_AGREEMENT_IDS,
@@ -75,6 +77,7 @@ import lol.pbu.z4j.Generated;
         TicketCreateInput.JSON_PROPERTY_MACRO_IDS,
         TicketCreateInput.JSON_PROPERTY_RAW_SUBJECT,
         TicketCreateInput.JSON_PROPERTY_RECIPIENT,
+        TicketCreateInput.JSON_PROPERTY_REQUESTER,
         TicketCreateInput.JSON_PROPERTY_SUBMITTER_ID,
         TicketCreateInput.JSON_PROPERTY_TICKET_FORM_ID,
         TicketCreateInput.JSON_PROPERTY_VIA,
@@ -91,6 +94,7 @@ public class TicketCreateInput extends TicketInputBase<TicketCreateInput> {
     public static final String JSON_PROPERTY_MACRO_IDS = "macro_ids";
     public static final String JSON_PROPERTY_RAW_SUBJECT = "raw_subject";
     public static final String JSON_PROPERTY_RECIPIENT = "recipient";
+    public static final String JSON_PROPERTY_REQUESTER = "requester";
     public static final String JSON_PROPERTY_SUBMITTER_ID = "submitter_id";
     public static final String JSON_PROPERTY_TICKET_FORM_ID = "ticket_form_id";
     public static final String JSON_PROPERTY_VIA = "via";
@@ -147,6 +151,12 @@ public class TicketCreateInput extends TicketInputBase<TicketCreateInput> {
     private String recipient;
 
     @Nullable
+    @Valid
+    @JsonProperty(JSON_PROPERTY_REQUESTER)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private TicketRequester requester;
+
+    @Nullable
     @JsonProperty(JSON_PROPERTY_SUBMITTER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private Long submitterId;
@@ -200,6 +210,15 @@ public class TicketCreateInput extends TicketInputBase<TicketCreateInput> {
             macroIds = new ArrayList<>();
         }
         macroIds.add(macroIdsItem);
+        return this;
+    }
+
+    public @Nullable TicketRequester getRequester() {
+        return requester;
+    }
+
+    public TicketCreateInput setRequester(@Nullable TicketRequester requester) {
+        this.requester = requester;
         return this;
     }
 }
