@@ -29,7 +29,7 @@ plugins {
     id("maven-publish")
     id("signing")
     id("com.gradleup.nmcp.aggregation").version("1.4.4")
-    id("io.micronaut.library") version "5.0.0"
+    id("io.micronaut.library") version "5.0.2"
     id("jacoco")
     id("org.sonarqube") version "latest.release"
 }
