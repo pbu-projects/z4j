@@ -61,7 +61,7 @@ dependencies {
     "lombok"("org.projectlombok:lombok:${lombokVersion}")
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("net.datafaker:datafaker:$dataFakerVersion")
-    testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.18.2")
+    testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.22.3")
     testImplementation("ch.qos.logback:logback-classic")
 }
 
