@@ -78,7 +78,7 @@ java {
 
 configurations.all {
     resolutionStrategy {
-        force("io.netty:netty-bom:4.2.10.Final")
+        force("io.netty:netty-bom:4.2.19.Final")
     }
 }
 
