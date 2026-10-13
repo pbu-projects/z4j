@@ -443,6 +443,12 @@ class ArticleClientSpec extends Z4jSpec {
 
         then:
         noExceptionThrown()
+        when:
+        def showRes = adminArticleClient.showArticle(createdId).block()
+
+        then:
+        noExceptionThrown()
+        showRes == null
 
         cleanup:
         try {
@@ -488,5 +494,510 @@ class ArticleClientSpec extends Z4jSpec {
                 [agentArticleClient, "agent"],
                 [userArticleClient, "user"]
         ]
+    }
+
+    def "can use listArticles with cursor pagination"() {
+        when: "listing articles with cursor pagination"
+        ArticlesResponse response = adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, null, 10).block()
+
+        then:
+        noExceptionThrown()
+        response != null
+        response.articles != null
+        if (!response.articles.isEmpty()) {
+            response.meta != null
+        }
+    }
+
+    def "can use listArticles with single locale argument"() {
+        when: "listing articles specifying only locale"
+        ArticlesResponse response = adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES).block()
+
+        then:
+        noExceptionThrown()
+        response != null
+        response.articles != null
+    }
+
+    def "can use listArticlesNoLocale with cursor pagination"() {
+        when: "listing articles across all locales with cursor pagination"
+        ArticlesResponse response = adminArticleClient.listArticlesNoLocale((String) null, 10).block()
+
+        then:
+        noExceptionThrown()
+        response != null
+        response.articles != null
+        if (!response.articles.isEmpty()) {
+            response.meta != null
+        }
+    }
+
+    def "can use listArticles with offset pagination"() {
+        when: "listing articles using offset pagination"
+        ArticlesResponse response = adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, null, null, null, null, null, null, null, 1, 10).block()
+
+        then:
+        noExceptionThrown()
+        response != null
+        response.articles != null
+        if (!response.articles.isEmpty()) {
+            response.page != null || response.meta != null
+        }
+    }
+
+    def "can use listArticles with offset pagination convenience overload"() {
+        when: "listing articles using offset pagination convenience overload"
+        ArticlesResponse response = adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, 1, 10).block()
+
+        then:
+        noExceptionThrown()
+        response != null
+        response.articles != null
+        if (!response.articles.isEmpty()) {
+            response.page != null || response.meta != null
+        }
+    }
+
+    def "can use listArticlesNoLocale without parameters"() {
+        when: "listing articles across all locales without parameters"
+        ArticlesResponse response = adminArticleClient.listArticlesNoLocale().block()
+
+        then:
+        noExceptionThrown()
+        response != null
+        response.articles != null
+    }
+
+    def "can use listArticlesNoLocale with offset pagination"() {
+        when: "listing articles across all locales with offset pagination"
+        ArticlesResponse response = adminArticleClient.listArticlesNoLocale(1, 10).block()
+
+        then:
+        noExceptionThrown()
+        response != null
+        response.articles != null
+        if (!response.articles.isEmpty()) {
+            response.page != null || response.meta != null
+        }
+    }
+
+    def "can use showArticle without locale"() {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article for Show No Locale " + UUID.randomUUID())
+                        .setBody("Body for show article without locale")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+
+        when: "fetching article using convenience method showArticle without locale"
+        def showResponse = adminArticleClient.showArticle(createdId).block()
+
+        then:
+        noExceptionThrown()
+        showResponse != null
+        showResponse.article != null
+        showResponse.article.id == createdId
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+    }
+
+    def "can use showArticleNoLocale"() {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article for ShowNoLocale " + UUID.randomUUID())
+                        .setBody("Body for showArticleNoLocale")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+
+        when: "fetching article using showArticleNoLocale"
+        def showResponse = adminArticleClient.showArticleNoLocale(createdId).block()
+
+        then:
+        noExceptionThrown()
+        showResponse != null
+        showResponse.article != null
+        showResponse.article.id == createdId
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+    }
+
+    def "cannot use showArticle for nonexistent article"() {
+        when: "requesting nonexistent article without locale"
+        def res = adminArticleClient.showArticle(999999999999L).block()
+
+        then: "null is returned as 404 completes empty"
+        noExceptionThrown()
+        res == null
+    }
+
+    def "cannot use showArticle with locale for nonexistent article"() {
+        when: "requesting nonexistent article with locale"
+        def res = adminArticleClient.showArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, 999999999999L).block()
+
+        then: "null is returned as 404 completes empty"
+        noExceptionThrown()
+        res == null
+    }
+
+    def "can update article without locale as admin"() {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Initial Title " + UUID.randomUUID())
+                        .setBody("Initial Body")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+        ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
+                new Article().setPromoted(true)
+        )
+
+        when: "updating article without locale using convenience method"
+        def updateResponse = adminArticleClient.updateArticle(createdId, updateReq).block()
+
+        then:
+        noExceptionThrown()
+        updateResponse != null
+        updateResponse.article != null
+        updateResponse.article.promoted == true
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+    }
+
+    def "can update article using updateArticleNoLocale as admin"() {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Initial Title " + UUID.randomUUID())
+                        .setBody("Initial Body")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+        ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
+                new Article().setPromoted(true)
+        )
+
+        when: "updating article using updateArticleNoLocale"
+        def updateResponse = adminArticleClient.updateArticleNoLocale(createdId, updateReq).block()
+
+        then:
+        noExceptionThrown()
+        updateResponse != null
+        updateResponse.article != null
+        updateResponse.article.promoted == true
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+    }
+
+    def "can delete article without locale as admin"() {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article to Delete " + UUID.randomUUID())
+                        .setBody("Body to delete")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+
+        when: "deleting article without locale using convenience method"
+        adminArticleClient.deleteArticle(createdId).block()
+
+        then: "subsequent show returns null"
+        noExceptionThrown()
+        when:
+        def showRes = adminArticleClient.showArticleNoLocale(createdId).block()
+
+        then:
+        noExceptionThrown()
+        showRes == null
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+    }
+
+    def "cannot update article as unauthorized user"() {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article for Unauthorized Update " + UUID.randomUUID())
+                        .setBody("Body")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+        ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
+                new Article().setTitle("Unauthorized Updated Title")
+        )
+
+        when: "unauthorized user attempts to update article"
+        userArticleClient.updateArticle(createdId, updateReq).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.getStatus().getCode() >= 400
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+    }
+
+    def "cannot update nonexistent article"() {
+        given:
+        ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
+                new Article().setPromoted(true)
+        )
+
+        when: "updating nonexistent article without locale"
+        def res = adminArticleClient.updateArticle(999999999999L, updateReq).block()
+
+        then: "null is returned as 404 completes empty"
+        noExceptionThrown()
+        res == null
+    }
+
+    def "cannot delete article as unauthorized user"() {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article for Unauthorized Delete " + UUID.randomUUID())
+                        .setBody("Body")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+
+        when: "unauthorized user attempts to delete article"
+        userArticleClient.deleteArticle(createdId).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.getStatus().getCode() >= 400
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+    }
+
+    def "cannot delete nonexistent article"() {
+        when: "deleting nonexistent article without locale"
+        adminArticleClient.deleteArticle(999999999999L).block()
+
+        then: "no exception is thrown as 404 Mono<Void> completes empty"
+        noExceptionThrown()
+    }
+
+    def "can use associateAttachmentsInBulk without locale as admin"() {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article for Bulk Attachments " + UUID.randomUUID())
+                        .setBody("Body for Bulk Attachments")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+        BulkAttachmentsRequest bulkReq = new BulkAttachmentsRequest(List.of(123456789L))
+
+        when: "admin associates attachments in bulk without locale"
+        adminArticleClient.associateAttachmentsInBulk(createdId, bulkReq).block()
+
+        then:
+        noExceptionThrown()
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+    }
+
+    def "cannot use associateAttachmentsInBulk without locale as unauthorized user"() {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article for Bulk Attachments " + UUID.randomUUID())
+                        .setBody("Body for Bulk Attachments")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+        BulkAttachmentsRequest bulkReq = new BulkAttachmentsRequest(List.of(123456789L))
+
+        when: "unauthorized user associates attachments in bulk without locale"
+        userArticleClient.associateAttachmentsInBulk(createdId, bulkReq).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.getStatus().getCode() >= 400
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+    }
+
+    def "can use associateAttachmentsInBulk with locale as admin"() {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article for Bulk Attachments " + UUID.randomUUID())
+                        .setBody("Body for Bulk Attachments")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+        BulkAttachmentsRequest bulkReq = new BulkAttachmentsRequest(List.of(123456789L))
+
+        when: "admin associates attachments in bulk with locale"
+        adminArticleClient.associateAttachmentsInBulk(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId, bulkReq).block()
+
+        then:
+        noExceptionThrown()
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+    }
+
+    def "cannot use associateAttachmentsInBulk with locale as unauthorized user"() {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article for Bulk Attachments " + UUID.randomUUID())
+                        .setBody("Body for Bulk Attachments")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+        BulkAttachmentsRequest bulkReq = new BulkAttachmentsRequest(List.of(123456789L))
+
+        when: "unauthorized user associates attachments in bulk with locale"
+        userArticleClient.associateAttachmentsInBulk(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId, bulkReq).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.getStatus().getCode() >= 400
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+    }
+
+    def "can use archiveArticle with locale as admin"() {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article to Archive " + UUID.randomUUID())
+                        .setBody("Body of article to archive")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+
+        when: "admin archives article with locale"
+        adminArticleClient.archiveArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
+
+        then: "subsequent show returns null"
+        noExceptionThrown()
+        when:
+        def showRes = adminArticleClient.showArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
+
+        then:
+        noExceptionThrown()
+        showRes == null
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
+    }
+
+    def "cannot use archiveArticle with locale as unauthorized user"() {
+        given:
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article to Archive " + UUID.randomUUID())
+                        .setBody("Body of article to archive")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createdId = createResponse.article.id
+
+        when: "unauthorized user archives article with locale"
+        userArticleClient.archiveArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
+
+        then:
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.getStatus().getCode() >= 400
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
+        } catch (Exception ignored) {
+            // Defensive cleanup - ignore if resource already deleted or not created
+        }
     }
 }

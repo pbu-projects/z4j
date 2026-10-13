@@ -39,17 +39,75 @@ import lol.pbu.z4j.Generated;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@JsonPropertyOrder(ArticlesResponse.JSON_PROPERTY_ARTICLES)
+@JsonPropertyOrder({
+        ArticlesResponse.JSON_PROPERTY_ARTICLES,
+        ArticlesResponse.JSON_PROPERTY_META,
+        ArticlesResponse.JSON_PROPERTY_LINKS,
+        ArticlesResponse.JSON_PROPERTY_COUNT,
+        ArticlesResponse.JSON_PROPERTY_NEXT_PAGE,
+        ArticlesResponse.JSON_PROPERTY_PREVIOUS_PAGE,
+        ArticlesResponse.JSON_PROPERTY_PAGE,
+        ArticlesResponse.JSON_PROPERTY_PAGE_COUNT,
+        ArticlesResponse.JSON_PROPERTY_PER_PAGE
+})
 @Serdeable
 @Generated
 public class ArticlesResponse {
 
     public static final String JSON_PROPERTY_ARTICLES = "articles";
+    public static final String JSON_PROPERTY_META = "meta";
+    public static final String JSON_PROPERTY_LINKS = "links";
+    public static final String JSON_PROPERTY_COUNT = "count";
+    public static final String JSON_PROPERTY_NEXT_PAGE = "next_page";
+    public static final String JSON_PROPERTY_PREVIOUS_PAGE = "previous_page";
+    public static final String JSON_PROPERTY_PAGE = "page";
+    public static final String JSON_PROPERTY_PAGE_COUNT = "page_count";
+    public static final String JSON_PROPERTY_PER_PAGE = "per_page";
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_ARTICLES)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private List<@Valid Article> articles;
+
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_META)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Meta meta;
+
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_LINKS)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Links links;
+
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_COUNT)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Integer count;
+
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_NEXT_PAGE)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String nextPage;
+
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private String previousPage;
+
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_PAGE)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Integer page;
+
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_PAGE_COUNT)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Integer pageCount;
+
+    @Nullable
+    @JsonProperty(JSON_PROPERTY_PER_PAGE)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Integer perPage;
 
     /**
      * Add an item to the articles property in a chainable fashion.
