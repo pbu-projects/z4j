@@ -30,6 +30,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.CreateManyTicketsRequest;
 import lol.pbu.z4j.model.DeletedTicketsResponse;
+import lol.pbu.z4j.model.JobStatus;
 import lol.pbu.z4j.model.JobStatusResponse;
 import lol.pbu.z4j.model.LocaleAbbreviation;
 import lol.pbu.z4j.model.MergeTicketsRequest;
@@ -230,6 +231,14 @@ public interface TicketClient {
 
     /**
      * <h1>{@summary Create Many Tickets}</h1>
+     * <p>Enqueues an asynchronous batch creation of tickets. Zendesk processes the request in the background
+     * and returns a {@link JobStatusResponse} containing the initial {@link JobStatus}.</p>
+     * <p>To obtain the newly created ticket IDs and statuses once execution finishes:</p>
+     * <ol>
+     *     <li>Capture the returned job ID: {@code response.getJobStatus().getId()}.</li>
+     *     <li>Poll {@link JobStatusClient#showJobStatus(String)} until the status is {@code "completed"}.</li>
+     *     <li>Call {@link JobStatus#getJobStatusResults()} to retrieve typed child results for each ticket.</li>
+     * </ol>
      *
      * @param body Create many tickets request (required)
      * @return Job status response (status code 200)
@@ -239,6 +248,7 @@ public interface TicketClient {
 
     /**
      * <h1>{@summary Create Many Tickets}</h1>
+     * <p>Convenience method to enqueue an asynchronous batch creation of tickets.</p>
      *
      * @param tickets List of ticket create inputs (required)
      * @return Job status response (status code 200)
