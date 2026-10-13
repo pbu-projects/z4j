@@ -272,6 +272,24 @@ public abstract class TicketInputBase<T extends TicketInputBase<T>> {
         return (T) this;
     }
 
+    public @Nullable List<String> getAdditionalTags() {
+        return additionalTags;
+    }
+
+    public T setAdditionalTags(@Nullable List<String> additionalTags) {
+        this.additionalTags = additionalTags;
+        return (T) this;
+    }
+
+    public @Nullable List<String> getRemoveTags() {
+        return removeTags;
+    }
+
+    public T setRemoveTags(@Nullable List<String> removeTags) {
+        this.removeTags = removeTags;
+        return (T) this;
+    }
+
     public @Nullable Long getCustomStatusId() {
         return customStatusId;
     }

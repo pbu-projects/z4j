@@ -215,4 +215,15 @@ class TicketUpdateInputSpec extends Z4jSpec {
         ((Map) reqMap["ticket"])["tags"] == ["base_tag"]
         ((Map) reqMap["ticket"])["ticket_form_id"] == 1001L
     }
+
+    def "should support setAdditionalTags and setRemoveTags directly"() {
+        given:
+        def input = new TicketUpdateInput()
+                .setAdditionalTags(["tag1", "tag2"])
+                .setRemoveTags(["rem1"])
+
+        expect:
+        input.getAdditionalTags() == ["tag1", "tag2"]
+        input.getRemoveTags() == ["rem1"]
+    }
 }

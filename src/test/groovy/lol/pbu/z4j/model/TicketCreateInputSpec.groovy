@@ -191,9 +191,11 @@ class TicketCreateInputSpec extends Z4jSpec {
         deserialized.getAssigneeId() == largeAssigneeId
     }
 
-    def "should serialize and deserialize additional_tags and remove_tags directly and within TicketCreateRequest"() {
+    def "should serialize and deserialize requester, additional_tags, and remove_tags directly and within TicketCreateRequest"() {
         given:
+        def requester = new TicketRequester("Jane Doe", "jane@example.com")
         def input = new TicketCreateInput(ticketComment)
+                .setRequester(requester)
                 .addAdditionalTagsItem("tag_to_add")
                 .addRemoveTagsItem("tag_to_remove")
                 .addTagsItem("base_tag")
@@ -204,9 +206,11 @@ class TicketCreateInputSpec extends Z4jSpec {
         def deserialized = objectMapper.readValue(json, TicketCreateInput.class)
 
         then:
+        parsedMap["requester"] == [name: "Jane Doe", email: "jane@example.com"]
         parsedMap["additional_tags"] == ["tag_to_add"]
         parsedMap["remove_tags"] == ["tag_to_remove"]
         parsedMap["tags"] == ["base_tag"]
+        deserialized.getRequester() == requester
         deserialized.getAdditionalTags() == ["tag_to_add"]
         deserialized.getRemoveTags() == ["tag_to_remove"]
         deserialized.getTags() == ["base_tag"]
@@ -218,8 +222,20 @@ class TicketCreateInputSpec extends Z4jSpec {
 
         then:
         reqMap["ticket"] instanceof Map
+        ((Map) reqMap["ticket"])["requester"] == [name: "Jane Doe", email: "jane@example.com"]
         ((Map) reqMap["ticket"])["additional_tags"] == ["tag_to_add"]
         ((Map) reqMap["ticket"])["remove_tags"] == ["tag_to_remove"]
         ((Map) reqMap["ticket"])["tags"] == ["base_tag"]
+    }
+
+    def "should support setAdditionalTags and setRemoveTags directly"() {
+        given:
+        def input = new TicketCreateInput(ticketComment)
+                .setAdditionalTags(["tag1", "tag2"])
+                .setRemoveTags(["rem1"])
+
+        expect:
+        input.getAdditionalTags() == ["tag1", "tag2"]
+        input.getRemoveTags() == ["rem1"]
     }
 }
