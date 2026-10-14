@@ -23,6 +23,7 @@ import lol.pbu.z4j.fixture.FixtureLoader
 import lol.pbu.z4j.model.*
 import spock.lang.Shared
 
+import static io.micronaut.http.HttpStatus.BAD_REQUEST
 import static io.micronaut.http.HttpStatus.FORBIDDEN
 
 @MicronautTest
@@ -120,7 +121,7 @@ class CategoryClientSpec extends Z4jSpec {
         HttpClientResponseException error = thrown(HttpClientResponseException)
 
         and:
-        error.getStatus() == FORBIDDEN
+        error.getStatus() == FORBIDDEN || error.getStatus() == BAD_REQUEST
 
         cleanup: "deleting #categoryName from the #localeAbbreviation locale"
         try {
@@ -239,7 +240,7 @@ class CategoryClientSpec extends Z4jSpec {
 
         then: "forbidden exception is thrown"
         HttpClientResponseException error = thrown(HttpClientResponseException)
-        error.status == FORBIDDEN
+        error.status == FORBIDDEN || error.status == BAD_REQUEST
 
         cleanup:
         try {

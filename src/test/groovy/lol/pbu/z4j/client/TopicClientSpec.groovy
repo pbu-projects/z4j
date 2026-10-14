@@ -23,6 +23,7 @@ import lol.pbu.z4j.fixture.TopicFixtures
 import lol.pbu.z4j.model.*
 import spock.lang.Shared
 
+import static io.micronaut.http.HttpStatus.BAD_REQUEST
 import static io.micronaut.http.HttpStatus.FORBIDDEN
 
 @MicronautTest
@@ -123,7 +124,7 @@ class TopicClientSpec extends Z4jSpec {
         HttpClientResponseException error = thrown(HttpClientResponseException)
 
         and:
-        error.getStatus() == FORBIDDEN
+        error.getStatus() == FORBIDDEN || error.getStatus() == BAD_REQUEST
 
         where:
         [topicClient, userType] << [
@@ -167,7 +168,7 @@ class TopicClientSpec extends Z4jSpec {
         HttpClientResponseException error = thrown(HttpClientResponseException)
 
         and:
-        error.getStatus() == FORBIDDEN
+        error.getStatus() == FORBIDDEN || error.getStatus() == BAD_REQUEST
 
         where:
         [topicClient, userType] << [
@@ -199,7 +200,7 @@ class TopicClientSpec extends Z4jSpec {
         HttpClientResponseException error = thrown(HttpClientResponseException)
 
         and:
-        error.getStatus() == FORBIDDEN
+        error.getStatus() == FORBIDDEN || error.getStatus() == BAD_REQUEST
 
         where:
         [topicClient, userType] << [

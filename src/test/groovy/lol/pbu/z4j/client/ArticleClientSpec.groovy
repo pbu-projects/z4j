@@ -501,7 +501,28 @@ class ArticleClientSpec extends Z4jSpec {
         ]
     }
 
+    private Long getOrCreateArticleId() {
+        try {
+            def existing = adminArticleClient.listArticles(validLocale).block()?.articles
+            if (existing != null && !existing.isEmpty()) {
+                return existing[0].id
+            }
+        } catch (Exception ignored) {
+        }
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Listing Test Article " + UUID.randomUUID())
+                        .setBody("Body for listing tests")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(validLocale)
+        )
+        return adminArticleClient.createArticle(validLocale, validSectionId, req).block().article.id
+    }
+
     def "can use listArticles with cursor pagination"() {
+        given: "an existing article in the help center"
+        getOrCreateArticleId()
+
         expect: "listing articles with cursor pagination"
         StepVerifier.create(adminArticleClient.listArticles(validLocale, (String) null, 10))
                 .assertNext { response ->
@@ -516,6 +537,9 @@ class ArticleClientSpec extends Z4jSpec {
     }
 
     def "can use listArticles with single locale argument"() {
+        given: "an existing article in the help center"
+        getOrCreateArticleId()
+
         expect: "listing articles specifying only locale"
         StepVerifier.create(adminArticleClient.listArticles(validLocale))
                 .assertNext { response ->
@@ -527,6 +551,9 @@ class ArticleClientSpec extends Z4jSpec {
     }
 
     def "can use listArticlesNoLocale with cursor pagination"() {
+        given: "an existing article in the help center"
+        getOrCreateArticleId()
+
         expect: "listing articles across all locales with cursor pagination"
         StepVerifier.create(adminArticleClient.listArticlesNoLocale((String) null, 10))
                 .assertNext { response ->
@@ -541,6 +568,9 @@ class ArticleClientSpec extends Z4jSpec {
     }
 
     def "can use listArticles with offset pagination"() {
+        given: "an existing article in the help center"
+        getOrCreateArticleId()
+
         expect: "listing articles using offset pagination"
         StepVerifier.create(adminArticleClient.listArticles(validLocale, null, null, null, null, null, null, null, 1, 10))
                 .assertNext { response ->
@@ -555,6 +585,9 @@ class ArticleClientSpec extends Z4jSpec {
     }
 
     def "can use listArticles with offset pagination convenience overload"() {
+        given: "an existing article in the help center"
+        getOrCreateArticleId()
+
         expect: "listing articles using offset pagination convenience overload"
         StepVerifier.create(adminArticleClient.listArticles(validLocale, 1, 10))
                 .assertNext { response ->
@@ -569,6 +602,9 @@ class ArticleClientSpec extends Z4jSpec {
     }
 
     def "can use listArticlesNoLocale without parameters"() {
+        given: "an existing article in the help center"
+        getOrCreateArticleId()
+
         expect: "listing articles across all locales without parameters"
         StepVerifier.create(adminArticleClient.listArticlesNoLocale())
                 .assertNext { response ->
@@ -580,6 +616,9 @@ class ArticleClientSpec extends Z4jSpec {
     }
 
     def "can use listArticlesNoLocale with offset pagination"() {
+        given: "an existing article in the help center"
+        getOrCreateArticleId()
+
         expect: "listing articles across all locales with offset pagination"
         StepVerifier.create(adminArticleClient.listArticlesNoLocale(1, 10))
                 .assertNext { response ->
@@ -594,6 +633,9 @@ class ArticleClientSpec extends Z4jSpec {
     }
 
     def "support portal can browse articles sorted by position with cursor pagination"() {
+        given: "an existing article in the help center"
+        getOrCreateArticleId()
+
         expect: "support portal retrieves articles sorted by position using cursor pagination within a locale"
         StepVerifier.create(adminArticleClient.listArticles(validLocale, SortArticleBy.POSITION, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, 10))
                 .assertNext { response ->
@@ -608,6 +650,9 @@ class ArticleClientSpec extends Z4jSpec {
     }
 
     def "global audit service can list all articles sorted by updated date across locales"() {
+        given: "an existing article in the help center"
+        getOrCreateArticleId()
+
         expect: "global audit service queries articles across all locales ordered by updated date"
         StepVerifier.create(adminArticleClient.listArticlesNoLocale(SortArticleBy.UPDATED_AT, SortOrder.DESCENDING, (Long) null, (String) null))
                 .assertNext { response ->
@@ -619,6 +664,9 @@ class ArticleClientSpec extends Z4jSpec {
     }
 
     def "knowledge base sync service can paginate through all articles globally with cursor pagination"() {
+        given: "an existing article in the help center"
+        getOrCreateArticleId()
+
         expect: "sync service fetches pages of articles globally sorted by updated date using cursor pagination"
         StepVerifier.create(adminArticleClient.listArticlesNoLocale(SortArticleBy.UPDATED_AT, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, 10))
                 .assertNext { response ->
@@ -633,6 +681,9 @@ class ArticleClientSpec extends Z4jSpec {
     }
 
     def "content analytics dashboard can query all articles globally with offset pagination and sorting"() {
+        given: "an existing article in the help center"
+        getOrCreateArticleId()
+
         expect: "analytics dashboard requests articles globally using offset pagination and sorting options"
         StepVerifier.create(adminArticleClient.listArticlesNoLocale(SortArticleBy.CREATED_AT, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, (String) null, (Integer) null, 1, 10))
                 .assertNext { response ->
@@ -647,7 +698,8 @@ class ArticleClientSpec extends Z4jSpec {
     }
 
     def "backup job can incrementally list articles modified since timestamp"() {
-        given: "a timestamp from the past 24 hours"
+        given: "an existing article in the help center and a timestamp from the past 24 hours"
+        getOrCreateArticleId()
         Long oneDayAgo = (System.currentTimeMillis() / 1000L) - 86400L
 
         expect: "backup job queries articles updated since the timestamp"
