@@ -61,21 +61,21 @@ class ArticleClientSpec extends Z4jSpec {
 
         if (validSectionId == null) {
             def auth = "Basic " + (System.getenv("Z4J_ADMIN_EMAIL") + "/token:" + System.getenv("Z4J_TOKEN")).bytes.encodeBase64().toString()
-            
+
             def sectionsConn = URI.create(System.getenv("Z4J_URL") + "/api/v2/help_center/en-us/sections.json").toURL().openConnection()
             sectionsConn.setRequestProperty("Authorization", auth)
             sectionsConn.setRequestProperty("Accept", "application/json")
             def sectionsJson = new ObjectMapper().readValue(sectionsConn.inputStream, Map.class)
-            
+
             def pgConn = URI.create(System.getenv("Z4J_URL") + "/api/v2/guide/permission_groups.json").toURL().openConnection()
             pgConn.setRequestProperty("Authorization", auth)
             pgConn.setRequestProperty("Accept", "application/json")
             def pgJson = new ObjectMapper().readValue(pgConn.inputStream, Map.class)
-            
+
             if (sectionsJson.sections && pgJson.permission_groups) {
                 validSectionId = sectionsJson.sections[0].id as Long
                 validPermissionGroupId = pgJson.permission_groups[0].id as Long
-                
+
                 def seedReq = new ArticleCreateRequest(
                         new Article()
                                 .setTitle("Seeded Article for Tests")
@@ -87,7 +87,7 @@ class ArticleClientSpec extends Z4jSpec {
             }
         }
 
-        assert validSectionId != null : "CRITICAL SETUP ERROR: No articles exist across ANY locale to test against, and could not dynamically seed one!"
+        assert validSectionId != null: "CRITICAL SETUP ERROR: No articles exist across ANY locale to test against, and could not dynamically seed one!"
     }
 
     def "can use ListArticles for other tests using the '#localeAbbreviation' locale"(
@@ -135,7 +135,6 @@ class ArticleClientSpec extends Z4jSpec {
         try {
             adminArticleClient.deleteArticle(localeAbbreviation, createResponse.article.id).block()
         } catch (Exception ignored) {
-            // Defensive cleanup - ignore if resource already deleted or not created
         }
 
         where:
