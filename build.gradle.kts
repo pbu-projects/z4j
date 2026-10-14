@@ -63,6 +63,7 @@ dependencies {
     testImplementation("net.datafaker:datafaker:$dataFakerVersion")
     testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.18.2")
     testImplementation("ch.qos.logback:logback-classic")
+    testImplementation("io.projectreactor:reactor-test")
 }
 
 java {

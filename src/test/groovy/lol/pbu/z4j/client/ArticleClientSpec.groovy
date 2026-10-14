@@ -23,6 +23,7 @@ import lol.pbu.z4j.fixture.ArticleFixtures
 import lol.pbu.z4j.fixture.FixtureLoader
 import lol.pbu.z4j.model.*
 import reactor.core.publisher.Mono
+import reactor.test.StepVerifier
 import spock.lang.Shared
 
 @MicronautTest
@@ -437,17 +438,11 @@ class ArticleClientSpec extends Z4jSpec {
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
 
-        when:
-        articleClient.archiveArticle(createdId).block()
-
-        then:
-        noExceptionThrown()
-        when:
-        def showRes = adminArticleClient.showArticle(createdId).block()
-
-        then:
-        noExceptionThrown()
-        showRes == null
+        expect:
+        StepVerifier.create(articleClient.archiveArticle(createdId))
+                .verifyComplete()
+        StepVerifier.create(adminArticleClient.showArticle(createdId))
+                .verifyComplete()
 
         cleanup:
         try {
@@ -474,12 +469,14 @@ class ArticleClientSpec extends Z4jSpec {
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
 
-        when:
-        articleClient.archiveArticle(createdId).block()
-
-        then:
-        HttpClientResponseException error = thrown(HttpClientResponseException)
-        error.getStatus().getCode() >= 400
+        expect:
+        StepVerifier.create(articleClient.archiveArticle(createdId))
+                .verifyErrorSatisfies { error ->
+                    verifyAll {
+                        error instanceof HttpClientResponseException
+                        ((HttpClientResponseException) error).status.code >= 400
+                    }
+                }
 
         cleanup:
         try {
@@ -496,88 +493,95 @@ class ArticleClientSpec extends Z4jSpec {
     }
 
     def "can use listArticles with cursor pagination"() {
-        when: "listing articles with cursor pagination"
-        ArticlesResponse response = adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, null, 10).block()
-
-        then:
-        noExceptionThrown()
-        response != null
-        response.articles != null
-        if (!response.articles.isEmpty()) {
-            response.meta != null
-        }
+        expect: "listing articles with cursor pagination"
+        StepVerifier.create(adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, (String) null, 10))
+                .assertNext { response ->
+                    verifyAll(response) {
+                        articles != null
+                        if (!articles.isEmpty()) {
+                            meta != null
+                        }
+                    }
+                }
+                .verifyComplete()
     }
 
     def "can use listArticles with single locale argument"() {
-        when: "listing articles specifying only locale"
-        ArticlesResponse response = adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES).block()
-
-        then:
-        noExceptionThrown()
-        response != null
-        response.articles != null
+        expect: "listing articles specifying only locale"
+        StepVerifier.create(adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES))
+                .assertNext { response ->
+                    verifyAll(response) {
+                        articles != null
+                    }
+                }
+                .verifyComplete()
     }
 
     def "can use listArticlesNoLocale with cursor pagination"() {
-        when: "listing articles across all locales with cursor pagination"
-        ArticlesResponse response = adminArticleClient.listArticlesNoLocale((String) null, 10).block()
-
-        then:
-        noExceptionThrown()
-        response != null
-        response.articles != null
-        if (!response.articles.isEmpty()) {
-            response.meta != null
-        }
+        expect: "listing articles across all locales with cursor pagination"
+        StepVerifier.create(adminArticleClient.listArticlesNoLocale((String) null, 10))
+                .assertNext { response ->
+                    verifyAll(response) {
+                        articles != null
+                        if (!articles.isEmpty()) {
+                            meta != null
+                        }
+                    }
+                }
+                .verifyComplete()
     }
 
     def "can use listArticles with offset pagination"() {
-        when: "listing articles using offset pagination"
-        ArticlesResponse response = adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, null, null, null, null, null, null, null, 1, 10).block()
-
-        then:
-        noExceptionThrown()
-        response != null
-        response.articles != null
-        if (!response.articles.isEmpty()) {
-            response.page != null || response.meta != null
-        }
+        expect: "listing articles using offset pagination"
+        StepVerifier.create(adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, null, null, null, null, null, null, null, 1, 10))
+                .assertNext { response ->
+                    verifyAll(response) {
+                        articles != null
+                        if (!articles.isEmpty()) {
+                            page != null || meta != null
+                        }
+                    }
+                }
+                .verifyComplete()
     }
 
     def "can use listArticles with offset pagination convenience overload"() {
-        when: "listing articles using offset pagination convenience overload"
-        ArticlesResponse response = adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, 1, 10).block()
-
-        then:
-        noExceptionThrown()
-        response != null
-        response.articles != null
-        if (!response.articles.isEmpty()) {
-            response.page != null || response.meta != null
-        }
+        expect: "listing articles using offset pagination convenience overload"
+        StepVerifier.create(adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, 1, 10))
+                .assertNext { response ->
+                    verifyAll(response) {
+                        articles != null
+                        if (!articles.isEmpty()) {
+                            page != null || meta != null
+                        }
+                    }
+                }
+                .verifyComplete()
     }
 
     def "can use listArticlesNoLocale without parameters"() {
-        when: "listing articles across all locales without parameters"
-        ArticlesResponse response = adminArticleClient.listArticlesNoLocale().block()
-
-        then:
-        noExceptionThrown()
-        response != null
-        response.articles != null
+        expect: "listing articles across all locales without parameters"
+        StepVerifier.create(adminArticleClient.listArticlesNoLocale())
+                .assertNext { response ->
+                    verifyAll(response) {
+                        articles != null
+                    }
+                }
+                .verifyComplete()
     }
 
     def "can use listArticlesNoLocale with offset pagination"() {
-        when: "listing articles across all locales with offset pagination"
-        ArticlesResponse response = adminArticleClient.listArticlesNoLocale(1, 10).block()
-
-        then:
-        noExceptionThrown()
-        response != null
-        response.articles != null
-        if (!response.articles.isEmpty()) {
-            response.page != null || response.meta != null
-        }
+        expect: "listing articles across all locales with offset pagination"
+        StepVerifier.create(adminArticleClient.listArticlesNoLocale(1, 10))
+                .assertNext { response ->
+                    verifyAll(response) {
+                        articles != null
+                        if (!articles.isEmpty()) {
+                            page != null || meta != null
+                        }
+                    }
+                }
+                .verifyComplete()
     }
 
     def "can use showArticle without locale"() {
@@ -592,14 +596,15 @@ class ArticleClientSpec extends Z4jSpec {
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
 
-        when: "fetching article using convenience method showArticle without locale"
-        def showResponse = adminArticleClient.showArticle(createdId).block()
-
-        then:
-        noExceptionThrown()
-        showResponse != null
-        showResponse.article != null
-        showResponse.article.id == createdId
+        expect: "fetching article using convenience method showArticle without locale"
+        StepVerifier.create(adminArticleClient.showArticle(createdId))
+                .assertNext { showResponse ->
+                    verifyAll(showResponse) {
+                        article != null
+                        article.id == createdId
+                    }
+                }
+                .verifyComplete()
 
         cleanup:
         try {
@@ -621,14 +626,15 @@ class ArticleClientSpec extends Z4jSpec {
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
 
-        when: "fetching article using showArticleNoLocale"
-        def showResponse = adminArticleClient.showArticleNoLocale(createdId).block()
-
-        then:
-        noExceptionThrown()
-        showResponse != null
-        showResponse.article != null
-        showResponse.article.id == createdId
+        expect: "fetching article using showArticleNoLocale"
+        StepVerifier.create(adminArticleClient.showArticleNoLocale(createdId))
+                .assertNext { showResponse ->
+                    verifyAll(showResponse) {
+                        article != null
+                        article.id == createdId
+                    }
+                }
+                .verifyComplete()
 
         cleanup:
         try {
@@ -639,21 +645,15 @@ class ArticleClientSpec extends Z4jSpec {
     }
 
     def "cannot use showArticle for nonexistent article"() {
-        when: "requesting nonexistent article without locale"
-        def res = adminArticleClient.showArticle(999999999999L).block()
-
-        then: "null is returned as 404 completes empty"
-        noExceptionThrown()
-        res == null
+        expect: "requesting nonexistent article without locale completes empty"
+        StepVerifier.create(adminArticleClient.showArticle(999999999999L))
+                .verifyComplete()
     }
 
     def "cannot use showArticle with locale for nonexistent article"() {
-        when: "requesting nonexistent article with locale"
-        def res = adminArticleClient.showArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, 999999999999L).block()
-
-        then: "null is returned as 404 completes empty"
-        noExceptionThrown()
-        res == null
+        expect: "requesting nonexistent article with locale completes empty"
+        StepVerifier.create(adminArticleClient.showArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, 999999999999L))
+                .verifyComplete()
     }
 
     def "can update article without locale as admin"() {
@@ -671,14 +671,15 @@ class ArticleClientSpec extends Z4jSpec {
                 new Article().setPromoted(true)
         )
 
-        when: "updating article without locale using convenience method"
-        def updateResponse = adminArticleClient.updateArticle(createdId, updateReq).block()
-
-        then:
-        noExceptionThrown()
-        updateResponse != null
-        updateResponse.article != null
-        updateResponse.article.promoted == true
+        expect: "updating article without locale using convenience method"
+        StepVerifier.create(adminArticleClient.updateArticle(createdId, updateReq))
+                .assertNext { updateResponse ->
+                    verifyAll(updateResponse) {
+                        article != null
+                        article.promoted == true
+                    }
+                }
+                .verifyComplete()
 
         cleanup:
         try {
@@ -703,14 +704,15 @@ class ArticleClientSpec extends Z4jSpec {
                 new Article().setPromoted(true)
         )
 
-        when: "updating article using updateArticleNoLocale"
-        def updateResponse = adminArticleClient.updateArticleNoLocale(createdId, updateReq).block()
-
-        then:
-        noExceptionThrown()
-        updateResponse != null
-        updateResponse.article != null
-        updateResponse.article.promoted == true
+        expect: "updating article using updateArticleNoLocale"
+        StepVerifier.create(adminArticleClient.updateArticleNoLocale(createdId, updateReq))
+                .assertNext { updateResponse ->
+                    verifyAll(updateResponse) {
+                        article != null
+                        article.promoted == true
+                    }
+                }
+                .verifyComplete()
 
         cleanup:
         try {
@@ -732,17 +734,11 @@ class ArticleClientSpec extends Z4jSpec {
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
 
-        when: "deleting article without locale using convenience method"
-        adminArticleClient.deleteArticle(createdId).block()
-
-        then: "subsequent show returns null"
-        noExceptionThrown()
-        when:
-        def showRes = adminArticleClient.showArticleNoLocale(createdId).block()
-
-        then:
-        noExceptionThrown()
-        showRes == null
+        expect: "deleting article without locale using convenience method"
+        StepVerifier.create(adminArticleClient.deleteArticle(createdId))
+                .verifyComplete()
+        StepVerifier.create(adminArticleClient.showArticleNoLocale(createdId))
+                .verifyComplete()
 
         cleanup:
         try {
@@ -767,12 +763,14 @@ class ArticleClientSpec extends Z4jSpec {
                 new Article().setTitle("Unauthorized Updated Title")
         )
 
-        when: "unauthorized user attempts to update article"
-        userArticleClient.updateArticle(createdId, updateReq).block()
-
-        then:
-        HttpClientResponseException error = thrown(HttpClientResponseException)
-        error.getStatus().getCode() >= 400
+        expect: "unauthorized user attempts to update article"
+        StepVerifier.create(userArticleClient.updateArticle(createdId, updateReq))
+                .verifyErrorSatisfies { error ->
+                    verifyAll {
+                        error instanceof HttpClientResponseException
+                        ((HttpClientResponseException) error).status.code >= 400
+                    }
+                }
 
         cleanup:
         try {
@@ -788,12 +786,9 @@ class ArticleClientSpec extends Z4jSpec {
                 new Article().setPromoted(true)
         )
 
-        when: "updating nonexistent article without locale"
-        def res = adminArticleClient.updateArticle(999999999999L, updateReq).block()
-
-        then: "null is returned as 404 completes empty"
-        noExceptionThrown()
-        res == null
+        expect: "updating nonexistent article without locale completes empty"
+        StepVerifier.create(adminArticleClient.updateArticle(999999999999L, updateReq))
+                .verifyComplete()
     }
 
     def "cannot delete article as unauthorized user"() {
@@ -808,12 +803,14 @@ class ArticleClientSpec extends Z4jSpec {
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
 
-        when: "unauthorized user attempts to delete article"
-        userArticleClient.deleteArticle(createdId).block()
-
-        then:
-        HttpClientResponseException error = thrown(HttpClientResponseException)
-        error.getStatus().getCode() >= 400
+        expect: "unauthorized user attempts to delete article"
+        StepVerifier.create(userArticleClient.deleteArticle(createdId))
+                .verifyErrorSatisfies { error ->
+                    verifyAll {
+                        error instanceof HttpClientResponseException
+                        ((HttpClientResponseException) error).status.code >= 400
+                    }
+                }
 
         cleanup:
         try {
@@ -824,11 +821,9 @@ class ArticleClientSpec extends Z4jSpec {
     }
 
     def "cannot delete nonexistent article"() {
-        when: "deleting nonexistent article without locale"
-        adminArticleClient.deleteArticle(999999999999L).block()
-
-        then: "no exception is thrown as 404 Mono<Void> completes empty"
-        noExceptionThrown()
+        expect: "deleting nonexistent article without locale completes empty"
+        StepVerifier.create(adminArticleClient.deleteArticle(999999999999L))
+                .verifyComplete()
     }
 
     def "can use associateAttachmentsInBulk without locale as admin"() {
@@ -844,11 +839,9 @@ class ArticleClientSpec extends Z4jSpec {
         def createdId = createResponse.article.id
         BulkAttachmentsRequest bulkReq = new BulkAttachmentsRequest(List.of(123456789L))
 
-        when: "admin associates attachments in bulk without locale"
-        adminArticleClient.associateAttachmentsInBulk(createdId, bulkReq).block()
-
-        then:
-        noExceptionThrown()
+        expect: "admin associates attachments in bulk without locale"
+        StepVerifier.create(adminArticleClient.associateAttachmentsInBulk(createdId, bulkReq))
+                .verifyComplete()
 
         cleanup:
         try {
@@ -871,12 +864,14 @@ class ArticleClientSpec extends Z4jSpec {
         def createdId = createResponse.article.id
         BulkAttachmentsRequest bulkReq = new BulkAttachmentsRequest(List.of(123456789L))
 
-        when: "unauthorized user associates attachments in bulk without locale"
-        userArticleClient.associateAttachmentsInBulk(createdId, bulkReq).block()
-
-        then:
-        HttpClientResponseException error = thrown(HttpClientResponseException)
-        error.getStatus().getCode() >= 400
+        expect: "unauthorized user associates attachments in bulk without locale"
+        StepVerifier.create(userArticleClient.associateAttachmentsInBulk(createdId, bulkReq))
+                .verifyErrorSatisfies { error ->
+                    verifyAll {
+                        error instanceof HttpClientResponseException
+                        ((HttpClientResponseException) error).status.code >= 400
+                    }
+                }
 
         cleanup:
         try {
@@ -899,11 +894,9 @@ class ArticleClientSpec extends Z4jSpec {
         def createdId = createResponse.article.id
         BulkAttachmentsRequest bulkReq = new BulkAttachmentsRequest(List.of(123456789L))
 
-        when: "admin associates attachments in bulk with locale"
-        adminArticleClient.associateAttachmentsInBulk(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId, bulkReq).block()
-
-        then:
-        noExceptionThrown()
+        expect: "admin associates attachments in bulk with locale"
+        StepVerifier.create(adminArticleClient.associateAttachmentsInBulk(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId, bulkReq))
+                .verifyComplete()
 
         cleanup:
         try {
@@ -926,12 +919,14 @@ class ArticleClientSpec extends Z4jSpec {
         def createdId = createResponse.article.id
         BulkAttachmentsRequest bulkReq = new BulkAttachmentsRequest(List.of(123456789L))
 
-        when: "unauthorized user associates attachments in bulk with locale"
-        userArticleClient.associateAttachmentsInBulk(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId, bulkReq).block()
-
-        then:
-        HttpClientResponseException error = thrown(HttpClientResponseException)
-        error.getStatus().getCode() >= 400
+        expect: "unauthorized user associates attachments in bulk with locale"
+        StepVerifier.create(userArticleClient.associateAttachmentsInBulk(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId, bulkReq))
+                .verifyErrorSatisfies { error ->
+                    verifyAll {
+                        error instanceof HttpClientResponseException
+                        ((HttpClientResponseException) error).status.code >= 400
+                    }
+                }
 
         cleanup:
         try {
@@ -953,17 +948,11 @@ class ArticleClientSpec extends Z4jSpec {
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
 
-        when: "admin archives article with locale"
-        adminArticleClient.archiveArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
-
-        then: "subsequent show returns null"
-        noExceptionThrown()
-        when:
-        def showRes = adminArticleClient.showArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
-
-        then:
-        noExceptionThrown()
-        showRes == null
+        expect: "admin archives article with locale"
+        StepVerifier.create(adminArticleClient.archiveArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId))
+                .verifyComplete()
+        StepVerifier.create(adminArticleClient.showArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId))
+                .verifyComplete()
 
         cleanup:
         try {
@@ -985,12 +974,14 @@ class ArticleClientSpec extends Z4jSpec {
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
 
-        when: "unauthorized user archives article with locale"
-        userArticleClient.archiveArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
-
-        then:
-        HttpClientResponseException error = thrown(HttpClientResponseException)
-        error.getStatus().getCode() >= 400
+        expect: "unauthorized user archives article with locale"
+        StepVerifier.create(userArticleClient.archiveArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId))
+                .verifyErrorSatisfies { error ->
+                    verifyAll {
+                        error instanceof HttpClientResponseException
+                        ((HttpClientResponseException) error).status.code >= 400
+                    }
+                }
 
         cleanup:
         try {
