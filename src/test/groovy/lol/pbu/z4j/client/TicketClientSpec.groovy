@@ -679,7 +679,7 @@ class TicketClientSpec extends Z4jSpec {
         deleteJob.getJobStatus().getId() != null
 
         when: "restoring deleted tickets in bulk using comma-separated string"
-        sleep(2000)
+        waitForJobCompletion(deleteJob.getJobStatus().getId())
         JobStatusResponse restoreJob = ticketsAdminClient.restoreDeletedTicketsInBulk(ids.join(",")).block()
 
         then: "bulk restore succeeds without error"
@@ -688,9 +688,9 @@ class TicketClientSpec extends Z4jSpec {
         restoreJob.getJobStatus() != null
 
         when: "soft deleting tickets again then permanently deleting them in bulk"
-        sleep(2000)
-        ticketsAdminClient.bulkDeleteTickets(ids).block()
-        sleep(2000)
+        waitForJobCompletion(restoreJob.getJobStatus().getId())
+        JobStatusResponse secondDeleteJob = ticketsAdminClient.bulkDeleteTickets(ids).block()
+        waitForJobCompletion(secondDeleteJob.getJobStatus().getId())
         JobStatusResponse permDeleteJob = ticketsAdminClient.deleteMultipleTicketsPermanently(ids).block()
 
         then: "permanent delete job status is returned"
@@ -810,6 +810,17 @@ class TicketClientSpec extends Z4jSpec {
             HttpRequest<?> req = HttpRequest.DELETE("${System.getenv('Z4J_URL')}/api/v2/users/${userId}.json")
             httpClient.toBlocking().exchange(req, String.class)
         } catch (Exception ignored) {
+        }
+    }
+
+    private void waitForJobCompletion(String jobId) {
+        if (jobId == null) return
+        for (int i = 0; i < 20; i++) {
+            sleep(1000)
+            JobStatus status = jobStatusClient.showJobStatus(jobId).block()?.getJobStatus()
+            if (status?.getStatus() == "completed" || status?.getStatus() == "failed") {
+                break
+            }
         }
     }
 }

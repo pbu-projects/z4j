@@ -44,6 +44,9 @@ class ArticleClientSpec extends Z4jSpec {
     @Shared
     Long validPermissionGroupId
 
+    @Shared
+    LocaleAbbreviation validLocale
+
     def setupSpec() {
         adminArticleClient = adminCtx.getBean(ArticleClient.class)
         agentArticleClient = agentCtx.getBean(ArticleClient.class)
@@ -56,6 +59,7 @@ class ArticleClientSpec extends Z4jSpec {
             if (articles != null && !articles.isEmpty()) {
                 validSectionId = articles.get(0).sectionId
                 validPermissionGroupId = articles.get(0).permissionGroupId
+                validLocale = loc
                 break
             }
         }
@@ -85,7 +89,12 @@ class ArticleClientSpec extends Z4jSpec {
                                 .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
                 )
                 adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, seedReq).block()
+                validLocale = LocaleAbbreviation.ENGLISH_UNITED_STATES
             }
+        }
+
+        if (validLocale == null) {
+            validLocale = allLocales ? allLocales[0] : LocaleAbbreviation.ENGLISH_UNITED_STATES
         }
 
         assert validSectionId != null: "CRITICAL SETUP ERROR: No articles exist across ANY locale to test against, and could not dynamically seed one!"
@@ -494,7 +503,7 @@ class ArticleClientSpec extends Z4jSpec {
 
     def "can use listArticles with cursor pagination"() {
         expect: "listing articles with cursor pagination"
-        StepVerifier.create(adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, (String) null, 10))
+        StepVerifier.create(adminArticleClient.listArticles(validLocale, (String) null, 10))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -508,7 +517,7 @@ class ArticleClientSpec extends Z4jSpec {
 
     def "can use listArticles with single locale argument"() {
         expect: "listing articles specifying only locale"
-        StepVerifier.create(adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES))
+        StepVerifier.create(adminArticleClient.listArticles(validLocale))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -533,7 +542,7 @@ class ArticleClientSpec extends Z4jSpec {
 
     def "can use listArticles with offset pagination"() {
         expect: "listing articles using offset pagination"
-        StepVerifier.create(adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, null, null, null, null, null, null, null, 1, 10))
+        StepVerifier.create(adminArticleClient.listArticles(validLocale, null, null, null, null, null, null, null, 1, 10))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -547,7 +556,7 @@ class ArticleClientSpec extends Z4jSpec {
 
     def "can use listArticles with offset pagination convenience overload"() {
         expect: "listing articles using offset pagination convenience overload"
-        StepVerifier.create(adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, 1, 10))
+        StepVerifier.create(adminArticleClient.listArticles(validLocale, 1, 10))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -586,7 +595,7 @@ class ArticleClientSpec extends Z4jSpec {
 
     def "support portal can browse articles sorted by position with cursor pagination"() {
         expect: "support portal retrieves articles sorted by position using cursor pagination within a locale"
-        StepVerifier.create(adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, SortArticleBy.POSITION, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, 10))
+        StepVerifier.create(adminArticleClient.listArticles(validLocale, SortArticleBy.POSITION, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, 10))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -642,7 +651,7 @@ class ArticleClientSpec extends Z4jSpec {
         Long oneDayAgo = (System.currentTimeMillis() / 1000L) - 86400L
 
         expect: "backup job queries articles updated since the timestamp"
-        StepVerifier.create(adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, SortArticleBy.UPDATED_AT, SortOrder.ASCENDING, oneDayAgo, (String) null))
+        StepVerifier.create(adminArticleClient.listArticles(validLocale, SortArticleBy.UPDATED_AT, SortOrder.ASCENDING, oneDayAgo, (String) null))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -955,19 +964,19 @@ class ArticleClientSpec extends Z4jSpec {
                         .setTitle("Article for Bulk Attachments " + UUID.randomUUID())
                         .setBody("Body for Bulk Attachments")
                         .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .setLocaleAbbreviation(validLocale)
         )
-        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createResponse = adminArticleClient.createArticle(validLocale, validSectionId, req).block()
         def createdId = createResponse.article.id
         BulkAttachmentsRequest bulkReq = new BulkAttachmentsRequest(List.of(123456789L))
 
         expect: "admin associates attachments in bulk with locale"
-        StepVerifier.create(adminArticleClient.associateAttachmentsInBulk(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId, bulkReq))
+        StepVerifier.create(adminArticleClient.associateAttachmentsInBulk(validLocale, createdId, bulkReq))
                 .verifyComplete()
 
         cleanup:
         try {
-            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
+            adminArticleClient.deleteArticle(validLocale, createdId).block()
         } catch (Exception ignored) {
             // Defensive cleanup - ignore if resource already deleted or not created
         }
@@ -980,14 +989,14 @@ class ArticleClientSpec extends Z4jSpec {
                         .setTitle("Article for Bulk Attachments " + UUID.randomUUID())
                         .setBody("Body for Bulk Attachments")
                         .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .setLocaleAbbreviation(validLocale)
         )
-        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createResponse = adminArticleClient.createArticle(validLocale, validSectionId, req).block()
         def createdId = createResponse.article.id
         BulkAttachmentsRequest bulkReq = new BulkAttachmentsRequest(List.of(123456789L))
 
         expect: "unauthorized user associates attachments in bulk with locale"
-        StepVerifier.create(userArticleClient.associateAttachmentsInBulk(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId, bulkReq))
+        StepVerifier.create(userArticleClient.associateAttachmentsInBulk(validLocale, createdId, bulkReq))
                 .verifyErrorSatisfies { error ->
                     verifyAll {
                         error instanceof HttpClientResponseException
@@ -997,7 +1006,7 @@ class ArticleClientSpec extends Z4jSpec {
 
         cleanup:
         try {
-            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
+            adminArticleClient.deleteArticle(validLocale, createdId).block()
         } catch (Exception ignored) {
             // Defensive cleanup - ignore if resource already deleted or not created
         }
@@ -1010,20 +1019,20 @@ class ArticleClientSpec extends Z4jSpec {
                         .setTitle("Article to Archive " + UUID.randomUUID())
                         .setBody("Body of article to archive")
                         .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .setLocaleAbbreviation(validLocale)
         )
-        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createResponse = adminArticleClient.createArticle(validLocale, validSectionId, req).block()
         def createdId = createResponse.article.id
 
         expect: "admin archives article with locale"
-        StepVerifier.create(adminArticleClient.archiveArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId))
+        StepVerifier.create(adminArticleClient.archiveArticle(validLocale, createdId))
                 .verifyComplete()
-        StepVerifier.create(adminArticleClient.showArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId))
+        StepVerifier.create(adminArticleClient.showArticle(validLocale, createdId))
                 .verifyComplete()
 
         cleanup:
         try {
-            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
+            adminArticleClient.deleteArticle(validLocale, createdId).block()
         } catch (Exception ignored) {
             // Defensive cleanup - ignore if resource already deleted or not created
         }
@@ -1036,13 +1045,13 @@ class ArticleClientSpec extends Z4jSpec {
                         .setTitle("Article to Archive " + UUID.randomUUID())
                         .setBody("Body of article to archive")
                         .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .setLocaleAbbreviation(validLocale)
         )
-        def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        def createResponse = adminArticleClient.createArticle(validLocale, validSectionId, req).block()
         def createdId = createResponse.article.id
 
         expect: "unauthorized user archives article with locale"
-        StepVerifier.create(userArticleClient.archiveArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId))
+        StepVerifier.create(userArticleClient.archiveArticle(validLocale, createdId))
                 .verifyErrorSatisfies { error ->
                     verifyAll {
                         error instanceof HttpClientResponseException
@@ -1052,7 +1061,7 @@ class ArticleClientSpec extends Z4jSpec {
 
         cleanup:
         try {
-            adminArticleClient.deleteArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, createdId).block()
+            adminArticleClient.deleteArticle(validLocale, createdId).block()
         } catch (Exception ignored) {
             // Defensive cleanup - ignore if resource already deleted or not created
         }
