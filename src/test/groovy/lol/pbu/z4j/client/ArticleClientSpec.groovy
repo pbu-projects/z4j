@@ -22,6 +22,7 @@ import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.fixture.ArticleFixtures
 import lol.pbu.z4j.fixture.FixtureLoader
 import lol.pbu.z4j.model.*
+import java.time.Duration
 import reactor.core.publisher.Mono
 import reactor.test.StepVerifier
 import spock.lang.Shared
@@ -504,7 +505,8 @@ class ArticleClientSpec extends Z4jSpec {
     private Long getOrCreateArticleId() {
         try {
             def existing = adminArticleClient.listArticles(validLocale).block()?.articles
-            if (existing != null && !existing.isEmpty()) {
+            def existingNoLocale = adminArticleClient.listArticlesNoLocale().block()?.articles
+            if (existing != null && !existing.isEmpty() && existingNoLocale != null && !existingNoLocale.isEmpty()) {
                 return existing[0].id
             }
         } catch (Exception ignored) {
@@ -516,7 +518,23 @@ class ArticleClientSpec extends Z4jSpec {
                         .setPermissionGroupId(validPermissionGroupId)
                         .setLocaleAbbreviation(validLocale)
         )
-        return adminArticleClient.createArticle(validLocale, validSectionId, req).block().article.id
+        Long createdId = adminArticleClient.createArticle(validLocale, validSectionId, req).block().article.id
+        for (int i = 0; i < 10; i++) {
+            try {
+                def check = adminArticleClient.listArticles(validLocale).block()?.articles
+                def checkNoLocale = adminArticleClient.listArticlesNoLocale().block()?.articles
+                if (check != null && !check.isEmpty() && checkNoLocale != null && !checkNoLocale.isEmpty()) {
+                    break
+                }
+            } catch (Exception ignored) {
+            }
+            sleep(500)
+        }
+        return createdId
+    }
+
+    private static <T> Mono<T> ensureNonEmpty(Mono<T> mono) {
+        return mono.repeatWhenEmpty(5, { flux -> flux.delayElements(Duration.ofMillis(1000)) })
     }
 
     def "can use listArticles with cursor pagination"() {
@@ -524,7 +542,7 @@ class ArticleClientSpec extends Z4jSpec {
         getOrCreateArticleId()
 
         expect: "listing articles with cursor pagination"
-        StepVerifier.create(adminArticleClient.listArticles(validLocale, (String) null, 10))
+        StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticles(validLocale, (String) null, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -541,7 +559,7 @@ class ArticleClientSpec extends Z4jSpec {
         getOrCreateArticleId()
 
         expect: "listing articles specifying only locale"
-        StepVerifier.create(adminArticleClient.listArticles(validLocale))
+        StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticles(validLocale)))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -555,7 +573,7 @@ class ArticleClientSpec extends Z4jSpec {
         getOrCreateArticleId()
 
         expect: "listing articles across all locales with cursor pagination"
-        StepVerifier.create(adminArticleClient.listArticlesNoLocale((String) null, 10))
+        StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticlesNoLocale((String) null, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -572,7 +590,7 @@ class ArticleClientSpec extends Z4jSpec {
         getOrCreateArticleId()
 
         expect: "listing articles using offset pagination"
-        StepVerifier.create(adminArticleClient.listArticles(validLocale, null, null, null, null, null, null, null, 1, 10))
+        StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticles(validLocale, null, null, null, null, null, null, null, 1, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -589,7 +607,7 @@ class ArticleClientSpec extends Z4jSpec {
         getOrCreateArticleId()
 
         expect: "listing articles using offset pagination convenience overload"
-        StepVerifier.create(adminArticleClient.listArticles(validLocale, 1, 10))
+        StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticles(validLocale, 1, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -606,7 +624,7 @@ class ArticleClientSpec extends Z4jSpec {
         getOrCreateArticleId()
 
         expect: "listing articles across all locales without parameters"
-        StepVerifier.create(adminArticleClient.listArticlesNoLocale())
+        StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticlesNoLocale()))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -620,7 +638,7 @@ class ArticleClientSpec extends Z4jSpec {
         getOrCreateArticleId()
 
         expect: "listing articles across all locales with offset pagination"
-        StepVerifier.create(adminArticleClient.listArticlesNoLocale(1, 10))
+        StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticlesNoLocale(1, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -637,7 +655,7 @@ class ArticleClientSpec extends Z4jSpec {
         getOrCreateArticleId()
 
         expect: "support portal retrieves articles sorted by position using cursor pagination within a locale"
-        StepVerifier.create(adminArticleClient.listArticles(validLocale, SortArticleBy.POSITION, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, 10))
+        StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticles(validLocale, SortArticleBy.POSITION, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -654,7 +672,7 @@ class ArticleClientSpec extends Z4jSpec {
         getOrCreateArticleId()
 
         expect: "global audit service queries articles across all locales ordered by updated date"
-        StepVerifier.create(adminArticleClient.listArticlesNoLocale(SortArticleBy.UPDATED_AT, SortOrder.DESCENDING, (Long) null, (String) null))
+        StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticlesNoLocale(SortArticleBy.UPDATED_AT, SortOrder.DESCENDING, (Long) null, (String) null)))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -668,7 +686,7 @@ class ArticleClientSpec extends Z4jSpec {
         getOrCreateArticleId()
 
         expect: "sync service fetches pages of articles globally sorted by updated date using cursor pagination"
-        StepVerifier.create(adminArticleClient.listArticlesNoLocale(SortArticleBy.UPDATED_AT, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, 10))
+        StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticlesNoLocale(SortArticleBy.UPDATED_AT, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -685,7 +703,7 @@ class ArticleClientSpec extends Z4jSpec {
         getOrCreateArticleId()
 
         expect: "analytics dashboard requests articles globally using offset pagination and sorting options"
-        StepVerifier.create(adminArticleClient.listArticlesNoLocale(SortArticleBy.CREATED_AT, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, (String) null, (Integer) null, 1, 10))
+        StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticlesNoLocale(SortArticleBy.CREATED_AT, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, (String) null, (Integer) null, 1, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
@@ -703,7 +721,7 @@ class ArticleClientSpec extends Z4jSpec {
         Long oneDayAgo = (System.currentTimeMillis() / 1000L) - 86400L
 
         expect: "backup job queries articles updated since the timestamp"
-        StepVerifier.create(adminArticleClient.listArticles(validLocale, SortArticleBy.UPDATED_AT, SortOrder.ASCENDING, oneDayAgo, (String) null))
+        StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticles(validLocale, SortArticleBy.UPDATED_AT, SortOrder.ASCENDING, oneDayAgo, (String) null)))
                 .assertNext { response ->
                     verifyAll(response) {
                         articles != null
