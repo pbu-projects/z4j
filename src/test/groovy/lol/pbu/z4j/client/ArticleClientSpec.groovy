@@ -584,6 +584,73 @@ class ArticleClientSpec extends Z4jSpec {
                 .verifyComplete()
     }
 
+    def "support portal can browse articles sorted by position with cursor pagination"() {
+        expect: "support portal retrieves articles sorted by position using cursor pagination within a locale"
+        StepVerifier.create(adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, SortArticleBy.POSITION, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, 10))
+                .assertNext { response ->
+                    verifyAll(response) {
+                        articles != null
+                        if (!articles.isEmpty()) {
+                            meta != null
+                        }
+                    }
+                }
+                .verifyComplete()
+    }
+
+    def "global audit service can list all articles sorted by updated date across locales"() {
+        expect: "global audit service queries articles across all locales ordered by updated date"
+        StepVerifier.create(adminArticleClient.listArticlesNoLocale(SortArticleBy.UPDATED_AT, SortOrder.DESCENDING, (Long) null, (String) null))
+                .assertNext { response ->
+                    verifyAll(response) {
+                        articles != null
+                    }
+                }
+                .verifyComplete()
+    }
+
+    def "knowledge base sync service can paginate through all articles globally with cursor pagination"() {
+        expect: "sync service fetches pages of articles globally sorted by updated date using cursor pagination"
+        StepVerifier.create(adminArticleClient.listArticlesNoLocale(SortArticleBy.UPDATED_AT, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, 10))
+                .assertNext { response ->
+                    verifyAll(response) {
+                        articles != null
+                        if (!articles.isEmpty()) {
+                            meta != null
+                        }
+                    }
+                }
+                .verifyComplete()
+    }
+
+    def "content analytics dashboard can query all articles globally with offset pagination and sorting"() {
+        expect: "analytics dashboard requests articles globally using offset pagination and sorting options"
+        StepVerifier.create(adminArticleClient.listArticlesNoLocale(SortArticleBy.CREATED_AT, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, (String) null, (Integer) null, 1, 10))
+                .assertNext { response ->
+                    verifyAll(response) {
+                        articles != null
+                        if (!articles.isEmpty()) {
+                            page != null || meta != null
+                        }
+                    }
+                }
+                .verifyComplete()
+    }
+
+    def "backup job can incrementally list articles modified since timestamp"() {
+        given: "a timestamp from the past 24 hours"
+        Long oneDayAgo = (System.currentTimeMillis() / 1000L) - 86400L
+
+        expect: "backup job queries articles updated since the timestamp"
+        StepVerifier.create(adminArticleClient.listArticles(LocaleAbbreviation.ENGLISH_UNITED_STATES, SortArticleBy.UPDATED_AT, SortOrder.ASCENDING, oneDayAgo, (String) null))
+                .assertNext { response ->
+                    verifyAll(response) {
+                        articles != null
+                    }
+                }
+                .verifyComplete()
+    }
+
     def "can use showArticle without locale"() {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
