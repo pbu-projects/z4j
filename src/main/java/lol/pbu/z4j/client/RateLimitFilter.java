@@ -86,7 +86,7 @@ public class RateLimitFilter implements HttpClientFilter {
         while (true) {
             long now = System.nanoTime();
             long current = nextAvailableTime.get();
-            long scheduledTime = Math.max(now, current);
+            long scheduledTime = (current == 0 || (now - current) > 0) ? now : current;
             long next = scheduledTime + intervalNanos;
             if (nextAvailableTime.compareAndSet(current, next)) {
                 long delayNanos = scheduledTime - now;
@@ -111,10 +111,11 @@ public class RateLimitFilter implements HttpClientFilter {
                 .doOnNext(response -> handleResponse(request, response))
                 .onErrorResume(HttpClientResponseException.class, ex -> {
                     handleResponse(request, ex.getResponse());
-                    if (isRetryable(ex) && attempt < 5) {
+                    int maxAttempts = (ex.getStatus() != null && ex.getStatus().getCode() == 429) ? 5 : 2;
+                    if (isRetryable(ex) && attempt < maxAttempts) {
                         HttpHeaders headers = ex.getResponse() != null ? ex.getResponse().getHeaders() : null;
                         Integer retryAfter = headers != null ? parseIntegerHeader(headers, HEADER_RETRY_AFTER) : null;
-                        long waitTime = (retryAfter != null && retryAfter > 0) ? retryAfter : Math.max(5, config.getWaitDurationSeconds());
+                        long waitTime = (retryAfter != null && retryAfter > 0) ? retryAfter : (ex.getStatus().getCode() == 429 ? Math.max(5, config.getWaitDurationSeconds()) : 2);
                         log.warn("Rate limit or Cloudflare edge block (HTTP {}) received for {} {}. Retrying (attempt {}) after {} seconds...",
                                 ex.getStatus().getCode(), request.getMethodName(), request.getPath(), attempt + 1, waitTime);
                         final long finalWait = waitTime;
