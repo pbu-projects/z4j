@@ -22,4 +22,10 @@ public class RateLimitConfiguration {
      * The remaining request count threshold to trigger the auto-wait.
      */
     private int approachThreshold = 1;
+
+    /**
+     * Target speed limit for outbound requests in requests per second.
+     * When greater than zero, outbound requests are paced to stay under this rate.
+     */
+    private double requestsPerSecond = 0.0;
 }

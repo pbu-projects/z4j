@@ -18,3 +18,4 @@ z4j:
     auto-wait-enabled: true
     wait-duration-seconds: 5
     approach-threshold: 1
+    requests-per-second: 10.0
