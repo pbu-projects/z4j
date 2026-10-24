@@ -96,10 +96,16 @@ public class RateLimitFilter implements HttpClientFilter {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private Flux<HttpResponse<?>> executeWithRetry(MutableHttpRequest<?> request, ClientFilterChain chain, int attempt) {
-        Flux<HttpResponse<?>> proceedFlux = Flux.defer(() -> {
-            if (attempt == 0 && config.isAutoWaitEnabled() && tracker.isApproachingLimit(config.getApproachThreshold())) {
+        return buildProceedFlux(request, chain, attempt)
+                .doOnNext(response -> handleResponse(request, response))
+                .onErrorResume(HttpClientResponseException.class, ex -> handleException(request, chain, attempt, ex));
+    }
+
+    @SuppressWarnings("unchecked")
+    private Flux<HttpResponse<?>> buildProceedFlux(MutableHttpRequest<?> request, ClientFilterChain chain, int attempt) {
+        return Flux.defer(() -> {
+            if (shouldAutoWait(attempt)) {
                 log.warn("Rate limit approaching threshold (<= {}). Auto-wait enabled. Pausing for {} seconds before sending request to {}",
                         config.getApproachThreshold(), config.getWaitDurationSeconds(), request.getPath());
                 return Mono.delay(Duration.ofSeconds(config.getWaitDurationSeconds()))
@@ -107,61 +113,79 @@ public class RateLimitFilter implements HttpClientFilter {
             }
             return (Publisher<HttpResponse<?>>) chain.proceed(request);
         });
+    }
 
-        return proceedFlux
-                .doOnNext(response -> handleResponse(request, response))
-                .onErrorResume(HttpClientResponseException.class, ex -> {
-                    handleResponse(request, ex.getResponse());
-                    if (ex.getStatus() != null && ex.getStatus().getCode() == 429 && attempt < 5) {
-                        HttpHeaders headers = ex.getResponse() != null ? ex.getResponse().getHeaders() : null;
-                        Integer retryAfter = headers != null ? parseIntegerHeader(headers, HEADER_RETRY_AFTER) : null;
-                        long waitTime = (retryAfter != null && retryAfter > 0) ? retryAfter : Math.max(5, config.getWaitDurationSeconds());
-                        log.warn("HTTP 429 received for {} {}. Retrying (attempt {}) after {} seconds...",
-                                request.getMethodName(), request.getPath(), attempt + 1, waitTime);
-                        final long finalWait = waitTime;
-                        return Mono.delay(Duration.ofSeconds(finalWait))
-                                .flatMapMany(v -> executeWithRetry(request, chain, attempt + 1));
-                    }
-                    if (isCloudflareBlock(ex)) {
-                        log.warn("Cloudflare edge returned 400 HTML instead of 403 Forbidden for {} {}. Mapping to 403 Forbidden.",
-                                request.getMethodName(), request.getPath());
-                        return Flux.error(new HttpClientResponseException(
-                                "Cloudflare edge returned 400 HTML instead of 403 Forbidden: " + ex.getMessage(),
-                                HttpResponse.status(HttpStatus.FORBIDDEN)
-                        ));
-                    }
-                    return Flux.error(ex);
-                });
+    private boolean shouldAutoWait(int attempt) {
+        return attempt == 0 && config.isAutoWaitEnabled() && tracker.isApproachingLimit(config.getApproachThreshold());
+    }
+
+    private Publisher<HttpResponse<?>> handleException(MutableHttpRequest<?> request, ClientFilterChain chain, int attempt, HttpClientResponseException ex) {
+        handleResponse(request, ex.getResponse());
+        if (canRetryRateLimit(ex, attempt)) {
+            return scheduleRetry(request, chain, attempt, ex);
+        }
+        if (isCloudflareBlock(ex)) {
+            return mapCloudflareBlock(request, ex);
+        }
+        return Flux.error(ex);
+    }
+
+    private boolean canRetryRateLimit(HttpClientResponseException ex, int attempt) {
+        return ex.getStatus() == HttpStatus.TOO_MANY_REQUESTS && attempt < 5;
+    }
+
+    private Publisher<HttpResponse<?>> scheduleRetry(MutableHttpRequest<?> request, ClientFilterChain chain, int attempt, HttpClientResponseException ex) {
+        long waitTime = resolveWaitTime(ex.getResponse());
+        log.warn("HTTP 429 received for {} {}. Retrying (attempt {}) after {} seconds...",
+                request.getMethodName(), request.getPath(), attempt + 1, waitTime);
+        return Mono.delay(Duration.ofSeconds(waitTime))
+                .flatMapMany(v -> executeWithRetry(request, chain, attempt + 1));
+    }
+
+    private long resolveWaitTime(HttpResponse<?> response) {
+        if (response != null) {
+            Integer retryAfter = parseIntegerHeader(response.getHeaders(), HEADER_RETRY_AFTER);
+            if (retryAfter != null && retryAfter > 0) {
+                return retryAfter;
+            }
+        }
+        return Math.max(5, config.getWaitDurationSeconds());
+    }
+
+    private Publisher<HttpResponse<?>> mapCloudflareBlock(MutableHttpRequest<?> request, HttpClientResponseException ex) {
+        log.warn("Cloudflare edge returned 400 HTML instead of 403 Forbidden for {} {}. Mapping to 403 Forbidden.",
+                request.getMethodName(), request.getPath());
+        return Flux.error(new HttpClientResponseException(
+                "Cloudflare edge returned 400 HTML instead of 403 Forbidden: " + ex.getMessage(),
+                HttpResponse.status(HttpStatus.FORBIDDEN)
+        ));
     }
 
     private boolean isCloudflareBlock(HttpClientResponseException ex) {
-        if (ex.getStatus() == null || ex.getStatus().getCode() != 400) {
+        if (ex.getStatus() != HttpStatus.BAD_REQUEST) {
             return false;
         }
-        String message = ex.getMessage();
-        if (message != null) {
-            String lowerMessage = message.toLowerCase();
-            if (lowerMessage.contains("<center>cloudflare</center>")
-                    || (lowerMessage.contains("cloudflare") && lowerMessage.contains("<html"))) {
-                return true;
-            }
+        return containsCloudflareHtml(ex.getMessage()) || containsCloudflareHtml(extractResponseBody(ex.getResponse()));
+    }
+
+    private boolean containsCloudflareHtml(String content) {
+        if (content == null) {
+            return false;
         }
-        HttpResponse<?> response = ex.getResponse();
-        if (response != null) {
-            try {
-                String body = response.getBody(String.class).orElse(null);
-                if (body != null) {
-                    String lowerBody = body.toLowerCase();
-                    if (lowerBody.contains("<center>cloudflare</center>")
-                            || (lowerBody.contains("cloudflare") && lowerBody.contains("<html"))) {
-                        return true;
-                    }
-                }
-            } catch (Exception _) {
-                // Ignore if body is not readable as String
-            }
+        String lower = content.toLowerCase();
+        return lower.contains("<center>cloudflare</center>")
+                || (lower.contains("cloudflare") && lower.contains("<html"));
+    }
+
+    private String extractResponseBody(HttpResponse<?> response) {
+        if (response == null) {
+            return null;
         }
-        return false;
+        try {
+            return response.getBody(String.class).orElse(null);
+        } catch (Exception _) {
+            return null;
+        }
     }
 
     public void handleResponse(MutableHttpRequest<?> request, HttpResponse<?> response) {
