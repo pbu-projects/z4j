@@ -17,6 +17,7 @@ package lol.pbu.z4j.client;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.annotation.ClientFilter;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
@@ -26,6 +27,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import lol.pbu.z4j.ratelimit.EndpointRateLimit;
 import lol.pbu.z4j.ratelimit.RateLimitConfiguration;
 import lol.pbu.z4j.ratelimit.RateLimitSnapshot;
@@ -58,6 +60,7 @@ public class RateLimitFilter implements HttpClientFilter {
 
     private final RateLimitTracker tracker;
     private final RateLimitConfiguration config;
+    private final AtomicLong nextAvailableTime = new AtomicLong();
 
     public RateLimitFilter(RateLimitTracker tracker, RateLimitConfiguration config) {
         this.tracker = tracker;
@@ -66,7 +69,31 @@ public class RateLimitFilter implements HttpClientFilter {
 
     @Override
     public Publisher<? extends HttpResponse<?>> doFilter(MutableHttpRequest<?> request, ClientFilterChain chain) {
-        return executeWithRetry(request, chain, 0);
+        return Flux.defer(() -> {
+            Duration delay = calculatePacingDelay();
+            if (!delay.isZero()) {
+                return Mono.delay(delay).flatMapMany(v -> executeWithRetry(request, chain, 0));
+            }
+            return executeWithRetry(request, chain, 0);
+        });
+    }
+
+    Duration calculatePacingDelay() {
+        double rps = config.getRequestsPerSecond();
+        if (rps <= 0.0) {
+            return Duration.ZERO;
+        }
+        long intervalNanos = (long) (1_000_000_000L / rps);
+        while (true) {
+            long now = System.nanoTime();
+            long current = nextAvailableTime.get();
+            long scheduledTime = (current == 0 || (now - current) > 0) ? now : current;
+            long next = scheduledTime + intervalNanos;
+            if (nextAvailableTime.compareAndSet(current, next)) {
+                long delayNanos = scheduledTime - now;
+                return delayNanos > 0 ? Duration.ofNanos(delayNanos) : Duration.ZERO;
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -85,21 +112,56 @@ public class RateLimitFilter implements HttpClientFilter {
                 .doOnNext(response -> handleResponse(request, response))
                 .onErrorResume(HttpClientResponseException.class, ex -> {
                     handleResponse(request, ex.getResponse());
-                    if (ex.getResponse() != null && ex.getStatus() != null
-                            && ex.getStatus().getCode() == 429
-                            && attempt < 5) {
-                        HttpHeaders headers = ex.getResponse().getHeaders();
-                        Integer retryAfter = parseIntegerHeader(headers, HEADER_RETRY_AFTER);
-                        long waitTime = (retryAfter != null && retryAfter > 0) ? retryAfter : config.getWaitDurationSeconds();
-                        if (waitTime <= 0) waitTime = 5;
+                    if (ex.getStatus() != null && ex.getStatus().getCode() == 429 && attempt < 5) {
+                        HttpHeaders headers = ex.getResponse() != null ? ex.getResponse().getHeaders() : null;
+                        Integer retryAfter = headers != null ? parseIntegerHeader(headers, HEADER_RETRY_AFTER) : null;
+                        long waitTime = (retryAfter != null && retryAfter > 0) ? retryAfter : Math.max(5, config.getWaitDurationSeconds());
                         log.warn("HTTP 429 received for {} {}. Retrying (attempt {}) after {} seconds...",
                                 request.getMethodName(), request.getPath(), attempt + 1, waitTime);
                         final long finalWait = waitTime;
                         return Mono.delay(Duration.ofSeconds(finalWait))
                                 .flatMapMany(v -> executeWithRetry(request, chain, attempt + 1));
                     }
+                    if (isCloudflareBlock(ex)) {
+                        log.warn("Cloudflare edge returned 400 HTML instead of 403 Forbidden for {} {}. Mapping to 403 Forbidden.",
+                                request.getMethodName(), request.getPath());
+                        return Flux.error(new HttpClientResponseException(
+                                "Cloudflare edge returned 400 HTML instead of 403 Forbidden: " + ex.getMessage(),
+                                HttpResponse.status(HttpStatus.FORBIDDEN)
+                        ));
+                    }
                     return Flux.error(ex);
                 });
+    }
+
+    private boolean isCloudflareBlock(HttpClientResponseException ex) {
+        if (ex.getStatus() == null || ex.getStatus().getCode() != 400) {
+            return false;
+        }
+        String message = ex.getMessage();
+        if (message != null) {
+            String lowerMessage = message.toLowerCase();
+            if (lowerMessage.contains("<center>cloudflare</center>")
+                    || (lowerMessage.contains("cloudflare") && lowerMessage.contains("<html"))) {
+                return true;
+            }
+        }
+        HttpResponse<?> response = ex.getResponse();
+        if (response != null) {
+            try {
+                String body = response.getBody(String.class).orElse(null);
+                if (body != null) {
+                    String lowerBody = body.toLowerCase();
+                    if (lowerBody.contains("<center>cloudflare</center>")
+                            || (lowerBody.contains("cloudflare") && lowerBody.contains("<html"))) {
+                        return true;
+                    }
+                }
+            } catch (Exception _) {
+                // Ignore if body is not readable as String
+            }
+        }
+        return false;
     }
 
     public void handleResponse(MutableHttpRequest<?> request, HttpResponse<?> response) {

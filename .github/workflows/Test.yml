@@ -19,6 +19,9 @@ on:
   pull_request:
     branches:
       - "main"
+concurrency:
+  group: zendesk-api-suite
+  cancel-in-progress: false
 jobs:
   build-and-analyze:
     runs-on: ubuntu-latest
