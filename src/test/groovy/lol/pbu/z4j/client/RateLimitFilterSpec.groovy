@@ -200,7 +200,7 @@ class RateLimitFilterSpec extends Specification {
         }
     }
 
-    def "filter retries on Cloudflare 400 HTML block and succeeds on retry"() {
+    def "filter maps Cloudflare 400 HTML block to 403 Forbidden without retrying"() {
         given:
         def tracker = new RateLimitTracker()
         def config = new RateLimitConfiguration()
@@ -215,34 +215,25 @@ class RateLimitFilterSpec extends Specification {
         def cloudflareHtml = "<html><head><title>400 Bad Request</title></head><body><center><h1>400 Bad Request</h1></center><hr><center>cloudflare</center></body></html>"
         def response400 = HttpResponse.status(HttpStatus.BAD_REQUEST)
                 .header("Server", "cloudflare")
-                .header("Retry-After", "1")
                 .body(cloudflareHtml)
 
         def exception400 = new HttpClientResponseException("Client ':zendesk': " + cloudflareHtml, response400)
-        def responseOk = HttpResponse.ok("recovered")
 
         def chain = Mock(ClientFilterChain)
         def attempts = 0
         chain.proceed(request) >> {
             attempts++
-            if (attempts == 1) {
-                return Flux.error(exception400)
-            } else {
-                return Flux.just(responseOk)
-            }
+            return Flux.error(exception400)
         }
 
         when:
-        def start = System.currentTimeMillis()
-        def result = Mono.from(filter.doFilter(request, chain)).block()
-        def duration = System.currentTimeMillis() - start
+        Mono.from(filter.doFilter(request, chain)).block()
 
         then:
-        verifyAll {
-            result.status == HttpStatus.OK
-            result.body() == "recovered"
-            attempts == 2
-            duration >= 900
+        def err = thrown(HttpClientResponseException)
+        verifyAll(err) {
+            status == HttpStatus.FORBIDDEN
+            attempts == 1
         }
     }
 
