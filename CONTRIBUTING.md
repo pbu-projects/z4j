@@ -55,7 +55,7 @@ To run the tests, you will need:
 2. Users with [different roles] created in your Zendesk instance.
 3. [Environment variables] configured in your test environment
 4. [Custom ticket fields] configured in your sandbox
-5. [Expected locales] enabled in your help center.
+5. [Expected locales] enabled in your Help Center (at least three languages must be enabled in the sandbox).
 
 ### Required Roles for Testing
 
@@ -243,12 +243,12 @@ A multi-select dropdown for reporting one or more errors.
 ---
 
 ## Expected Locales
-A few locales are to be enabled. See Zendesk's current docs on how to do that.
+Your sandbox must have at least three languages enabled in the Help Center so translation and missing-translation tests can run properly. See Zendesk's current docs on how to enable additional languages.
 
-The following languages are required for testing:
+For example, you might enable:
+- English (`en`)
 - Spanish (`es`)
 - French (`fr`)
-- English (`en`)
 
 ---
 
