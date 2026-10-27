@@ -40,6 +40,7 @@ import lol.pbu.z4j.Generated;
 @ToString(callSuper = true)
 @JsonPropertyOrder({
         TicketInputBase.JSON_PROPERTY_ADDITIONAL_COLLABORATORS,
+        TicketInputBase.JSON_PROPERTY_ADDITIONAL_TAGS,
         TicketInputBase.JSON_PROPERTY_ASSIGNEE_EMAIL,
         TicketInputBase.JSON_PROPERTY_ASSIGNEE_ID,
         TicketInputBase.JSON_PROPERTY_ATTRIBUTE_VALUE_IDS,
@@ -55,6 +56,7 @@ import lol.pbu.z4j.Generated;
         TicketInputBase.JSON_PROPERTY_ORGANIZATION_ID,
         TicketInputBase.JSON_PROPERTY_PRIORITY,
         TicketInputBase.JSON_PROPERTY_PROBLEM_ID,
+        TicketInputBase.JSON_PROPERTY_REMOVE_TAGS,
         TicketInputBase.JSON_PROPERTY_REQUESTER_ID,
         TicketInputBase.JSON_PROPERTY_SAFE_UPDATE,
         TicketInputBase.JSON_PROPERTY_SHARING_AGREEMENT_IDS,

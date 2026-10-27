@@ -28,8 +28,8 @@ plugins {
     id("java-library")
     id("maven-publish")
     id("signing")
-    id("com.gradleup.nmcp.aggregation").version("1.4.4")
-    id("io.micronaut.library") version "5.0.0"
+    id("com.gradleup.nmcp.aggregation").version("1.6.2")
+    id("io.micronaut.library") version "5.0.2"
     id("jacoco")
     id("org.sonarqube") version "latest.release"
 }
@@ -61,8 +61,9 @@ dependencies {
     "lombok"("org.projectlombok:lombok:${lombokVersion}")
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("net.datafaker:datafaker:$dataFakerVersion")
-    testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.18.2")
+    testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.22.4")
     testImplementation("ch.qos.logback:logback-classic")
+    testImplementation("io.projectreactor:reactor-test")
 }
 
 java {
@@ -77,7 +78,7 @@ java {
 
 configurations.all {
     resolutionStrategy {
-        force("io.netty:netty-bom:4.2.10.Final")
+        force("io.netty:netty-bom:4.2.19.Final")
     }
 }
 

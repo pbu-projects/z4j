@@ -68,6 +68,8 @@ class TicketUpdateInputSpec extends Z4jSpec {
         'followers'               | 'addFollowersItem'               | follower1
         'sharingAgreementIds'     | 'addSharingAgreementIdsItem'     | 3L
         'tags'                    | 'addTagsItem'                    | "tag1"
+        'additionalTags'          | 'addAdditionalTagsItem'          | "add1"
+        'removeTags'              | 'addRemoveTagsItem'              | "rem1"
     }
 
     @Unroll
@@ -94,6 +96,8 @@ class TicketUpdateInputSpec extends Z4jSpec {
         'followers'               | 'addFollowersItem'               | [follower1]      | follower2
         'sharingAgreementIds'     | 'addSharingAgreementIdsItem'     | [30L]            | 3L
         'tags'                    | 'addTagsItem'                    | ["existing"]     | "tag"
+        'additionalTags'          | 'addAdditionalTagsItem'          | ["existing_add"] | "new_add"
+        'removeTags'              | 'addRemoveTagsItem'              | ["existing_rem"] | "new_rem"
     }
 
     def "should handle 64-bit Long IDs and boundary values for ID fields"() {
@@ -174,5 +178,52 @@ class TicketUpdateInputSpec extends Z4jSpec {
         deserialized.getGroupId() == largeGroupId
         deserialized.getOrganizationId() == largeOrgId
         deserialized.getAssigneeId() == largeAssigneeId
+    }
+
+    def "should serialize and deserialize additional_tags, remove_tags, and ticket_form_id directly and within TicketUpdateRequest"() {
+        given:
+        def input = new TicketUpdateInput()
+                .addAdditionalTagsItem("tag_to_add")
+                .addRemoveTagsItem("tag_to_remove")
+                .addTagsItem("base_tag")
+                .setTicketFormId(1001L)
+
+        when: "serializing TicketUpdateInput directly"
+        String json = objectMapper.writeValueAsString(input)
+        Map parsedMap = objectMapper.readValue(json, Map.class)
+        def deserialized = objectMapper.readValue(json, TicketUpdateInput.class)
+
+        then:
+        parsedMap["additional_tags"] == ["tag_to_add"]
+        parsedMap["remove_tags"] == ["tag_to_remove"]
+        parsedMap["tags"] == ["base_tag"]
+        parsedMap["ticket_form_id"] == 1001L
+        deserialized.getAdditionalTags() == ["tag_to_add"]
+        deserialized.getRemoveTags() == ["tag_to_remove"]
+        deserialized.getTags() == ["base_tag"]
+        deserialized.getTicketFormId() == 1001L
+
+        when: "serializing within TicketUpdateRequest wrapper"
+        def req = new TicketUpdateRequest(input)
+        String reqJson = objectMapper.writeValueAsString(req)
+        Map reqMap = objectMapper.readValue(reqJson, Map.class)
+
+        then:
+        reqMap["ticket"] instanceof Map
+        ((Map) reqMap["ticket"])["additional_tags"] == ["tag_to_add"]
+        ((Map) reqMap["ticket"])["remove_tags"] == ["tag_to_remove"]
+        ((Map) reqMap["ticket"])["tags"] == ["base_tag"]
+        ((Map) reqMap["ticket"])["ticket_form_id"] == 1001L
+    }
+
+    def "should support setAdditionalTags and setRemoveTags directly"() {
+        given:
+        def input = new TicketUpdateInput()
+                .setAdditionalTags(["tag1", "tag2"])
+                .setRemoveTags(["rem1"])
+
+        expect:
+        input.getAdditionalTags() == ["tag1", "tag2"]
+        input.getRemoveTags() == ["rem1"]
     }
 }
