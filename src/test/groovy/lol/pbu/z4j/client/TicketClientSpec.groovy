@@ -15,9 +15,11 @@
  */
 package lol.pbu.z4j.client
 
-import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpResponse
-import io.micronaut.http.client.HttpClient
+import io.micronaut.http.annotation.Body
+import io.micronaut.http.annotation.Delete
+import io.micronaut.http.annotation.PathVariable
+import io.micronaut.http.annotation.Post
+import io.micronaut.http.client.annotation.Client
 import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.json.JsonMapper
 import lol.pbu.z4j.Z4jSpec
@@ -25,6 +27,7 @@ import lol.pbu.z4j.fixture.FixtureLoader
 import lol.pbu.z4j.fixture.TicketFixtures
 import lol.pbu.z4j.fixture.TicketItem
 import lol.pbu.z4j.model.*
+import reactor.core.publisher.Mono
 import spock.lang.Shared
 
 class TicketClientSpec extends Z4jSpec {
@@ -792,23 +795,30 @@ class TicketClientSpec extends Z4jSpec {
         }
     }
 
+    @Client("zendesk")
+    static interface DisposableUserClient {
+        @Post("/api/v2/users")
+        Mono<String> createUser(@Body String body)
+
+        @Delete("/api/v2/users/{user_id}")
+        Mono<Void> deleteUser(@PathVariable("user_id") Long userId)
+    }
+
     private Long createDisposableEndUser() {
         String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
         String email = "disposable-${entropy}@example.com"
-        HttpClient httpClient = adminCtx.getBean(HttpClient.class)
+        DisposableUserClient userClient = adminCtx.getBean(DisposableUserClient.class)
         String body = "{\"user\":{\"name\":\"Disposable ${entropy}\",\"email\":\"${email}\",\"role\":\"end-user\"}}"
-        HttpRequest<?> req = HttpRequest.POST("${System.getenv('Z4J_URL')}/api/v2/users.json", body)
-        HttpResponse<String> res = httpClient.toBlocking().exchange(req, String.class)
-        Map responseMap = jsonMapper.readValue(res.body(), Map.class)
+        String resBody = userClient.createUser(body).block()
+        Map responseMap = jsonMapper.readValue(resBody, Map.class)
         return (responseMap.get("user")["id"] as Number).longValue()
     }
 
     private void deleteUserSafely(Long userId) {
         if (userId == null) return
         try {
-            HttpClient httpClient = adminCtx.getBean(HttpClient.class)
-            HttpRequest<?> req = HttpRequest.DELETE("${System.getenv('Z4J_URL')}/api/v2/users/${userId}.json")
-            httpClient.toBlocking().exchange(req, String.class)
+            DisposableUserClient userClient = adminCtx.getBean(DisposableUserClient.class)
+            userClient.deleteUser(userId).block()
         } catch (Exception ignored) {
         }
     }

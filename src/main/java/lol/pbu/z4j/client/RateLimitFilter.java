@@ -46,7 +46,7 @@ import reactor.core.publisher.Mono;
  * @author Jonathan-Zollinger
  * @since 0.2.3
  */
-@ClientFilter("/**")
+@ClientFilter(value = "/**", serviceId = "zendesk")
 public class RateLimitFilter implements HttpClientFilter {
 
     private static final Logger log = LoggerFactory.getLogger(RateLimitFilter.class);
