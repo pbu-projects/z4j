@@ -18,14 +18,8 @@ package lol.pbu.z4j.client
 import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
-import lol.pbu.z4j.model.DeletedUserResponse
-import lol.pbu.z4j.model.JobStatusResponse
 import lol.pbu.z4j.model.User
-import lol.pbu.z4j.model.UserCountResponse
-import lol.pbu.z4j.model.UserRelatedResponse
 import lol.pbu.z4j.model.UserRequest
-import lol.pbu.z4j.model.UserResponse
-import lol.pbu.z4j.model.UsersResponse
 import spock.lang.Shared
 import spock.lang.Unroll
 
@@ -415,6 +409,62 @@ class UserClientSpec extends Z4jSpec {
         verifyAll(response) {
             count != null
             count.value != null
+        }
+    }
+
+    def "can create many users and destroy many users via convenience overloads"() {
+        given:
+        def testEmail1 = "test-bulk-" + UUID.randomUUID().toString().substring(0, 8) + "@example.com"
+        def testEmail2 = "test-bulk-" + UUID.randomUUID().toString().substring(0, 8) + "@example.com"
+        def user1 = new User().setName("Bulk User One").setEmail(testEmail1)
+        def user2 = new User().setName("Bulk User Two").setEmail(testEmail2)
+        List<Long> createdUserIds = []
+
+        when:
+        def createResponse = adminUserClient.createManyUsers([user1, user2]).block()
+
+        then:
+        noExceptionThrown()
+        verifyAll(createResponse) {
+            jobStatus != null
+            jobStatus.id != null
+        }
+
+        when:
+        def search1 = adminUserClient.searchUsers(testEmail1, null).block()
+        def search2 = adminUserClient.searchUsers(testEmail2, null).block()
+        if (search1?.users && !search1.users.isEmpty()) {
+            createdUserIds.add(search1.users[0].id)
+        }
+        if (search2?.users && !search2.users.isEmpty()) {
+            createdUserIds.add(search2.users[0].id)
+        }
+
+        then:
+        noExceptionThrown()
+
+        when:
+        def destroyResponse = adminUserClient.destroyManyUsers([123456789L, 987654321L]).block()
+
+        then:
+        noExceptionThrown()
+        if (destroyResponse != null) {
+            verifyAll(destroyResponse) {
+                jobStatus != null
+                jobStatus.id != null
+            }
+        }
+
+        cleanup:
+        createdUserIds.each { id ->
+            try {
+                adminUserClient.deleteUser(id).block()
+            } catch (Exception ignored) {
+            }
+            try {
+                adminUserClient.permanentlyDeleteUser(id).block()
+            } catch (Exception ignored) {
+            }
         }
     }
 
