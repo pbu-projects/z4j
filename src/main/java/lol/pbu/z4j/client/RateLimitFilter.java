@@ -172,20 +172,12 @@ public class RateLimitFilter implements HttpClientFilter {
     }
 
     private boolean isIdempotent(MutableHttpRequest<?> request) {
-        if (request.getMethod() != null) {
-            HttpMethod method = request.getMethod();
-            return method == HttpMethod.GET
-                    || method == HttpMethod.PUT
-                    || method == HttpMethod.DELETE
-                    || method == HttpMethod.HEAD
-                    || method == HttpMethod.OPTIONS;
-        }
-        String methodName = request.getMethodName();
-        return "GET".equalsIgnoreCase(methodName)
-                || "PUT".equalsIgnoreCase(methodName)
-                || "DELETE".equalsIgnoreCase(methodName)
-                || "HEAD".equalsIgnoreCase(methodName)
-                || "OPTIONS".equalsIgnoreCase(methodName);
+        HttpMethod method = request.getMethod();
+        return method == HttpMethod.GET
+                || method == HttpMethod.PUT
+                || method == HttpMethod.DELETE
+                || method == HttpMethod.HEAD
+                || method == HttpMethod.OPTIONS;
     }
 
     private Publisher<HttpResponse<?>> scheduleTransientRetry(MutableHttpRequest<?> request, ClientFilterChain chain, int attempt, String reason) {

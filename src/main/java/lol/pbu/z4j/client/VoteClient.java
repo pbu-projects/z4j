@@ -15,7 +15,6 @@
  */
 package lol.pbu.z4j.client;
 
-import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
