@@ -23,7 +23,6 @@ import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.multipart.MultipartBody;
-import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.ArticleAttachmentResponse;
@@ -50,7 +49,6 @@ import reactor.core.publisher.Mono;
  * @author Jonathan-Zollinger
  * @since 0.3.0
  */
-@Retryable
 @Client("zendesk")
 public interface ArticleAttachmentClient {
 

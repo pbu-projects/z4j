@@ -16,6 +16,7 @@
 package lol.pbu.z4j.client
 
 import io.micronaut.http.HttpHeaders
+import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MutableHttpRequest
@@ -336,6 +337,298 @@ class RateLimitFilterSpec extends Specification {
         verifyAll(err) {
             status == HttpStatus.INTERNAL_SERVER_ERROR
             attempts == 1
+        }
+    }
+
+    def "filter propagates 401 Unauthorized immediately without retry"() {
+        given:
+        def tracker = new RateLimitTracker()
+        def config = new RateLimitConfiguration()
+        config.setAutoWaitEnabled(false)
+        def filter = new RateLimitFilter(tracker, config)
+
+        def request = Mock(MutableHttpRequest)
+        request.getPath() >> "/api/v2/users/me"
+        request.getMethodName() >> "GET"
+        request.getMethod() >> HttpMethod.GET
+        request.getUri() >> URI.create("https://z.com/api/v2/users/me")
+
+        def response401 = HttpResponse.status(HttpStatus.UNAUTHORIZED)
+        def exception401 = new HttpClientResponseException("Unauthorized", response401)
+
+        def chain = Mock(ClientFilterChain)
+        def attempts = 0
+        chain.proceed(request) >> {
+            attempts++
+            return Flux.error(exception401)
+        }
+
+        when:
+        Mono.from(filter.doFilter(request, chain)).block()
+
+        then:
+        def err = thrown(HttpClientResponseException)
+        verifyAll(err) {
+            status == HttpStatus.UNAUTHORIZED
+            attempts == 1
+        }
+    }
+
+    def "filter propagates 403 Forbidden immediately without retry"() {
+        given:
+        def tracker = new RateLimitTracker()
+        def config = new RateLimitConfiguration()
+        config.setAutoWaitEnabled(false)
+        def filter = new RateLimitFilter(tracker, config)
+
+        def request = Mock(MutableHttpRequest)
+        request.getPath() >> "/api/v2/tickets"
+        request.getMethodName() >> "GET"
+        request.getMethod() >> HttpMethod.GET
+        request.getUri() >> URI.create("https://z.com/api/v2/tickets")
+
+        def response403 = HttpResponse.status(HttpStatus.FORBIDDEN)
+        def exception403 = new HttpClientResponseException("Forbidden", response403)
+
+        def chain = Mock(ClientFilterChain)
+        def attempts = 0
+        chain.proceed(request) >> {
+            attempts++
+            return Flux.error(exception403)
+        }
+
+        when:
+        Mono.from(filter.doFilter(request, chain)).block()
+
+        then:
+        def err = thrown(HttpClientResponseException)
+        verifyAll(err) {
+            status == HttpStatus.FORBIDDEN
+            attempts == 1
+        }
+    }
+
+    def "filter does not retry failed POST create requests"() {
+        given:
+        def tracker = new RateLimitTracker()
+        def config = new RateLimitConfiguration()
+        config.setAutoWaitEnabled(false)
+        def filter = new RateLimitFilter(tracker, config)
+
+        def request = Mock(MutableHttpRequest)
+        request.getPath() >> "/api/v2/tickets"
+        request.getMethodName() >> "POST"
+        request.getMethod() >> HttpMethod.POST
+        request.getUri() >> URI.create("https://z.com/api/v2/tickets")
+
+        def response500 = HttpResponse.serverError()
+        def exception500 = new HttpClientResponseException("Server error", response500)
+
+        def chain = Mock(ClientFilterChain)
+        def attempts = 0
+        chain.proceed(request) >> {
+            attempts++
+            return Flux.error(exception500)
+        }
+
+        when:
+        Mono.from(filter.doFilter(request, chain)).block()
+
+        then:
+        def err = thrown(HttpClientResponseException)
+        verifyAll(err) {
+            status == HttpStatus.INTERNAL_SERVER_ERROR
+            attempts == 1
+        }
+    }
+
+    def "filter does not retry failed POST create requests even when transient retries are configured"() {
+        given:
+        def tracker = new RateLimitTracker()
+        def config = new RateLimitConfiguration()
+        config.setAutoWaitEnabled(false)
+        config.setMaxTransientRetries(3)
+        config.setTransientRetryDelaySeconds(0)
+        def filter = new RateLimitFilter(tracker, config)
+
+        def request = Mock(MutableHttpRequest)
+        request.getPath() >> "/api/v2/tickets"
+        request.getMethodName() >> "POST"
+        request.getMethod() >> HttpMethod.POST
+        request.getUri() >> URI.create("https://z.com/api/v2/tickets")
+
+        def response500 = HttpResponse.serverError()
+        def exception500 = new HttpClientResponseException("Server error", response500)
+
+        def chain = Mock(ClientFilterChain)
+        def attempts = 0
+        chain.proceed(request) >> {
+            attempts++
+            return Flux.error(exception500)
+        }
+
+        when:
+        Mono.from(filter.doFilter(request, chain)).block()
+
+        then:
+        def err = thrown(HttpClientResponseException)
+        verifyAll(err) {
+            status == HttpStatus.INTERNAL_SERVER_ERROR
+            attempts == 1
+        }
+    }
+
+    def "filter retries idempotent #method request on transient 5xx error when configured"() {
+        given:
+        def tracker = new RateLimitTracker()
+        def config = new RateLimitConfiguration()
+        config.setAutoWaitEnabled(false)
+        config.setMaxTransientRetries(2)
+        config.setTransientRetryDelaySeconds(0)
+        def filter = new RateLimitFilter(tracker, config)
+
+        def request = Mock(MutableHttpRequest)
+        request.getPath() >> path
+        request.getMethodName() >> method.name()
+        request.getMethod() >> method
+        request.getUri() >> URI.create("https://z.com" + path)
+
+        def response503 = HttpResponse.status(HttpStatus.SERVICE_UNAVAILABLE)
+        def exception503 = new HttpClientResponseException("Service Unavailable", response503)
+        def responseOk = HttpResponse.ok("recovered")
+
+        def chain = Mock(ClientFilterChain)
+        def attempts = 0
+        chain.proceed(request) >> {
+            attempts++
+            if (attempts == 1) {
+                return Flux.error(exception503)
+            } else {
+                return Flux.just(responseOk)
+            }
+        }
+
+        when:
+        def result = Mono.from(filter.doFilter(request, chain)).block()
+
+        then:
+        verifyAll {
+            result.status == HttpStatus.OK
+            attempts == 2
+        }
+
+        where:
+        method            | path
+        HttpMethod.GET    | "/api/v2/tickets/1"
+        HttpMethod.PUT    | "/api/v2/tickets/1"
+        HttpMethod.DELETE | "/api/v2/tickets/1"
+    }
+
+    def "filter terminates transient retry when maximum attempts are reached"() {
+        given:
+        def tracker = new RateLimitTracker()
+        def config = new RateLimitConfiguration()
+        config.setAutoWaitEnabled(false)
+        config.setMaxTransientRetries(2)
+        config.setTransientRetryDelaySeconds(0)
+        def filter = new RateLimitFilter(tracker, config)
+
+        def request = Mock(MutableHttpRequest)
+        request.getPath() >> "/api/v2/tickets/1"
+        request.getMethodName() >> "GET"
+        request.getMethod() >> HttpMethod.GET
+        request.getUri() >> URI.create("https://z.com/api/v2/tickets/1")
+
+        def response500 = HttpResponse.serverError()
+        def exception500 = new HttpClientResponseException("Server error", response500)
+
+        def chain = Mock(ClientFilterChain)
+        def attempts = 0
+        chain.proceed(request) >> {
+            attempts++
+            return Flux.error(exception500)
+        }
+
+        when:
+        Mono.from(filter.doFilter(request, chain)).block()
+
+        then:
+        def err = thrown(HttpClientResponseException)
+        verifyAll(err) {
+            status == HttpStatus.INTERNAL_SERVER_ERROR
+            attempts == 3 // initial attempt + 2 retries
+        }
+    }
+
+    def "filter retries on HTTP 409 Conflict and succeeds on retry"() {
+        given:
+        def tracker = new RateLimitTracker()
+        def config = new RateLimitConfiguration()
+        config.setAutoWaitEnabled(false)
+        def filter = new RateLimitFilter(tracker, config)
+
+        def request = Mock(MutableHttpRequest)
+        request.getPath() >> "/api/v2/help_center/en-us/articles/123/attachments"
+        request.getMethodName() >> "POST"
+        request.getMethod() >> HttpMethod.POST
+        request.getUri() >> URI.create("https://z.com/api/v2/help_center/en-us/articles/123/attachments")
+
+        def response409 = HttpResponse.status(HttpStatus.CONFLICT)
+        def exception409 = new HttpClientResponseException("Conflict", response409)
+        def responseOk = HttpResponse.created(HttpResponse.ok())
+
+        def chain = Mock(ClientFilterChain)
+        def attempts = 0
+        chain.proceed(request) >> {
+            attempts++
+            if (attempts == 1) {
+                return Flux.error(exception409)
+            } else {
+                return Flux.just(responseOk)
+            }
+        }
+
+        when:
+        def result = Mono.from(filter.doFilter(request, chain)).block()
+
+        then:
+        verifyAll {
+            result.status == HttpStatus.CREATED
+            attempts == 2
+        }
+    }
+
+    def "filter terminates 409 Conflict retry and propagates exception when 2 attempts are exceeded"() {
+        given:
+        def tracker = new RateLimitTracker()
+        def config = new RateLimitConfiguration()
+        config.setAutoWaitEnabled(false)
+        def filter = new RateLimitFilter(tracker, config)
+
+        def request = Mock(MutableHttpRequest)
+        request.getPath() >> "/api/v2/help_center/en-us/articles/123/attachments"
+        request.getMethodName() >> "POST"
+        request.getMethod() >> HttpMethod.POST
+        request.getUri() >> URI.create("https://z.com/api/v2/help_center/en-us/articles/123/attachments")
+
+        def response409 = HttpResponse.status(HttpStatus.CONFLICT)
+        def exception409 = new HttpClientResponseException("Conflict", response409)
+
+        def chain = Mock(ClientFilterChain)
+        def attempts = 0
+        chain.proceed(request) >> {
+            attempts++
+            return Flux.error(exception409)
+        }
+
+        when:
+        Mono.from(filter.doFilter(request, chain)).block()
+
+        then:
+        def err = thrown(HttpClientResponseException)
+        verifyAll(err) {
+            status == HttpStatus.CONFLICT
+            attempts == 3 // initial attempt + 2 retries
         }
     }
 }

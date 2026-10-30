@@ -24,7 +24,6 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
 import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.client.annotation.Client;
-import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
@@ -66,7 +65,6 @@ import java.util.stream.Collectors;
  * @since 0.1.1
  * @author Jonathan-Zollinger
  */
-@Retryable
 @Client("zendesk")
 public interface TicketClient {
 

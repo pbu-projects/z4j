@@ -23,7 +23,6 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
 import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.client.annotation.Client;
-import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.CustomStatusCreateRequest;
@@ -38,7 +37,6 @@ import reactor.core.publisher.Mono;
  * @author Jonathan-Zollinger
  * @since 0.2.6
  */
-@Retryable
 @Client("zendesk")
 public interface CustomStatusClient {
 

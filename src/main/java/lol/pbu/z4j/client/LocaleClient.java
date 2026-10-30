@@ -17,7 +17,6 @@ package lol.pbu.z4j.client;
 
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.client.annotation.Client;
-import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import lol.pbu.z4j.model.LocalesResponse;
 import reactor.core.publisher.Mono;
@@ -31,7 +30,6 @@ import reactor.core.publisher.Mono;
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Retryable
 @Client("zendesk")
 public interface LocaleClient {
 

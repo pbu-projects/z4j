@@ -18,7 +18,6 @@ package lol.pbu.z4j.client;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.client.annotation.Client;
-import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.JobStatus;
@@ -37,7 +36,6 @@ import reactor.core.publisher.Mono;
  *
  * @since 0.2.3
  */
-@Retryable
 @Client("zendesk")
 public interface JobStatusClient {
 

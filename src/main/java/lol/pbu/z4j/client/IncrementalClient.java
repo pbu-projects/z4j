@@ -19,7 +19,6 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.client.annotation.Client;
-import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.IncrementalOrganizationTimeResponse;
@@ -33,7 +32,6 @@ import reactor.core.publisher.Mono;
  *
  * @since 0.2.7
  */
-@Retryable
 @Client("zendesk")
 public interface IncrementalClient {
 
