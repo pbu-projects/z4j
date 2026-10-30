@@ -18,7 +18,6 @@ package lol.pbu.z4j.client;
 import io.micronaut.http.annotation.*;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.client.annotation.Client;
-import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.*;
@@ -37,7 +36,6 @@ import reactor.core.publisher.Mono;
  * @author Jonathan-Zollinger
  * @since 0.2.4
  */
-@Retryable
 @Client("zendesk")
 public interface TopicClient {
 

@@ -5,7 +5,6 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.client.annotation.Client;
-import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +15,6 @@ import lol.pbu.z4j.model.ViewResponse;
 import lol.pbu.z4j.model.ViewsResponse;
 import reactor.core.publisher.Mono;
 
-@Retryable
 @Client("zendesk")
 public interface ViewClient {
 

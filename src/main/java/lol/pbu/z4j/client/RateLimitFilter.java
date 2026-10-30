@@ -16,10 +16,12 @@
 package lol.pbu.z4j.client;
 
 import io.micronaut.http.HttpHeaders;
+import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.annotation.ClientFilter;
+import io.micronaut.http.client.exceptions.HttpClientException;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.http.filter.ClientFilterChain;
 import io.micronaut.http.filter.HttpClientFilter;
@@ -99,7 +101,7 @@ public class RateLimitFilter implements HttpClientFilter {
     private Flux<HttpResponse<?>> executeWithRetry(MutableHttpRequest<?> request, ClientFilterChain chain, int attempt) {
         return buildProceedFlux(request, chain, attempt)
                 .doOnNext(response -> handleResponse(request, response))
-                .onErrorResume(HttpClientResponseException.class, ex -> handleException(request, chain, attempt, ex));
+                .onErrorResume(HttpClientException.class, ex -> handleException(request, chain, attempt, ex));
     }
 
     @SuppressWarnings("unchecked")
@@ -119,19 +121,79 @@ public class RateLimitFilter implements HttpClientFilter {
         return attempt == 0 && config.isAutoWaitEnabled() && tracker.isApproachingLimit(config.getApproachThreshold());
     }
 
-    private Publisher<HttpResponse<?>> handleException(MutableHttpRequest<?> request, ClientFilterChain chain, int attempt, HttpClientResponseException ex) {
-        handleResponse(request, ex.getResponse());
-        if (canRetryRateLimit(ex, attempt)) {
-            return scheduleRetry(request, chain, attempt, ex);
+    private Publisher<HttpResponse<?>> handleException(MutableHttpRequest<?> request, ClientFilterChain chain, int attempt, HttpClientException ex) {
+        if (ex instanceof HttpClientResponseException responseException) {
+            handleResponse(request, responseException.getResponse());
+            if (canRetryRateLimit(responseException, attempt)) {
+                return scheduleRetry(request, chain, attempt, responseException);
+            }
+            if (isCloudflareBlock(responseException)) {
+                return mapCloudflareBlock(request, responseException);
+            }
+            if (canRetryLockConflict(responseException, attempt)) {
+                return scheduleConflictRetry(request, chain, attempt);
+            }
+            if (canRetryTransientResponse(request, responseException, attempt)) {
+                return scheduleTransientRetry(request, chain, attempt, "HTTP " + responseException.getStatus().getCode());
+            }
+            return Flux.error(responseException);
         }
-        if (isCloudflareBlock(ex)) {
-            return mapCloudflareBlock(request, ex);
+        if (canRetryTransientNetwork(request, attempt)) {
+            return scheduleTransientRetry(request, chain, attempt, "Network error: " + ex.getMessage());
         }
         return Flux.error(ex);
     }
 
     private boolean canRetryRateLimit(HttpClientResponseException ex, int attempt) {
         return ex.getStatus() == HttpStatus.TOO_MANY_REQUESTS && attempt < 5;
+    }
+
+    private boolean canRetryLockConflict(HttpClientResponseException ex, int attempt) {
+        return ex.getStatus() == HttpStatus.CONFLICT && attempt < 2;
+    }
+
+    private Publisher<HttpResponse<?>> scheduleConflictRetry(MutableHttpRequest<?> request, ClientFilterChain chain, int attempt) {
+        log.warn("HTTP 409 Conflict received for {} {}. Retrying lock conflict (attempt {}) after 1 second...",
+                request.getMethodName(), request.getPath(), attempt + 1);
+        return Mono.delay(Duration.ofSeconds(1))
+                .flatMapMany(v -> executeWithRetry(request, chain, attempt + 1));
+    }
+
+    private boolean canRetryTransientResponse(MutableHttpRequest<?> request, HttpClientResponseException ex, int attempt) {
+        if (!isIdempotent(request) || attempt >= config.getMaxTransientRetries()) {
+            return false;
+        }
+        int code = ex.getStatus().getCode();
+        return code >= 500 && code < 600;
+    }
+
+    private boolean canRetryTransientNetwork(MutableHttpRequest<?> request, int attempt) {
+        return isIdempotent(request) && attempt < config.getMaxTransientRetries();
+    }
+
+    private boolean isIdempotent(MutableHttpRequest<?> request) {
+        if (request.getMethod() != null) {
+            HttpMethod method = request.getMethod();
+            return method == HttpMethod.GET
+                    || method == HttpMethod.PUT
+                    || method == HttpMethod.DELETE
+                    || method == HttpMethod.HEAD
+                    || method == HttpMethod.OPTIONS;
+        }
+        String methodName = request.getMethodName();
+        return "GET".equalsIgnoreCase(methodName)
+                || "PUT".equalsIgnoreCase(methodName)
+                || "DELETE".equalsIgnoreCase(methodName)
+                || "HEAD".equalsIgnoreCase(methodName)
+                || "OPTIONS".equalsIgnoreCase(methodName);
+    }
+
+    private Publisher<HttpResponse<?>> scheduleTransientRetry(MutableHttpRequest<?> request, ClientFilterChain chain, int attempt, String reason) {
+        long waitTime = Math.max(1, config.getTransientRetryDelaySeconds());
+        log.warn("{} received for {} {}. Retrying transient error (attempt {}) after {} seconds...",
+                reason, request.getMethodName(), request.getPath(), attempt + 1, waitTime);
+        return Mono.delay(Duration.ofSeconds(waitTime))
+                .flatMapMany(v -> executeWithRetry(request, chain, attempt + 1));
     }
 
     private Publisher<HttpResponse<?>> scheduleRetry(MutableHttpRequest<?> request, ClientFilterChain chain, int attempt, HttpClientResponseException ex) {

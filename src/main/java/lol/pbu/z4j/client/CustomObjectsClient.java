@@ -17,7 +17,6 @@ package lol.pbu.z4j.client;
 
 import io.micronaut.http.annotation.*;
 import io.micronaut.http.client.annotation.Client;
-import io.micronaut.retry.annotation.Retryable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.CustomObjectLimitsResponse;
@@ -31,7 +30,6 @@ import reactor.core.publisher.Mono;
  *
  * @since 0.2.2
  */
-@Retryable
 @Client("zendesk")
 public interface CustomObjectsClient {
 
