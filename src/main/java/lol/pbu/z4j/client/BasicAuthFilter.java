@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 @ClientFilter(value = "/**", serviceId = "zendesk")
 @Requires(property = "micronaut.http.services.zendesk.email", pattern = "\\S+.*")
 @Requires(property = "micronaut.http.services.zendesk.token", pattern = "\\S+.*")
-@Requires(missingBeans = BearerAuthFilter.class)
+@Requires(missingBeans = {BearerAuthFilter.class, OAuthClientCredentialsAuthFilter.class})
 public class BasicAuthFilter {
 
     private static final Logger log = LoggerFactory.getLogger(BasicAuthFilter.class);
