@@ -107,6 +107,7 @@ class ZendeskFilterSpec extends Specification {
         verifyAll {
             BasicAuthFilter.getAnnotation(ClientFilter).serviceId() == ["zendesk"] as String[]
             BearerAuthFilter.getAnnotation(ClientFilter).serviceId() == ["zendesk"] as String[]
+            OAuthClientCredentialsAuthFilter.getAnnotation(ClientFilter).serviceId() == ["zendesk"] as String[]
             ZendeskHeaderFilter.getAnnotation(ClientFilter).serviceId() == ["zendesk"] as String[]
             RateLimitFilter.getAnnotation(ClientFilter).serviceId() == ["zendesk"] as String[]
         }
@@ -124,6 +125,27 @@ class ZendeskFilterSpec extends Specification {
         verifyAll {
             ctx.containsBean(BasicAuthFilter)
             !ctx.containsBean(BearerAuthFilter)
+            ctx.containsBean(ZendeskHeaderFilter)
+        }
+
+        cleanup:
+        ctx?.close()
+    }
+
+    def "BasicAuthFilter is inactive and OAuthClientCredentialsAuthFilter is active when client credentials are configured"() {
+        given:
+        ApplicationContext ctx = ApplicationContext.run([
+                "micronaut.http.services.zendesk.url"                : "http://localhost:8080",
+                "micronaut.http.services.zendesk.email"              : "admin@example.com",
+                "micronaut.http.services.zendesk.token"              : "api-token-xyz",
+                "micronaut.http.services.zendesk.oauth.client-id"    : "oauth-client-id",
+                "micronaut.http.services.zendesk.oauth.client-secret": "oauth-client-secret"
+        ])
+
+        expect:
+        verifyAll {
+            !ctx.containsBean(BasicAuthFilter)
+            ctx.containsBean(OAuthClientCredentialsAuthFilter)
             ctx.containsBean(ZendeskHeaderFilter)
         }
 
