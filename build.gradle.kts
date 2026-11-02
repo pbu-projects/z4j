@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import java.util.jar.JarFile
 import org.gradle.api.tasks.testing.TestDescriptor
 import org.gradle.api.tasks.testing.TestListener
 import org.gradle.api.tasks.testing.TestResult
@@ -88,6 +89,10 @@ tasks.withType<Javadoc>().configureEach {
     source = files().asFileTree
 }
 
+tasks.processResources {
+    exclude("logback.xml", "**/logback.xml")
+}
+
 micronaut {
     runtime("netty")
     testRuntime("spock2")
@@ -121,8 +126,26 @@ tasks.test {
     finalizedBy(tasks.jacocoTestReport)
 }
 
+val verifyJarPackaging = tasks.register("verifyJarPackaging") {
+    group = "verification"
+    description = "Verifies that the packaged JAR does not contain logback configuration."
+    dependsOn(tasks.jar)
+    doLast {
+        val jarFile = tasks.jar.get().archiveFile.get().asFile
+        JarFile(jarFile).use { jar ->
+            val logbackEntries = jar.entries().asSequence()
+                .map { it.name }
+                .filter { it.contains("logback") }
+                .toList()
+            if (logbackEntries.isNotEmpty()) {
+                throw GradleException("Found forbidden logback entries in ${jarFile.name}: $logbackEntries")
+            }
+        }
+    }
+}
+
 tasks.check {
-    dependsOn(tasks.jacocoTestReport)
+    dependsOn(tasks.jacocoTestReport, verifyJarPackaging)
 }
 
 val javaToolchains = project.extensions.getByType<JavaToolchainService>()
