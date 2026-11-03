@@ -15,48 +15,19 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
-/**
- * TicketUpdateResponse
- * @author Jonathan-Zollinger
- * @since 0.1.1
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder({
-        TicketUpdateResponse.JSON_PROPERTY_AUDIT,
-        TicketUpdateResponse.JSON_PROPERTY_TICKET,
-})
 @Serdeable
-@Generated
-public class TicketUpdateResponse {
+@RecordBuilder
+public record TicketUpdateResponse(
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_AUDIT) Audit audit,
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_TICKET) Ticket ticket
+) implements TicketUpdateResponseBuilder.With {
 
     public static final String JSON_PROPERTY_AUDIT = "audit";
     public static final String JSON_PROPERTY_TICKET = "ticket";
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_AUDIT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Audit audit;
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_TICKET)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Ticket ticket;
-
 }

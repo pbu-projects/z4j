@@ -217,8 +217,8 @@ class UserSpec extends Specification {
 
     def "can serialize and deserialize UserResponse"() {
         given:
-        def user = new User().setId(301L).setName("Test User")
-        def response = new UserResponse(user)
+        def expectedUser = new User().setId(301L).setName("Test User")
+        def response = new UserResponse(expectedUser)
 
         when:
         def json = jsonMapper.writeValueAsString(response)
@@ -226,9 +226,9 @@ class UserSpec extends Specification {
 
         then:
         verifyAll(deserialized) {
-            user != null
-            user.id == 301L
-            user.name == "Test User"
+            user() != null
+            user().id == 301L
+            user().name == "Test User"
         }
     }
 

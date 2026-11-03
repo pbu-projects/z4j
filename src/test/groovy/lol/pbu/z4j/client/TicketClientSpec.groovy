@@ -318,16 +318,18 @@ class TicketClientSpec extends Z4jSpec {
         String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
         TicketField field = new TicketField("z4j-field-${entropy}", TicketFieldTypeEnum.TEXT.getValue())
         TicketFieldResponse created = ticketsAdminClient.createTicketField(new TicketFieldCreateRequest(field)).block()
-        Long fieldId = created.getTicketField().getId()
+        Long fieldId = created.ticketField().getId()
 
         when: "fetching the ticket field by id"
         TicketFieldResponse shown = ticketsAdminClient.showTicketField(fieldId).block()
 
         then: "the ticket field matches"
         noExceptionThrown()
-        shown != null
-        shown.getTicketField() != null
-        shown.getTicketField().getId() == fieldId
+        verifyAll(shown) {
+            it != null
+            ticketField() != null
+            ticketField().getId() == fieldId
+        }
 
         when: "deleting the ticket field"
         ticketsAdminClient.deleteTicketField(fieldId).block()
@@ -342,7 +344,7 @@ class TicketClientSpec extends Z4jSpec {
         String customVal = "z4j-val-${entropy}"
         TicketField field = new TicketField("z4j-cf-${entropy}", TicketFieldTypeEnum.TEXT.getValue())
         TicketFieldResponse createdField = ticketsAdminClient.createTicketField(new TicketFieldCreateRequest(field)).block()
-        Long fieldId = createdField.getTicketField().getId()
+        Long fieldId = createdField.ticketField().getId()
 
         and: "a ticket created with this custom field populated"
         TicketComment comment = new TicketComment().setBody("Testing custom fields ${entropy}")
@@ -350,16 +352,18 @@ class TicketClientSpec extends Z4jSpec {
                 .setRawSubject("Ticket with custom field ${entropy}")
         ticketInput.addCustomFieldsItem(new TicketCustomField.Text(fieldId, customVal))
         TicketResponse createdTicket = ticketsAdminClient.createTicket(new TicketCreateRequest(ticketInput)).block()
-        Long ticketId = createdTicket.getTicket().getId()
+        Long ticketId = createdTicket.ticket().getId()
 
         when: "fetching the ticket via showTicket"
         TicketResponse fetched = ticketsAgentClient.showTicket(ticketId).block()
 
         then: "the ticket is returned and custom fields are present"
         noExceptionThrown()
-        fetched != null
-        fetched.getTicket() != null
-        List<TicketCustomField> customFields = fetched.getTicket().getCustomFields()
+        verifyAll(fetched) {
+            it != null
+            ticket() != null
+        }
+        List<TicketCustomField> customFields = fetched.ticket().getCustomFields()
         customFields != null
         !customFields.isEmpty()
 
@@ -626,7 +630,7 @@ class TicketClientSpec extends Z4jSpec {
     def "can delete and restore a ticket as admin"() {
         given: "a newly created ticket in the sandbox"
         TicketResponse created = createTicketForTest()
-        Long ticketId = created.getTicket().getId()
+        Long ticketId = created.ticket().getId()
 
         when: "deleting the ticket"
         ticketsAdminClient.deleteTicket(ticketId).block()
@@ -648,9 +652,11 @@ class TicketClientSpec extends Z4jSpec {
 
         and: "the ticket can be shown again"
         TicketResponse restored = ticketsAdminClient.showTicket(ticketId).block()
-        restored != null
-        restored.getTicket() != null
-        restored.getTicket().getId() == ticketId
+        verifyAll(restored) {
+            it != null
+            ticket() != null
+            ticket().getId() == ticketId
+        }
 
         cleanup: "defensively delete and permanently remove the test ticket"
         try {
@@ -666,8 +672,8 @@ class TicketClientSpec extends Z4jSpec {
         given: "two newly created tickets"
         TicketResponse t1 = createTicketForTest()
         TicketResponse t2 = createTicketForTest()
-        Long id1 = t1.getTicket().getId()
-        Long id2 = t2.getTicket().getId()
+        Long id1 = t1.ticket().getId()
+        Long id2 = t2.ticket().getId()
         List<Long> ids = [id1, id2]
 
         when: "bulk deleting tickets using List<Long>"
@@ -716,7 +722,7 @@ class TicketClientSpec extends Z4jSpec {
     def "can permanently delete a single soft-deleted ticket as admin"() {
         given: "a soft-deleted ticket"
         TicketResponse created = createTicketForTest()
-        Long ticketId = created.getTicket().getId()
+        Long ticketId = created.ticket().getId()
         ticketsAdminClient.deleteTicket(ticketId).block()
 
         when: "permanently deleting the ticket"
@@ -745,8 +751,8 @@ class TicketClientSpec extends Z4jSpec {
                 .setRequesterId(user2Id)
         TicketResponse t1 = ticketsAdminClient.createTicket(new TicketCreateRequest(input1)).block()
         TicketResponse t2 = ticketsAdminClient.createTicket(new TicketCreateRequest(input2)).block()
-        Long id1 = t1.getTicket().getId()
-        Long id2 = t2.getTicket().getId()
+        Long id1 = t1.ticket().getId()
+        Long id2 = t2.ticket().getId()
 
         when: "marking a single ticket as spam"
         ticketsAdminClient.markTicketAsSpam(id1).block()
@@ -778,8 +784,8 @@ class TicketClientSpec extends Z4jSpec {
         given: "target and source tickets created for merge"
         TicketResponse target = createTicketForTest()
         TicketResponse source = createTicketForTest()
-        Long targetId = target.getTicket().getId()
-        Long sourceId = source.getTicket().getId()
+        Long targetId = target.ticket().getId()
+        Long sourceId = source.ticket().getId()
         String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
         MergeTicketsRequest mergeRequest = new MergeTicketsRequest([sourceId])
                 .setTargetComment("Target merge comment ${entropy}")
@@ -820,15 +826,15 @@ class TicketClientSpec extends Z4jSpec {
 
         when: "creating the ticket with inline requester"
         TicketResponse response = ticketsAdminClient.createTicket(new TicketCreateRequest(input)).block()
-        createdTicketId = response?.getTicket()?.getId()
-        createdRequesterId = response?.getTicket()?.getRequesterId()
+        createdTicketId = response?.ticket()?.getId()
+        createdRequesterId = response?.ticket()?.getRequesterId()
 
         then: "ticket is created successfully and requester details are populated"
         noExceptionThrown()
         verifyAll(response) {
-            ticket != null
-            ticket.id != null
-            ticket.requesterId != null
+            ticket() != null
+            ticket().id != null
+            ticket().requesterId != null
         }
 
         when: "fetching the created requester user"
@@ -836,10 +842,10 @@ class TicketClientSpec extends Z4jSpec {
 
         then: "the user details match the inline requester"
         verifyAll(userResponse) {
-            user != null
-            user.id == createdRequesterId
-            user.name == requesterName
-            user.email == requesterEmail
+            user() != null
+            user().id == createdRequesterId
+            user().name == requesterName
+            user().email == requesterEmail
         }
 
         cleanup: "delete the test ticket and the created requester user"
@@ -876,13 +882,13 @@ class TicketClientSpec extends Z4jSpec {
 
         when: "creating the ticket with email CCs"
         TicketResponse response = ticketsAdminClient.createTicket(new TicketCreateRequest(input)).block()
-        createdTicketId = response?.getTicket()?.getId()
+        createdTicketId = response?.ticket()?.getId()
 
         then: "ticket is created successfully"
         noExceptionThrown()
         verifyAll(response) {
-            ticket != null
-            ticket.id != null
+            ticket() != null
+            ticket().id != null
         }
 
         when: "listing the email CCs for the ticket"
@@ -912,7 +918,7 @@ class TicketClientSpec extends Z4jSpec {
         UserClient userClient = adminCtx.getBean(UserClient.class)
         User user = new User().setName("Disposable ${entropy}").setEmail(email).setRole("end-user")
         UserResponse response = userClient.createUser(new UserRequest(user)).block()
-        return response?.getUser()?.getId()
+        return response?.user()?.getId()
     }
 
     private void deleteUserSafely(Long userId) {

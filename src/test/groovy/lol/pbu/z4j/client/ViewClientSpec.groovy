@@ -50,8 +50,11 @@ class ViewClientSpec extends Z4jSpec {
 
         then:
         noExceptionThrown()
-        response != null
-        response.getView().getId() == firstActiveViewId
+        verifyAll(response) {
+            it != null
+            view() != null
+            view().getId() == firstActiveViewId
+        }
     }
 
     def "can execute a view"() {
@@ -76,9 +79,11 @@ class ViewClientSpec extends Z4jSpec {
 
         then:
         noExceptionThrown()
-        response != null
-        response.getViewCount() != null
-        response.getViewCount().getViewId() == firstActiveViewId
+        verifyAll(response) {
+            it != null
+            viewCount() != null
+            viewCount().getViewId() == firstActiveViewId
+        }
     }
 
     def "can list tickets for a view"() {

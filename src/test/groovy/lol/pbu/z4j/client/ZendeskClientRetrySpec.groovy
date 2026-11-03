@@ -223,7 +223,8 @@ class ZendeskClientRetrySpec extends Specification {
         then:
         verifyAll {
             response != null
-            response.ticket.id == 300L
+            response.ticket() != null
+            response.ticket().id == 300L
             requestCount.get() == 2
         }
 
