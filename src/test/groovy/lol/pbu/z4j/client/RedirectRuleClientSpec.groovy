@@ -46,7 +46,7 @@ class RedirectRuleClientSpec extends Z4jSpec {
         noExceptionThrown()
         assert response != null
         verifyAll(response) {
-            records != null
+            records() != null
         }
     }
 
@@ -65,7 +65,7 @@ class RedirectRuleClientSpec extends Z4jSpec {
 
         and: "finding created redirect rule in list"
         RedirectRulesResponse listResp = adminRedirectRuleClient.searchRedirectRules().block()
-        RedirectRule createdRule = listResp?.records?.find { it.redirectFrom == expectedFrom }
+        RedirectRule createdRule = listResp?.records()?.find { it.redirectFrom == expectedFrom }
         ruleId = createdRule?.id
 
         then: "rule is created successfully"
@@ -123,7 +123,7 @@ class RedirectRuleClientSpec extends Z4jSpec {
 
         and: "finding created redirect rule in list"
         RedirectRulesResponse listResp = adminRedirectRuleClient.listRedirectRules().block()
-        RedirectRule createdRule = listResp?.records?.find { it.redirectFrom == expectedFrom }
+        RedirectRule createdRule = listResp?.records()?.find { it.redirectFrom == expectedFrom }
         ruleId = createdRule?.id
 
         then: "rule is created and matches input"

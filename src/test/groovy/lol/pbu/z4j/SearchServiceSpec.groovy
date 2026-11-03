@@ -2,7 +2,11 @@ package lol.pbu.z4j
 
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
+import lol.pbu.z4j.client.SearchClient
+import lol.pbu.z4j.model.ExportResponse
+import lol.pbu.z4j.model.Meta
 import lol.pbu.z4j.model.Ticket
+import reactor.core.publisher.Mono
 import spock.lang.Shared
 
 class SearchServiceSpec extends Z4jSpec {
@@ -79,14 +83,12 @@ class SearchServiceSpec extends Z4jSpec {
 
     def "getTickets with default page size works"() {
         given:
-        def client = Mock(lol.pbu.z4j.client.SearchClient)
+        def client = Mock(SearchClient)
         def service = new SearchService()
         service.searchClient = client
-        def response = new lol.pbu.z4j.model.ExportResponse<lol.pbu.z4j.model.Ticket>()
-        response.setResults([])
-        response.setMeta(new lol.pbu.z4j.model.Meta(hasMore: false))
+        def response = new ExportResponse<Ticket>([], null, new Meta(hasMore: false), null)
         
-        client.exportTicket(_, _, _) >> reactor.core.publisher.Mono.just(response)
+        client.exportTicket(_, _, _) >> Mono.just(response)
 
         expect:
         service.getTickets("status:open").collectList().block().isEmpty()

@@ -92,8 +92,8 @@ class ContentTagClientSpec extends Z4jSpec {
         noExceptionThrown()
         assert searchResp != null
         verifyAll(searchResp) {
-            records != null
-            records.any { it.id == tagId }
+            records() != null
+            records().any { it.id == tagId }
         }
 
         when: "updating content tag"

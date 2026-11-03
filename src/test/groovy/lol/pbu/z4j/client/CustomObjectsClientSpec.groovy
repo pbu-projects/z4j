@@ -67,7 +67,7 @@ class CustomObjectsClientSpec extends Z4jSpec {
         then: "response deserializes successfully without exception"
         noExceptionThrown()
         response != null
-        response.customObjects != null
+        response.customObjects() != null
 
         where:
         [client, userType] << [

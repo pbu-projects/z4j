@@ -20,59 +20,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * GuideMediasResponse
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         GuideMediasResponse.JSON_PROPERTY_RECORDS,
         GuideMediasResponse.JSON_PROPERTY_META
 })
-@Serdeable
-@Generated
-public class GuideMediasResponse {
+public record GuideMediasResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_RECORDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid GuideMedia> records,
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_META) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Meta meta
+) implements GuideMediasResponseBuilder.With {
 
     public static final String JSON_PROPERTY_RECORDS = "records";
     public static final String JSON_PROPERTY_META = "meta";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_RECORDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid GuideMedia> records;
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_META)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Meta meta;
-
-    /**
-     * Add an item to the records property in a chainable fashion.
-     *
-     * @param recordsItem the GuideMedia to add
-     * @return The same instance of GuideMediasResponse for chaining.
-     */
     public GuideMediasResponse addRecordsItem(GuideMedia recordsItem) {
-        if (records == null) {
-            records = new ArrayList<>();
-        }
-        records.add(recordsItem);
-        return this;
+        List<GuideMedia> list = new ArrayList<>(records != null ? records : List.of());
+        list.add(recordsItem);
+        return new GuideMediasResponse(list, meta);
     }
 }

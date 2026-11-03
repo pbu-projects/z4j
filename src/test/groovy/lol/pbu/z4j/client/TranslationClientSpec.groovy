@@ -77,15 +77,15 @@ class TranslationClientSpec extends Z4jSpec {
         badEmailTranslationClient = badEmailCtx.getBean(TranslationClient.class)
 
         HelpCenterLocalesResponse hcLocales = adminTranslationClient.listHelpCenterLocales().block()
-        defaultLocale = hcLocales?.defaultLocale ?: LocaleAbbreviation.ENGLISH_UNITED_STATES
-        allLocales = hcLocales?.locales ?: userCtx.getBean(LocaleClient.class).listLocales().block().locales().collect { it.localeAbbreviation }
+        defaultLocale = hcLocales?.defaultLocale() ?: LocaleAbbreviation.ENGLISH_UNITED_STATES
+        allLocales = hcLocales?.locales() ?: userCtx.getBean(LocaleClient.class).listLocales().block().locales().collect { it.localeAbbreviation }
         targetLocales = allLocales.findAll { it != defaultLocale }
         assert !targetLocales.isEmpty() : "Test requires at least one non-default locale enabled in Help Center"
 
         articleFixtures = FixtureLoader.loadFixture("/fixtures/article_fixtures.yaml", ArticleFixtures.class)
 
         for (LocaleAbbreviation loc : allLocales) {
-            def articles = adminArticleClient.listArticles(loc, null, null, null, null).block()?.articles
+            def articles = adminArticleClient.listArticles(loc, null, null, null, null).block()?.articles()
             if (articles != null && !articles.isEmpty()) {
                 validSectionId = articles.get(0).sectionId
                 validPermissionGroupId = articles.get(0).permissionGroupId
@@ -476,9 +476,9 @@ class TranslationClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(response) {
-            locales != null
-            !locales.isEmpty()
-            defaultLocale != null
+            locales() != null
+            !locales().isEmpty()
+            defaultLocale() != null
         }
 
         where:
