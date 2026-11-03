@@ -1136,4 +1136,143 @@ class ArticleClientSpec extends Z4jSpec {
             // Defensive cleanup - ignore if resource already deleted or not created
         }
     }
+
+    def "can update article source locale with locale as admin"() {
+        given: "an article created in the default source locale"
+        LocaleAbbreviation targetLocale = allLocales.find { it != LocaleAbbreviation.ENGLISH_UNITED_STATES }
+        assert targetLocale != null : "Test requires at least one non-en-us locale active in sandbox"
+
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article Source Locale Test " + UUID.randomUUID())
+                        .setBody("Article body for testing source locale update with locale")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        ArticleResponse created = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        Long articleId = created.article.id
+
+        and: "a translation added for the target locale"
+        TranslationClient translationClient = adminCtx.getBean(TranslationClient.class)
+        translationClient.createTranslation("articles", articleId, new TranslationCreateRequest(
+                new Translation()
+                        .setLocale(targetLocale)
+                        .setTitle("Translation " + UUID.randomUUID())
+                        .setBody("Translation body")
+        )).block()
+
+        when: "updating article source locale with locale to target locale"
+        adminArticleClient.updateArticleSourceLocale(
+                LocaleAbbreviation.ENGLISH_UNITED_STATES,
+                articleId,
+                new ArticleSourceLocaleRequest(targetLocale)
+        ).block()
+
+        then: "source locale is updated"
+        ArticleResponse fetched = adminArticleClient.showArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, articleId).block()
+        verifyAll(fetched.article) {
+            id == articleId
+            sourceLocale == targetLocale.toString()
+        }
+
+        when: "updating article source locale back using convenience method"
+        adminArticleClient.updateArticleSourceLocale(LocaleAbbreviation.ENGLISH_UNITED_STATES, articleId).block()
+
+        then: "source locale is reverted to default"
+        ArticleResponse reverted = adminArticleClient.showArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, articleId).block()
+        verifyAll(reverted.article) {
+            id == articleId
+            sourceLocale == LocaleAbbreviation.ENGLISH_UNITED_STATES.toString()
+        }
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(articleId).block()
+        } catch (Exception ignored) {
+        }
+    }
+
+    def "can update article source locale without locale as admin"() {
+        given: "an article created in the default source locale"
+        LocaleAbbreviation targetLocale = allLocales.find { it != LocaleAbbreviation.ENGLISH_UNITED_STATES }
+        assert targetLocale != null : "Test requires at least one non-en-us locale active in sandbox"
+
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Article Source Locale Test NoLocale " + UUID.randomUUID())
+                        .setBody("Article body for testing source locale update without locale")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        ArticleResponse created = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        Long articleId = created.article.id
+
+        and: "a translation added for the target locale"
+        TranslationClient translationClient = adminCtx.getBean(TranslationClient.class)
+        translationClient.createTranslation("articles", articleId, new TranslationCreateRequest(
+                new Translation()
+                        .setLocale(targetLocale)
+                        .setTitle("Translation " + UUID.randomUUID())
+                        .setBody("Translation body")
+        )).block()
+
+        when: "updating article source locale without locale using convenience method"
+        adminArticleClient.updateArticleSourceLocaleNoLocale(targetLocale, articleId).block()
+
+        then: "source locale is updated"
+        ArticleResponse fetched = adminArticleClient.showArticleNoLocale(articleId).block()
+        verifyAll(fetched.article) {
+            id == articleId
+            sourceLocale == targetLocale.toString()
+        }
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(articleId).block()
+        } catch (Exception ignored) {
+        }
+    }
+
+    def "cannot update article source locale as unauthorized user"() {
+        given: "an article created by admin"
+        LocaleAbbreviation targetLocale = allLocales.find { it != LocaleAbbreviation.ENGLISH_UNITED_STATES }
+        assert targetLocale != null : "Test requires at least one non-en-us locale active in sandbox"
+
+        ArticleCreateRequest req = new ArticleCreateRequest(
+                new Article()
+                        .setTitle("Unauthorized Article Source Locale Test " + UUID.randomUUID())
+                        .setBody("Article body for unauthorized test")
+                        .setPermissionGroupId(validPermissionGroupId)
+                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        )
+        ArticleResponse created = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
+        Long articleId = created.article.id
+
+        expect: "unauthorized user cannot update article source locale with locale"
+        StepVerifier.create(userArticleClient.updateArticleSourceLocale(
+                LocaleAbbreviation.ENGLISH_UNITED_STATES,
+                articleId,
+                new ArticleSourceLocaleRequest(targetLocale)
+        )).verifyErrorSatisfies { error ->
+            verifyAll {
+                error instanceof HttpClientResponseException
+                ((HttpClientResponseException) error).status.code >= 400
+            }
+        }
+
+        and: "unauthorized user cannot update article source locale without locale"
+        StepVerifier.create(userArticleClient.updateArticleSourceLocaleNoLocale(targetLocale, articleId))
+                .verifyErrorSatisfies { error ->
+                    verifyAll {
+                        error instanceof HttpClientResponseException
+                        ((HttpClientResponseException) error).status.code >= 400
+                    }
+                }
+
+        cleanup:
+        try {
+            adminArticleClient.deleteArticleNoLocale(articleId).block()
+        } catch (Exception ignored) {
+        }
+    }
 }

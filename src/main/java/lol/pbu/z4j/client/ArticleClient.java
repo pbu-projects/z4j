@@ -29,6 +29,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.ArticleCreateRequest;
 import lol.pbu.z4j.model.ArticleResponse;
+import lol.pbu.z4j.model.ArticleSourceLocaleRequest;
 import lol.pbu.z4j.model.ArticleUpdateRequest;
 import lol.pbu.z4j.model.ArticlesResponse;
 import lol.pbu.z4j.model.BulkAttachmentsRequest;
@@ -47,6 +48,8 @@ import reactor.core.publisher.Mono;
  *     <li> Create Article with {@link #createArticle}</li>
  *     <li> Update Article with {@link #updateArticle}</li>
  *     <li> Delete Article with {@link #deleteArticle}</li>
+ *     <li> Update Article Source Locale by Locale with {@link #updateArticleSourceLocale}</li>
+ *     <li> Update Article Source Locale without Locale with {@link #updateArticleSourceLocaleNoLocale}</li>
  *     <li> Associate Attachments In Bulk with {@link #associateAttachmentsInBulk}</li>
  *     <li> Archive Article with {@link #archiveArticle}</li>
  * </ul>
@@ -335,6 +338,101 @@ public interface ArticleClient {
             @NotNull @Valid ArticleUpdateRequest body
     ) {
         return updateArticleNoLocale(articleId, body);
+    }
+
+    /**
+     * <h1>{@summary Update Article Source Locale}</h1>
+     * <p>Updates the default source locale of an article.</p>
+     *
+     * <h3>Example Usage:</h3>
+     * <pre>{@code
+     * articleClient.updateArticleSourceLocale(
+     *         LocaleAbbreviation.FRENCH,
+     *         12345L,
+     *         new ArticleSourceLocaleRequest(LocaleAbbreviation.FRENCH)
+     * ).block();
+     * }</pre>
+     *
+     * <p>Handle an error when the article does not exist:</p>
+     * <pre>{@code
+     * try {
+     *     articleClient.updateArticleSourceLocale(LocaleAbbreviation.FRENCH, 999999L).block();
+     * } catch (HttpClientResponseException e) {
+     *     int statusCode = e.getStatus().getCode();
+     * }
+     * }</pre>
+     *
+     * @param locale    The locale in which the article is displayed (required)
+     * @param articleId The unique ID of the article (required)
+     * @param body      The {@link ArticleSourceLocaleRequest} specifying the new source locale (required)
+     * @return No Content (status code 200)
+     */
+    @Put("/api/v2/help_center/{locale}/articles/{article_id}/source_locale")
+    Mono<Void> updateArticleSourceLocale(
+            @PathVariable("locale") @NotNull LocaleAbbreviation locale,
+            @PathVariable("article_id") @NotNull Long articleId,
+            @Body @NotNull @Valid ArticleSourceLocaleRequest body
+    );
+
+    /**
+     * <h1>{@summary Update Article Source Locale}</h1>
+     * <p>Convenience method to update the source locale of an article using a single locale parameter.</p>
+     *
+     * @param localeAbbreviation The locale to set as the source locale (required)
+     * @param articleId          The unique ID of the article (required)
+     * @return No Content (status code 200)
+     */
+    default Mono<Void> updateArticleSourceLocale(
+            @NotNull LocaleAbbreviation localeAbbreviation,
+            @NotNull Long articleId
+    ) {
+        return updateArticleSourceLocale(localeAbbreviation, articleId, new ArticleSourceLocaleRequest(localeAbbreviation));
+    }
+
+    /**
+     * <h1>{@summary Update Article Source Locale (No Locale)}</h1>
+     * <p>Updates the default source locale of an article without specifying a route locale.</p>
+     *
+     * <h3>Example Usage:</h3>
+     * <pre>{@code
+     * articleClient.updateArticleSourceLocaleNoLocale(
+     *         12345L,
+     *         new ArticleSourceLocaleRequest(LocaleAbbreviation.FRENCH)
+     * ).block();
+     * }</pre>
+     *
+     * <p>Handle an error when the article does not exist:</p>
+     * <pre>{@code
+     * try {
+     *     articleClient.updateArticleSourceLocaleNoLocale(LocaleAbbreviation.FRENCH, 999999L).block();
+     * } catch (HttpClientResponseException e) {
+     *     int statusCode = e.getStatus().getCode();
+     * }
+     * }</pre>
+     *
+     * @param articleId The unique ID of the article (required)
+     * @param body      The {@link ArticleSourceLocaleRequest} specifying the new source locale (required)
+     * @return No Content (status code 200)
+     */
+    @Put("/api/v2/help_center/articles/{article_id}/source_locale")
+    Mono<Void> updateArticleSourceLocaleNoLocale(
+            @PathVariable("article_id") @NotNull Long articleId,
+            @Body @NotNull @Valid ArticleSourceLocaleRequest body
+    );
+
+    /**
+     * <h1>{@summary Update Article Source Locale (No Locale)}</h1>
+     * <p>Convenience method to update the source locale of an article without specifying a route locale.</p>
+     *
+     * @param localeAbbreviation The locale to set as the source locale (required)
+     * @param articleId          The unique ID of the article (required)
+     * @return No Content (status code 200)
+     */
+    default Mono<Void> updateArticleSourceLocaleNoLocale(
+            @NotNull LocaleAbbreviation localeAbbreviation,
+            @NotNull Long articleId
+    ) {
+        return updateArticleSourceLocaleNoLocale(articleId, new ArticleSourceLocaleRequest(localeAbbreviation));
     }
 
     /**
