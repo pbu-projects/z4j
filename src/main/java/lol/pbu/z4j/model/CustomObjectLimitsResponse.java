@@ -15,45 +15,18 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
-/**
- * CustomObjectLimitsResponse
- *
- * @since 0.2.2
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder({
-    CustomObjectLimitsResponse.JSON_PROPERTY_COUNT,
-    CustomObjectLimitsResponse.JSON_PROPERTY_LIMIT,
-})
 @Serdeable
-@Generated
-public class CustomObjectLimitsResponse {
+@RecordBuilder
+public record CustomObjectLimitsResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_COUNT) Integer count,
+        @Nullable @JsonProperty(JSON_PROPERTY_LIMIT) Integer limit
+) implements CustomObjectLimitsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_COUNT = "count";
     public static final String JSON_PROPERTY_LIMIT = "limit";
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_COUNT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long count;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_LIMIT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long limit;
-
 }

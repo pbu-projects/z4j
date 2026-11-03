@@ -15,46 +15,18 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
-/**
- * ContentTagCountResponse
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder({
-        ContentTagCountResponse.JSON_PROPERTY_VALUE,
-        ContentTagCountResponse.JSON_PROPERTY_REFRESHED_AT
-})
 @Serdeable
-@Generated
-public class ContentTagCountResponse {
+@RecordBuilder
+public record ContentTagCountResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_VALUE) Long value,
+        @Nullable @JsonProperty(JSON_PROPERTY_REFRESHED_AT) String refreshedAt
+) implements ContentTagCountResponseBuilder.With {
 
     public static final String JSON_PROPERTY_VALUE = "value";
     public static final String JSON_PROPERTY_REFRESHED_AT = "refreshed_at";
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_VALUE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long value;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_REFRESHED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String refreshedAt;
-
 }

@@ -49,7 +49,7 @@ class ContentTagClientSpec extends Z4jSpec {
         noExceptionThrown()
         assert countResp != null
         verifyAll(countResp) {
-            value != null
+            value() != null
         }
     }
 

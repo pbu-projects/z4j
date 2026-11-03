@@ -110,9 +110,9 @@ class UserClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(response) {
-            count != null
-            count.value != null
-            count.value > 0
+            count() != null
+            count().value != null
+            count().value > 0
         }
     }
 
@@ -123,9 +123,9 @@ class UserClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(response) {
-            count != null
-            count.value != null
-            count.value > 0
+            count() != null
+            count().value != null
+            count().value > 0
         }
     }
 
@@ -240,8 +240,8 @@ class UserClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(showDeletedResponse) {
-            deletedUser != null
-            deletedUser.id == createdUserId
+            deletedUser() != null
+            deletedUser().id == createdUserId
         }
 
         when: "permanently deleting user"
@@ -250,8 +250,8 @@ class UserClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(purgeResponse) {
-            deletedUser != null
-            deletedUser.id == createdUserId
+            deletedUser() != null
+            deletedUser().id == createdUserId
         }
 
         cleanup:
@@ -383,9 +383,9 @@ class UserClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(response) {
-            userRelated != null
-            userRelated.assignedTickets != null
-            userRelated.requestedTickets != null
+            userRelated() != null
+            userRelated().assignedTickets != null
+            userRelated().requestedTickets != null
         }
     }
 
@@ -407,8 +407,8 @@ class UserClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(response) {
-            count != null
-            count.value != null
+            count() != null
+            count().value != null
         }
     }
 
