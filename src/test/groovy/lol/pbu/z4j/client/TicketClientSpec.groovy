@@ -795,29 +795,120 @@ class TicketClientSpec extends Z4jSpec {
         }
     }
 
-    @Client("zendesk")
-    static interface DisposableUserClient {
-        @Post("/api/v2/users")
-        Mono<String> createUser(@Body String body)
+    def "can create a ticket with an inline ticket requester as admin"() {
+        given: "an inline requester with unique name and email"
+        String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
+        String requesterName = "Requester User ${entropy}"
+        String requesterEmail = "requester-${entropy}@example.com"
+        TicketRequester requester = new TicketRequester(requesterName, requesterEmail)
+        TicketComment comment = new TicketComment().setBody("Ticket created with inline requester ${entropy}")
+        TicketCreateInput input = new TicketCreateInput(comment)
+                .setRawSubject("Inline requester test ${entropy}")
+                .setRequester(requester)
+        Long createdTicketId = null
+        Long createdRequesterId = null
 
-        @Delete("/api/v2/users/{user_id}")
-        Mono<Void> deleteUser(@PathVariable("user_id") Long userId)
+        when: "creating the ticket with inline requester"
+        TicketResponse response = ticketsAdminClient.createTicket(new TicketCreateRequest(input)).block()
+        createdTicketId = response?.getTicket()?.getId()
+        createdRequesterId = response?.getTicket()?.getRequesterId()
+
+        then: "ticket is created successfully and requester details are populated"
+        noExceptionThrown()
+        verifyAll(response) {
+            ticket != null
+            ticket.id != null
+            ticket.requesterId != null
+        }
+
+        when: "fetching the created requester user"
+        UserResponse userResponse = adminCtx.getBean(UserClient.class).showUser(createdRequesterId).block()
+
+        then: "the user details match the inline requester"
+        verifyAll(userResponse) {
+            user != null
+            user.id == createdRequesterId
+            user.name == requesterName
+            user.email == requesterEmail
+        }
+
+        cleanup: "delete the test ticket and the created requester user"
+        try {
+            if (createdTicketId != null) {
+                ticketsAdminClient.deleteTicket(createdTicketId).block()
+                ticketsAdminClient.deleteTicketPermanently(createdTicketId).block()
+            }
+        } catch (Exception ignored) {
+        }
+        deleteUserSafely(createdRequesterId)
+    }
+
+    def "can create a ticket with email CCs as admin"() {
+        given: "a disposable user and an email CC list"
+        Long disposableUserId = createDisposableEndUser()
+        String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
+        String ccEmail = "cc-user-${entropy}@example.com"
+        String ccName = "CC User ${entropy}"
+
+        EmailCC ccWithId = new EmailCC()
+                .setAction(EmailCCAllOfAction.PUT)
+                .setUserId(disposableUserId)
+        EmailCC ccWithEmail = new EmailCC()
+                .setAction(EmailCCAllOfAction.PUT)
+                .setUserEmail(ccEmail)
+                .setUserName(ccName)
+
+        TicketComment comment = new TicketComment().setBody("Ticket created with email CCs ${entropy}")
+        TicketCreateInput input = new TicketCreateInput(comment)
+                .setRawSubject("Email CCs test ${entropy}")
+                .setEmailCcs([ccWithId, ccWithEmail])
+        Long createdTicketId = null
+
+        when: "creating the ticket with email CCs"
+        TicketResponse response = ticketsAdminClient.createTicket(new TicketCreateRequest(input)).block()
+        createdTicketId = response?.getTicket()?.getId()
+
+        then: "ticket is created successfully"
+        noExceptionThrown()
+        verifyAll(response) {
+            ticket != null
+            ticket.id != null
+        }
+
+        when: "listing the email CCs for the ticket"
+        UsersResponse ccListResponse = ticketsAdminClient.listEmailCcsForTicket(createdTicketId).block()
+
+        then: "the email CCs include both the existing user and the email recipient"
+        verifyAll(ccListResponse) {
+            users != null
+            users.any { it.id == disposableUserId }
+            users.any { it.email == ccEmail }
+        }
+
+        cleanup: "delete the test ticket and disposable user"
+        try {
+            if (createdTicketId != null) {
+                ticketsAdminClient.deleteTicket(createdTicketId).block()
+                ticketsAdminClient.deleteTicketPermanently(createdTicketId).block()
+            }
+        } catch (Exception ignored) {
+        }
+        deleteUserSafely(disposableUserId)
     }
 
     private Long createDisposableEndUser() {
         String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
         String email = "disposable-${entropy}@example.com"
-        DisposableUserClient userClient = adminCtx.getBean(DisposableUserClient.class)
-        String body = "{\"user\":{\"name\":\"Disposable ${entropy}\",\"email\":\"${email}\",\"role\":\"end-user\"}}"
-        String resBody = userClient.createUser(body).block()
-        Map responseMap = jsonMapper.readValue(resBody, Map.class)
-        return (responseMap.get("user")["id"] as Number).longValue()
+        UserClient userClient = adminCtx.getBean(UserClient.class)
+        User user = new User().setName("Disposable ${entropy}").setEmail(email).setRole("end-user")
+        UserResponse response = userClient.createUser(new UserRequest(user)).block()
+        return response?.getUser()?.getId()
     }
 
     private void deleteUserSafely(Long userId) {
         if (userId == null) return
         try {
-            DisposableUserClient userClient = adminCtx.getBean(DisposableUserClient.class)
+            UserClient userClient = adminCtx.getBean(UserClient.class)
             userClient.deleteUser(userId).block()
         } catch (Exception ignored) {
         }
