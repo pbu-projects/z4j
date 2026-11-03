@@ -315,21 +315,23 @@ class UserSpec extends Specification {
     def "can create DeletedUsersResponse and add deleted users"() {
         given:
         def user1 = new User().setId(601L).setName("Deleted One")
-        def response = new DeletedUsersResponse()
-                .setCount(1L)
-                .setNextPage("https://example.zendesk.com/api/v2/deleted_users?page=2")
-                .setPreviousPage(null)
+        def response = new DeletedUsersResponse(
+                null,
+                1L,
+                "https://example.zendesk.com/api/v2/deleted_users?page=2",
+                null
+        )
 
         when:
-        response.addDeletedUsersItem(user1)
+        response = response.addDeletedUsersItem(user1)
 
         then:
         verifyAll(response) {
-            deletedUsers != null
-            deletedUsers.size() == 1
-            count == 1L
-            nextPage == "https://example.zendesk.com/api/v2/deleted_users?page=2"
-            previousPage == null
+            deletedUsers() != null
+            deletedUsers().size() == 1
+            count() == 1L
+            nextPage() == "https://example.zendesk.com/api/v2/deleted_users?page=2"
+            previousPage() == null
         }
 
         when:
@@ -338,10 +340,10 @@ class UserSpec extends Specification {
 
         then:
         verifyAll(deserialized) {
-            deletedUsers != null
-            deletedUsers.size() == 1
-            deletedUsers[0].id == 601L
-            count == 1L
+            deletedUsers() != null
+            deletedUsers().size() == 1
+            deletedUsers()[0].id == 601L
+            count() == 1L
         }
     }
 

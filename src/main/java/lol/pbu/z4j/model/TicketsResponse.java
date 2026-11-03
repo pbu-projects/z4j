@@ -20,71 +20,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
-/**
- * TicketsResponse
- * @author Jonathan-Zollinger
- * @since 0.1.1
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         TicketsResponse.JSON_PROPERTY_TICKETS,
         TicketsResponse.JSON_PROPERTY_META,
         TicketsResponse.JSON_PROPERTY_LINKS,
         TicketsResponse.JSON_PROPERTY_COUNT
 })
-@Serdeable
-@Generated
-public class TicketsResponse {
+public record TicketsResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_TICKETS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Ticket> tickets,
+        @Nullable @JsonProperty(JSON_PROPERTY_META) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Meta meta,
+        @Nullable @JsonProperty(JSON_PROPERTY_LINKS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Links links,
+        @Nullable @JsonProperty(JSON_PROPERTY_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer count
+) implements TicketsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_TICKETS = "tickets";
     public static final String JSON_PROPERTY_META = "meta";
     public static final String JSON_PROPERTY_LINKS = "links";
     public static final String JSON_PROPERTY_COUNT = "count";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TICKETS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid Ticket> tickets;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_META)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Meta meta;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_LINKS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Links links;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_COUNT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer count;
-
-    /**
-     * Add an item to the tickets property in a chainable fashion.
-     *
-     * @return The same instance of TicketsResponse for chaining.
-     */
     public TicketsResponse addTicketsItem(Ticket ticketsItem) {
-        if (tickets == null) {
-            tickets = new ArrayList<>();
-        }
-        tickets.add(ticketsItem);
-        return this;
+        List<Ticket> list = new ArrayList<>(tickets != null ? tickets : List.of());
+        list.add(ticketsItem);
+        return new TicketsResponse(list, meta, links, count);
     }
-
 }

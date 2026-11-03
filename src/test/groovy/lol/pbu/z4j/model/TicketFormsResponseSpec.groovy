@@ -15,34 +15,112 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.serde.ObjectMapper
 import lol.pbu.z4j.Z4jSpec
+import spock.lang.Shared
 
 class TicketFormsResponseSpec extends Z4jSpec {
 
-    def "should add ticket forms item to null list"() {
-        given:
-        def response = new TicketFormsResponse()
-        def form = new TicketForm("Form 1")
+    @Shared
+    ObjectMapper objectMapper
 
-        when:
-        response.addTicketFormsItem(form)
-
-        then:
-        response.ticketForms.size() == 1
-        response.ticketForms[0] == form
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
     }
 
-    def "should add ticket forms item to existing list"() {
+    def "should create TicketFormsResponse with canonical constructor and builder"() {
         given:
-        def form1 = new TicketForm("Form 1")
-        def form2 = new TicketForm("Form 2")
-        def response = new TicketFormsResponse(ticketForms: [form1])
+        TicketForm form = new TicketForm("Support Form").setId(501L)
+        List<TicketForm> list = [form]
 
         when:
-        response.addTicketFormsItem(form2)
+        TicketFormsResponse direct = new TicketFormsResponse(list)
+        TicketFormsResponse built = TicketFormsResponseBuilder.builder()
+                .ticketForms(list)
+                .build()
 
         then:
-        response.ticketForms.size() == 2
-        response.ticketForms.containsAll([form1, form2])
+        verifyAll(direct) {
+            ticketForms() == list
+            ticketForms().size() == 1
+            ticketForms().first().id == 501L
+            ticketForms().first().name == "Support Form"
+        }
+        verifyAll(built) {
+            it == direct
+            ticketForms() == list
+        }
+    }
+
+    def "should update TicketFormsResponse using record withers and addTicketFormsItem method"() {
+        given:
+        TicketForm form1 = new TicketForm("Form 1").setId(1L)
+        TicketForm form2 = new TicketForm("Form 2").setId(2L)
+        TicketFormsResponse response = new TicketFormsResponse([form1])
+
+        when:
+        TicketFormsResponse updated = response.withTicketForms([form2])
+        TicketFormsResponse withAdded = response.addTicketFormsItem(form2)
+        TicketFormsResponse fromNull = new TicketFormsResponse(null).addTicketFormsItem(form1)
+
+        then:
+        verifyAll(response) {
+            ticketForms().size() == 1
+            ticketForms().first().id == 1L
+        }
+        verifyAll(updated) {
+            ticketForms() == [form2]
+        }
+        verifyAll(withAdded) {
+            ticketForms().size() == 2
+            ticketForms().containsAll([form1, form2])
+        }
+        verifyAll(fromNull) {
+            ticketForms().size() == 1
+            ticketForms().first() == form1
+        }
+    }
+
+    def "should round-trip serialize and deserialize TicketFormsResponse"() {
+        given:
+        TicketForm form = new TicketForm("Billing Form").setId(701L)
+        TicketFormsResponse response = new TicketFormsResponse([form])
+
+        when:
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        TicketFormsResponse deserialized = objectMapper.readValue(json, TicketFormsResponse.class)
+
+        then:
+        verifyAll(map) {
+            containsKey("ticket_forms")
+            ((List) get("ticket_forms")).size() == 1
+        }
+        verifyAll(deserialized) {
+            it == response
+            ticketForms().size() == 1
+            ticketForms().first().id == 701L
+            ticketForms().first().name == "Billing Form"
+        }
+    }
+
+    def "should handle null components in TicketFormsResponse"() {
+        when:
+        TicketFormsResponse empty = new TicketFormsResponse(null)
+        String json = objectMapper.writeValueAsString(empty)
+        Map map = objectMapper.readValue(json, Map.class)
+        TicketFormsResponse deserialized = objectMapper.readValue(json, TicketFormsResponse.class)
+
+        then:
+        verifyAll(empty) {
+            ticketForms() == null
+        }
+        verifyAll(map) {
+            isEmpty()
+        }
+        verifyAll(deserialized) {
+            it == empty
+            ticketForms() == null
+        }
     }
 }

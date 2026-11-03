@@ -16,65 +16,107 @@
 package lol.pbu.z4j.model
 
 import io.micronaut.serde.ObjectMapper
-import lol.pbu.z4j.Z4jSpec
-import spock.lang.Unroll
-
 import java.net.URI
+import lol.pbu.z4j.Z4jSpec
+import spock.lang.Shared
 
 class TicketsResponseSpec extends Z4jSpec {
 
-    @Unroll
-    def "should add tickets item"() {
-        given:
-        def ticketsResponse = new TicketsResponse()
-        ticketsResponse.tickets == null
-        def ticket = new Ticket(faker.number().randomNumber())
+    @Shared
+    ObjectMapper objectMapper
 
-        when:
-        ticketsResponse.addTicketsItem(ticket)
-
-        then:
-        ticketsResponse.tickets.size() == 1
-        ticketsResponse.tickets.getAt(0) == ticket
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
     }
 
-    @Unroll
-    def "add tickets item to existing list"() {
+    def "should create TicketsResponse with canonical constructor and builder"() {
         given:
-        def existingTicket = new Ticket(faker.number().randomNumber())
-        def ticketsResponse = new TicketsResponse(tickets: [existingTicket])
-        def newTicket = new Ticket(faker.number().randomNumber())
+        Ticket ticket = new Ticket().setId(101L).setSubject("Support Request")
+        List<Ticket> list = [ticket]
+        Meta expectedMeta = new Meta().setHasMore(true).setAfterCursor("cursor_after").setBeforeCursor("cursor_before")
+        Links expectedLinks = new Links()
+                .setNext(URI.create("https://example.zendesk.com/api/v2/views/1/tickets.json?page[after]=cursor_after").toURL())
+                .setPrev(URI.create("https://example.zendesk.com/api/v2/views/1/tickets.json?page[before]=cursor_before").toURL())
 
         when:
-        ticketsResponse.addTicketsItem(newTicket)
+        TicketsResponse direct = new TicketsResponse(list, expectedMeta, expectedLinks, 42)
+        TicketsResponse built = TicketsResponseBuilder.builder()
+                .tickets(list)
+                .meta(expectedMeta)
+                .links(expectedLinks)
+                .count(42)
+                .build()
 
         then:
-        ticketsResponse.tickets.size() == 2
-        ticketsResponse.tickets.containsAll([existingTicket, newTicket])
+        verifyAll(direct) {
+            tickets() == list
+            tickets().size() == 1
+            tickets().first().id == 101L
+            tickets().first().subject == "Support Request"
+            meta() == expectedMeta
+            links() == expectedLinks
+            count() == 42
+        }
+        verifyAll(built) {
+            it == direct
+            tickets() == list
+            meta() == expectedMeta
+            links() == expectedLinks
+            count() == 42
+        }
     }
 
-    def "should instantiate and set meta, links, and count on TicketsResponse"() {
+    def "should update TicketsResponse using record withers and addTicketsItem method"() {
         given:
-        def response = new TicketsResponse()
-        def meta = new Meta().setHasMore(true).setAfterCursor("cursor_after").setBeforeCursor("cursor_before")
-        def links = new Links().setNext(new URI("https://example.zendesk.com/api/v2/views/1/tickets.json?page[after]=cursor_after").toURL())
-                               .setPrev(new URI("https://example.zendesk.com/api/v2/views/1/tickets.json?page[before]=cursor_before").toURL())
+        Ticket existingTicket = new Ticket(faker.number().randomNumber())
+        Ticket newTicket = new Ticket(faker.number().randomNumber())
+        Meta meta1 = new Meta().setHasMore(false)
+        Meta meta2 = new Meta().setHasMore(true).setAfterCursor("after_2")
+        Links links1 = new Links().setPrev(URI.create("https://example.zendesk.com/prev").toURL())
+        Links links2 = new Links().setNext(URI.create("https://example.zendesk.com/next").toURL())
+        TicketsResponse response = new TicketsResponse([existingTicket], meta1, links1, 1)
 
         when:
-        response.setMeta(meta)
-                .setLinks(links)
-                .setCount(42)
+        TicketsResponse updated = response
+                .withTickets([newTicket])
+                .withMeta(meta2)
+                .withLinks(links2)
+                .withCount(2)
+        TicketsResponse withAdded = response.addTicketsItem(newTicket)
+        TicketsResponse fromNull = new TicketsResponse(null, null, null, null).addTicketsItem(existingTicket)
 
         then:
-        response.meta == meta
-        response.links == links
-        response.count == 42
+        verifyAll(response) {
+            tickets() == [existingTicket]
+            meta() == meta1
+            links() == links1
+            count() == 1
+        }
+        verifyAll(updated) {
+            tickets() == [newTicket]
+            meta() == meta2
+            links() == links2
+            count() == 2
+        }
+        verifyAll(withAdded) {
+            tickets().size() == 2
+            tickets().containsAll([existingTicket, newTicket])
+            meta() == meta1
+            links() == links1
+            count() == 1
+        }
+        verifyAll(fromNull) {
+            tickets().size() == 1
+            tickets().first() == existingTicket
+            meta() == null
+            links() == null
+            count() == null
+        }
     }
 
     def "should round-trip serde TicketsResponse with meta, links, and count"() {
         given:
-        def objectMapper = adminCtx.getBean(ObjectMapper)
-        def json = '''{
+        String json = '''{
   "tickets": [
     {
       "id": 12345
@@ -93,28 +135,52 @@ class TicketsResponseSpec extends Z4jSpec {
 }'''
 
         when:
-        def response = objectMapper.readValue(json, TicketsResponse)
+        TicketsResponse response = objectMapper.readValue(json, TicketsResponse)
+        String serialized = objectMapper.writeValueAsString(response)
+        TicketsResponse deserialized = objectMapper.readValue(serialized, TicketsResponse)
 
         then:
-        response != null
-        response.tickets != null
-        response.tickets.size() == 1
-        response.tickets[0].id == 12345L
-        response.meta != null
-        response.meta.hasMore == true
-        response.meta.afterCursor == "cursor_after"
-        response.meta.beforeCursor == "cursor_before"
-        response.links != null
-        response.links.next.toString() == "https://example.zendesk.com/api/v2/views/1/tickets.json?page[after]=cursor_after"
-        response.links.prev.toString() == "https://example.zendesk.com/api/v2/views/1/tickets.json?page[before]=cursor_before"
-        response.count == 1
+        verifyAll(response) {
+            tickets() != null
+            tickets().size() == 1
+            tickets()[0].id == 12345L
+            meta() != null
+            meta().hasMore == true
+            meta().afterCursor == "cursor_after"
+            meta().beforeCursor == "cursor_before"
+            links() != null
+            links().next.toString() == "https://example.zendesk.com/api/v2/views/1/tickets.json?page[after]=cursor_after"
+            links().prev.toString() == "https://example.zendesk.com/api/v2/views/1/tickets.json?page[before]=cursor_before"
+            count() == 1
+        }
+        verifyAll(deserialized) {
+            it == response
+        }
+    }
 
+    def "should handle null components in TicketsResponse"() {
         when:
-        def serialized = objectMapper.writeValueAsString(response)
-        def deserialized = objectMapper.readValue(serialized, TicketsResponse)
+        TicketsResponse empty = new TicketsResponse(null, null, null, null)
+        String json = objectMapper.writeValueAsString(empty)
+        Map map = objectMapper.readValue(json, Map.class)
+        TicketsResponse deserialized = objectMapper.readValue(json, TicketsResponse.class)
 
         then:
-        deserialized == response
+        verifyAll(empty) {
+            tickets() == null
+            meta() == null
+            links() == null
+            count() == null
+        }
+        verifyAll(map) {
+            isEmpty()
+        }
+        verifyAll(deserialized) {
+            it == empty
+            tickets() == null
+            meta() == null
+            links() == null
+            count() == null
+        }
     }
 }
-

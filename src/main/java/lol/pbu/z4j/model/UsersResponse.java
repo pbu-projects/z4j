@@ -20,66 +20,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * UsersResponse
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         UsersResponse.JSON_PROPERTY_USERS,
         UsersResponse.JSON_PROPERTY_COUNT,
         UsersResponse.JSON_PROPERTY_NEXT_PAGE,
         UsersResponse.JSON_PROPERTY_PREVIOUS_PAGE
 })
-@Serdeable
-@Generated
-public class UsersResponse {
+public record UsersResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_USERS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid User> users,
+        @Nullable @JsonProperty(JSON_PROPERTY_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long count,
+        @Nullable @JsonProperty(JSON_PROPERTY_NEXT_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String nextPage,
+        @Nullable @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String previousPage
+) implements UsersResponseBuilder.With {
 
     public static final String JSON_PROPERTY_USERS = "users";
     public static final String JSON_PROPERTY_COUNT = "count";
     public static final String JSON_PROPERTY_NEXT_PAGE = "next_page";
     public static final String JSON_PROPERTY_PREVIOUS_PAGE = "previous_page";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_USERS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid User> users;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_COUNT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long count;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_NEXT_PAGE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String nextPage;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String previousPage;
-
     public UsersResponse addUsersItem(User usersItem) {
-        if (users == null) {
-            users = new ArrayList<>();
-        }
-        users.add(usersItem);
-        return this;
+        List<User> list = new ArrayList<>(users != null ? users : List.of());
+        list.add(usersItem);
+        return new UsersResponse(list, count, nextPage, previousPage);
     }
 }

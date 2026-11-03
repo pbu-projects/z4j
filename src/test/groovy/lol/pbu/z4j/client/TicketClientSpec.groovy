@@ -52,7 +52,7 @@ class TicketClientSpec extends Z4jSpec {
         ticketsUserClient = userCtx.getBean(TicketClient.class)
         jobStatusClient = agentCtx.getBean(JobStatusClient.class)
         jsonMapper = adminCtx.getBean(JsonMapper.class)
-        tickets = ticketsAgentClient.listTickets(null).block().getTickets()
+        tickets = ticketsAgentClient.listTickets(null).block().tickets()
         ticketFixtures = FixtureLoader.loadFixture("/fixtures/ticket_fixtures.yaml", TicketFixtures.class)
         clientTestMatrix = [[client: ticketsAgentClient, clientType: "Agent", shouldSucceed: true, expectedTitle: "should"],
                             [client: ticketsAdminClient, clientType: "Admin", shouldSucceed: true, expectedTitle: "should"],
@@ -61,8 +61,8 @@ class TicketClientSpec extends Z4jSpec {
                             [client: ticketsUserClient, clientType: "simple user", shouldSucceed: false, expectedTitle: "should not"]]
         try {
             DeletedTicketsResponse stale = ticketsAdminClient.listDeletedTickets().block()
-            if (stale?.getDeletedTickets()) {
-                List<Long> staleIds = stale.getDeletedTickets().collect { it.getId() }.findAll { it != null }
+            if (stale?.deletedTickets()) {
+                List<Long> staleIds = stale.deletedTickets().collect { it.getId() }.findAll { it != null }
                 if (!staleIds.isEmpty()) {
                     ticketsAdminClient.deleteMultipleTicketsPermanently(staleIds).block()
                 }
@@ -122,10 +122,10 @@ class TicketClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         response != null
-        response.audits != null
-        !response.audits.isEmpty()
-        response.audits.first().ticketId == tickets.get(0).getId()
-        response.audits.first().events != null
+        response.audits() != null
+        !response.audits().isEmpty()
+        response.audits().first().ticketId == tickets.get(0).getId()
+        response.audits().first().events != null
 
         where:
         [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { it.shouldSucceed }
@@ -273,13 +273,13 @@ class TicketClientSpec extends Z4jSpec {
         TicketFieldsResponse page = ticketsAdminClient.listTicketFields(locale, null, null, 100).block()
         List<TicketField> allFields = []
         while (page != null) {
-            if (page.getTicketFields() != null) {
-                allFields.addAll(page.getTicketFields())
+            if (page.ticketFields() != null) {
+                allFields.addAll(page.ticketFields())
             }
-            if (!(page.getMeta()?.getHasMore()) || page.getMeta()?.getAfterCursor() == null) {
+            if (!(page.meta()?.getHasMore()) || page.meta()?.getAfterCursor() == null) {
                 break
             }
-            page = ticketsAdminClient.listTicketFields(locale, null, page.getMeta().getAfterCursor(), 100).block()
+            page = ticketsAdminClient.listTicketFields(locale, null, page.meta().getAfterCursor(), 100).block()
         }
 
         then:
@@ -289,11 +289,11 @@ class TicketClientSpec extends Z4jSpec {
 
     private void ensureMoreThan100TicketFields(LocaleAbbreviation locale) {
         TicketFieldsResponse firstPage = ticketsAdminClient.listTicketFields(locale, null, null, 100).block()
-        if (firstPage.getMeta()?.getHasMore()) {
+        if (firstPage.meta()?.getHasMore()) {
             return
         }
 
-        int needed = Math.max(0, 101 - (firstPage.getTicketFields()?.size() ?: 0))
+        int needed = Math.max(0, 101 - (firstPage.ticketFields()?.size() ?: 0))
         (1..needed).each {
             String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
             TicketField field = new TicketField()
@@ -305,7 +305,7 @@ class TicketClientSpec extends Z4jSpec {
         int maxAttempts = 10
         for (int i = 0; i < maxAttempts; i++) {
             TicketFieldsResponse refreshed = ticketsAdminClient.listTicketFields(locale, null, null, 100).block()
-            if (refreshed.getMeta()?.getHasMore()) {
+            if (refreshed.meta()?.getHasMore()) {
                 return
             }
             sleep(2000)
@@ -424,9 +424,9 @@ class TicketClientSpec extends Z4jSpec {
         then: "tickets are returned"
         noExceptionThrown()
         response != null
-        response.getTickets() != null
-        !response.getTickets().isEmpty()
-        response.getTickets()*.id.contains(tickets.first().getId())
+        response.tickets() != null
+        !response.tickets().isEmpty()
+        response.tickets()*.id.contains(tickets.first().getId())
 
         where:
         [client, clientType] << [[ticketsAgentClient, "Agent"], [ticketsAdminClient, "Admin"]]
@@ -442,9 +442,9 @@ class TicketClientSpec extends Z4jSpec {
         then: "tickets are returned"
         noExceptionThrown()
         response != null
-        response.getTickets() != null
-        !response.getTickets().isEmpty()
-        response.getTickets()*.id.contains(tickets.first().getId())
+        response.tickets() != null
+        !response.tickets().isEmpty()
+        response.tickets()*.id.contains(tickets.first().getId())
     }
 
     def "calling showMultipleTickets fails when used with a(n) #clientType client"(TicketClient client, String clientType) {
@@ -493,7 +493,7 @@ class TicketClientSpec extends Z4jSpec {
         then: "users response is returned"
         noExceptionThrown()
         response != null
-        response.getUsers() != null
+        response.users() != null
     }
 
     def "calling listCollaboratorsForTicket fails when used with bad credentials"() {
@@ -514,7 +514,7 @@ class TicketClientSpec extends Z4jSpec {
         then: "users response is returned"
         noExceptionThrown()
         response != null
-        response.getUsers() != null
+        response.users() != null
     }
 
     def "calling listFollowersForTicket fails when used with bad credentials"() {
@@ -535,7 +535,7 @@ class TicketClientSpec extends Z4jSpec {
         then: "users response is returned"
         noExceptionThrown()
         response != null
-        response.getUsers() != null
+        response.users() != null
     }
 
     def "calling listEmailCcsForTicket fails when used with bad credentials"() {
@@ -556,7 +556,7 @@ class TicketClientSpec extends Z4jSpec {
         then: "tickets response is returned"
         noExceptionThrown()
         response != null
-        response.getTickets() != null
+        response.tickets() != null
     }
 
     def "calling listTicketIncidents fails when used with bad credentials"() {
@@ -574,7 +574,7 @@ class TicketClientSpec extends Z4jSpec {
         then: "tickets response is returned"
         noExceptionThrown()
         response != null
-        response.getTickets() != null
+        response.tickets() != null
     }
 
     def "calling autocompleteProblems fails when used with bad credentials"() {
@@ -644,7 +644,7 @@ class TicketClientSpec extends Z4jSpec {
         and: "the deleted tickets list can be retrieved"
         DeletedTicketsResponse deletedResponse = ticketsAdminClient.listDeletedTickets().block()
         deletedResponse != null
-        deletedResponse.getDeletedTickets() != null
+        deletedResponse.deletedTickets() != null
 
         when: "restoring the deleted ticket"
         ticketsAdminClient.restoreDeletedTicket(ticketId).block()
@@ -898,9 +898,9 @@ class TicketClientSpec extends Z4jSpec {
 
         then: "the email CCs include both the existing user and the email recipient"
         verifyAll(ccListResponse) {
-            users != null
-            users.any { it.id == disposableUserId }
-            users.any { it.email == ccEmail }
+            users() != null
+            users().any { it.id == disposableUserId }
+            users().any { it.email == ccEmail }
         }
 
         cleanup: "delete the test ticket and disposable user"

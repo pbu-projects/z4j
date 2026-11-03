@@ -85,8 +85,8 @@ class UserClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(response) {
-            users != null
-            !users.isEmpty()
+            users() != null
+            !users().isEmpty()
         }
     }
 
@@ -97,9 +97,9 @@ class UserClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(response) {
-            users != null
-            !users.isEmpty()
-            users.every { it.role == "admin" }
+            users() != null
+            !users().isEmpty()
+            users().every { it.role == "admin" }
         }
     }
 
@@ -152,8 +152,8 @@ class UserClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(response) {
-            users != null
-            !users.isEmpty()
+            users() != null
+            !users().isEmpty()
         }
     }
 
@@ -167,8 +167,8 @@ class UserClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(response) {
-            users != null
-            !users.isEmpty()
+            users() != null
+            !users().isEmpty()
         }
     }
 
@@ -182,9 +182,9 @@ class UserClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(response) {
-            users != null
-            !users.isEmpty()
-            users.any { it.id == adminUserId }
+            users() != null
+            !users().isEmpty()
+            users().any { it.id == adminUserId }
         }
     }
 
@@ -396,7 +396,7 @@ class UserClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(response) {
-            deletedUsers != null
+            deletedUsers() != null
         }
     }
 
@@ -433,11 +433,11 @@ class UserClientSpec extends Z4jSpec {
         when:
         def search1 = adminUserClient.searchUsers(testEmail1, null).block()
         def search2 = adminUserClient.searchUsers(testEmail2, null).block()
-        if (search1?.users && !search1.users.isEmpty()) {
-            createdUserIds.add(search1.users[0].id)
+        if (search1?.users() && !search1.users().isEmpty()) {
+            createdUserIds.add(search1.users()[0].id)
         }
-        if (search2?.users && !search2.users.isEmpty()) {
-            createdUserIds.add(search2.users[0].id)
+        if (search2?.users() && !search2.users().isEmpty()) {
+            createdUserIds.add(search2.users()[0].id)
         }
 
         then:

@@ -20,24 +20,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
-/**
- * SearchResponse
- * @author Jonathan-Zollinger
- * @since 0.1.1
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         SearchResponse.JSON_PROPERTY_COUNT,
         SearchResponse.JSON_PROPERTY_FACETS,
@@ -48,9 +36,16 @@ import lol.pbu.z4j.Generated;
         SearchResponse.JSON_PROPERTY_ORGANIZATIONS,
         SearchResponse.JSON_PROPERTY_GROUPS,
 })
-@Serdeable
-@Generated
-public class SearchResponse {
+public record SearchResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer count,
+        @Nullable @JsonProperty(JSON_PROPERTY_FACETS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String facets,
+        @Nullable @JsonProperty(JSON_PROPERTY_NEXT_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String nextPage,
+        @Nullable @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String previousPage,
+        @Nullable @JsonProperty(JSON_PROPERTY_RESULTS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid SearchResult> results,
+        @Nullable @JsonProperty(JSON_PROPERTY_USERS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid User> users,
+        @Nullable @JsonProperty(JSON_PROPERTY_ORGANIZATIONS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Organization> organizations,
+        @Nullable @JsonProperty(JSON_PROPERTY_GROUPS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Group> groups
+) implements SearchResponseBuilder.With {
 
     public static final String JSON_PROPERTY_COUNT = "count";
     public static final String JSON_PROPERTY_FACETS = "facets";
@@ -60,69 +55,4 @@ public class SearchResponse {
     public static final String JSON_PROPERTY_USERS = "users";
     public static final String JSON_PROPERTY_ORGANIZATIONS = "organizations";
     public static final String JSON_PROPERTY_GROUPS = "groups";
-
-    /**
-     * The number of resources returned by the query corresponding to this page of results in the paginated response
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_COUNT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer count;
-
-    /**
-     * The facets corresponding to the search query
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_FACETS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String facets;
-
-    /**
-     * URL to the next page of results
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_NEXT_PAGE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String nextPage;
-
-    /**
-     * URL to the previous page of results
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String previousPage;
-
-    /**
-     * May consist of tickets, users, groups, or organizations, as specified by the `result_type` property in each result object
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_RESULTS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid SearchResult> results;
-
-    /**
-     * Sideloaded users associated with search results (when include=users is requested)
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_USERS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid User> users;
-
-    /**
-     * Sideloaded organizations associated with search results (when include=organizations is requested)
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ORGANIZATIONS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid Organization> organizations;
-
-    /**
-     * Sideloaded groups associated with search results (when include=groups is requested)
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_GROUPS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid Group> groups;
-
 }
