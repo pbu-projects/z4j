@@ -15,39 +15,126 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.serde.ObjectMapper
 import lol.pbu.z4j.Z4jSpec
-import spock.lang.Unroll
+import spock.lang.Shared
 
 class PostsResponseSpec extends Z4jSpec {
 
-    @Unroll
-    def "should add posts item"() {
-        given:
-        def postsResponse = new PostsResponse()
-        postsResponse.posts == null
-        def post = new Post(faker.lorem().sentence())
+    @Shared
+    ObjectMapper objectMapper
 
-        when:
-        postsResponse.addPostsItem(post)
-
-        then:
-        postsResponse.posts.size() == 1
-        postsResponse.posts.getAt(0) == post
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
     }
 
-    @Unroll
-    def "add posts item to existing list"() {
+    def "should create PostsResponse with canonical constructor and builder"() {
         given:
-        def existingPost = new Post(faker.lorem().sentence())
-        def postsResponse = new PostsResponse(posts: [existingPost])
-        def newPost = new Post(faker.lorem().sentence())
+        Post item = new Post("Community Announcement").setId(101L)
+        List<Post> list = [item]
 
         when:
-        postsResponse.addPostsItem(newPost)
+        PostsResponse direct = new PostsResponse(list)
+        PostsResponse built = PostsResponseBuilder.builder()
+                .posts(list)
+                .build()
 
         then:
-        postsResponse.posts.size() == 2
-        postsResponse.posts.containsAll([existingPost, newPost])
+        verifyAll(direct) {
+            posts() == list
+            posts().size() == 1
+            posts().first().id == 101L
+            posts().first().title == "Community Announcement"
+        }
+        verifyAll(built) {
+            posts() == list
+            posts().size() == 1
+            posts().first().id == 101L
+            posts().first().title == "Community Announcement"
+        }
+    }
+
+    def "should update posts using record wither and addPostsItem method"() {
+        given:
+        Post first = new Post("Old Post").setId(1L)
+        Post second = new Post("New Post").setId(2L)
+        PostsResponse response = new PostsResponse([first])
+
+        when:
+        PostsResponse withNewList = response.withPosts([second])
+        PostsResponse withAdded = response.addPostsItem(second)
+        PostsResponse fromNull = new PostsResponse(null).addPostsItem(first)
+
+        then:
+        verifyAll(response) {
+            posts().size() == 1
+            posts().first().id == 1L
+        }
+        verifyAll(withNewList) {
+            posts().size() == 1
+            posts().first().id == 2L
+        }
+        verifyAll(withAdded) {
+            posts().size() == 2
+            posts().first().id == 1L
+            posts().last().id == 2L
+        }
+        verifyAll(fromNull) {
+            posts().size() == 1
+            posts().first().id == 1L
+        }
+    }
+
+    def "should round-trip serialize and deserialize PostsResponse"() {
+        given:
+        Post item = new Post("Release Notes").setDetails("Version 1.0 is live").setId(555L)
+        PostsResponse response = new PostsResponse([item])
+
+        when:
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        PostsResponse deserialized = objectMapper.readValue(json, PostsResponse.class)
+
+        then:
+        verifyAll(map) {
+            containsKey("posts")
+            get("posts") instanceof List
+            ((List) get("posts")).size() == 1
+        }
+        verifyAll(deserialized) {
+            it == response
+            posts() != null
+            posts().size() == 1
+            posts().first().id == 555L
+            posts().first().title == "Release Notes"
+        }
+    }
+
+    def "should handle null posts component in constructor, wither, and serde"() {
+        when:
+        PostsResponse response = new PostsResponse(null)
+        Post item = new Post("Maintenance Notice").setId(99L)
+        PostsResponse updated = response.withPosts([item])
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        PostsResponse deserialized = objectMapper.readValue(json, PostsResponse.class)
+
+        then:
+        verifyAll(response) {
+            posts() == null
+        }
+        verifyAll(updated) {
+            posts() != null
+            posts().size() == 1
+            posts().first().id == 99L
+        }
+        verifyAll(map) {
+            isEmpty()
+            !containsKey("posts")
+        }
+        verifyAll(deserialized) {
+            it == response
+            posts() == null
+        }
     }
 }
-

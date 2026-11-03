@@ -66,8 +66,8 @@ class GuideMediaClientSpec extends Z4jSpec {
         noExceptionThrown()
         assert defaultResp != null
         verifyAll(defaultResp) {
-            assetUploadId != null
-            uploadUrl != null
+            assetUploadId() != null
+            uploadUrl() != null
         }
 
         when: "creating upload url with custom parameters"
@@ -79,8 +79,8 @@ class GuideMediaClientSpec extends Z4jSpec {
         noExceptionThrown()
         assert customResp != null
         verifyAll(customResp) {
-            assetUploadId != null
-            uploadUrl != null
+            assetUploadId() != null
+            uploadUrl() != null
         }
     }
 
@@ -91,8 +91,8 @@ class GuideMediaClientSpec extends Z4jSpec {
         GuideMediaUploadUrlResponse uploadUrlResp = adminGuideMediaClient.createUploadUrl(
                 new GuideMediaUploadUrlRequest("text/plain", (long) payload.length)
         ).block()
-        String uploadUrl = uploadUrlResp.getUploadUrl()
-        String assetUploadId = uploadUrlResp.getAssetUploadId()
+        String uploadUrl = uploadUrlResp.uploadUrl()
+        String assetUploadId = uploadUrlResp.assetUploadId()
         String filename = "test-media-${entropy}.txt"
         String renamedFilename = "renamed-media-${entropy}.txt"
         String mediaId = null
@@ -101,8 +101,8 @@ class GuideMediaClientSpec extends Z4jSpec {
         HttpURLConnection conn = (HttpURLConnection) URI.create(uploadUrl).toURL().openConnection()
         conn.setRequestMethod("PUT")
         conn.setDoOutput(true)
-        if (uploadUrlResp.getHeaders() != null) {
-            Map<String, String> headerMap = objectMapper.readValue(uploadUrlResp.getHeaders(), Map.class)
+        if (uploadUrlResp.headers() != null) {
+            Map<String, String> headerMap = objectMapper.readValue(uploadUrlResp.headers(), Map.class)
             headerMap.each { k, v -> conn.setRequestProperty(k, v) }
         } else {
             conn.setRequestProperty("Content-Type", "text/plain")
@@ -175,11 +175,11 @@ class GuideMediaClientSpec extends Z4jSpec {
         GuideMediaUploadUrlResponse uploadResp1 = adminGuideMediaClient.createUploadUrl(
                 new GuideMediaUploadUrlRequest("text/plain", (long) payload1.length)
         ).block()
-        HttpURLConnection conn1 = (HttpURLConnection) URI.create(uploadResp1.getUploadUrl()).toURL().openConnection()
+        HttpURLConnection conn1 = (HttpURLConnection) URI.create(uploadResp1.uploadUrl()).toURL().openConnection()
         conn1.setRequestMethod("PUT")
         conn1.setDoOutput(true)
-        if (uploadResp1.getHeaders() != null) {
-            Map<String, String> headerMap = objectMapper.readValue(uploadResp1.getHeaders(), Map.class)
+        if (uploadResp1.headers() != null) {
+            Map<String, String> headerMap = objectMapper.readValue(uploadResp1.headers(), Map.class)
             headerMap.each { k, v -> conn1.setRequestProperty(k, v) }
         } else {
             conn1.setRequestProperty("Content-Type", "text/plain")
@@ -189,7 +189,7 @@ class GuideMediaClientSpec extends Z4jSpec {
 
         String initialFilename = "initial-media-${entropy}.txt"
         GuideMediaResponse created = adminGuideMediaClient.createGuideMedia(
-                new GuideMediaCreateRequest(uploadResp1.getAssetUploadId(), initialFilename)
+                new GuideMediaCreateRequest(uploadResp1.assetUploadId(), initialFilename)
         ).block()
         String mediaId = created?.media()?.id
 
@@ -198,11 +198,11 @@ class GuideMediaClientSpec extends Z4jSpec {
         GuideMediaUploadUrlResponse uploadResp2 = adminGuideMediaClient.createUploadUrl(
                 new GuideMediaUploadUrlRequest("text/plain", (long) payload2.length)
         ).block()
-        HttpURLConnection conn2 = (HttpURLConnection) URI.create(uploadResp2.getUploadUrl()).toURL().openConnection()
+        HttpURLConnection conn2 = (HttpURLConnection) URI.create(uploadResp2.uploadUrl()).toURL().openConnection()
         conn2.setRequestMethod("PUT")
         conn2.setDoOutput(true)
-        if (uploadResp2.getHeaders() != null) {
-            Map<String, String> headerMap = objectMapper.readValue(uploadResp2.getHeaders(), Map.class)
+        if (uploadResp2.headers() != null) {
+            Map<String, String> headerMap = objectMapper.readValue(uploadResp2.headers(), Map.class)
             headerMap.each { k, v -> conn2.setRequestProperty(k, v) }
         } else {
             conn2.setRequestProperty("Content-Type", "text/plain")
@@ -214,7 +214,7 @@ class GuideMediaClientSpec extends Z4jSpec {
         when: "replacing the guide media"
         GuideMediaResponse replaced = adminGuideMediaClient.replaceGuideMedia(
                 mediaId,
-                new GuideMediaCreateRequest(uploadResp2.getAssetUploadId(), replacedFilename)
+                new GuideMediaCreateRequest(uploadResp2.assetUploadId(), replacedFilename)
         ).block()
 
         then: "replacement response returns updated media"
@@ -251,11 +251,11 @@ class GuideMediaClientSpec extends Z4jSpec {
         GuideMediaUploadUrlResponse uploadResp = adminGuideMediaClient.createUploadUrl(
                 new GuideMediaUploadUrlRequest("text/plain", (long) payload.length)
         ).block()
-        HttpURLConnection conn = (HttpURLConnection) URI.create(uploadResp.getUploadUrl()).toURL().openConnection()
+        HttpURLConnection conn = (HttpURLConnection) URI.create(uploadResp.uploadUrl()).toURL().openConnection()
         conn.setRequestMethod("PUT")
         conn.setDoOutput(true)
-        if (uploadResp.getHeaders() != null) {
-            Map<String, String> headerMap = objectMapper.readValue(uploadResp.getHeaders(), Map.class)
+        if (uploadResp.headers() != null) {
+            Map<String, String> headerMap = objectMapper.readValue(uploadResp.headers(), Map.class)
             headerMap.each { k, v -> conn.setRequestProperty(k, v) }
         } else {
             conn.setRequestProperty("Content-Type", "text/plain")
@@ -265,7 +265,7 @@ class GuideMediaClientSpec extends Z4jSpec {
 
         String filename = "role-reject-${entropy}.txt"
         GuideMediaResponse created = adminGuideMediaClient.createGuideMedia(
-                new GuideMediaCreateRequest(uploadResp.getAssetUploadId(), filename)
+                new GuideMediaCreateRequest(uploadResp.assetUploadId(), filename)
         ).block()
         String mediaId = created?.media()?.id
 

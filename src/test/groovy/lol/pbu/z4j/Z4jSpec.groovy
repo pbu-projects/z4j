@@ -50,7 +50,7 @@ class Z4jSpec extends Specification {
         badEmailCtx = getCtx("Z4J_ADMIN_EMAIL", ["micronaut.http.services.zendesk.email": "this-is-an-invalid-email"])
         badUrlCtx = getCtx("Z4J_ADMIN_EMAIL", ["micronaut.http.services.zendesk.url": "https://fake-url.lol"])
         faker = new Faker()
-        accountLocales = adminCtx.getBean(LocaleClient.class).listLocales().block().locales
+        accountLocales = adminCtx.getBean(LocaleClient.class).listLocales().block()?.locales()
     }
 
     void cleanupSpec() {

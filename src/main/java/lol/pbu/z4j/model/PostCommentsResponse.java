@@ -15,53 +15,25 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
-/**
- * PostCommentsResponse
- * @author Jonathan-Zollinger
- * @since 0.1.1
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(PostCommentsResponse.JSON_PROPERTY_COMMENTS)
 @Serdeable
-@Generated
-public class PostCommentsResponse {
+@RecordBuilder
+public record PostCommentsResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_COMMENTS) List<@Valid PostComment> comments
+) implements PostCommentsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_COMMENTS = "comments";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_COMMENTS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid PostComment> comments;
-
-    /**
-     * Add an item to the comments property in a chainable fashion.
-     *
-     * @return The same instance of PostCommentsResponse for chaining.
-     */
-    public PostCommentsResponse addCommentsItem(PostComment commentsItem) {
-        if (comments == null) {
-            comments = new ArrayList<>();
-        }
-        comments.add(commentsItem);
-        return this;
+    public PostCommentsResponse addCommentsItem(PostComment item) {
+        List<PostComment> list = new ArrayList<>(comments != null ? comments : List.of());
+        list.add(item);
+        return new PostCommentsResponse(list);
     }
-
 }

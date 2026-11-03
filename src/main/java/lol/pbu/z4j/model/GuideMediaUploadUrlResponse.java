@@ -15,57 +15,24 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
-/**
- * GuideMediaUploadUrlResponse
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder({
-        GuideMediaUploadUrlResponse.JSON_PROPERTY_UPLOAD_URL,
-        GuideMediaUploadUrlResponse.JSON_PROPERTY_ASSET_UPLOAD_ID,
-        GuideMediaUploadUrlResponse.JSON_PROPERTY_HEADERS
-})
 @Serdeable
-@Generated
-public class GuideMediaUploadUrlResponse {
+@RecordBuilder
+public record GuideMediaUploadUrlResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_UPLOAD_URL) String uploadUrl,
+        @Nullable @JsonProperty(JSON_PROPERTY_ASSET_UPLOAD_ID) String assetUploadId,
+        @Nullable @JsonProperty(JSON_PROPERTY_HEADERS) String headers
+) implements GuideMediaUploadUrlResponseBuilder.With {
 
     public static final String JSON_PROPERTY_UPLOAD_URL = "upload_url";
     public static final String JSON_PROPERTY_ASSET_UPLOAD_ID = "asset_upload_id";
     public static final String JSON_PROPERTY_HEADERS = "headers";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_UPLOAD_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String uploadUrl;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ASSET_UPLOAD_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String assetUploadId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_HEADERS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String headers;
-
     public GuideMediaUploadUrlResponse(String uploadUrl, String assetUploadId) {
-        this.uploadUrl = uploadUrl;
-        this.assetUploadId = assetUploadId;
+        this(uploadUrl, assetUploadId, null);
     }
 }

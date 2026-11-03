@@ -16,47 +16,23 @@
 package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
-/**
- * MissingTranslationsResponse
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(MissingTranslationsResponse.JSON_PROPERTY_LOCALES)
 @Serdeable
-@Generated
-public class MissingTranslationsResponse {
+@RecordBuilder
+public record MissingTranslationsResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_LOCALES) List<LocaleAbbreviation> locales
+) implements MissingTranslationsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_LOCALES = "locales";
 
-    @JsonProperty(JSON_PROPERTY_LOCALES)
-    private List<LocaleAbbreviation> locales;
-
-    /**
-     * Add an item to the locales property in a chainable fashion.
-     *
-     * @param localesItem the locale abbreviation to add
-     * @return The same instance of MissingTranslationsResponse for chaining.
-     */
-    public MissingTranslationsResponse addLocalesItem(LocaleAbbreviation localesItem) {
-        if (locales == null) {
-            locales = new ArrayList<>();
-        }
-        locales.add(localesItem);
-        return this;
+    public MissingTranslationsResponse addLocalesItem(LocaleAbbreviation item) {
+        List<LocaleAbbreviation> list = new ArrayList<>(locales != null ? locales : List.of());
+        list.add(item);
+        return new MissingTranslationsResponse(list);
     }
 }

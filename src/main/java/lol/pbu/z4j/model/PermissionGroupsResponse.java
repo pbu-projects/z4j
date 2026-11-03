@@ -15,54 +15,25 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * PermissionGroupsResponse
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(PermissionGroupsResponse.JSON_PROPERTY_PERMISSION_GROUPS)
 @Serdeable
-@Generated
-public class PermissionGroupsResponse {
+@RecordBuilder
+public record PermissionGroupsResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_PERMISSION_GROUPS) List<@Valid PermissionGroup> permissionGroups
+) implements PermissionGroupsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_PERMISSION_GROUPS = "permission_groups";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_PERMISSION_GROUPS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid PermissionGroup> permissionGroups;
-
-    /**
-     * Add an item to the permissionGroups property in a chainable fashion.
-     *
-     * @return The same instance of PermissionGroupsResponse for chaining.
-     */
-    public PermissionGroupsResponse addPermissionGroupsItem(PermissionGroup permissionGroupsItem) {
-        if (permissionGroups == null) {
-            permissionGroups = new ArrayList<>();
-        }
-        permissionGroups.add(permissionGroupsItem);
-        return this;
+    public PermissionGroupsResponse addPermissionGroupsItem(PermissionGroup item) {
+        List<PermissionGroup> list = new ArrayList<>(permissionGroups != null ? permissionGroups : List.of());
+        list.add(item);
+        return new PermissionGroupsResponse(list);
     }
-
 }

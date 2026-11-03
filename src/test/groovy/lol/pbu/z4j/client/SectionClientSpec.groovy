@@ -53,7 +53,7 @@ class SectionClientSpec extends Z4jSpec {
         userSectionClient = userCtx.getBean(SectionClient.class)
         adminCategoryClient = adminCtx.getBean(CategoryClient.class)
 
-        allLocales = adminCtx.getBean(LocaleClient.class).listLocales().block().locales.collect { it.localeAbbreviation }
+        allLocales = adminCtx.getBean(LocaleClient.class).listLocales().block().locales().collect { it.localeAbbreviation }
 
         CreateCategoryRequest catReq = new CreateCategoryRequest(
                 new Category("SectionClientSpec Category " + UUID.randomUUID())

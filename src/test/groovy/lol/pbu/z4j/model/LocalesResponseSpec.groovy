@@ -15,39 +15,126 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.serde.ObjectMapper
 import lol.pbu.z4j.Z4jSpec
-import spock.lang.Unroll
+import spock.lang.Shared
 
 class LocalesResponseSpec extends Z4jSpec {
 
-    @Unroll
-    def "should add locales item"() {
-        given:
-        def localesResponse = new LocalesResponse()
-        localesResponse.locales == null
-        def locale = new Locale(name: faker.nation().language())
+    @Shared
+    ObjectMapper objectMapper
 
-        when:
-        localesResponse.addLocalesItem(locale)
-
-        then:
-        localesResponse.locales.size() == 1
-        localesResponse.locales.getAt(0) == locale
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
     }
 
-    @Unroll
-    def "add locales item to existing list"() {
+    def "should create LocalesResponse with canonical constructor and builder"() {
         given:
-        def existingLocale = new Locale(name: faker.nation().language())
-        def localesResponse = new LocalesResponse(locales: [existingLocale])
-        def newLocale = new Locale(name: faker.nation().language())
+        Locale item = new Locale().setId(101L).setName("English").setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        List<Locale> list = [item]
 
         when:
-        localesResponse.addLocalesItem(newLocale)
+        LocalesResponse direct = new LocalesResponse(list)
+        LocalesResponse built = LocalesResponseBuilder.builder()
+                .locales(list)
+                .build()
 
         then:
-        localesResponse.locales.size() == 2
-        localesResponse.locales.containsAll([existingLocale, newLocale])
+        verifyAll(direct) {
+            locales() == list
+            locales().size() == 1
+            locales().first().id == 101L
+            locales().first().name == "English"
+        }
+        verifyAll(built) {
+            locales() == list
+            locales().size() == 1
+            locales().first().id == 101L
+            locales().first().name == "English"
+        }
+    }
+
+    def "should update locales using record wither and addLocalesItem method"() {
+        given:
+        Locale first = new Locale().setId(1L).setName("English")
+        Locale second = new Locale().setId(2L).setName("Spanish")
+        LocalesResponse response = new LocalesResponse([first])
+
+        when:
+        LocalesResponse withNewList = response.withLocales([second])
+        LocalesResponse withAdded = response.addLocalesItem(second)
+        LocalesResponse fromNull = new LocalesResponse(null).addLocalesItem(first)
+
+        then:
+        verifyAll(response) {
+            locales().size() == 1
+            locales().first().id == 1L
+        }
+        verifyAll(withNewList) {
+            locales().size() == 1
+            locales().first().id == 2L
+        }
+        verifyAll(withAdded) {
+            locales().size() == 2
+            locales().first().id == 1L
+            locales().last().id == 2L
+        }
+        verifyAll(fromNull) {
+            locales().size() == 1
+            locales().first().id == 1L
+        }
+    }
+
+    def "should round-trip serialize and deserialize LocalesResponse"() {
+        given:
+        Locale item = new Locale().setId(555L).setName("French").setLocaleAbbreviation(LocaleAbbreviation.FRENCH)
+        LocalesResponse response = new LocalesResponse([item])
+
+        when:
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        LocalesResponse deserialized = objectMapper.readValue(json, LocalesResponse.class)
+
+        then:
+        verifyAll(map) {
+            containsKey("locales")
+            get("locales") instanceof List
+            ((List) get("locales")).size() == 1
+        }
+        verifyAll(deserialized) {
+            it == response
+            locales() != null
+            locales().size() == 1
+            locales().first().id == 555L
+            locales().first().name == "French"
+        }
+    }
+
+    def "should handle null locales component in constructor, wither, and serde"() {
+        when:
+        LocalesResponse response = new LocalesResponse(null)
+        Locale item = new Locale().setId(99L).setName("German")
+        LocalesResponse updated = response.withLocales([item])
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        LocalesResponse deserialized = objectMapper.readValue(json, LocalesResponse.class)
+
+        then:
+        verifyAll(response) {
+            locales() == null
+        }
+        verifyAll(updated) {
+            locales() != null
+            locales().size() == 1
+            locales().first().id == 99L
+        }
+        verifyAll(map) {
+            isEmpty()
+            !containsKey("locales")
+        }
+        verifyAll(deserialized) {
+            it == response
+            locales() == null
+        }
     }
 }
-

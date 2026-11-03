@@ -78,7 +78,7 @@ class TranslationClientSpec extends Z4jSpec {
 
         HelpCenterLocalesResponse hcLocales = adminTranslationClient.listHelpCenterLocales().block()
         defaultLocale = hcLocales?.defaultLocale ?: LocaleAbbreviation.ENGLISH_UNITED_STATES
-        allLocales = hcLocales?.locales ?: userCtx.getBean(LocaleClient.class).listLocales().block().locales.collect { it.localeAbbreviation }
+        allLocales = hcLocales?.locales ?: userCtx.getBean(LocaleClient.class).listLocales().block().locales().collect { it.localeAbbreviation }
         targetLocales = allLocales.findAll { it != defaultLocale }
         assert !targetLocales.isEmpty() : "Test requires at least one non-default locale enabled in Help Center"
 
@@ -496,8 +496,8 @@ class TranslationClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(response) {
-            locales != null
-            !locales.isEmpty()
+            locales() != null
+            !locales().isEmpty()
         }
 
         where:
@@ -530,8 +530,8 @@ class TranslationClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(response) {
-            locales != null
-            !locales.isEmpty()
+            locales() != null
+            !locales().isEmpty()
         }
 
         where:
@@ -564,8 +564,8 @@ class TranslationClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(response) {
-            locales != null
-            !locales.isEmpty()
+            locales() != null
+            !locales().isEmpty()
         }
 
         where:
@@ -598,8 +598,8 @@ class TranslationClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll(response) {
-            locales != null
-            !locales.isEmpty()
+            locales() != null
+            !locales().isEmpty()
         }
 
         where:

@@ -24,12 +24,11 @@ import io.micronaut.http.annotation.ClientFilter;
 import io.micronaut.http.annotation.RequestFilter;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import jakarta.inject.Inject;
+import java.time.Instant;
+import java.util.concurrent.locks.ReentrantLock;
 import lol.pbu.z4j.model.OAuthTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.time.Instant;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * <h1>OAuth Client Credentials Auth Filter.</h1>
@@ -113,11 +112,11 @@ public class OAuthClientCredentialsAuthFilter {
             OAuthTokenRequest req = new OAuthTokenRequest(clientId, clientSecret, scope);
             try {
                 OAuthTokenResponse resp = resolveTokenClient().requestToken(req).block();
-                if (resp == null || resp.getAccessToken() == null) {
+                if (resp == null || resp.accessToken() == null) {
                     throw new IllegalStateException("Received empty OAuth token response from Zendesk for client id: " + clientId);
                 }
-                cachedToken = resp.getAccessToken();
-                long expiresIn = resp.getExpiresIn() != null ? resp.getExpiresIn() : 1800L;
+                cachedToken = resp.accessToken();
+                long expiresIn = resp.expiresIn() != null ? resp.expiresIn() : 1800L;
                 tokenExpiration = Instant.now().plusSeconds(Math.max(0, expiresIn - REFRESH_WINDOW_SECONDS));
                 return cachedToken;
             } catch (HttpClientResponseException e) {
