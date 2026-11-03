@@ -15,37 +15,61 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.serde.ObjectMapper
 import lol.pbu.z4j.Z4jSpec
+import spock.lang.Shared
 import spock.lang.Unroll
 
 class TicketStatusSpec extends Z4jSpec {
 
+    @Shared
+    ObjectMapper objectMapper
+
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
+    }
+
     @Unroll
-    def "#status toString() should return #expectedString"() {
+    def "#status toString() and getValue() should return #expectedString"() {
         expect:
-        status.toString() == expectedString
+        verifyAll {
+            status.toString() == expectedString
+            status.getValue() == expectedString
+        }
 
         where:
         status               | expectedString
         TicketStatus.NEW     | "new"
         TicketStatus.OPEN    | "open"
         TicketStatus.PENDING | "pending"
+        TicketStatus.HOLD    | "hold"
         TicketStatus.SOLVED  | "solved"
         TicketStatus.CLOSED  | "closed"
+        TicketStatus.DELETED | "deleted"
     }
 
     @Unroll
-    def "fromValue(#stringValue) should return #expectedStatus"() {
-        expect:
-        TicketStatus.fromValue(stringValue) == expectedStatus
+    def "fromValue(#stringValue) and JSON round-trip should return #expectedStatus"() {
+        when:
+        String json = objectMapper.writeValueAsString(expectedStatus)
+        TicketStatus deserialized = objectMapper.readValue(json, TicketStatus.class)
+
+        then:
+        verifyAll {
+            TicketStatus.fromValue(stringValue) == expectedStatus
+            json == "\"${stringValue}\""
+            deserialized == expectedStatus
+        }
 
         where:
         stringValue | expectedStatus
         "new"       | TicketStatus.NEW
         "open"      | TicketStatus.OPEN
         "pending"   | TicketStatus.PENDING
+        "hold"      | TicketStatus.HOLD
         "solved"    | TicketStatus.SOLVED
         "closed"    | TicketStatus.CLOSED
+        "deleted"   | TicketStatus.DELETED
     }
 
     def "fromValue() should throw IllegalArgumentException for invalid string"() {

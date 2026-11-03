@@ -15,15 +15,27 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.serde.ObjectMapper
 import lol.pbu.z4j.Z4jSpec
+import spock.lang.Shared
 import spock.lang.Unroll
 
 class TicketPrioritySpec extends Z4jSpec {
 
+    @Shared
+    ObjectMapper objectMapper
+
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
+    }
+
     @Unroll
-    def "#priority toString() should return #expectedString"() {
+    def "#priority toString() and getValue() should return #expectedString"() {
         expect:
-        priority.toString() == expectedString
+        verifyAll {
+            priority.toString() == expectedString
+            priority.getValue() == expectedString
+        }
 
         where:
         priority              | expectedString
@@ -34,9 +46,17 @@ class TicketPrioritySpec extends Z4jSpec {
     }
 
     @Unroll
-    def "fromValue(#stringValue) should return #expectedPriority"() {
-        expect:
-        TicketPriority.fromValue(stringValue) == expectedPriority
+    def "fromValue(#stringValue) and JSON round-trip should return #expectedPriority"() {
+        when:
+        String json = objectMapper.writeValueAsString(expectedPriority)
+        TicketPriority deserialized = objectMapper.readValue(json, TicketPriority.class)
+
+        then:
+        verifyAll {
+            TicketPriority.fromValue(stringValue) == expectedPriority
+            json == "\"${stringValue}\""
+            deserialized == expectedPriority
+        }
 
         where:
         stringValue | expectedPriority

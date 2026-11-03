@@ -19,22 +19,15 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import lol.pbu.z4j.Generated;
 
 /**
  * The locale of the translation
  */
-@RequiredArgsConstructor
-@Getter(onMethod = @__(@JsonValue))
 @Serdeable
-@Generated
 public enum LocaleAbbreviation {
 
     @JsonProperty("ar")
@@ -162,6 +155,15 @@ public enum LocaleAbbreviation {
             .collect(Collectors.toMap(v -> v.value, Function.identity())));
 
     private final String value;
+
+    LocaleAbbreviation(String value) {
+        this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+        return value;
+    }
 
     /**
      * Create this enum from a value.

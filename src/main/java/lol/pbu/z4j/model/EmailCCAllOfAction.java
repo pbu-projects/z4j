@@ -19,14 +19,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import lol.pbu.z4j.Generated;
 
 /**
  * Gets or Sets EmailCC_allOf_action
@@ -34,10 +30,7 @@ import lol.pbu.z4j.Generated;
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@RequiredArgsConstructor
-@Getter(onMethod_ = {@JsonValue})
 @Serdeable
-@Generated
 public enum EmailCCAllOfAction {
 
     @JsonProperty("put")
@@ -51,6 +44,15 @@ public enum EmailCCAllOfAction {
             .collect(Collectors.toMap(v -> v.value, Function.identity())));
 
     private final String value;
+
+    EmailCCAllOfAction(String value) {
+        this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+        return value;
+    }
 
     /**
      * Create this enum from a value.

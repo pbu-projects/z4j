@@ -19,25 +19,18 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import lol.pbu.z4j.Generated;
 
 /**
- * The state of the ticket.  If your account has activated custom ticket statuses, this is the ticket's status category. See <a href=\"#custom-ticket-statuses\">custom ticket statuses</a>.
+ * The state of the ticket. If your account has activated custom ticket statuses, this is the ticket's status category. See <a href="#custom-ticket-statuses">custom ticket statuses</a>.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@RequiredArgsConstructor
-@Getter(onMethod_ = {@JsonValue})
 @Serdeable
-@Generated
 public enum TicketUpdateInputStatus {
 
     @JsonProperty("new")
@@ -63,6 +56,15 @@ public enum TicketUpdateInputStatus {
             .collect(Collectors.toMap(v -> v.value, Function.identity())));
 
     private final String value;
+
+    TicketUpdateInputStatus(String value) {
+        this.value = value;
+    }
+
+    @JsonValue
+    public String getValue() {
+        return value;
+    }
 
     /**
      * Create this enum from a value.

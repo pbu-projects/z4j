@@ -15,15 +15,27 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.serde.ObjectMapper
 import lol.pbu.z4j.Z4jSpec
+import spock.lang.Shared
 import spock.lang.Unroll
 
 class TopicManageableBySpec extends Z4jSpec {
 
+    @Shared
+    ObjectMapper objectMapper
+
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
+    }
+
     @Unroll
-    def "#manageableBy toString() should return #expectedString"() {
+    def "#manageableBy toString() and getValue() should return #expectedString"() {
         expect:
-        manageableBy.toString() == expectedString
+        verifyAll {
+            manageableBy.toString() == expectedString
+            manageableBy.getValue() == expectedString
+        }
 
         where:
         manageableBy               | expectedString
@@ -32,9 +44,17 @@ class TopicManageableBySpec extends Z4jSpec {
     }
 
     @Unroll
-    def "fromValue(#stringValue) should return #expectedManageableBy"() {
-        expect:
-        TopicManageableBy.fromValue(stringValue) == expectedManageableBy
+    def "fromValue(#stringValue) and JSON round-trip should return #expectedManageableBy"() {
+        when:
+        String json = objectMapper.writeValueAsString(expectedManageableBy)
+        TopicManageableBy deserialized = objectMapper.readValue(json, TopicManageableBy.class)
+
+        then:
+        verifyAll {
+            TopicManageableBy.fromValue(stringValue) == expectedManageableBy
+            json == "\"${stringValue}\""
+            deserialized == expectedManageableBy
+        }
 
         where:
         stringValue | expectedManageableBy
