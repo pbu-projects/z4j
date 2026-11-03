@@ -134,16 +134,18 @@ class ArticleAttachmentClientSpec extends Z4jSpec {
                 content,
                 true
         ).block()
-        attachmentId = response?.articleAttachment?.id
+        attachmentId = response?.articleAttachment()?.id
 
         then: "attachment is created with metadata"
         noExceptionThrown()
         response != null
-        response.articleAttachment != null
-        response.articleAttachment.id != null
-        response.articleAttachment.fileName == filename
-        response.articleAttachment.size == (long) content.length
-        response.articleAttachment.inline == true
+        verifyAll(response.articleAttachment()) {
+            it != null
+            id != null
+            fileName == filename
+            size == (long) content.length
+            inline == true
+        }
 
         cleanup: "delete the created attachment"
         if (attachmentId != null) {
@@ -168,14 +170,16 @@ class ArticleAttachmentClientSpec extends Z4jSpec {
 
         when: "posting unassociated attachment"
         ArticleAttachmentResponse response = adminAttachmentClient.createUnassociatedAttachment(body).block()
-        attachmentId = response?.articleAttachment?.id
+        attachmentId = response?.articleAttachment()?.id
 
         then: "attachment is successfully created"
         noExceptionThrown()
         response != null
-        response.articleAttachment != null
-        response.articleAttachment.id != null
-        response.articleAttachment.fileName == filename
+        verifyAll(response.articleAttachment()) {
+            it != null
+            id != null
+            fileName == filename
+        }
 
         cleanup: "delete created attachment"
         if (attachmentId != null) {
@@ -197,7 +201,7 @@ class ArticleAttachmentClientSpec extends Z4jSpec {
                 content,
                 false
         ).block()
-        Long attachmentId = created?.articleAttachment?.id
+        Long attachmentId = created?.articleAttachment()?.id
 
         when: "fetching the attachment by id"
         ArticleAttachmentResponse response = adminAttachmentClient.showArticleAttachment(attachmentId).block()
@@ -205,9 +209,11 @@ class ArticleAttachmentClientSpec extends Z4jSpec {
         then: "attachment details match"
         noExceptionThrown()
         response != null
-        response.articleAttachment != null
-        response.articleAttachment.id == attachmentId
-        response.articleAttachment.fileName == filename
+        verifyAll(response.articleAttachment()) {
+            it != null
+            id == attachmentId
+            fileName == filename
+        }
 
         cleanup: "delete created attachment"
         if (attachmentId != null) {
@@ -229,7 +235,7 @@ class ArticleAttachmentClientSpec extends Z4jSpec {
                 content,
                 false
         ).block()
-        Long attachmentId = created?.articleAttachment?.id
+        Long attachmentId = created?.articleAttachment()?.id
 
         when: "deleting the attachment"
         adminAttachmentClient.deleteArticleAttachment(attachmentId).block()
@@ -262,15 +268,17 @@ class ArticleAttachmentClientSpec extends Z4jSpec {
                 content,
                 false
         ).block()
-        attachmentId = response?.articleAttachment?.id
+        attachmentId = response?.articleAttachment()?.id
 
         then: "response contains attachment linked to article"
         noExceptionThrown()
         response != null
-        response.articleAttachment != null
-        response.articleAttachment.id != null
-        response.articleAttachment.articleId == testArticle.id
-        response.articleAttachment.fileName == filename
+        verifyAll(response.articleAttachment()) {
+            it != null
+            id != null
+            articleId == testArticle.id
+            fileName == filename
+        }
 
         cleanup: "delete created attachment"
         if (attachmentId != null) {
@@ -296,15 +304,17 @@ class ArticleAttachmentClientSpec extends Z4jSpec {
                 content,
                 false
         ).block()
-        attachmentId = response?.articleAttachment?.id
+        attachmentId = response?.articleAttachment()?.id
 
         then: "response contains attachment linked to article"
         noExceptionThrown()
         response != null
-        response.articleAttachment != null
-        response.articleAttachment.id != null
-        response.articleAttachment.articleId == testArticle.id
-        response.articleAttachment.fileName == filename
+        verifyAll(response.articleAttachment()) {
+            it != null
+            id != null
+            articleId == testArticle.id
+            fileName == filename
+        }
 
         cleanup: "delete created attachment"
         if (attachmentId != null) {
@@ -328,7 +338,7 @@ class ArticleAttachmentClientSpec extends Z4jSpec {
                 content,
                 false
         ).block()
-        Long attachmentId = created?.articleAttachment?.id
+        Long attachmentId = created?.articleAttachment()?.id
 
         when: "listing attachments for the article with locale"
         ArticleAttachmentsResponse listWithLoc = adminAttachmentClient.listArticleAttachments(
@@ -372,7 +382,7 @@ class ArticleAttachmentClientSpec extends Z4jSpec {
                 content,
                 false
         ).block()
-        Long attachmentId = created?.articleAttachment?.id
+        Long attachmentId = created?.articleAttachment()?.id
 
         when: "listing block attachments with and without locale"
         ArticleAttachmentsResponse blockListWithLoc = adminAttachmentClient.listArticleBlockAttachments(
@@ -419,7 +429,7 @@ class ArticleAttachmentClientSpec extends Z4jSpec {
                 content,
                 true
         ).block()
-        Long attachmentId = created?.articleAttachment?.id
+        Long attachmentId = created?.articleAttachment()?.id
 
         when: "listing inline attachments with and without locale"
         ArticleAttachmentsResponse inlineListWithLoc = adminAttachmentClient.listArticleInlineAttachments(

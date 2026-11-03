@@ -45,7 +45,7 @@ class TopicClientSpec extends Z4jSpec {
         // Create a shared topic for read tests
         def fixture = topicFixtures.getTopics().first()
         def createReq = new TopicCreateRequest().setTopic(new Topic(fixture.getName()).setDescription(fixture.getDescription()))
-        sharedTopicId = adminTopicClient.createTopic(createReq).block().getTopic().getId()
+        sharedTopicId = adminTopicClient.createTopic(createReq).block().topic().getId()
     }
 
     def cleanupSpec() {
@@ -80,7 +80,7 @@ class TopicClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         and:
-        response.getTopic().getId() == sharedTopicId
+        response.topic().getId() == sharedTopicId
 
         where:
         [topicClient, userType] << [
@@ -101,11 +101,11 @@ class TopicClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         and:
-        response.getTopic().getName() == name
+        response.topic().getName() == name
 
         cleanup:
         try {
-            adminTopicClient.deleteTopic(response.getTopic().getId()).block()
+            adminTopicClient.deleteTopic(response.topic().getId()).block()
         } catch (Exception ignored) {}
 
         where:
@@ -135,7 +135,7 @@ class TopicClientSpec extends Z4jSpec {
     def "can update a topic as an admin"(String name, String description, String updatedName) {
         given:
         def createReq = new TopicCreateRequest().setTopic(new Topic(name).setDescription(description))
-        def created = adminTopicClient.createTopic(createReq).block().getTopic()
+        def created = adminTopicClient.createTopic(createReq).block().topic()
 
         when:
         def updateReq = new TopicUpdateRequest().setTopic(new Topic(updatedName))
@@ -145,7 +145,7 @@ class TopicClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         and:
-        response.getTopic().getName() == updatedName
+        response.topic().getName() == updatedName
 
         cleanup:
         try {
@@ -179,7 +179,7 @@ class TopicClientSpec extends Z4jSpec {
     def "can delete a topic as an admin"(String name, String description) {
         given:
         def createReq = new TopicCreateRequest().setTopic(new Topic(name).setDescription(description))
-        def created = adminTopicClient.createTopic(createReq).block().getTopic()
+        def created = adminTopicClient.createTopic(createReq).block().topic()
 
         when:
         adminTopicClient.deleteTopic(created.getId()).block()

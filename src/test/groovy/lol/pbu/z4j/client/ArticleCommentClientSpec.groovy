@@ -129,14 +129,16 @@ class ArticleCommentClientSpec extends Z4jSpec {
 
         when: "creating comment with locale"
         CommentResponse response = adminCommentClient.createComment(defaultLocale, testArticle.id, req).block()
-        commentId = response?.comment?.id
+        commentId = response?.comment()?.id
 
         then: "comment is created with expected body"
         noExceptionThrown()
         response != null
-        response.comment != null
-        response.comment.id != null
-        response.comment.body == commentBody
+        verifyAll(response.comment()) {
+            it != null
+            id != null
+            body == commentBody
+        }
 
         cleanup: "delete created comment"
         if (commentId != null) {
@@ -157,14 +159,16 @@ class ArticleCommentClientSpec extends Z4jSpec {
 
         when: "creating comment without locale"
         CommentResponse response = adminCommentClient.createCommentNoLocale(testArticle.id, req).block()
-        commentId = response?.comment?.id
+        commentId = response?.comment()?.id
 
         then: "comment is created with expected body"
         noExceptionThrown()
         response != null
-        response.comment != null
-        response.comment.id != null
-        response.comment.body == commentBody
+        verifyAll(response.comment()) {
+            it != null
+            id != null
+            body == commentBody
+        }
 
         cleanup: "delete created comment"
         if (commentId != null) {
@@ -185,7 +189,7 @@ class ArticleCommentClientSpec extends Z4jSpec {
                 testArticle.id,
                 new CommentCreateRequest(new Comment(commentBody, defaultLocale))
         ).block()
-        Long commentId = created?.comment?.id
+        Long commentId = created?.comment()?.id
 
         when: "showing comment with locale"
         CommentResponse showWithLoc = adminCommentClient.showComment(defaultLocale, testArticle.id, commentId).block()
@@ -196,12 +200,16 @@ class ArticleCommentClientSpec extends Z4jSpec {
         then: "both responses return the comment"
         noExceptionThrown()
         showWithLoc != null
-        showWithLoc.comment != null
-        showWithLoc.comment.id == commentId
-        showWithLoc.comment.body == commentBody
+        verifyAll(showWithLoc.comment()) {
+            it != null
+            id == commentId
+            body == commentBody
+        }
         showNoLoc != null
-        showNoLoc.comment != null
-        showNoLoc.comment.id == commentId
+        verifyAll(showNoLoc.comment()) {
+            it != null
+            id == commentId
+        }
 
         cleanup: "delete created comment"
         if (commentId != null) {
@@ -221,7 +229,7 @@ class ArticleCommentClientSpec extends Z4jSpec {
                 testArticle.id,
                 new CommentCreateRequest(new Comment("Initial comment ${entropy}", defaultLocale))
         ).block()
-        Long commentId = created?.comment?.id
+        Long commentId = created?.comment()?.id
         String updatedBody1 = "Updated body with locale ${entropy}"
         String updatedBody2 = "Updated body without locale ${entropy}"
 
@@ -242,8 +250,8 @@ class ArticleCommentClientSpec extends Z4jSpec {
 
         then: "comments are updated successfully"
         noExceptionThrown()
-        updatedWithLoc?.comment?.body?.contains(updatedBody1)
-        updatedNoLoc?.comment?.body?.contains(updatedBody2)
+        updatedWithLoc?.comment()?.body?.contains(updatedBody1)
+        updatedNoLoc?.comment()?.body?.contains(updatedBody2)
 
         cleanup: "delete created comment"
         if (commentId != null) {
@@ -263,7 +271,7 @@ class ArticleCommentClientSpec extends Z4jSpec {
                 testArticle.id,
                 new CommentCreateRequest(new Comment("List comment test ${entropy}", defaultLocale))
         ).block()
-        Long commentId = created?.comment?.id
+        Long commentId = created?.comment()?.id
 
         when: "listing comments on article with locale"
         CommentsResponse listWithLoc = adminCommentClient.listCommentsOnArticle(defaultLocale, testArticle.id).block()
@@ -296,8 +304,8 @@ class ArticleCommentClientSpec extends Z4jSpec {
                 testArticle.id,
                 new CommentCreateRequest(new Comment("User comment test ${entropy}", defaultLocale))
         ).block()
-        Long commentId = created?.comment?.id
-        Long userId = created?.comment?.authorId
+        Long commentId = created?.comment()?.id
+        Long userId = created?.comment()?.authorId
 
         when: "listing comments by user"
         CommentsResponse userComments = adminCommentClient.listCommentsByUser(userId).block()
@@ -330,8 +338,8 @@ class ArticleCommentClientSpec extends Z4jSpec {
                 testArticle.id,
                 new CommentCreateRequest(new Comment("Delete test 2 ${entropy}", defaultLocale))
         ).block()
-        Long commentId1 = created1?.comment?.id
-        Long commentId2 = created2?.comment?.id
+        Long commentId1 = created1?.comment()?.id
+        Long commentId2 = created2?.comment()?.id
 
         when: "deleting comment 1 with locale"
         adminCommentClient.deleteComment(defaultLocale, testArticle.id, commentId1).block()

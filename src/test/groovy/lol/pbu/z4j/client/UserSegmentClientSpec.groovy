@@ -60,7 +60,7 @@ class UserSegmentClientSpec extends Z4jSpec {
     def "can create user segment named '#segmentName' with '#userType' user type"(String userType, String segmentName) {
         when:
         UserSegment userSegment = userSegmentClient.createUserSegment(
-                new CreateUserSegmentRequest(new UserSegment(segmentName, userType))).block().getUserSegment()
+                new CreateUserSegmentRequest(new UserSegment(segmentName, userType))).block().userSegment()
 
         then:
         noExceptionThrown()
@@ -128,7 +128,7 @@ class UserSegmentClientSpec extends Z4jSpec {
         UserSegmentResponse response = userSegmentClient.showUserSegment(userSegment.getId()).block()
 
         and: "query resultant userSegments"
-        response.getUserSegment()
+        response.userSegment()
 
         then:
         noExceptionThrown()
@@ -167,7 +167,7 @@ class UserSegmentClientSpec extends Z4jSpec {
     }
 
     UserSegment createUserSegment(String userType, String name) {
-        return userSegmentClient.createUserSegment(new CreateUserSegmentRequest(new UserSegment(name, userType))).block().getUserSegment()
+        return userSegmentClient.createUserSegment(new CreateUserSegmentRequest(new UserSegment(name, userType))).block().userSegment()
     }
 }
 
