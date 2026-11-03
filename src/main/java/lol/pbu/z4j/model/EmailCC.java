@@ -64,7 +64,7 @@ public class EmailCC {
     @Nullable
     @JsonProperty(JSON_PROPERTY_USER_ID)
     @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String userId;
+    private Long userId;
 
     @Nullable
     @JsonProperty(JSON_PROPERTY_USER_NAME)
