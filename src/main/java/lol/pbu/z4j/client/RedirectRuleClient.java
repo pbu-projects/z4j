@@ -30,10 +30,31 @@ import reactor.core.publisher.Mono;
 
 /**
  * <h1>Work with Redirect Rules in Zendesk Guide.</h1>
+ * <p>Redirect rules send visitors from old article links to new article links.</p>
+ *
+ * <h3>Example Usage:</h3>
+ * <p>Create or set a redirect rule:</p>
+ * <pre>{@code
+ * redirectRuleClient.setRedirectRule(
+ *         new RedirectRuleCreateRequest("/hc/en-us/articles/old", "/hc/en-us/articles/new", 301)
+ * ).block();
+ * }</pre>
+ *
+ * <p>Handle an error when a redirect rule is not found:</p>
+ * <pre>{@code
+ * try {
+ *     redirectRuleClient.showRedirectRule("missing-id").block();
+ * } catch (HttpClientResponseException e) {
+ *     int statusCode = e.getStatus().getCode();
+ * }
+ * }</pre>
+ *
  * <ul>
  *     <li>Search Redirect Rules {@link #searchRedirectRules}</li>
+ *     <li>List Redirect Rules {@link #listRedirectRules}</li>
  *     <li>Show Redirect Rule {@link #showRedirectRule}</li>
  *     <li>Create Redirect Rule {@link #createRedirectRule}</li>
+ *     <li>Set Redirect Rule {@link #setRedirectRule}</li>
  *     <li>Delete Redirect Rule {@link #deleteRedirectRule}</li>
  * </ul>
  *
@@ -91,7 +112,7 @@ public interface RedirectRuleClient {
      * @return Void response (status code 204)
      */
     default Mono<Void> setRedirectRule(
-            RedirectRuleCreateRequest body
+            @NotNull @Valid RedirectRuleCreateRequest body
     ) {
         return createRedirectRule(body);
     }

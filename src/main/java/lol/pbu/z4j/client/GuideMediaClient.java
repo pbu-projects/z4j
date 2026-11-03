@@ -36,6 +36,24 @@ import reactor.core.publisher.Mono;
 
 /**
  * <h1>Work with Guide Media objects in Zendesk.</h1>
+ * <p>Guide media objects represent images and files attached to Guide content.</p>
+ *
+ * <h3>Example Usage:</h3>
+ * <p>Search for media files:</p>
+ * <pre>{@code
+ * GuideMediasResponse response = guideMediaClient.searchGuideMedia(null, null).block();
+ * List<GuideMedia> mediaList = response.getRecords();
+ * }</pre>
+ *
+ * <p>Handle an error when a media file is missing:</p>
+ * <pre>{@code
+ * try {
+ *     guideMediaClient.showGuideMedia("missing-id").block();
+ * } catch (HttpClientResponseException e) {
+ *     int statusCode = e.getStatus().getCode();
+ * }
+ * }</pre>
+ *
  * <ul>
  *     <li>Search Guide Media {@link #searchGuideMedia}</li>
  *     <li>Create Upload URL {@link #createUploadUrl}</li>
