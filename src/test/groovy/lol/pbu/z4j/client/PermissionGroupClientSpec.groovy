@@ -80,9 +80,10 @@ class PermissionGroupClientSpec extends Z4jSpec {
 
         then: "response contains the expected permission group"
         noExceptionThrown()
-        response != null
-        response.getPermissionGroup() != null
-        response.getPermissionGroup().getId() == existingId
+        verifyAll(response) {
+            permissionGroup() != null
+            permissionGroup().id == existingId
+        }
     }
 
     def "can create, update, and delete permission group as admin"() {
@@ -97,25 +98,28 @@ class PermissionGroupClientSpec extends Z4jSpec {
 
         when: "creating the permission group"
         PermissionGroupResponse createResponse = adminPermissionGroupClient.createPermissionGroup(createRequest).block()
-        if (createResponse != null && createResponse.getPermissionGroup() != null) {
-            createdId = createResponse.getPermissionGroup().getId()
+        if (createResponse != null && createResponse.permissionGroup() != null) {
+            createdId = createResponse.permissionGroup().id
         }
 
         then: "permission group is created"
         noExceptionThrown()
-        createResponse != null
-        createResponse.getPermissionGroup() != null
-        createdId != null
-        createResponse.getPermissionGroup().getName() == groupName
+        verifyAll(createResponse) {
+            permissionGroup() != null
+            createdId != null
+            permissionGroup().name == groupName
+        }
 
         when: "showing the created permission group"
         PermissionGroupResponse showResponse = adminPermissionGroupClient.showPermissionGroup(createdId).block()
 
         then: "the retrieved permission group matches"
         noExceptionThrown()
-        showResponse != null
-        showResponse.getPermissionGroup().getId() == createdId
-        showResponse.getPermissionGroup().getName() == groupName
+        verifyAll(showResponse) {
+            permissionGroup() != null
+            permissionGroup().id == createdId
+            permissionGroup().name == groupName
+        }
 
         when: "updating the permission group"
         String updatedName = "Updated PG " + UUID.randomUUID().toString()
@@ -125,8 +129,10 @@ class PermissionGroupClientSpec extends Z4jSpec {
 
         then: "the permission group is updated"
         noExceptionThrown()
-        updateResponse != null
-        updateResponse.getPermissionGroup().getName() == updatedName
+        verifyAll(updateResponse) {
+            permissionGroup() != null
+            permissionGroup().name == updatedName
+        }
 
         when: "deleting the permission group"
         adminPermissionGroupClient.deletePermissionGroup(createdId).block()

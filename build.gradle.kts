@@ -54,7 +54,9 @@ repositories {
 dependencies {
     annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
+    annotationProcessor("io.soabase.record-builder:record-builder-processor:53")
     compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    compileOnly("io.soabase.record-builder:record-builder-processor:53")
     implementation("io.micronaut.reactor:micronaut-reactor-http-client")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     implementation("io.micronaut.validation:micronaut-validation")
