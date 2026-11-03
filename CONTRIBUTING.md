@@ -18,6 +18,27 @@ For an in-depth understanding of the target personas and design philosophy drivi
 
 - This project uses [google's java style guide].
 - We follow (and enforce) [conventional commits] in this repo.
+
+### Git Pre-Commit Hook (Clean Unused Imports)
+To keep code clean and prevent unused imports from being flagged in pull requests or CI, this repository provides a fast pre-commit hook for both Java and Groovy.
+
+The hook runs on your staged files before each commit:
+- **Java**: Uses [google-java-format] with `--fix-imports-only` to organize imports and remove unused Java imports.
+- **Groovy**: Uses [npm-groovy-lint] (backed by [CodeNarc]) to remove unused Groovy imports.
+
+To install the pre-commit hook into your local `.git/hooks/`:
+```shell
+./scripts/setup-pre-commit.sh
+```
+
+You can also run the cleaner manually on staged files or specific files at any time:
+```shell
+# Clean currently staged files
+./scripts/clean-imports.sh
+
+# Or clean specific files
+./scripts/clean-imports.sh path/to/MyClass.java path/to/MySpec.groovy
+```
 ## Set up your machine
 
 `z4j` is written in java 25, compiled with the [graalvm], and uses [gradle] as its build tool.
@@ -363,3 +384,6 @@ This method is a little tricky to test for negative tests because the only way t
 [test it]:https://www.geeksforgeeks.org/software-engineering/difference-between-positive-testing-and-negative-testing/
 [Testing]:#testing
 [users]:#Required-Roles-for-Testing
+[google-java-format]:https://github.com/google/google-java-format
+[npm-groovy-lint]:https://nicolas-van.github.io/npm-groovy-lint/
+[CodeNarc]:https://codenarc.org/
