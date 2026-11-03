@@ -178,12 +178,12 @@ public class IncrementalService {
 
             return mono.map(res -> {
                 IncrementalPage<T> page = new IncrementalPage<>();
-                page.setResults((List<T>) res.getResults());
-                page.setCursor(res.getCursor() != null ? res.getCursor() : res.getAfterCursor());
-                page.setAfterCursor(res.getAfterCursor());
-                page.setBeforeCursor(res.getBeforeCursor());
-                page.setEndOfStream(res.getEndOfStream());
-                page.setCount(res.getCount());
+                page.setResults((List<T>) res.results());
+                page.setCursor(res.cursor() != null ? res.cursor() : res.afterCursor());
+                page.setAfterCursor(res.afterCursor());
+                page.setBeforeCursor(res.beforeCursor());
+                page.setEndOfStream(res.endOfStream());
+                page.setCount(res.count());
                 return page;
             });
         }
@@ -305,11 +305,11 @@ public class IncrementalService {
 
             return mono.map(res -> {
                 IncrementalTimePage<T> page = new IncrementalTimePage<>();
-                page.setResults((List<T>) res.getResults());
-                page.setEndTime(res.getEndTime());
-                page.setNextPage(res.getNextPage());
-                page.setEndOfStream(res.getEndOfStream());
-                page.setCount(res.getCount());
+                page.setResults((List<T>) res.results());
+                page.setEndTime(res.endTime());
+                page.setNextPage(res.nextPage());
+                page.setEndOfStream(res.endOfStream());
+                page.setCount(res.count());
                 return page;
             });
         }

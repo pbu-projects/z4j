@@ -19,31 +19,31 @@ import spock.lang.Specification
 
 class IncrementalTimePaginationResponseSpec extends Specification {
 
-    static class SampleTimeResponse extends IncrementalTimePaginationResponse<String> {
-        List<String> items = []
+    static record SampleTimeResponse(
+            List<String> results,
+            Long endTime,
+            String nextPage,
+            Boolean endOfStream,
+            Integer count
+    ) implements IncrementalTimePaginationResponse<String> {}
 
-        @Override
-        List<String> getResults() {
-            return items
-        }
-    }
-
-    def "time pagination response properties work as expected"() {
-        given:
-        def response = new SampleTimeResponse()
-        response.items = ["time_item1"]
-
+    def "time pagination response interface methods work as expected"() {
         when:
-        response.setEndTime(123456789L)
-                .setNextPage("https://example.zendesk.com/api/v2/incremental/orgs.json?start_time=123456789")
-                .setEndOfStream(true)
-                .setCount(5)
+        def response = new SampleTimeResponse(
+                ["time_item1"],
+                123456789L,
+                "https://example.zendesk.com/api/v2/incremental/orgs.json?start_time=123456789",
+                true,
+                5
+        )
 
         then:
-        response.getEndTime() == 123456789L
-        response.getNextPage() == "https://example.zendesk.com/api/v2/incremental/orgs.json?start_time=123456789"
-        response.getEndOfStream() == true
-        response.getCount() == 5
-        response.getResults() == ["time_item1"]
+        verifyAll(response) {
+            endTime() == 123456789L
+            nextPage() == "https://example.zendesk.com/api/v2/incremental/orgs.json?start_time=123456789"
+            endOfStream() == true
+            count() == 5
+            results() == ["time_item1"]
+        }
     }
 }

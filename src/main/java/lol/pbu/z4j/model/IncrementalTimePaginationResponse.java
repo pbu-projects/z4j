@@ -16,42 +16,35 @@
 package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.serde.annotation.Serdeable;
-import lombok.Data;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
 import java.util.List;
 
 /**
- * Base class for time-based incremental export responses.
+ * Shared interface for time-based incremental export responses.
  *
+ * @param <T> the exported item type
  * @author Jonathan-Zollinger
  * @since 0.2.7
  */
-@Data
-@Accessors(chain = true)
-@Serdeable
-@Generated
-public abstract class IncrementalTimePaginationResponse<T> {
-    @Nullable
-    @JsonProperty("end_time")
-    private Long endTime;
+public interface IncrementalTimePaginationResponse<T> {
+
+    String JSON_PROPERTY_END_TIME = "end_time";
+    String JSON_PROPERTY_NEXT_PAGE = "next_page";
+    String JSON_PROPERTY_END_OF_STREAM = "end_of_stream";
+    String JSON_PROPERTY_COUNT = "count";
 
     @Nullable
-    @JsonProperty("next_page")
-    private String nextPage;
+    Long endTime();
 
     @Nullable
-    @JsonProperty("end_of_stream")
-    private Boolean endOfStream;
+    String nextPage();
 
     @Nullable
-    @JsonProperty("count")
-    private Integer count;
+    Boolean endOfStream();
+
+    @Nullable
+    Integer count();
 
     @JsonIgnore
-    public abstract List<T> getResults();
+    List<T> results();
 }

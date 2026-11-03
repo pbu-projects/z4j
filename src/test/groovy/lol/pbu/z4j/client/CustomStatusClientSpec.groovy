@@ -48,13 +48,13 @@ class CustomStatusClientSpec extends Z4jSpec {
         adminTicketClient = adminCtx.getBean(TicketClient.class)
 
         def statusesResp = adminCustomStatusClient.listCustomStatuses().block()
-        if (statusesResp != null && statusesResp.customStatuses != null && !statusesResp.customStatuses.isEmpty()) {
-            sampleCustomStatusId = statusesResp.customStatuses[0].id
+        if (statusesResp != null && statusesResp.customStatuses() != null && !statusesResp.customStatuses().isEmpty()) {
+            sampleCustomStatusId = statusesResp.customStatuses()[0].id
         }
 
         def formStatusesResp = adminCustomStatusClient.listTicketFormStatuses().block()
-        if (formStatusesResp != null && formStatusesResp.ticketFormStatuses != null && !formStatusesResp.ticketFormStatuses.isEmpty()) {
-            sampleFormId = formStatusesResp.ticketFormStatuses[0].ticketFormId
+        if (formStatusesResp != null && formStatusesResp.ticketFormStatuses() != null && !formStatusesResp.ticketFormStatuses().isEmpty()) {
+            sampleFormId = formStatusesResp.ticketFormStatuses()[0].ticketFormId
         }
     }
 
@@ -65,11 +65,12 @@ class CustomStatusClientSpec extends Z4jSpec {
 
         then: "response deserializes successfully with custom statuses"
         noExceptionThrown()
-        response != null
-        response.customStatuses != null
-        !response.customStatuses.isEmpty()
-        response.customStatuses().size() == response.customStatuses.size()
-        response.count != null
+        verifyAll(response) {
+            it != null
+            customStatuses() != null
+            !customStatuses().isEmpty()
+            count() != null
+        }
 
         where:
         [client, userType] << [
@@ -84,11 +85,13 @@ class CustomStatusClientSpec extends Z4jSpec {
 
         then: "all returned custom statuses belong to the open category and are active"
         noExceptionThrown()
-        response != null
-        response.customStatuses != null
-        !response.customStatuses.isEmpty()
-        response.customStatuses.every { it.statusCategory == TicketFieldCustomStatusObjectStatusCategory.OPEN }
-        response.customStatuses.every { it.active }
+        verifyAll(response) {
+            it != null
+            customStatuses() != null
+            !customStatuses().isEmpty()
+            customStatuses().every { status -> status.statusCategory == TicketFieldCustomStatusObjectStatusCategory.OPEN }
+            customStatuses().every { status -> status.active }
+        }
     }
 
     @Unroll
@@ -121,10 +124,11 @@ class CustomStatusClientSpec extends Z4jSpec {
 
         then: "response deserializes ticket form statuses with pagination metadata"
         noExceptionThrown()
-        response != null
-        response.ticketFormStatuses != null
-        response.ticketFormStatuses().size() == response.ticketFormStatuses.size()
-        response.count != null
+        verifyAll(response) {
+            it != null
+            ticketFormStatuses() != null
+            count() != null
+        }
 
         where:
         [client, userType] << [
@@ -142,9 +146,11 @@ class CustomStatusClientSpec extends Z4jSpec {
 
         then: "all returned associations match the requested form ID"
         noExceptionThrown()
-        response != null
-        response.ticketFormStatuses != null
-        response.ticketFormStatuses.every { it.ticketFormId == sampleFormId }
+        verifyAll(response) {
+            it != null
+            ticketFormStatuses() != null
+            ticketFormStatuses().every { status -> status.ticketFormId == sampleFormId }
+        }
     }
 
     def "can update ticket customStatusId and ticketFormId using TicketUpdateInput"() {
@@ -242,14 +248,14 @@ class CustomStatusClientSpec extends Z4jSpec {
             singleResp.customStatus() == statusObj
             singleResp.customStatus().id == 101L
 
-            listResp.customStatuses() == listResp.getCustomStatuses()
+            listResp.customStatuses() == [statusObj]
             listResp.customStatuses().size() == 1
 
             formStatus.id() == formStatus.getId()
             formStatus.customStatusId() == formStatus.getCustomStatusId()
             formStatus.ticketFormId() == formStatus.getTicketFormId()
 
-            formStatusesResp.ticketFormStatuses() == formStatusesResp.getTicketFormStatuses()
+            formStatusesResp.ticketFormStatuses() == [formStatus]
             formStatusesResp.ticketFormStatuses().size() == 1
 
             createReq.customStatus() == statusObj

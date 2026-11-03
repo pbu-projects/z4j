@@ -15,32 +15,167 @@
  */
 package lol.pbu.z4j.model
 
-import lol.pbu.z4j.Z4jSpec
+import io.micronaut.serde.ObjectMapper
+import spock.lang.Shared
+import spock.lang.Specification
 
-class IncrementalUserCursorResponseSpec extends Z4jSpec {
+class IncrementalUserCursorResponseSpec extends Specification {
 
-    def "should instantiate and set properties on IncrementalUserCursorResponse"() {
+    @Shared
+    ObjectMapper objectMapper = ObjectMapper.getDefault()
+
+    def "should create IncrementalUserCursorResponse with canonical constructor, convenience constructor, and builder"() {
         given:
-        def response = new IncrementalUserCursorResponse()
-        def user = new User()
-        user.setId(456L)
+        User user = new User().setId(456L).setName("Exported User")
+        List<User> expectedUsers = [user]
 
         when:
-        response.setUsers([user])
-              .setCursor("user_cursor")
-              .setAfterCursor("user_after")
-              .setBeforeCursor("user_before")
-              .setEndOfStream(true)
-              .setCount(1)
+        IncrementalUserCursorResponse direct = new IncrementalUserCursorResponse(
+                expectedUsers, "user_cursor", "user_after", "user_before", true, 1
+        )
+        IncrementalUserCursorResponse convenience = new IncrementalUserCursorResponse(expectedUsers)
+        IncrementalUserCursorResponse built = IncrementalUserCursorResponseBuilder.builder()
+                .users(expectedUsers)
+                .cursor("user_cursor")
+                .afterCursor("user_after")
+                .beforeCursor("user_before")
+                .endOfStream(true)
+                .count(1)
+                .build()
 
         then:
-        response.users.size() == 1
-        response.users[0].id == 456L
-        response.results == [user]
-        response.cursor == "user_cursor"
-        response.afterCursor == "user_after"
-        response.beforeCursor == "user_before"
-        response.endOfStream == true
-        response.count == 1
+        verifyAll(direct) {
+            users() == expectedUsers
+            results() == expectedUsers
+            cursor() == "user_cursor"
+            afterCursor() == "user_after"
+            beforeCursor() == "user_before"
+            endOfStream() == true
+            count() == 1
+        }
+        verifyAll(convenience) {
+            users() == expectedUsers
+            results() == expectedUsers
+            cursor() == null
+            afterCursor() == null
+            beforeCursor() == null
+            endOfStream() == null
+            count() == null
+        }
+        verifyAll(built) {
+            it == direct
+            users() == expectedUsers
+            results() == expectedUsers
+            cursor() == "user_cursor"
+            afterCursor() == "user_after"
+            beforeCursor() == "user_before"
+            endOfStream() == true
+            count() == 1
+        }
+    }
+
+    def "should update IncrementalUserCursorResponse using record withers"() {
+        given:
+        User first = new User().setId(1L).setName("User 1")
+        User second = new User().setId(2L).setName("User 2")
+        IncrementalUserCursorResponse response = new IncrementalUserCursorResponse(
+                [first], "c1", "a1", "b1", false, 1
+        )
+
+        when:
+        IncrementalUserCursorResponse updated = response
+                .withUsers([second])
+                .withCursor("c2")
+                .withAfterCursor("a2")
+                .withBeforeCursor("b2")
+                .withEndOfStream(true)
+                .withCount(2)
+
+        then:
+        verifyAll(response) {
+            users() == [first]
+            results() == [first]
+            cursor() == "c1"
+            afterCursor() == "a1"
+            beforeCursor() == "b1"
+            endOfStream() == false
+            count() == 1
+        }
+        verifyAll(updated) {
+            users() == [second]
+            results() == [second]
+            cursor() == "c2"
+            afterCursor() == "a2"
+            beforeCursor() == "b2"
+            endOfStream() == true
+            count() == 2
+        }
+    }
+
+    def "should round-trip serialize and deserialize IncrementalUserCursorResponse"() {
+        given:
+        User user = new User().setId(456L).setName("Jane Doe")
+        IncrementalUserCursorResponse response = new IncrementalUserCursorResponse(
+                [user], "cur_456", "after_456", "before_456", true, 1
+        )
+
+        when:
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        IncrementalUserCursorResponse deserialized = objectMapper.readValue(json, IncrementalUserCursorResponse.class)
+
+        then:
+        verifyAll(map) {
+            containsKey("users")
+            containsKey("cursor")
+            containsKey("after_cursor")
+            containsKey("before_cursor")
+            containsKey("end_of_stream")
+            containsKey("count")
+            !containsKey("results")
+        }
+        verifyAll(deserialized) {
+            it == response
+            users().size() == 1
+            users().first().id == 456L
+            results() == users()
+            cursor() == "cur_456"
+            afterCursor() == "after_456"
+            beforeCursor() == "before_456"
+            endOfStream() == true
+            count() == 1
+        }
+    }
+
+    def "should handle null components in IncrementalUserCursorResponse"() {
+        when:
+        IncrementalUserCursorResponse empty = new IncrementalUserCursorResponse(null, null, null, null, null, null)
+        String json = objectMapper.writeValueAsString(empty)
+        Map map = objectMapper.readValue(json, Map.class)
+        IncrementalUserCursorResponse deserialized = objectMapper.readValue(json, IncrementalUserCursorResponse.class)
+
+        then:
+        verifyAll(empty) {
+            users() == null
+            results() == null
+            cursor() == null
+            afterCursor() == null
+            beforeCursor() == null
+            endOfStream() == null
+            count() == null
+        }
+        verifyAll(map) {
+            isEmpty()
+        }
+        verifyAll(deserialized) {
+            it == empty
+            users() == null
+            results() == null
+            cursor() == null
+            afterCursor() == null
+            beforeCursor() == null
+            endOfStream() == null
+            count() == null
+        }
     }
 }

@@ -15,29 +15,160 @@
  */
 package lol.pbu.z4j.model
 
-import lol.pbu.z4j.Z4jSpec
+import io.micronaut.serde.ObjectMapper
+import spock.lang.Shared
+import spock.lang.Specification
 
-class IncrementalTicketEventTimeResponseSpec extends Z4jSpec {
+class IncrementalTicketEventTimeResponseSpec extends Specification {
 
-    def "should instantiate and set properties on IncrementalTicketEventTimeResponse"() {
+    @Shared
+    ObjectMapper objectMapper = ObjectMapper.getDefault()
+
+    def "should create IncrementalTicketEventTimeResponse with canonical constructor, convenience constructor, and builder"() {
         given:
-        def response = new IncrementalTicketEventTimeResponse()
-        def event = new TicketEvent()
-        event.setId(999L)
+        TicketEvent event = new TicketEvent().setId(999L).setTicketId(10L).setEventType("Audit")
+        List<TicketEvent> events = [event]
 
         when:
-        response.setTicketEvents([event])
-              .setEndTime(1727330400L)
-              .setNextPage("https://example.zendesk.com/api/v2/incremental/ticket_events.json?start_time=1727330400")
-              .setEndOfStream(true)
-              .setCount(1)
+        IncrementalTicketEventTimeResponse direct = new IncrementalTicketEventTimeResponse(
+                events,
+                1727330400L,
+                "https://example.zendesk.com/api/v2/incremental/ticket_events.json?start_time=1727330400",
+                true,
+                1
+        )
+        IncrementalTicketEventTimeResponse convenience = new IncrementalTicketEventTimeResponse(events)
+        IncrementalTicketEventTimeResponse built = IncrementalTicketEventTimeResponseBuilder.builder()
+                .ticketEvents(events)
+                .endTime(1727330400L)
+                .nextPage("https://example.zendesk.com/api/v2/incremental/ticket_events.json?start_time=1727330400")
+                .endOfStream(true)
+                .count(1)
+                .build()
 
         then:
-        response.ticketEvents.size() == 1
-        response.ticketEvents[0].id == 999L
-        response.results == [event]
-        response.endTime == 1727330400L
-        response.endOfStream == true
-        response.count == 1
+        verifyAll(direct) {
+            ticketEvents() == events
+            results() == events
+            endTime() == 1727330400L
+            nextPage() == "https://example.zendesk.com/api/v2/incremental/ticket_events.json?start_time=1727330400"
+            endOfStream() == true
+            count() == 1
+        }
+        verifyAll(convenience) {
+            ticketEvents() == events
+            results() == events
+            endTime() == null
+            nextPage() == null
+            endOfStream() == null
+            count() == null
+        }
+        verifyAll(built) {
+            it == direct
+            ticketEvents() == events
+            results() == events
+            endTime() == 1727330400L
+            nextPage() == "https://example.zendesk.com/api/v2/incremental/ticket_events.json?start_time=1727330400"
+            endOfStream() == true
+            count() == 1
+        }
+    }
+
+    def "should update IncrementalTicketEventTimeResponse using record withers"() {
+        given:
+        TicketEvent first = new TicketEvent().setId(1L)
+        TicketEvent second = new TicketEvent().setId(2L)
+        IncrementalTicketEventTimeResponse response = new IncrementalTicketEventTimeResponse(
+                [first], 1000L, "next1", false, 1
+        )
+
+        when:
+        IncrementalTicketEventTimeResponse updated = response
+                .withTicketEvents([second])
+                .withEndTime(2000L)
+                .withNextPage("next2")
+                .withEndOfStream(true)
+                .withCount(2)
+
+        then:
+        verifyAll(response) {
+            ticketEvents() == [first]
+            results() == [first]
+            endTime() == 1000L
+            nextPage() == "next1"
+            endOfStream() == false
+            count() == 1
+        }
+        verifyAll(updated) {
+            ticketEvents() == [second]
+            results() == [second]
+            endTime() == 2000L
+            nextPage() == "next2"
+            endOfStream() == true
+            count() == 2
+        }
+    }
+
+    def "should round-trip serialize and deserialize IncrementalTicketEventTimeResponse"() {
+        given:
+        TicketEvent event = new TicketEvent().setId(999L).setTicketId(50L).setEventType("Audit")
+        IncrementalTicketEventTimeResponse response = new IncrementalTicketEventTimeResponse(
+                [event], 1727330400L, "https://example.com/next", true, 1
+        )
+
+        when:
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        IncrementalTicketEventTimeResponse deserialized = objectMapper.readValue(json, IncrementalTicketEventTimeResponse.class)
+
+        then:
+        verifyAll(map) {
+            containsKey("ticket_events")
+            containsKey("end_time")
+            containsKey("next_page")
+            containsKey("end_of_stream")
+            containsKey("count")
+            !containsKey("results")
+        }
+        verifyAll(deserialized) {
+            it == response
+            ticketEvents().size() == 1
+            ticketEvents().first().id == 999L
+            results() == ticketEvents()
+            endTime() == 1727330400L
+            nextPage() == "https://example.com/next"
+            endOfStream() == true
+            count() == 1
+        }
+    }
+
+    def "should handle null components in IncrementalTicketEventTimeResponse"() {
+        when:
+        IncrementalTicketEventTimeResponse empty = new IncrementalTicketEventTimeResponse(null, null, null, null, null)
+        String json = objectMapper.writeValueAsString(empty)
+        Map map = objectMapper.readValue(json, Map.class)
+        IncrementalTicketEventTimeResponse deserialized = objectMapper.readValue(json, IncrementalTicketEventTimeResponse.class)
+
+        then:
+        verifyAll(empty) {
+            ticketEvents() == null
+            results() == null
+            endTime() == null
+            nextPage() == null
+            endOfStream() == null
+            count() == null
+        }
+        verifyAll(map) {
+            isEmpty()
+        }
+        verifyAll(deserialized) {
+            it == empty
+            ticketEvents() == null
+            results() == null
+            endTime() == null
+            nextPage() == null
+            endOfStream() == null
+            count() == null
+        }
     }
 }

@@ -16,37 +16,46 @@
 package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.util.List;
-import lol.pbu.z4j.Generated;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 /**
- * IncrementalTicketEventTimeResponse
+ * Time-based incremental export response containing ticket events.
+ *
  * @author Jonathan-Zollinger
  * @since 0.2.7
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Serdeable
-@Generated
-public class IncrementalTicketEventTimeResponse extends IncrementalTimePaginationResponse<TicketEvent> {
-    @Nullable
-    @JsonProperty("ticket_events")
-    private List<TicketEvent> ticketEvents;
+@RecordBuilder
+@JsonPropertyOrder({
+        IncrementalTicketEventTimeResponse.JSON_PROPERTY_TICKET_EVENTS,
+        IncrementalTimePaginationResponse.JSON_PROPERTY_END_TIME,
+        IncrementalTimePaginationResponse.JSON_PROPERTY_NEXT_PAGE,
+        IncrementalTimePaginationResponse.JSON_PROPERTY_END_OF_STREAM,
+        IncrementalTimePaginationResponse.JSON_PROPERTY_COUNT
+})
+public record IncrementalTicketEventTimeResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_TICKET_EVENTS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<TicketEvent> ticketEvents,
+        @Nullable @JsonProperty(JSON_PROPERTY_END_TIME) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long endTime,
+        @Nullable @JsonProperty(JSON_PROPERTY_NEXT_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String nextPage,
+        @Nullable @JsonProperty(JSON_PROPERTY_END_OF_STREAM) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean endOfStream,
+        @Nullable @JsonProperty(JSON_PROPERTY_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer count
+) implements IncrementalTimePaginationResponse<TicketEvent>, IncrementalTicketEventTimeResponseBuilder.With {
+
+    public static final String JSON_PROPERTY_TICKET_EVENTS = "ticket_events";
+
+    public IncrementalTicketEventTimeResponse(@Nullable List<TicketEvent> ticketEvents) {
+        this(ticketEvents, null, null, null, null);
+    }
 
     @Override
     @JsonIgnore
-    public List<TicketEvent> getResults() {
+    public List<TicketEvent> results() {
         return ticketEvents;
     }
 }

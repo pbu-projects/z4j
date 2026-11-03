@@ -15,7 +15,7 @@ class ViewClientSpec extends Z4jSpec {
 
     def setupSpec() {
         adminViewClient = adminCtx.getBean(ViewClient.class)
-        def views = adminViewClient.listActiveViews().block().getViews()
+        def views = adminViewClient.listActiveViews().block().views()
         if (views != null && !views.isEmpty()) {
             firstActiveViewId = views.get(0).getId()
         }
@@ -27,8 +27,10 @@ class ViewClientSpec extends Z4jSpec {
 
         then:
         noExceptionThrown()
-        response != null
-        response.getViews() != null
+        verifyAll(response) {
+            it != null
+            views() != null
+        }
     }
 
     def "can list active views"() {
@@ -37,8 +39,10 @@ class ViewClientSpec extends Z4jSpec {
 
         then:
         noExceptionThrown()
-        response != null
-        response.getViews() != null
+        verifyAll(response) {
+            it != null
+            views() != null
+        }
     }
 
     def "can show a view"() {
@@ -66,8 +70,10 @@ class ViewClientSpec extends Z4jSpec {
 
         then:
         noExceptionThrown()
-        response != null
-        response.getRows() != null
+        verifyAll(response) {
+            it != null
+            rows() != null
+        }
     }
 
     def "can count a view"() {

@@ -16,37 +16,46 @@
 package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.util.List;
-import lol.pbu.z4j.Generated;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 /**
- * IncrementalOrganizationTimeResponse
+ * Time-based incremental export response containing organizations.
+ *
  * @author Jonathan-Zollinger
  * @since 0.2.7
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Serdeable
-@Generated
-public class IncrementalOrganizationTimeResponse extends IncrementalTimePaginationResponse<Organization> {
-    @Nullable
-    @JsonProperty("organizations")
-    private List<Organization> organizations;
+@RecordBuilder
+@JsonPropertyOrder({
+        IncrementalOrganizationTimeResponse.JSON_PROPERTY_ORGANIZATIONS,
+        IncrementalTimePaginationResponse.JSON_PROPERTY_END_TIME,
+        IncrementalTimePaginationResponse.JSON_PROPERTY_NEXT_PAGE,
+        IncrementalTimePaginationResponse.JSON_PROPERTY_END_OF_STREAM,
+        IncrementalTimePaginationResponse.JSON_PROPERTY_COUNT
+})
+public record IncrementalOrganizationTimeResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_ORGANIZATIONS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<Organization> organizations,
+        @Nullable @JsonProperty(JSON_PROPERTY_END_TIME) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long endTime,
+        @Nullable @JsonProperty(JSON_PROPERTY_NEXT_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String nextPage,
+        @Nullable @JsonProperty(JSON_PROPERTY_END_OF_STREAM) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean endOfStream,
+        @Nullable @JsonProperty(JSON_PROPERTY_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer count
+) implements IncrementalTimePaginationResponse<Organization>, IncrementalOrganizationTimeResponseBuilder.With {
+
+    public static final String JSON_PROPERTY_ORGANIZATIONS = "organizations";
+
+    public IncrementalOrganizationTimeResponse(@Nullable List<Organization> organizations) {
+        this(organizations, null, null, null, null);
+    }
 
     @Override
     @JsonIgnore
-    public List<Organization> getResults() {
+    public List<Organization> results() {
         return organizations;
     }
 }
