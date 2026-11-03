@@ -76,14 +76,48 @@ class ArticleResponseSpec extends Z4jSpec {
 
         when:
         String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
         ArticleResponse deserialized = objectMapper.readValue(json, ArticleResponse.class)
 
         then:
+        verifyAll(map) {
+            containsKey("article")
+            get("article") instanceof Map
+            ((Map) get("article")).id == 555
+            ((Map) get("article")).title == "User Guide"
+        }
         verifyAll(deserialized) {
             it == response
             article != null
             article.id == 555L
             article.title == "User Guide"
+        }
+    }
+
+    def "should handle null article component in constructor and wither"() {
+        when:
+        ArticleResponse response = new ArticleResponse(null)
+        Article replacement = new Article().setTitle("Created").setId(99L)
+        ArticleResponse updated = response.withArticle(replacement)
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        ArticleResponse deserialized = objectMapper.readValue(json, ArticleResponse.class)
+
+        then:
+        verifyAll(response) {
+            article() == null
+        }
+        verifyAll(updated) {
+            article() == replacement
+            article().id == 99L
+        }
+        verifyAll(map) {
+            isEmpty()
+            !containsKey("article")
+        }
+        verifyAll(deserialized) {
+            it == response
+            article() == null
         }
     }
 }

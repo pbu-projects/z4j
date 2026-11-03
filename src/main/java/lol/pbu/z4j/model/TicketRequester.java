@@ -18,7 +18,6 @@ package lol.pbu.z4j.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import io.soabase.recordbuilder.core.RecordBuilder;
@@ -32,7 +31,6 @@ import jakarta.validation.constraints.Email;
  */
 @Serdeable
 @RecordBuilder
-@Introspected
 @JsonInclude(Include.NON_NULL)
 public record TicketRequester(
         @Nullable @JsonProperty(JSON_PROPERTY_NAME) String name,

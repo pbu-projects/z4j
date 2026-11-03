@@ -76,14 +76,48 @@ class SectionResponseSpec extends Z4jSpec {
 
         when:
         String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
         SectionResponse deserialized = objectMapper.readValue(json, SectionResponse.class)
 
         then:
+        verifyAll(map) {
+            containsKey("section")
+            get("section") instanceof Map
+            ((Map) get("section")).id == 888
+            ((Map) get("section")).name == "Tutorials"
+        }
         verifyAll(deserialized) {
             it == response
             section != null
             section.id == 888L
             section.name == "Tutorials"
+        }
+    }
+
+    def "should handle null section component in constructor and wither"() {
+        when:
+        SectionResponse response = new SectionResponse(null)
+        Section replacement = new Section().setName("Quickstarts").setId(77L)
+        SectionResponse updated = response.withSection(replacement)
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        SectionResponse deserialized = objectMapper.readValue(json, SectionResponse.class)
+
+        then:
+        verifyAll(response) {
+            section() == null
+        }
+        verifyAll(updated) {
+            section() == replacement
+            section().id == 77L
+        }
+        verifyAll(map) {
+            isEmpty()
+            !containsKey("section")
+        }
+        verifyAll(deserialized) {
+            it == response
+            section() == null
         }
     }
 }

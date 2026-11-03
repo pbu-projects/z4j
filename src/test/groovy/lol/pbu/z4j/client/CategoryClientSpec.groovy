@@ -144,9 +144,8 @@ class CategoryClientSpec extends Z4jSpec {
         error.getStatus() == FORBIDDEN
 
         cleanup: "deleting #categoryName from the #localeAbbreviation locale"
-        try {
-            adminCategoryClient.deleteCategory(localeAbbreviation, response.getCategory().getId())
-        } catch (NullPointerException ignored) {
+        if (response?.category()?.id != null) {
+            adminCategoryClient.deleteCategory(localeAbbreviation, response.category().id)
         }
 
         where:

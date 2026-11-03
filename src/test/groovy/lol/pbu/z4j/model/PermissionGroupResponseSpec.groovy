@@ -76,14 +76,48 @@ class PermissionGroupResponseSpec extends Z4jSpec {
 
         when:
         String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
         PermissionGroupResponse deserialized = objectMapper.readValue(json, PermissionGroupResponse.class)
 
         then:
+        verifyAll(map) {
+            containsKey("permission_group")
+            get("permission_group") instanceof Map
+            ((Map) get("permission_group")).id == 999
+            ((Map) get("permission_group")).name == "Admins"
+        }
         verifyAll(deserialized) {
             it == response
             permissionGroup != null
             permissionGroup.id == 999L
             permissionGroup.name == "Admins"
+        }
+    }
+
+    def "should handle null permission group component in constructor and wither"() {
+        when:
+        PermissionGroupResponse response = new PermissionGroupResponse(null)
+        PermissionGroup replacement = new PermissionGroup("Staff").setId(66L)
+        PermissionGroupResponse updated = response.withPermissionGroup(replacement)
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        PermissionGroupResponse deserialized = objectMapper.readValue(json, PermissionGroupResponse.class)
+
+        then:
+        verifyAll(response) {
+            permissionGroup() == null
+        }
+        verifyAll(updated) {
+            permissionGroup() == replacement
+            permissionGroup().id == 66L
+        }
+        verifyAll(map) {
+            isEmpty()
+            !containsKey("permission_group")
+        }
+        verifyAll(deserialized) {
+            it == response
+            permissionGroup() == null
         }
     }
 }

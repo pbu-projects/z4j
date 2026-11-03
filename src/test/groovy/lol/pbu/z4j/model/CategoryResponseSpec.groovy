@@ -76,14 +76,48 @@ class CategoryResponseSpec extends Z4jSpec {
 
         when:
         String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
         CategoryResponse deserialized = objectMapper.readValue(json, CategoryResponse.class)
 
         then:
+        verifyAll(map) {
+            containsKey("category")
+            get("category") instanceof Map
+            ((Map) get("category")).id == 777
+            ((Map) get("category")).name == "Support"
+        }
         verifyAll(deserialized) {
             it == response
             category != null
             category.id == 777L
             category.name == "Support"
+        }
+    }
+
+    def "should handle null category component in constructor and wither"() {
+        when:
+        CategoryResponse response = new CategoryResponse(null)
+        Category replacement = new Category("General").setId(88L)
+        CategoryResponse updated = response.withCategory(replacement)
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        CategoryResponse deserialized = objectMapper.readValue(json, CategoryResponse.class)
+
+        then:
+        verifyAll(response) {
+            category() == null
+        }
+        verifyAll(updated) {
+            category() == replacement
+            category().id == 88L
+        }
+        verifyAll(map) {
+            isEmpty()
+            !containsKey("category")
+        }
+        verifyAll(deserialized) {
+            it == response
+            category() == null
         }
     }
 }
