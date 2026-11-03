@@ -17,37 +17,21 @@ package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.util.List;
 import java.util.Map;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
-/**
- * ContentTagsJob
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder({
-        ContentTagsJob.JSON_PROPERTY_ACTION,
-        ContentTagsJob.JSON_PROPERTY_ITEMS,
-        ContentTagsJob.JSON_PROPERTY_TAGS,
-        ContentTagsJob.JSON_PROPERTY_ARTICLE_IDS,
-        ContentTagsJob.JSON_PROPERTY_ATTRIBUTES
-})
 @Serdeable
-@Generated
-public class ContentTagsJob {
+@RecordBuilder
+public record ContentTagsJob(
+        @Nullable @JsonProperty(JSON_PROPERTY_ACTION) @JsonInclude(JsonInclude.Include.NON_NULL) String action,
+        @Nullable @JsonProperty(JSON_PROPERTY_ITEMS) @JsonInclude(JsonInclude.Include.NON_NULL) List<String> items,
+        @Nullable @JsonProperty(JSON_PROPERTY_TAGS) @JsonInclude(JsonInclude.Include.NON_NULL) List<String> tags,
+        @Nullable @JsonProperty(JSON_PROPERTY_ARTICLE_IDS) @JsonInclude(JsonInclude.Include.NON_NULL) List<Long> articleIds,
+        @Nullable @JsonProperty(JSON_PROPERTY_ATTRIBUTES) @JsonInclude(JsonInclude.Include.NON_NULL) Map<String, Object> attributes
+) implements ContentTagsJobBuilder.With {
 
     public static final String JSON_PROPERTY_ACTION = "action";
     public static final String JSON_PROPERTY_ITEMS = "items";
@@ -55,33 +39,7 @@ public class ContentTagsJob {
     public static final String JSON_PROPERTY_ARTICLE_IDS = "article_ids";
     public static final String JSON_PROPERTY_ATTRIBUTES = "attributes";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ACTION)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String action;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ITEMS)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<String> items;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TAGS)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<String> tags;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ARTICLE_IDS)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<Long> articleIds;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ATTRIBUTES)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Map<String, Object> attributes;
-
     public ContentTagsJob(String action, List<String> items) {
-        this.action = action;
-        this.items = items;
+        this(action, items, null, null, null);
     }
 }

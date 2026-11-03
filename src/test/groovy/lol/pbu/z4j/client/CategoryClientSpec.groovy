@@ -86,10 +86,9 @@ class CategoryClientSpec extends Z4jSpec {
 
     def "can use CreateCategory as an #userType for the '#localeAbbreviation' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation, String categoryName, String description) {
         given:
-        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         Category category = new Category(categoryName)
         category.setDescription(description)
-        createCategoryRequest.setCategory(category)
+        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(category)
 
         when: "category name to be created is #categoryName"
         CategoryResponse response = categoryClient.createCategory(localeAbbreviation, createCategoryRequest).block()
@@ -129,10 +128,9 @@ class CategoryClientSpec extends Z4jSpec {
             )
         }
 
-        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         Category category = new Category(categoryName)
         category.setDescription(description)
-        createCategoryRequest.setCategory(category)
+        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(category)
 
         when: "category name to be created is #categoryName"
         CategoryResponse response = mockCategoryClient.createCategory(localeAbbreviation, createCategoryRequest).block()
@@ -158,10 +156,9 @@ class CategoryClientSpec extends Z4jSpec {
 
     def "can use DeleteCategory as an #userType for the '#localeAbbreviation"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation, String categoryName, String description) {
         given:
-        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         Category category = new Category(categoryName)
         category.setDescription(description)
-        createCategoryRequest.setCategory(category)
+        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(category)
         CategoryResponse response = categoryClient.createCategory(localeAbbreviation, createCategoryRequest).block()
 
         when:
@@ -180,10 +177,9 @@ class CategoryClientSpec extends Z4jSpec {
 
     def "cannot use DeleteCategory as an #userType for the '#localeAbbreviation' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation, String categoryName, String description) {
         given:
-        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest()
         Category category = new Category(categoryName)
         category.setDescription(description)
-        createCategoryRequest.setCategory(category)
+        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(category)
         CategoryResponse response = adminCategoryClient.createCategory(localeAbbreviation, createCategoryRequest).block()
 
         when:

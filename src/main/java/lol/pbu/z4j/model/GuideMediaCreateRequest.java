@@ -17,78 +17,36 @@ package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
-/**
- * GuideMediaCreateRequest
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder({
-        GuideMediaCreateRequest.JSON_PROPERTY_GUIDE_MEDIA,
-        GuideMediaCreateRequest.JSON_PROPERTY_ASSET_UPLOAD_ID,
-        GuideMediaCreateRequest.JSON_PROPERTY_FILENAME
-})
 @Serdeable
-@Generated
-public class GuideMediaCreateRequest {
+@RecordBuilder
+public record GuideMediaCreateRequest(
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_GUIDE_MEDIA) @JsonInclude(JsonInclude.Include.NON_NULL) GuideMedia guideMedia,
+        @Nullable @JsonProperty(JSON_PROPERTY_ASSET_UPLOAD_ID) @JsonInclude(JsonInclude.Include.NON_NULL) String assetUploadId,
+        @Nullable @JsonProperty(JSON_PROPERTY_FILENAME) @JsonInclude(JsonInclude.Include.NON_NULL) String filename
+) implements GuideMediaCreateRequestBuilder.With {
 
     public static final String JSON_PROPERTY_GUIDE_MEDIA = "guide_media";
     public static final String JSON_PROPERTY_ASSET_UPLOAD_ID = "asset_upload_id";
     public static final String JSON_PROPERTY_FILENAME = "filename";
 
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_GUIDE_MEDIA)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private GuideMedia guideMedia;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ASSET_UPLOAD_ID)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String assetUploadId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_FILENAME)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String filename;
-
     public GuideMediaCreateRequest(GuideMedia guideMedia) {
-        this.guideMedia = guideMedia;
-        if (guideMedia != null && guideMedia.getName() != null) {
-            this.filename = guideMedia.getName();
-        }
+        this(
+                guideMedia,
+                null,
+                guideMedia != null ? guideMedia.getName() : null
+        );
     }
 
     public GuideMediaCreateRequest(String filename) {
-        this.filename = filename;
-        this.guideMedia = new GuideMedia().setName(filename);
+        this(new GuideMedia().setName(filename), null, filename);
     }
 
     public GuideMediaCreateRequest(String assetUploadId, String filename) {
-        this.assetUploadId = assetUploadId;
-        this.filename = filename;
-        this.guideMedia = new GuideMedia().setName(filename);
-    }
-
-    public GuideMediaCreateRequest setGuideMedia(GuideMedia guideMedia) {
-        this.guideMedia = guideMedia;
-        if (guideMedia != null && guideMedia.getName() != null && this.filename == null) {
-            this.filename = guideMedia.getName();
-        }
-        return this;
+        this(new GuideMedia().setName(filename), assetUploadId, filename);
     }
 }
