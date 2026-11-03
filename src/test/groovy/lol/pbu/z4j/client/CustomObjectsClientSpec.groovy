@@ -93,9 +93,11 @@ class CustomObjectsClientSpec extends Z4jSpec {
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
-        response != null
-        response.customObject != null
-        response.customObject.key == existingObjectKey
+        verifyAll(response) {
+            it != null
+            customObject() != null
+            customObject().key == existingObjectKey
+        }
 
         where:
         [client, userType] << [

@@ -95,9 +95,11 @@ class CustomStatusClientSpec extends Z4jSpec {
 
         then: "the custom status is returned successfully"
         noExceptionThrown()
-        response != null
-        response.customStatus != null
-        response.customStatus().id == sampleCustomStatusId
+        verifyAll(response) {
+            it != null
+            customStatus() != null
+            customStatus().id == sampleCustomStatusId
+        }
 
         where:
         [client, userType] << [
@@ -227,20 +229,22 @@ class CustomStatusClientSpec extends Z4jSpec {
         def formStatusesResp = new lol.pbu.z4j.model.TicketFormStatusesResponse([formStatus])
         def createReq = new lol.pbu.z4j.model.CustomStatusCreateRequest(statusObj)
 
-        expect: "record-style accessors and JavaBean getters return identical references"
-        singleResp.customStatus() == singleResp.getCustomStatus()
-        singleResp.customStatus().id == 101L
+        expect: "record-style accessors and models return expected references"
+        verifyAll {
+            singleResp.customStatus() == statusObj
+            singleResp.customStatus().id == 101L
 
-        listResp.customStatuses() == listResp.getCustomStatuses()
-        listResp.customStatuses().size() == 1
+            listResp.customStatuses() == listResp.getCustomStatuses()
+            listResp.customStatuses().size() == 1
 
-        formStatus.id() == formStatus.getId()
-        formStatus.customStatusId() == formStatus.getCustomStatusId()
-        formStatus.ticketFormId() == formStatus.getTicketFormId()
+            formStatus.id() == formStatus.getId()
+            formStatus.customStatusId() == formStatus.getCustomStatusId()
+            formStatus.ticketFormId() == formStatus.getTicketFormId()
 
-        formStatusesResp.ticketFormStatuses() == formStatusesResp.getTicketFormStatuses()
-        formStatusesResp.ticketFormStatuses().size() == 1
+            formStatusesResp.ticketFormStatuses() == formStatusesResp.getTicketFormStatuses()
+            formStatusesResp.ticketFormStatuses().size() == 1
 
-        createReq.customStatus() == createReq.getCustomStatus()
+            createReq.customStatus() == createReq.getCustomStatus()
+        }
     }
 }

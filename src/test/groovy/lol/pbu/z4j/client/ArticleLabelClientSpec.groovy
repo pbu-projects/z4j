@@ -129,14 +129,16 @@ class ArticleLabelClientSpec extends Z4jSpec {
                 testArticle.id,
                 new LabelCreateRequest(new Label(labelName))
         ).block()
-        labelId = response?.label?.id
+        labelId = response?.label()?.id
 
         then: "label is created with correct name"
         noExceptionThrown()
-        response != null
-        response.label != null
-        response.label.id != null
-        response.label.name == labelName
+        verifyAll(response) {
+            it != null
+            label() != null
+            label().id != null
+            label().name == labelName
+        }
 
         cleanup: "delete created label"
         if (labelId != null) {
@@ -156,7 +158,7 @@ class ArticleLabelClientSpec extends Z4jSpec {
                 testArticle.id,
                 new LabelCreateRequest(new Label(labelName))
         ).block()
-        Long labelId = created?.label?.id
+        Long labelId = created?.label()?.id
 
         when: "listing labels for the article"
         LabelsResponse listResp = adminLabelClient.listLabelsOnArticle(testArticle.id).block()
@@ -184,7 +186,7 @@ class ArticleLabelClientSpec extends Z4jSpec {
                 testArticle.id,
                 new LabelCreateRequest(new Label(labelName))
         ).block()
-        Long labelId = created?.label?.id
+        Long labelId = created?.label()?.id
 
         when: "listing all labels in help center"
         LabelsResponse allLabels = adminLabelClient.listLabels().block()
@@ -196,9 +198,12 @@ class ArticleLabelClientSpec extends Z4jSpec {
         noExceptionThrown()
         allLabels?.labels != null
         allLabels.labels.any { it.id == labelId }
-        showResp?.label != null
-        showResp.label.id == labelId
-        showResp.label.name == labelName
+        verifyAll(showResp) {
+            it != null
+            label() != null
+            label().id == labelId
+            label().name == labelName
+        }
 
         cleanup: "delete created label"
         if (labelId != null) {
@@ -218,7 +223,7 @@ class ArticleLabelClientSpec extends Z4jSpec {
                 testArticle.id,
                 new LabelCreateRequest(new Label(labelName))
         ).block()
-        Long labelId = created?.label?.id
+        Long labelId = created?.label()?.id
 
         when: "removing label from the article"
         adminLabelClient.deleteLabelFromArticle(testArticle.id, labelId).block()
@@ -248,7 +253,7 @@ class ArticleLabelClientSpec extends Z4jSpec {
                 testArticle.id,
                 new LabelCreateRequest(new Label(labelName))
         ).block()
-        Long labelId = created?.label?.id
+        Long labelId = created?.label()?.id
 
         when: "deleting the label globally"
         adminLabelClient.deleteLabel(labelId).block()
