@@ -15,11 +15,6 @@
  */
 package lol.pbu.z4j.client
 
-import io.micronaut.http.annotation.Body
-import io.micronaut.http.annotation.Delete
-import io.micronaut.http.annotation.PathVariable
-import io.micronaut.http.annotation.Post
-import io.micronaut.http.client.annotation.Client
 import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.json.JsonMapper
 import lol.pbu.z4j.Z4jSpec
@@ -27,7 +22,6 @@ import lol.pbu.z4j.fixture.FixtureLoader
 import lol.pbu.z4j.fixture.TicketFixtures
 import lol.pbu.z4j.fixture.TicketItem
 import lol.pbu.z4j.model.*
-import reactor.core.publisher.Mono
 import spock.lang.Shared
 
 class TicketClientSpec extends Z4jSpec {
