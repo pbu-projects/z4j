@@ -15,36 +15,16 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.constraints.NotNull;
-import lol.pbu.z4j.Generated;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 
-/**
- * Request payload for updating the article source locale.
- *
- * @author Jonathan-Zollinger
- * @since 0.3.10
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@Data
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-@JsonPropertyOrder(ArticleSourceLocaleRequest.JSON_PROPERTY_ARTICLE_LOCALE)
 @Serdeable
-@Generated
-public class ArticleSourceLocaleRequest extends SourceLocaleRequest {
+@RecordBuilder
+public record ArticleSourceLocaleRequest(
+        @NotNull @JsonProperty(JSON_PROPERTY_ARTICLE_LOCALE) LocaleAbbreviation articleLocale
+) implements ArticleSourceLocaleRequestBuilder.With {
 
     public static final String JSON_PROPERTY_ARTICLE_LOCALE = "article_locale";
-
-    public ArticleSourceLocaleRequest(@NotNull LocaleAbbreviation articleLocale) {
-        super(articleLocale, null, null);
-    }
-
 }

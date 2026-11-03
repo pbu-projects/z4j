@@ -20,69 +20,34 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lol.pbu.z4j.Generated;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
-/**
- * Base request payload for updating Help Center resource source locales.
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
 @Serdeable
-@Generated
-public class SourceLocaleRequest {
+@RecordBuilder
+public record SourceLocaleRequest(
+        @Nullable @JsonProperty(JSON_PROPERTY_ARTICLE_LOCALE) @JsonInclude(JsonInclude.Include.NON_NULL) LocaleAbbreviation articleLocale,
+        @Nullable @JsonProperty(JSON_PROPERTY_CATEGORY_LOCALE) @JsonInclude(JsonInclude.Include.NON_NULL) LocaleAbbreviation categoryLocale,
+        @Nullable @JsonProperty(JSON_PROPERTY_SECTION_LOCALE) @JsonInclude(JsonInclude.Include.NON_NULL) LocaleAbbreviation sectionLocale
+) implements SourceLocaleRequestBuilder.With {
 
-    @Nullable
-    @JsonProperty("article_locale")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private LocaleAbbreviation articleLocale;
+    public static final String JSON_PROPERTY_ARTICLE_LOCALE = "article_locale";
+    public static final String JSON_PROPERTY_CATEGORY_LOCALE = "category_locale";
+    public static final String JSON_PROPERTY_SECTION_LOCALE = "section_locale";
 
-    @Nullable
-    @JsonProperty("category_locale")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private LocaleAbbreviation categoryLocale;
-
-    @Nullable
-    @JsonProperty("section_locale")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private LocaleAbbreviation sectionLocale;
-
-    @Generated
     public SourceLocaleRequest(LocaleAbbreviation categoryLocale, LocaleAbbreviation sectionLocale) {
-        this.categoryLocale = categoryLocale;
-        this.sectionLocale = sectionLocale;
+        this(null, categoryLocale, sectionLocale);
     }
 
-    @Generated
     public SourceLocaleRequest(LocaleAbbreviation locale) {
-        this.articleLocale = locale;
-        this.categoryLocale = locale;
-        this.sectionLocale = locale;
+        this(locale, locale, locale);
     }
 
     @JsonIgnore
-    @Generated
-    public LocaleAbbreviation getSourceLocale() {
-        if (articleLocale != null) {
-            return articleLocale;
-        }
-        return categoryLocale != null ? categoryLocale : sectionLocale;
+    public LocaleAbbreviation sourceLocale() {
+        return articleLocale != null ? articleLocale : (categoryLocale != null ? categoryLocale : sectionLocale);
     }
 
-    @JsonIgnore
-    @Generated
-    public SourceLocaleRequest setSourceLocale(LocaleAbbreviation locale) {
-        this.articleLocale = locale;
-        this.categoryLocale = locale;
-        this.sectionLocale = locale;
-        return this;
+    public SourceLocaleRequest withSourceLocale(LocaleAbbreviation locale) {
+        return new SourceLocaleRequest(locale, locale, locale);
     }
 }

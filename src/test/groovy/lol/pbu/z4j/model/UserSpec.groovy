@@ -234,8 +234,8 @@ class UserSpec extends Specification {
 
     def "can serialize and deserialize UserRequest"() {
         given:
-        def user = new User().setName("New User").setEmail("new@example.com")
-        def request = new UserRequest().setUser(user)
+        def expectedUser = new User().setName("New User").setEmail("new@example.com")
+        def request = new UserRequest(expectedUser)
 
         when:
         def json = jsonMapper.writeValueAsString(request)
@@ -243,9 +243,9 @@ class UserSpec extends Specification {
 
         then:
         verifyAll(deserialized) {
-            user != null
-            user.name == "New User"
-            user.email == "new@example.com"
+            user() != null
+            user().name == "New User"
+            user().email == "new@example.com"
         }
     }
 
@@ -253,18 +253,17 @@ class UserSpec extends Specification {
         given:
         def user1 = new User().setId(1L).setName("User One")
         def user2 = new User().setId(2L).setName("User Two")
-        def request = new UsersRequest()
+        def request = new UsersRequest(null)
 
         when:
-        request.addUsersItem(user1)
-        request.addUsersItem(user2)
+        request = request.addUsersItem(user1).addUsersItem(user2)
 
         then:
         verifyAll(request) {
-            users != null
-            users.size() == 2
-            users[0].name == "User One"
-            users[1].name == "User Two"
+            users() != null
+            users().size() == 2
+            users()[0].name == "User One"
+            users()[1].name == "User Two"
         }
 
         when:
@@ -273,10 +272,10 @@ class UserSpec extends Specification {
 
         then:
         verifyAll(deserialized) {
-            users != null
-            users.size() == 2
-            users[0].id == 1L
-            users[1].id == 2L
+            users() != null
+            users().size() == 2
+            users()[0].id == 1L
+            users()[1].id == 2L
         }
     }
 

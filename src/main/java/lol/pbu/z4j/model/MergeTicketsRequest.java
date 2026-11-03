@@ -15,58 +15,26 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
 import java.util.List;
 
-/**
- * MergeTicketsRequest
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder({
-        MergeTicketsRequest.JSON_PROPERTY_IDS,
-        MergeTicketsRequest.JSON_PROPERTY_TARGET_COMMENT,
-        MergeTicketsRequest.JSON_PROPERTY_SOURCE_COMMENT
-})
 @Serdeable
-@Generated
-public class MergeTicketsRequest {
+@RecordBuilder
+public record MergeTicketsRequest(
+        @NotNull @JsonProperty(JSON_PROPERTY_IDS) List<Long> ids,
+        @Nullable @JsonProperty(JSON_PROPERTY_TARGET_COMMENT) String targetComment,
+        @Nullable @JsonProperty(JSON_PROPERTY_SOURCE_COMMENT) String sourceComment
+) implements MergeTicketsRequestBuilder.With {
 
     public static final String JSON_PROPERTY_IDS = "ids";
     public static final String JSON_PROPERTY_TARGET_COMMENT = "target_comment";
     public static final String JSON_PROPERTY_SOURCE_COMMENT = "source_comment";
 
-    @NotNull
-    @JsonProperty(JSON_PROPERTY_IDS)
-    private List<Long> ids;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TARGET_COMMENT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String targetComment;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SOURCE_COMMENT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String sourceComment;
-
     public MergeTicketsRequest(List<Long> ids) {
-        this.ids = ids;
+        this(ids, null, null);
     }
 }

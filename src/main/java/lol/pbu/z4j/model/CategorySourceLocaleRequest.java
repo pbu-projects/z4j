@@ -15,36 +15,16 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
-/**
- * Request payload for updating the category source locale.
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@Data
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-@JsonPropertyOrder(CategorySourceLocaleRequest.JSON_PROPERTY_CATEGORY_LOCALE)
 @Serdeable
-@Generated
-public class CategorySourceLocaleRequest extends SourceLocaleRequest {
+@RecordBuilder
+public record CategorySourceLocaleRequest(
+        @NotNull @JsonProperty(JSON_PROPERTY_CATEGORY_LOCALE) LocaleAbbreviation categoryLocale
+) implements CategorySourceLocaleRequestBuilder.With {
 
     public static final String JSON_PROPERTY_CATEGORY_LOCALE = "category_locale";
-
-    public CategorySourceLocaleRequest(@NotNull LocaleAbbreviation categoryLocale) {
-        super(categoryLocale, null);
-    }
-
 }

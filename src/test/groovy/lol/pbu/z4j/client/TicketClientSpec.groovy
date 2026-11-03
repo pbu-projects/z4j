@@ -183,7 +183,7 @@ class TicketClientSpec extends Z4jSpec {
         TicketItem sampleData = ticketFixtures.getTicketData().first()
         TicketUpdateInput ticketUpdateInput = new TicketUpdateInput()
                 .setComment(new TicketComment().setBody(sampleData.getUpdateComment()))
-        TicketUpdateRequest ticketUpdateRequest = new TicketUpdateRequest().setTicket(ticketUpdateInput)
+        TicketUpdateRequest ticketUpdateRequest = new TicketUpdateRequest(ticketUpdateInput)
 
 
         when:
@@ -201,7 +201,7 @@ class TicketClientSpec extends Z4jSpec {
         TicketItem sampleData = ticketFixtures.getTicketData().first()
         TicketUpdateInput ticketUpdateInput = new TicketUpdateInput()
                 .setComment(new TicketComment().setBody(sampleData.getUpdateComment()))
-        TicketUpdateRequest ticketUpdateRequest = new TicketUpdateRequest().setTicket(ticketUpdateInput)
+        TicketUpdateRequest ticketUpdateRequest = new TicketUpdateRequest(ticketUpdateInput)
 
 
         when:
@@ -399,7 +399,7 @@ class TicketClientSpec extends Z4jSpec {
         String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
         TicketUpdateInput updateInput = new TicketUpdateInput()
                 .setComment(new TicketComment().setBody("Bulk update test ${entropy}").setIsPublic(false))
-        TicketUpdateRequest updateRequest = new TicketUpdateRequest().setTicket(updateInput)
+        TicketUpdateRequest updateRequest = new TicketUpdateRequest(updateInput)
 
         when: "calling updateManyTickets"
         JobStatusResponse response = ticketsAgentClient.updateManyTickets(ticketId.toString(), updateRequest).block()
@@ -790,8 +790,8 @@ class TicketClientSpec extends Z4jSpec {
         Long sourceId = source.ticket().getId()
         String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
         MergeTicketsRequest mergeRequest = new MergeTicketsRequest([sourceId])
-                .setTargetComment("Target merge comment ${entropy}")
-                .setSourceComment("Source merge comment ${entropy}")
+                .withTargetComment("Target merge comment ${entropy}")
+                .withSourceComment("Source merge comment ${entropy}")
 
         when: "merging tickets"
         JobStatusResponse job = ticketsAdminClient.mergeTickets(targetId, mergeRequest).block()
