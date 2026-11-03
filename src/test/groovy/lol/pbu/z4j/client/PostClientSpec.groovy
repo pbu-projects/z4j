@@ -50,11 +50,11 @@ class PostClientSpec extends Z4jSpec {
         TopicFixtures topicFixtures = FixtureLoader.loadFixture("/fixtures/topic_fixtures.yaml", TopicFixtures.class)
         // Create a shared topic for post tests
         def topicFixture = topicFixtures.getTopics().first()
-        def topicReq = new TopicCreateRequest().setTopic(new Topic(topicFixture.getName() + " PostClientSpec").setDescription(topicFixture.getDescription()))
+        def topicReq = new TopicCreateRequest(new Topic(topicFixture.getName() + " PostClientSpec").setDescription(topicFixture.getDescription()))
         sharedTopicId = adminTopicClient.createTopic(topicReq).block().topic().getId()
         // Create a shared post for read tests
         def postFixture = postFixtures.getPosts().first()
-        def postReq = new PostCreateRequest().setPost(new Post(postFixture.getTitle()).setTopicId(sharedTopicId).setDetails(postFixture.getDetails()))
+        def postReq = new PostCreateRequest(new Post(postFixture.getTitle()).setTopicId(sharedTopicId).setDetails(postFixture.getDetails()))
         sharedPostId = adminPostClient.createPost(postReq).block().post().id
     }
 
@@ -137,7 +137,7 @@ class PostClientSpec extends Z4jSpec {
 
     def "can create and delete a post as an #userType user"(PostClient postClient, String userType, String title, String details) {
         given:
-        def createReq = new PostCreateRequest().setPost(new Post(title).setTopicId(sharedTopicId).setDetails(details))
+        def createReq = new PostCreateRequest(new Post(title).setTopicId(sharedTopicId).setDetails(details))
 
         when:
         def response = postClient.createPost(createReq).block()
@@ -164,11 +164,11 @@ class PostClientSpec extends Z4jSpec {
 
     def "can update a post as an #userType user"(PostClient postClient, String userType, String title, String details, String updatedTitle) {
         given:
-        def createReq = new PostCreateRequest().setPost(new Post(title).setTopicId(sharedTopicId).setDetails(details))
+        def createReq = new PostCreateRequest(new Post(title).setTopicId(sharedTopicId).setDetails(details))
         def created = adminPostClient.createPost(createReq).block().post()
 
         when:
-        def updateReq = new PostUpdateRequest().setPost(new Post(updatedTitle))
+        def updateReq = new PostUpdateRequest(new Post(updatedTitle))
         def response = postClient.updatePost(created.id, updateReq).block()
 
         then:
@@ -193,7 +193,7 @@ class PostClientSpec extends Z4jSpec {
 
     def "can create and delete a post comment as an #userType user"(PostClient postClient, String userType) {
         given:
-        def createReq = new PostCommentCreateRequest().setComment(
+        def createReq = new PostCommentCreateRequest(
                 new PostComment("Automated test comment").setPostId(sharedPostId).setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
 
@@ -240,7 +240,7 @@ class PostClientSpec extends Z4jSpec {
 
     def "can show a post comment as a #userType user"(PostClient postClient, String userType) {
         given: "a comment exists"
-        def createReq = new PostCommentCreateRequest().setComment(
+        def createReq = new PostCommentCreateRequest(
                 new PostComment("Show test comment").setPostId(sharedPostId).setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def created = adminPostClient.createPostComment(sharedPostId, createReq).block().comment()
@@ -271,13 +271,13 @@ class PostClientSpec extends Z4jSpec {
 
     def "can update a post comment as an #userType user"(PostClient postClient, String userType) {
         given:
-        def createReq = new PostCommentCreateRequest().setComment(
+        def createReq = new PostCommentCreateRequest(
                 new PostComment("Original comment body").setPostId(sharedPostId).setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def created = adminPostClient.createPostComment(sharedPostId, createReq).block().comment()
 
         when:
-        def updateReq = new PostCommentUpdateRequest().setComment(
+        def updateReq = new PostCommentUpdateRequest(
                 new PostComment("Updated comment body").setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def response = postClient.updatePostComment(sharedPostId, created.id, updateReq).block()

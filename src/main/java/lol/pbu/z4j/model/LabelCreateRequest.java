@@ -15,43 +15,21 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
-/**
- * LabelCreateRequest
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(LabelCreateRequest.JSON_PROPERTY_LABEL)
 @Serdeable
-@Generated
-public class LabelCreateRequest {
+@RecordBuilder
+public record LabelCreateRequest(
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_LABEL) Label label
+) implements LabelCreateRequestBuilder.With {
 
     public static final String JSON_PROPERTY_LABEL = "label";
 
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_LABEL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Label label;
-
     public LabelCreateRequest(String name) {
-        this.label = new Label(name);
+        this(new Label(name));
     }
-
 }

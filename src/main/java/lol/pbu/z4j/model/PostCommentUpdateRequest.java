@@ -15,39 +15,17 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
-/**
- * PostCommentUpdateRequest
- *
- * @author Jonathan-Zollinger
- * @since 0.2.4
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(PostCommentUpdateRequest.JSON_PROPERTY_COMMENT)
 @Serdeable
-@Generated
-public class PostCommentUpdateRequest {
+@RecordBuilder
+public record PostCommentUpdateRequest(
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_COMMENT) PostComment comment
+) implements PostCommentUpdateRequestBuilder.With {
 
     public static final String JSON_PROPERTY_COMMENT = "comment";
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_COMMENT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private PostComment comment;
-
 }

@@ -129,10 +129,10 @@ public interface VoteClient {
             @NotNull Long articleId,
             @NotNull @Valid VoteCreateRequest body
     ) {
-        if (body.getVote() == null || body.getVote().getValue() == null || (body.getVote().getValue() != 1 && body.getVote().getValue() != -1)) {
+        if (body.vote() == null || body.vote().getValue() == null || (body.vote().getValue() != 1 && body.vote().getValue() != -1)) {
             throw new IllegalArgumentException("Vote value must be 1 (upvote) or -1 (downvote)");
         }
-        if (body.getVote().getValue() == -1) {
+        if (body.vote().getValue() == -1) {
             return downvoteArticle(articleId);
         }
         return upvoteArticle(articleId);
