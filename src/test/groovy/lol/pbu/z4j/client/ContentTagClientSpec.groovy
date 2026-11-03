@@ -16,13 +16,16 @@
 package lol.pbu.z4j.client
 
 import io.micronaut.http.client.exceptions.HttpClientException
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.model.ContentTag
 import lol.pbu.z4j.model.ContentTagCountResponse
 import lol.pbu.z4j.model.ContentTagCreateRequest
 import lol.pbu.z4j.model.ContentTagResponse
+import lol.pbu.z4j.model.ContentTagsJobRequest
 import lol.pbu.z4j.model.ContentTagsResponse
+import lol.pbu.z4j.model.JobStatusResponse
 import spock.lang.Shared
 
 @MicronautTest
@@ -44,8 +47,10 @@ class ContentTagClientSpec extends Z4jSpec {
 
         then: "count response is returned"
         noExceptionThrown()
-        countResp != null
-        countResp.value != null
+        assert countResp != null
+        verifyAll(countResp) {
+            value != null
+        }
     }
 
     def "can create, show, search, update, and delete content tag"() {
@@ -63,26 +68,33 @@ class ContentTagClientSpec extends Z4jSpec {
 
         then: "tag is created successfully"
         noExceptionThrown()
-        created?.contentTag != null
-        created.contentTag.id != null
-        created.contentTag.name == initialName
+        assert created?.contentTag != null
+        verifyAll(created.contentTag) {
+            id != null
+            name == initialName
+        }
 
         when: "showing content tag"
         ContentTagResponse shown = adminContentTagClient.showContentTag(tagId).block()
 
         then: "tag is returned with same properties"
         noExceptionThrown()
-        shown?.contentTag != null
-        shown.contentTag.id == tagId
-        shown.contentTag.name == initialName
+        assert shown?.contentTag != null
+        verifyAll(shown.contentTag) {
+            id == tagId
+            name == initialName
+        }
 
         when: "searching content tags"
         ContentTagsResponse searchResp = adminContentTagClient.searchContentTags().block()
 
         then: "the created tag is found in the search results"
         noExceptionThrown()
-        searchResp?.records != null
-        searchResp.records.any { it.id == tagId }
+        assert searchResp != null
+        verifyAll(searchResp) {
+            records != null
+            records.any { it.id == tagId }
+        }
 
         when: "updating content tag"
         ContentTagResponse updated = adminContentTagClient.updateContentTag(
@@ -92,8 +104,10 @@ class ContentTagClientSpec extends Z4jSpec {
 
         then: "tag name is updated"
         noExceptionThrown()
-        updated?.contentTag != null
-        updated.contentTag.name == updatedName
+        assert updated?.contentTag != null
+        verifyAll(updated.contentTag) {
+            name == updatedName
+        }
 
         when: "deleting content tag"
         adminContentTagClient.deleteContentTag(tagId).block()
@@ -109,6 +123,88 @@ class ContentTagClientSpec extends Z4jSpec {
                 // Defensive cleanup
             }
         }
+    }
+
+    def "can create content tags job"() {
+        given: "two temporary content tags"
+        String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
+        ContentTagResponse tag1 = adminContentTagClient.createContentTag(
+                new ContentTagCreateRequest("job_a_${entropy}")
+        ).block()
+        ContentTagResponse tag2 = adminContentTagClient.createContentTag(
+                new ContentTagCreateRequest("job_b_${entropy}")
+        ).block()
+        String tag1Id = tag1?.contentTag?.id
+        String tag2Id = tag2?.contentTag?.id
+
+        when: "creating a content tags job to delete the tags"
+        JobStatusResponse response = adminContentTagClient.createContentTagsJob(
+                new ContentTagsJobRequest("delete", [tag1Id, tag2Id])
+        ).block()
+
+        then: "job request succeeds with non-null response"
+        noExceptionThrown()
+        assert response != null
+        verifyAll(response) {
+            jobStatus != null
+        }
+
+        cleanup: "clean up tags defensively"
+        [tag1Id, tag2Id].each { id ->
+            if (id != null) {
+                try {
+                    adminContentTagClient.deleteContentTag(id).block()
+                } catch (Exception ignored) {
+                }
+            }
+        }
+    }
+
+    def "creating content tags job with invalid action fails"() {
+        when: "submitting a job with an unsupported action"
+        adminContentTagClient.createContentTagsJob(
+                new ContentTagsJobRequest("invalid_action", ["invalid_tag_id"])
+        ).block()
+
+        then: "bad request or unprocessable entity exception is thrown"
+        HttpClientResponseException ex = thrown(HttpClientResponseException)
+        ex.status.code in [400, 422]
+    }
+
+    def "fetching non-existent content tag returns null or throws exception"() {
+        when: "requesting a missing content tag ulid"
+        ContentTagResponse resp = adminContentTagClient.showContentTag("01ARZ3NDEK0000000000000000").block()
+
+        then: "empty response is returned"
+        noExceptionThrown()
+        resp == null
+
+        when: "requesting with invalid id format"
+        adminContentTagClient.showContentTag("invalid-id").block()
+
+        then: "bad request or not found exception is thrown"
+        HttpClientResponseException ex = thrown(HttpClientResponseException)
+        ex.status.code in [400, 404]
+    }
+
+    def "cannot create content tags job as unauthorized user"() {
+        when: "end user attempts to create content tags job"
+        userContentTagClient.createContentTagsJob(
+                new ContentTagsJobRequest("delete", ["01ARZ3NDEK0000000000000000"])
+        ).block()
+
+        then: "unauthorized or forbidden exception is thrown"
+        HttpClientResponseException ex = thrown(HttpClientResponseException)
+        ex.status.code in [401, 403, 404]
+    }
+
+    def "cannot create content tag as unauthorized user"() {
+        when: "end user creates a content tag"
+        userContentTagClient.createContentTag(new ContentTagCreateRequest("unauthorized_tag")).block()
+
+        then: "unauthorized or forbidden exception is thrown"
+        HttpClientResponseException ex = thrown(HttpClientResponseException)
+        ex.status.code in [401, 403, 404]
     }
 
     def "calling content tag client with bad url fails"() {

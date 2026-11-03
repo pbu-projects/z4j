@@ -27,11 +27,32 @@ import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.ContentTagCountResponse;
 import lol.pbu.z4j.model.ContentTagCreateRequest;
 import lol.pbu.z4j.model.ContentTagResponse;
+import lol.pbu.z4j.model.ContentTagsJobRequest;
 import lol.pbu.z4j.model.ContentTagsResponse;
+import lol.pbu.z4j.model.JobStatusResponse;
 import reactor.core.publisher.Mono;
 
 /**
  * <h1>Work with Content Tags in Zendesk Guide.</h1>
+ * <p>Content tags help label and group help center articles.</p>
+ *
+ * <h3>Example Usage:</h3>
+ * <p>Create a new tag:</p>
+ * <pre>{@code
+ * ContentTagResponse created = contentTagClient.createContentTag(
+ *         new ContentTagCreateRequest("troubleshooting")
+ * ).block();
+ * }</pre>
+ *
+ * <p>Handle an error when a tag is not found:</p>
+ * <pre>{@code
+ * try {
+ *     contentTagClient.showContentTag("missing-id").block();
+ * } catch (HttpClientResponseException e) {
+ *     int statusCode = e.getStatus().getCode();
+ * }
+ * }</pre>
+ *
  * <ul>
  *     <li>Search Content Tags {@link #searchContentTags}</li>
  *     <li>Count Content Tags {@link #countContentTags}</li>
@@ -39,6 +60,7 @@ import reactor.core.publisher.Mono;
  *     <li>Create Content Tag {@link #createContentTag}</li>
  *     <li>Update Content Tag {@link #updateContentTag}</li>
  *     <li>Delete Content Tag {@link #deleteContentTag}</li>
+ *     <li>Create Content Tags Job {@link #createContentTagsJob}</li>
  * </ul>
  *
  * @author Jonathan-Zollinger
@@ -107,5 +129,17 @@ public interface ContentTagClient {
     @Delete("/api/v2/guide/content_tags/{id}")
     Mono<Void> deleteContentTag(
             @PathVariable("id") @NotNull String id
+    );
+
+    /**
+     * <h1>{@summary Create Content Tags Job}</h1>
+     * Runs a background job to delete or merge content tags.
+     *
+     * @param body The content tags job request body (required)
+     * @return Job status response (status code 200 or 202)
+     */
+    @Post("/api/v2/guide/content_tags/jobs")
+    Mono<@Valid JobStatusResponse> createContentTagsJob(
+            @Body @NotNull @Valid ContentTagsJobRequest body
     );
 }
