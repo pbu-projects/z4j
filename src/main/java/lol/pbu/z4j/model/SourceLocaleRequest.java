@@ -15,15 +15,16 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import lol.pbu.z4j.Generated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
 /**
  * Base request payload for updating Help Center resource source locales.
@@ -40,6 +41,11 @@ import lol.pbu.z4j.Generated;
 public class SourceLocaleRequest {
 
     @Nullable
+    @JsonProperty("article_locale")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private LocaleAbbreviation articleLocale;
+
+    @Nullable
     @JsonProperty("category_locale")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private LocaleAbbreviation categoryLocale;
@@ -50,18 +56,31 @@ public class SourceLocaleRequest {
     private LocaleAbbreviation sectionLocale;
 
     @Generated
+    public SourceLocaleRequest(LocaleAbbreviation categoryLocale, LocaleAbbreviation sectionLocale) {
+        this.categoryLocale = categoryLocale;
+        this.sectionLocale = sectionLocale;
+    }
+
+    @Generated
     public SourceLocaleRequest(LocaleAbbreviation locale) {
+        this.articleLocale = locale;
         this.categoryLocale = locale;
         this.sectionLocale = locale;
     }
 
+    @JsonIgnore
     @Generated
     public LocaleAbbreviation getSourceLocale() {
+        if (articleLocale != null) {
+            return articleLocale;
+        }
         return categoryLocale != null ? categoryLocale : sectionLocale;
     }
 
+    @JsonIgnore
     @Generated
     public SourceLocaleRequest setSourceLocale(LocaleAbbreviation locale) {
+        this.articleLocale = locale;
         this.categoryLocale = locale;
         this.sectionLocale = locale;
         return this;
