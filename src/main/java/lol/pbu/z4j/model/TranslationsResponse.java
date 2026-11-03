@@ -15,53 +15,25 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
-/**
- * TranslationsResponse
- *
- * @author Jonathan-Zollinger
- * @since 0.2.5
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(TranslationsResponse.JSON_PROPERTY_TRANSLATIONS)
 @Serdeable
-@Generated
-public class TranslationsResponse {
+@RecordBuilder
+public record TranslationsResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_TRANSLATIONS) List<@Valid Translation> translations
+) implements TranslationsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_TRANSLATIONS = "translations";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TRANSLATIONS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid Translation> translations;
-
-    /**
-     * Add an item to the translations property in a chainable fashion.
-     *
-     * @return The same instance of TranslationsResponse for chaining.
-     */
-    public TranslationsResponse addTranslationsItem(Translation translationsItem) {
-        if (translations == null) {
-            translations = new ArrayList<>();
-        }
-        translations.add(translationsItem);
-        return this;
+    public TranslationsResponse addTranslationsItem(Translation item) {
+        List<Translation> list = new ArrayList<>(translations != null ? translations : List.of());
+        list.add(item);
+        return new TranslationsResponse(list);
     }
-
 }

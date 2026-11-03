@@ -156,7 +156,7 @@ class VoteClientSpec extends Z4jSpec {
         VotesResponse articleVotes = null
         for (int i = 0; i < 5; i++) {
             articleVotes = adminVoteClient.listVotesOnArticle(testArticle.id).block()
-            if (articleVotes?.votes?.any { it.id == voteId }) {
+            if (articleVotes?.votes()?.any { it.id == voteId }) {
                 break
             }
             sleep(1000)
@@ -164,14 +164,17 @@ class VoteClientSpec extends Z4jSpec {
 
         then: "article votes list contains the vote"
         noExceptionThrown()
-        articleVotes?.votes != null
-        articleVotes.votes.any { it.id == voteId }
+        verifyAll(articleVotes) {
+            it != null
+            votes() != null
+            votes().any { it.id == voteId }
+        }
 
         when: "listing votes by user"
         VotesResponse userVotes = null
         for (int i = 0; i < 5; i++) {
             userVotes = adminVoteClient.listVotesByUser(userId).block()
-            if (userVotes?.votes?.any { it.id == voteId }) {
+            if (userVotes?.votes()?.any { it.id == voteId }) {
                 break
             }
             sleep(1000)
@@ -179,8 +182,11 @@ class VoteClientSpec extends Z4jSpec {
 
         then: "user votes list contains the vote"
         noExceptionThrown()
-        userVotes?.votes != null
-        userVotes.votes.any { it.id == voteId }
+        verifyAll(userVotes) {
+            it != null
+            votes() != null
+            votes().any { it.id == voteId }
+        }
 
         when: "deleting the vote"
         adminVoteClient.deleteVote(voteId).block()

@@ -45,7 +45,7 @@ class UserSegmentClientSpec extends Z4jSpec {
         Mono<UserSegmentsResponse> response = userSegmentClient.listUserSegments(segmentQuery)
 
         and: "reading response causes no error"
-        response.block().getUserSegments()
+        response.block().userSegments()
 
         then:
         noExceptionThrown()

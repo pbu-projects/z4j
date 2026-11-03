@@ -353,12 +353,12 @@ class ArticleAttachmentClientSpec extends Z4jSpec {
 
         then: "both lists contain the created attachment"
         noExceptionThrown()
-        listWithLoc != null
-        listWithLoc.articleAttachments != null
-        listWithLoc.articleAttachments.any { it.id == attachmentId }
-        listNoLoc != null
-        listNoLoc.articleAttachments != null
-        listNoLoc.articleAttachments.any { it.id == attachmentId }
+        verifyAll {
+            listWithLoc?.articleAttachments() != null
+            listWithLoc.articleAttachments().any { it.id == attachmentId }
+            listNoLoc?.articleAttachments() != null
+            listNoLoc.articleAttachments().any { it.id == attachmentId }
+        }
 
         cleanup: "delete created attachment"
         if (attachmentId != null) {
@@ -395,17 +395,17 @@ class ArticleAttachmentClientSpec extends Z4jSpec {
 
         then: "both block lists contain the attachment and inline is false"
         noExceptionThrown()
-        blockListWithLoc != null
-        blockListWithLoc.articleAttachments != null
-        def foundWithLoc = blockListWithLoc.articleAttachments.find { it.id == attachmentId }
-        foundWithLoc != null
-        !foundWithLoc.inline
+        verifyAll {
+            blockListWithLoc?.articleAttachments() != null
+            def foundWithLoc = blockListWithLoc.articleAttachments().find { it.id == attachmentId }
+            foundWithLoc != null
+            !foundWithLoc.inline
 
-        blockListNoLoc != null
-        blockListNoLoc.articleAttachments != null
-        def foundNoLoc = blockListNoLoc.articleAttachments.find { it.id == attachmentId }
-        foundNoLoc != null
-        !foundNoLoc.inline
+            blockListNoLoc?.articleAttachments() != null
+            def foundNoLoc = blockListNoLoc.articleAttachments().find { it.id == attachmentId }
+            foundNoLoc != null
+            !foundNoLoc.inline
+        }
 
         cleanup: "delete created attachment"
         if (attachmentId != null) {
@@ -442,17 +442,17 @@ class ArticleAttachmentClientSpec extends Z4jSpec {
 
         then: "both inline lists contain the attachment and inline is true"
         noExceptionThrown()
-        inlineListWithLoc != null
-        inlineListWithLoc.articleAttachments != null
-        def foundWithLoc = inlineListWithLoc.articleAttachments.find { it.id == attachmentId }
-        foundWithLoc != null
-        foundWithLoc.inline
+        verifyAll {
+            inlineListWithLoc?.articleAttachments() != null
+            def foundWithLoc = inlineListWithLoc.articleAttachments().find { it.id == attachmentId }
+            foundWithLoc != null
+            foundWithLoc.inline
 
-        inlineListNoLoc != null
-        inlineListNoLoc.articleAttachments != null
-        def foundNoLoc = inlineListNoLoc.articleAttachments.find { it.id == attachmentId }
-        foundNoLoc != null
-        foundNoLoc.inline
+            inlineListNoLoc?.articleAttachments() != null
+            def foundNoLoc = inlineListNoLoc.articleAttachments().find { it.id == attachmentId }
+            foundNoLoc != null
+            foundNoLoc.inline
+        }
 
         cleanup: "delete created attachment"
         if (attachmentId != null) {

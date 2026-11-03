@@ -53,7 +53,7 @@ class PermissionGroupClientSpec extends Z4jSpec {
         userPermissionGroupClient = userCtx.getBean(PermissionGroupClient.class)
         userSegmentClient = adminCtx.getBean(UserSegmentClient.class)
 
-        def segments = userSegmentClient.listUserSegments(null).block().getUserSegments()
+        def segments = userSegmentClient.listUserSegments(null).block().userSegments()
         if (segments != null) {
             staffUserSegmentIds = segments.findAll { it.getUserType() == "staff" }.collect { it.getId() }
         }
