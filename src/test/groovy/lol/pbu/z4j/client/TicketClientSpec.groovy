@@ -614,11 +614,11 @@ class TicketClientSpec extends Z4jSpec {
                 for (int i = 0; i < 10; i++) {
                     sleep(1000)
                     status = jobStatusClient.showJobStatus(jobId).block()?.jobStatus()
-                    if (status?.getStatus() == "completed" || status?.getStatus() == "failed") {
+                    if (status?.status() == "completed" || status?.status() == "failed") {
                         break
                     }
                 }
-                List<Long> createdIds = status?.getResults()?.collect { (it.id as Number)?.longValue() }?.findAll { it != null }
+                List<Long> createdIds = status?.results()?.collect { (it.id as Number)?.longValue() }?.findAll { it != null }
                 if (createdIds) {
                     ticketsAdminClient.bulkDeleteTickets(createdIds).block()
                     sleep(2000)
@@ -939,7 +939,7 @@ class TicketClientSpec extends Z4jSpec {
         for (int i = 0; i < 20; i++) {
             sleep(1000)
             JobStatus status = jobStatusClient.showJobStatus(jobId).block()?.jobStatus()
-            if (status?.getStatus() == "completed" || status?.getStatus() == "failed") {
+            if (status?.status() == "completed" || status?.status() == "failed") {
                 break
             }
         }

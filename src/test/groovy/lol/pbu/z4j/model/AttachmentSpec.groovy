@@ -187,6 +187,36 @@ class AttachmentSpec extends Specification {
         }
     }
 
+    def "should round-trip serialize and deserialize Attachment with populated thumbnails"() {
+        given:
+        Attachment thumb = new Attachment()
+                .withId(888L)
+                .withFileName("thumb.jpeg")
+                .withContentType("image/jpeg")
+                .withSize(512)
+        Attachment item = new Attachment()
+                .withId(777L)
+                .withFileName("photo.jpeg")
+                .withContentType("image/jpeg")
+                .withSize(4096)
+                .withThumbnails([thumb])
+
+        when:
+        String json = objectMapper.writeValueAsString(item)
+        Attachment deserialized = objectMapper.readValue(json, Attachment.class)
+
+        then:
+        verifyAll(deserialized) {
+            id() == 777L
+            fileName() == "photo.jpeg"
+            thumbnails() != null
+            thumbnails().size() == 1
+            thumbnails().first() instanceof Attachment
+            thumbnails().first().id() == 888L
+            thumbnails().first().fileName() == "thumb.jpeg"
+        }
+    }
+
     def "should verify AttachmentBase constants"() {
         expect:
         verifyAll {

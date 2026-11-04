@@ -24,7 +24,8 @@ import io.micronaut.serde.annotation.Serdeable;
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Serdeable
+@Serdeable.Serializable
+@Serdeable.Deserializable(as = Attachment.class)
 public interface AttachmentBase {
 
     String JSON_PROPERTY_CONTENT_TYPE = "content_type";
