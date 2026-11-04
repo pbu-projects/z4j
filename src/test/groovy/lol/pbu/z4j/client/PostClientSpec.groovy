@@ -50,8 +50,8 @@ class PostClientSpec extends Z4jSpec {
         TopicFixtures topicFixtures = FixtureLoader.loadFixture("/fixtures/topic_fixtures.yaml", TopicFixtures.class)
         // Create a shared topic for post tests
         def topicFixture = topicFixtures.getTopics().first()
-        def topicReq = new TopicCreateRequest(new Topic(topicFixture.getName() + " PostClientSpec").setDescription(topicFixture.getDescription()))
-        sharedTopicId = adminTopicClient.createTopic(topicReq).block().topic().getId()
+        def topicReq = new TopicCreateRequest(new Topic(topicFixture.getName() + " PostClientSpec").withDescription(topicFixture.getDescription()))
+        sharedTopicId = adminTopicClient.createTopic(topicReq).block().topic().id()
         // Create a shared post for read tests
         def postFixture = postFixtures.getPosts().first()
         def postReq = new PostCreateRequest(new Post(postFixture.getTitle()).setTopicId(sharedTopicId).setDetails(postFixture.getDetails()))

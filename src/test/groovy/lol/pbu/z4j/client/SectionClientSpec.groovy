@@ -57,8 +57,8 @@ class SectionClientSpec extends Z4jSpec {
 
         CreateCategoryRequest catReq = new CreateCategoryRequest(
                 new Category("SectionClientSpec Category " + UUID.randomUUID())
-                        .setDescription("Category created for testing SectionClient")
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withDescription("Category created for testing SectionClient")
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         testCategory = adminCategoryClient.createCategory(LocaleAbbreviation.ENGLISH_UNITED_STATES, catReq).block().category
     }
@@ -145,7 +145,7 @@ class SectionClientSpec extends Z4jSpec {
         String initialName = "Spec Section " + UUID.randomUUID()
         String initialDesc = "Initial description"
         CreateSectionRequest createReq = new CreateSectionRequest(
-                new Section(initialName).setDescription(initialDesc)
+                new Section(initialName).withDescription(initialDesc)
         )
         Long sectionId = null
 
@@ -176,7 +176,7 @@ class SectionClientSpec extends Z4jSpec {
 
         when: "updating section position with locale"
         CreateSectionRequest updateReq = new CreateSectionRequest(
-                new Section().setPosition(2L)
+                new Section().withPosition(2L)
         )
         SectionResponse updated = adminSectionClient.updateSection(
                 LocaleAbbreviation.ENGLISH_UNITED_STATES,
@@ -207,7 +207,7 @@ class SectionClientSpec extends Z4jSpec {
         given: "a section creation request"
         String initialName = "Spec Section NoLocale " + UUID.randomUUID()
         CreateSectionRequest createReq = new CreateSectionRequest(
-                new Section(initialName).setDescription("Initial description no locale")
+                new Section(initialName).withDescription("Initial description no locale")
         )
         Long sectionId = null
 
@@ -232,7 +232,7 @@ class SectionClientSpec extends Z4jSpec {
 
         when: "updating section position without locale"
         CreateSectionRequest updateReq = new CreateSectionRequest(
-                new Section().setPosition(2L)
+                new Section().withPosition(2L)
         )
         SectionResponse updated = adminSectionClient.updateSectionNoLocale(
                 sectionId,
@@ -265,8 +265,8 @@ class SectionClientSpec extends Z4jSpec {
 
         CreateSectionRequest req = new CreateSectionRequest(
                 new Section("Source Locale Test " + UUID.randomUUID())
-                        .setDescription("Test section for source locale update")
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withDescription("Test section for source locale update")
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         SectionResponse created = adminSectionClient.createSection(LocaleAbbreviation.ENGLISH_UNITED_STATES, testCategory.id, req).block()
         Long sectionId = created.section.id
@@ -275,8 +275,8 @@ class SectionClientSpec extends Z4jSpec {
         TranslationClient translationClient = adminCtx.getBean(TranslationClient.class)
         translationClient.createTranslation("sections", sectionId, new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(targetLocale)
-                        .setTitle("Translation " + UUID.randomUUID())
+                        .withLocale(targetLocale)
+                        .withTitle("Translation " + UUID.randomUUID())
         )).block()
 
         when: "updating section source locale to the target locale"

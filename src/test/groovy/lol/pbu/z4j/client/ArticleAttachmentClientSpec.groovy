@@ -102,10 +102,10 @@ class ArticleAttachmentClientSpec extends Z4jSpec {
         String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
         def createReq = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Attachment Spec Test Article ${entropy}")
-                        .setBody("<p>Test article for testing attachments.</p>")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(defaultLocale)
+                        .withTitle("Attachment Spec Test Article ${entropy}")
+                        .withBody("<p>Test article for testing attachments.</p>")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(defaultLocale)
         )
         testArticle = adminArticleClient.createArticle(defaultLocale, validSectionId, createReq).block()?.article
         assert testArticle != null && testArticle.id != null : "Failed to seed test article!"

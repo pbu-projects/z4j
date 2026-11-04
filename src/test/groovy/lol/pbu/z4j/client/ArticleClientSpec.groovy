@@ -84,10 +84,10 @@ class ArticleClientSpec extends Z4jSpec {
 
                 def seedReq = new ArticleCreateRequest(
                         new Article()
-                                .setTitle("Seeded Article for Tests")
-                                .setBody("This article was seeded automatically by the test suite.")
-                                .setPermissionGroupId(validPermissionGroupId)
-                                .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                                .withTitle("Seeded Article for Tests")
+                                .withBody("This article was seeded automatically by the test suite.")
+                                .withPermissionGroupId(validPermissionGroupId)
+                                .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
                 )
                 adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, seedReq).block()
                 validLocale = LocaleAbbreviation.ENGLISH_UNITED_STATES
@@ -129,10 +129,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle(title)
-                        .setBody(body)
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(localeAbbreviation)
+                        .withTitle(title)
+                        .withBody(body)
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(localeAbbreviation)
         )
 
         when: "creating the article"
@@ -160,10 +160,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle(title)
-                        .setBody(body)
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(localeAbbreviation)
+                        .withTitle(title)
+                        .withBody(body)
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(localeAbbreviation)
         )
 
         when: "creating the article"
@@ -194,10 +194,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle(title)
-                        .setBody(body)
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(localeAbbreviation)
+                        .withTitle(title)
+                        .withBody(body)
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(localeAbbreviation)
         )
         def createResponse = adminArticleClient.createArticle(localeAbbreviation, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -228,17 +228,17 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle(title)
-                        .setBody(body)
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(localeAbbreviation)
+                        .withTitle(title)
+                        .withBody(body)
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(localeAbbreviation)
         )
         def createResponse = adminArticleClient.createArticle(localeAbbreviation, validSectionId, req).block()
         def createdId = createResponse.article.id
 
         ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
                 new Article()
-                        .setPromoted(true)
+                        .withPromoted(true)
         )
 
         when:
@@ -267,17 +267,17 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle(title)
-                        .setBody(body)
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(localeAbbreviation)
+                        .withTitle(title)
+                        .withBody(body)
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(localeAbbreviation)
         )
         def createResponse = adminArticleClient.createArticle(localeAbbreviation, validSectionId, req).block()
         def createdId = createResponse.article.id
 
         ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
                 new Article()
-                        .setPromoted(true)
+                        .withPromoted(true)
         )
 
         when:
@@ -306,10 +306,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle(title)
-                        .setBody(body)
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(localeAbbreviation)
+                        .withTitle(title)
+                        .withBody(body)
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(localeAbbreviation)
         )
         def createResponse = adminArticleClient.createArticle(localeAbbreviation, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -339,10 +339,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle(title)
-                        .setBody(body)
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(localeAbbreviation)
+                        .withTitle(title)
+                        .withBody(body)
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(localeAbbreviation)
         )
         def createResponse = adminArticleClient.createArticle(localeAbbreviation, validSectionId, req).block()
 
@@ -372,10 +372,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article for Bulk Attachments " + UUID.randomUUID())
-                        .setBody("Body for Bulk Attachments")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Article for Bulk Attachments " + UUID.randomUUID())
+                        .withBody("Body for Bulk Attachments")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -405,10 +405,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article for Bulk Attachments " + UUID.randomUUID())
-                        .setBody("Body for Bulk Attachments")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Article for Bulk Attachments " + UUID.randomUUID())
+                        .withBody("Body for Bulk Attachments")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -440,10 +440,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article to Archive " + UUID.randomUUID())
-                        .setBody("Body of article to archive")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Article to Archive " + UUID.randomUUID())
+                        .withBody("Body of article to archive")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -471,10 +471,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article to Archive " + UUID.randomUUID())
-                        .setBody("Body of article to archive")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Article to Archive " + UUID.randomUUID())
+                        .withBody("Body of article to archive")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -513,10 +513,10 @@ class ArticleClientSpec extends Z4jSpec {
         }
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Listing Test Article " + UUID.randomUUID())
-                        .setBody("Body for listing tests")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(validLocale)
+                        .withTitle("Listing Test Article " + UUID.randomUUID())
+                        .withBody("Body for listing tests")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(validLocale)
         )
         Long createdId = adminArticleClient.createArticle(validLocale, validSectionId, req).block().article.id
         for (int i = 0; i < 10; i++) {
@@ -734,10 +734,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article for Show No Locale " + UUID.randomUUID())
-                        .setBody("Body for show article without locale")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Article for Show No Locale " + UUID.randomUUID())
+                        .withBody("Body for show article without locale")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -764,10 +764,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article for ShowNoLocale " + UUID.randomUUID())
-                        .setBody("Body for showArticleNoLocale")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Article for ShowNoLocale " + UUID.randomUUID())
+                        .withBody("Body for showArticleNoLocale")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -806,15 +806,15 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Initial Title " + UUID.randomUUID())
-                        .setBody("Initial Body")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Initial Title " + UUID.randomUUID())
+                        .withBody("Initial Body")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
         ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
-                new Article().setPromoted(true)
+                new Article().withPromoted(true)
         )
 
         expect: "updating article without locale using convenience method"
@@ -839,15 +839,15 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Initial Title " + UUID.randomUUID())
-                        .setBody("Initial Body")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Initial Title " + UUID.randomUUID())
+                        .withBody("Initial Body")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
         ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
-                new Article().setPromoted(true)
+                new Article().withPromoted(true)
         )
 
         expect: "updating article using updateArticleNoLocale"
@@ -872,10 +872,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article to Delete " + UUID.randomUUID())
-                        .setBody("Body to delete")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Article to Delete " + UUID.randomUUID())
+                        .withBody("Body to delete")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -898,15 +898,15 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article for Unauthorized Update " + UUID.randomUUID())
-                        .setBody("Body")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Article for Unauthorized Update " + UUID.randomUUID())
+                        .withBody("Body")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
         ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
-                new Article().setTitle("Unauthorized Updated Title")
+                new Article().withTitle("Unauthorized Updated Title")
         )
 
         expect: "unauthorized user attempts to update article"
@@ -929,7 +929,7 @@ class ArticleClientSpec extends Z4jSpec {
     def "cannot update nonexistent article"() {
         given:
         ArticleUpdateRequest updateReq = new ArticleUpdateRequest(
-                new Article().setPromoted(true)
+                new Article().withPromoted(true)
         )
 
         expect: "updating nonexistent article without locale completes empty"
@@ -941,10 +941,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article for Unauthorized Delete " + UUID.randomUUID())
-                        .setBody("Body")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Article for Unauthorized Delete " + UUID.randomUUID())
+                        .withBody("Body")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -976,10 +976,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article for Bulk Attachments " + UUID.randomUUID())
-                        .setBody("Body for Bulk Attachments")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Article for Bulk Attachments " + UUID.randomUUID())
+                        .withBody("Body for Bulk Attachments")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -1001,10 +1001,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article for Bulk Attachments " + UUID.randomUUID())
-                        .setBody("Body for Bulk Attachments")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Article for Bulk Attachments " + UUID.randomUUID())
+                        .withBody("Body for Bulk Attachments")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         def createResponse = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -1031,10 +1031,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article for Bulk Attachments " + UUID.randomUUID())
-                        .setBody("Body for Bulk Attachments")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(validLocale)
+                        .withTitle("Article for Bulk Attachments " + UUID.randomUUID())
+                        .withBody("Body for Bulk Attachments")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(validLocale)
         )
         def createResponse = adminArticleClient.createArticle(validLocale, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -1056,10 +1056,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article for Bulk Attachments " + UUID.randomUUID())
-                        .setBody("Body for Bulk Attachments")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(validLocale)
+                        .withTitle("Article for Bulk Attachments " + UUID.randomUUID())
+                        .withBody("Body for Bulk Attachments")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(validLocale)
         )
         def createResponse = adminArticleClient.createArticle(validLocale, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -1086,10 +1086,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article to Archive " + UUID.randomUUID())
-                        .setBody("Body of article to archive")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(validLocale)
+                        .withTitle("Article to Archive " + UUID.randomUUID())
+                        .withBody("Body of article to archive")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(validLocale)
         )
         def createResponse = adminArticleClient.createArticle(validLocale, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -1112,10 +1112,10 @@ class ArticleClientSpec extends Z4jSpec {
         given:
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article to Archive " + UUID.randomUUID())
-                        .setBody("Body of article to archive")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(validLocale)
+                        .withTitle("Article to Archive " + UUID.randomUUID())
+                        .withBody("Body of article to archive")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(validLocale)
         )
         def createResponse = adminArticleClient.createArticle(validLocale, validSectionId, req).block()
         def createdId = createResponse.article.id
@@ -1144,10 +1144,10 @@ class ArticleClientSpec extends Z4jSpec {
 
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article Source Locale Test " + UUID.randomUUID())
-                        .setBody("Article body for testing source locale update with locale")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Article Source Locale Test " + UUID.randomUUID())
+                        .withBody("Article body for testing source locale update with locale")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         ArticleResponse created = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         Long articleId = created.article.id
@@ -1156,9 +1156,9 @@ class ArticleClientSpec extends Z4jSpec {
         TranslationClient translationClient = adminCtx.getBean(TranslationClient.class)
         translationClient.createTranslation("articles", articleId, new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(targetLocale)
-                        .setTitle("Translation " + UUID.randomUUID())
-                        .setBody("Translation body")
+                        .withLocale(targetLocale)
+                        .withTitle("Translation " + UUID.randomUUID())
+                        .withBody("Translation body")
         )).block()
 
         when: "updating article source locale with locale to target locale"
@@ -1199,10 +1199,10 @@ class ArticleClientSpec extends Z4jSpec {
 
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Article Source Locale Test NoLocale " + UUID.randomUUID())
-                        .setBody("Article body for testing source locale update without locale")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Article Source Locale Test NoLocale " + UUID.randomUUID())
+                        .withBody("Article body for testing source locale update without locale")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         ArticleResponse created = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         Long articleId = created.article.id
@@ -1211,9 +1211,9 @@ class ArticleClientSpec extends Z4jSpec {
         TranslationClient translationClient = adminCtx.getBean(TranslationClient.class)
         translationClient.createTranslation("articles", articleId, new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(targetLocale)
-                        .setTitle("Translation " + UUID.randomUUID())
-                        .setBody("Translation body")
+                        .withLocale(targetLocale)
+                        .withTitle("Translation " + UUID.randomUUID())
+                        .withBody("Translation body")
         )).block()
 
         when: "updating article source locale without locale using convenience method"
@@ -1240,10 +1240,10 @@ class ArticleClientSpec extends Z4jSpec {
 
         ArticleCreateRequest req = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Unauthorized Article Source Locale Test " + UUID.randomUUID())
-                        .setBody("Article body for unauthorized test")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withTitle("Unauthorized Article Source Locale Test " + UUID.randomUUID())
+                        .withBody("Article body for unauthorized test")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         ArticleResponse created = adminArticleClient.createArticle(LocaleAbbreviation.ENGLISH_UNITED_STATES, validSectionId, req).block()
         Long articleId = created.article.id

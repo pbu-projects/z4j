@@ -20,23 +20,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
 /**
- * Vote
+ * Vote on a Help Center article or post.
  *
  * @author Jonathan-Zollinger
  * @since 0.3.0
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         Vote.JSON_PROPERTY_ID,
         Vote.JSON_PROPERTY_URL,
@@ -47,9 +41,16 @@ import lol.pbu.z4j.Generated;
         Vote.JSON_PROPERTY_CREATED_AT,
         Vote.JSON_PROPERTY_UPDATED_AT
 })
-@Serdeable
-@Generated
-public class Vote {
+public record Vote(
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String url,
+        @Nullable @JsonProperty(JSON_PROPERTY_USER_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long userId,
+        @NotNull @JsonProperty(JSON_PROPERTY_VALUE) Integer value,
+        @Nullable @JsonProperty(JSON_PROPERTY_ITEM_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long itemId,
+        @Nullable @JsonProperty(JSON_PROPERTY_ITEM_TYPE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String itemType,
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String createdAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_UPDATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String updatedAt
+) implements VoteBuilder.With {
 
     public static final String JSON_PROPERTY_ID = "id";
     public static final String JSON_PROPERTY_URL = "url";
@@ -60,71 +61,11 @@ public class Vote {
     public static final String JSON_PROPERTY_CREATED_AT = "created_at";
     public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
 
-    /**
-     * Automatically assigned when the vote is created
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    /**
-     * The API url of this vote
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String url;
-
-    /**
-     * The user who voted
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_USER_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long userId;
-
-    /**
-     * The value of the vote (+1 or -1)
-     */
-    @NotNull
-    @JsonProperty(JSON_PROPERTY_VALUE)
-    private Integer value;
-
-    /**
-     * The id of the voted item
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ITEM_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long itemId;
-
-    /**
-     * The type of the voted item (e.g. Article)
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ITEM_TYPE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String itemType;
-
-    /**
-     * The time the vote was created
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String createdAt;
-
-    /**
-     * The time at which the vote was last updated
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_UPDATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String updatedAt;
-
     public Vote(Integer value) {
-        this.value = value;
+        this(null, null, null, value, null, null, null, null);
     }
 
+    public Vote() {
+        this(null, null, null, null, null, null, null, null);
+    }
 }

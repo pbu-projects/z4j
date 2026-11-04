@@ -100,11 +100,11 @@ class ArticleCommentClientSpec extends Z4jSpec {
         String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
         def createReq = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Comment Spec Test Article ${entropy}")
-                        .setBody("<p>Test article for testing comments.</p>")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(defaultLocale)
-                        .setCommentsDisabled(false)
+                        .withTitle("Comment Spec Test Article ${entropy}")
+                        .withBody("<p>Test article for testing comments.</p>")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(defaultLocale)
+                        .withCommentsDisabled(false)
         )
         testArticle = adminArticleClient.createArticle(defaultLocale, validSectionId, createReq).block()?.article
         assert testArticle != null && testArticle.id != null : "Failed to seed test article!"

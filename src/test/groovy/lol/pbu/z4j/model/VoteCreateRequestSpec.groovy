@@ -30,7 +30,7 @@ class VoteCreateRequestSpec extends Z4jSpec {
 
     def "should create VoteCreateRequest with constructors and builder"() {
         given:
-        Vote expected = new Vote(1).setId(101L).setUserId(202L)
+        Vote expected = new Vote(1).withId(101L).withUserId(202L)
 
         when:
         VoteCreateRequest byValue = new VoteCreateRequest(1)
@@ -59,8 +59,8 @@ class VoteCreateRequestSpec extends Z4jSpec {
 
     def "should update vote using record wither"() {
         given:
-        Vote original = new Vote().setId(1L).setValue(1)
-        Vote updatedVote = new Vote().setId(2L).setValue(-1)
+        Vote original = new Vote().withId(1L).withValue(1)
+        Vote updatedVote = new Vote().withId(2L).withValue(-1)
         VoteCreateRequest request = new VoteCreateRequest(original)
 
         when:
@@ -79,7 +79,7 @@ class VoteCreateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize VoteCreateRequest"() {
         given:
-        Vote expected = new Vote().setId(555L).setValue(1).setUserId(999L)
+        Vote expected = new Vote().withId(555L).withValue(1).withUserId(999L)
         VoteCreateRequest request = new VoteCreateRequest(expected)
 
         when:
@@ -107,7 +107,7 @@ class VoteCreateRequestSpec extends Z4jSpec {
     def "should handle null vote component in constructor and wither"() {
         when:
         VoteCreateRequest request = new VoteCreateRequest((Vote) null)
-        Vote replacement = new Vote().setId(99L).setValue(-1)
+        Vote replacement = new Vote().withId(99L).withValue(-1)
         VoteCreateRequest updated = request.withVote(replacement)
         String json = objectMapper.writeValueAsString(request)
         Map map = objectMapper.readValue(json, Map.class)

@@ -30,7 +30,7 @@ class LabelCreateRequestSpec extends Z4jSpec {
 
     def "should create LabelCreateRequest with constructors and builder"() {
         given:
-        Label expected = new Label("help-center").setId(101L)
+        Label expected = new Label("help-center").withId(101L)
 
         when:
         LabelCreateRequest byName = new LabelCreateRequest("help-center")
@@ -57,8 +57,8 @@ class LabelCreateRequestSpec extends Z4jSpec {
 
     def "should update label using record wither"() {
         given:
-        Label original = new Label("old-label").setId(1L)
-        Label updatedLabel = new Label("new-label").setId(2L)
+        Label original = new Label("old-label").withId(1L)
+        Label updatedLabel = new Label("new-label").withId(2L)
         LabelCreateRequest request = new LabelCreateRequest(original)
 
         when:
@@ -77,7 +77,7 @@ class LabelCreateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize LabelCreateRequest"() {
         given:
-        Label expected = new Label("troubleshooting").setId(555L)
+        Label expected = new Label("troubleshooting").withId(555L)
         LabelCreateRequest request = new LabelCreateRequest(expected)
 
         when:
@@ -103,7 +103,7 @@ class LabelCreateRequestSpec extends Z4jSpec {
     def "should handle null label component in constructor and wither"() {
         when:
         LabelCreateRequest request = new LabelCreateRequest((Label) null)
-        Label replacement = new Label("faq").setId(99L)
+        Label replacement = new Label("faq").withId(99L)
         LabelCreateRequest updated = request.withLabel(replacement)
         String json = objectMapper.writeValueAsString(request)
         Map map = objectMapper.readValue(json, Map.class)

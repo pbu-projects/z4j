@@ -32,10 +32,10 @@ class ArticlesResponseSpec extends Z4jSpec {
     def "should create ArticlesResponse with canonical constructor and builder"() {
         given:
         Article item = new Article()
-                .setId(101L)
-                .setTitle("Getting Started")
-                .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
-                .setPermissionGroupId(42L)
+                .withId(101L)
+                .withTitle("Getting Started")
+                .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                .withPermissionGroupId(42L)
         List<Article> list = [item]
         Meta expectedMeta = MetaBuilder.builder().hasMore(true).afterCursor("cursor_after").beforeCursor("cursor_before").build()
         Links expectedLinks = LinksBuilder.builder()
@@ -85,8 +85,8 @@ class ArticlesResponseSpec extends Z4jSpec {
 
     def "should update ArticlesResponse using record withers and addArticlesItem method"() {
         given:
-        Article first = new Article().setId(1L).setTitle("Article 1")
-        Article second = new Article().setId(2L).setTitle("Article 2")
+        Article first = new Article().withId(1L).withTitle("Article 1")
+        Article second = new Article().withId(2L).withTitle("Article 2")
         Meta expectedMeta = MetaBuilder.builder().hasMore(false).build()
         Links expectedLinks = LinksBuilder.builder().next(URI.create("https://example.zendesk.com/next").toURL()).build()
         ArticlesResponse response = new ArticlesResponse([first], null, null, null, null, null, null, null, null)

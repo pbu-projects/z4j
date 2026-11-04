@@ -30,7 +30,7 @@ class CreateUserSegmentRequestSpec extends Z4jSpec {
 
     def "should create CreateUserSegmentRequest with canonical constructor and builder"() {
         given:
-        UserSegment expected = new UserSegment("VIP Customers", "signed_in_users").setId(101L)
+        UserSegment expected = new UserSegment("VIP Customers", "signed_in_users").withId(101L)
 
         when:
         CreateUserSegmentRequest direct = new CreateUserSegmentRequest(expected)
@@ -52,8 +52,8 @@ class CreateUserSegmentRequestSpec extends Z4jSpec {
 
     def "should update userSegment using record wither"() {
         given:
-        UserSegment originalSegment = new UserSegment("Staff", "staff").setId(1L)
-        UserSegment newSegment = new UserSegment("Members", "signed_in_users").setId(2L)
+        UserSegment originalSegment = new UserSegment("Staff", "staff").withId(1L)
+        UserSegment newSegment = new UserSegment("Members", "signed_in_users").withId(2L)
         CreateUserSegmentRequest request = new CreateUserSegmentRequest(originalSegment)
 
         when:
@@ -72,7 +72,7 @@ class CreateUserSegmentRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize CreateUserSegmentRequest"() {
         given:
-        UserSegment expected = new UserSegment("Agents", "staff").setId(555L)
+        UserSegment expected = new UserSegment("Agents", "staff").withId(555L)
         CreateUserSegmentRequest request = new CreateUserSegmentRequest(expected)
 
         when:
@@ -98,7 +98,7 @@ class CreateUserSegmentRequestSpec extends Z4jSpec {
     def "should handle null userSegment component in constructor and wither"() {
         when:
         CreateUserSegmentRequest request = new CreateUserSegmentRequest(null)
-        UserSegment replacement = new UserSegment("Created", "signed_in_users").setId(99L)
+        UserSegment replacement = new UserSegment("Created", "signed_in_users").withId(99L)
         CreateUserSegmentRequest updated = request.withUserSegment(replacement)
         String json = objectMapper.writeValueAsString(request)
         Map map = objectMapper.readValue(json, Map.class)

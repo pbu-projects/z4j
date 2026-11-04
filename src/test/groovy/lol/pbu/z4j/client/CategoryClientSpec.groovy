@@ -86,8 +86,7 @@ class CategoryClientSpec extends Z4jSpec {
 
     def "can use CreateCategory as an #userType for the '#localeAbbreviation' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation, String categoryName, String description) {
         given:
-        Category category = new Category(categoryName)
-        category.setDescription(description)
+        Category category = new Category(categoryName).withDescription(description)
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(category)
 
         when: "category name to be created is #categoryName"
@@ -128,8 +127,7 @@ class CategoryClientSpec extends Z4jSpec {
             )
         }
 
-        Category category = new Category(categoryName)
-        category.setDescription(description)
+        Category category = new Category(categoryName).withDescription(description)
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(category)
 
         when: "category name to be created is #categoryName"
@@ -156,8 +154,7 @@ class CategoryClientSpec extends Z4jSpec {
 
     def "can use DeleteCategory as an #userType for the '#localeAbbreviation"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation, String categoryName, String description) {
         given:
-        Category category = new Category(categoryName)
-        category.setDescription(description)
+        Category category = new Category(categoryName).withDescription(description)
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(category)
         CategoryResponse response = categoryClient.createCategory(localeAbbreviation, createCategoryRequest).block()
 
@@ -177,8 +174,7 @@ class CategoryClientSpec extends Z4jSpec {
 
     def "cannot use DeleteCategory as an #userType for the '#localeAbbreviation' locale"(CategoryClient categoryClient, String userType, LocaleAbbreviation localeAbbreviation, String categoryName, String description) {
         given:
-        Category category = new Category(categoryName)
-        category.setDescription(description)
+        Category category = new Category(categoryName).withDescription(description)
         CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(category)
         CategoryResponse response = adminCategoryClient.createCategory(localeAbbreviation, createCategoryRequest).block()
 
@@ -209,8 +205,8 @@ class CategoryClientSpec extends Z4jSpec {
 
         CreateCategoryRequest req = new CreateCategoryRequest(
                 new Category("Source Locale Test " + UUID.randomUUID())
-                        .setDescription("Test category for source locale update")
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withDescription("Test category for source locale update")
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         CategoryResponse created = adminCategoryClient.createCategory(LocaleAbbreviation.ENGLISH_UNITED_STATES, req).block()
         Long catId = created.category.id
@@ -219,8 +215,8 @@ class CategoryClientSpec extends Z4jSpec {
         TranslationClient translationClient = adminCtx.getBean(TranslationClient.class)
         translationClient.createTranslation("categories", catId, new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(targetLocale)
-                        .setTitle("Translation " + UUID.randomUUID())
+                        .withLocale(targetLocale)
+                        .withTitle("Translation " + UUID.randomUUID())
         )).block()
 
         when: "updating source locale to the target locale"
@@ -244,8 +240,8 @@ class CategoryClientSpec extends Z4jSpec {
 
         CreateCategoryRequest req = new CreateCategoryRequest(
                 new Category("User Source Locale Test " + UUID.randomUUID())
-                        .setDescription("Test category for forbidden source locale update")
-                        .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                        .withDescription("Test category for forbidden source locale update")
+                        .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
         CategoryResponse created = adminCategoryClient.createCategory(LocaleAbbreviation.ENGLISH_UNITED_STATES, req).block()
         Long catId = created.category.id

@@ -30,7 +30,7 @@ class ArticleAttachmentResponseSpec extends Z4jSpec {
 
     def "should create ArticleAttachmentResponse with canonical constructor and builder"() {
         given:
-        ArticleAttachment expected = new ArticleAttachment().setId(101L).setFileName("guide.pdf")
+        ArticleAttachment expected = new ArticleAttachment().withId(101L).withFileName("guide.pdf")
 
         when:
         ArticleAttachmentResponse direct = new ArticleAttachmentResponse(expected)
@@ -51,8 +51,8 @@ class ArticleAttachmentResponseSpec extends Z4jSpec {
 
     def "should update article attachment using record wither"() {
         given:
-        ArticleAttachment original = new ArticleAttachment().setId(1L).setFileName("draft.pdf")
-        ArticleAttachment updatedAttachment = new ArticleAttachment().setId(2L).setFileName("final.pdf")
+        ArticleAttachment original = new ArticleAttachment().withId(1L).withFileName("draft.pdf")
+        ArticleAttachment updatedAttachment = new ArticleAttachment().withId(2L).withFileName("final.pdf")
         ArticleAttachmentResponse response = new ArticleAttachmentResponse(original)
 
         when:
@@ -71,7 +71,7 @@ class ArticleAttachmentResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize ArticleAttachmentResponse"() {
         given:
-        ArticleAttachment expected = new ArticleAttachment().setId(555L).setFileName("manual.pdf")
+        ArticleAttachment expected = new ArticleAttachment().withId(555L).withFileName("manual.pdf")
         ArticleAttachmentResponse response = new ArticleAttachmentResponse(expected)
 
         when:
@@ -97,7 +97,7 @@ class ArticleAttachmentResponseSpec extends Z4jSpec {
     def "should handle null article attachment component in constructor and wither"() {
         when:
         ArticleAttachmentResponse response = new ArticleAttachmentResponse(null)
-        ArticleAttachment replacement = new ArticleAttachment().setId(99L).setFileName("spec.pdf")
+        ArticleAttachment replacement = new ArticleAttachment().withId(99L).withFileName("spec.pdf")
         ArticleAttachmentResponse updated = response.withArticleAttachment(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

@@ -20,22 +20,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
- * ArticleAttachment
+ * Article attachment uploaded to Zendesk Guide.
  *
  * @author Jonathan-Zollinger
  * @since 0.3.0
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         ArticleAttachment.JSON_PROPERTY_ID,
         ArticleAttachment.JSON_PROPERTY_URL,
@@ -47,11 +41,21 @@ import lol.pbu.z4j.Generated;
         ArticleAttachment.JSON_PROPERTY_SIZE,
         ArticleAttachment.JSON_PROPERTY_INLINE,
         ArticleAttachment.JSON_PROPERTY_CREATED_AT,
-        ArticleAttachment.JSON_PROPERTY_UPDATED_AT,
+        ArticleAttachment.JSON_PROPERTY_UPDATED_AT
 })
-@Serdeable
-@Generated
-public class ArticleAttachment {
+public record ArticleAttachment(
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String url,
+        @Nullable @JsonProperty(JSON_PROPERTY_ARTICLE_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long articleId,
+        @Nullable @JsonProperty(JSON_PROPERTY_FILE_NAME) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String fileName,
+        @Nullable @JsonProperty(JSON_PROPERTY_DISPLAY_FILE_NAME) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String displayFileName,
+        @Nullable @JsonProperty(JSON_PROPERTY_CONTENT_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String contentUrl,
+        @Nullable @JsonProperty(JSON_PROPERTY_CONTENT_TYPE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String contentType,
+        @Nullable @JsonProperty(JSON_PROPERTY_SIZE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long size,
+        @Nullable @JsonProperty(JSON_PROPERTY_INLINE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean inline,
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String createdAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_UPDATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String updatedAt
+) implements ArticleAttachmentBuilder.With {
 
     public static final String JSON_PROPERTY_ID = "id";
     public static final String JSON_PROPERTY_URL = "url";
@@ -65,59 +69,7 @@ public class ArticleAttachment {
     public static final String JSON_PROPERTY_CREATED_AT = "created_at";
     public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String url;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ARTICLE_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long articleId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_FILE_NAME)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String fileName;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DISPLAY_FILE_NAME)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String displayFileName;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CONTENT_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String contentUrl;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CONTENT_TYPE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String contentType;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SIZE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long size;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_INLINE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean inline;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String createdAt;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_UPDATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String updatedAt;
-
+    public ArticleAttachment() {
+        this(null, null, null, null, null, null, null, null, null, null, null);
+    }
 }

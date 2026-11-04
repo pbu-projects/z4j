@@ -30,7 +30,7 @@ class TopicUpdateRequestSpec extends Z4jSpec {
 
     def "should create TopicUpdateRequest with canonical constructor and builder"() {
         given:
-        Topic expected = new Topic("Updated Announcements").setDescription("Revised news").setId(101L)
+        Topic expected = new Topic("Updated Announcements").withDescription("Revised news").withId(101L)
 
         when:
         TopicUpdateRequest direct = new TopicUpdateRequest(expected)
@@ -54,8 +54,8 @@ class TopicUpdateRequestSpec extends Z4jSpec {
 
     def "should update topic using record wither"() {
         given:
-        Topic original = new Topic("Old News").setId(1L)
-        Topic updatedTopic = new Topic("New News").setId(2L)
+        Topic original = new Topic("Old News").withId(1L)
+        Topic updatedTopic = new Topic("New News").withId(2L)
         TopicUpdateRequest request = new TopicUpdateRequest(original)
 
         when:
@@ -74,7 +74,7 @@ class TopicUpdateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize TopicUpdateRequest"() {
         given:
-        Topic expected = new Topic("Community Q&A v2").setDescription("Ask questions here").setId(555L)
+        Topic expected = new Topic("Community Q&A v2").withDescription("Ask questions here").withId(555L)
         TopicUpdateRequest request = new TopicUpdateRequest(expected)
 
         when:
@@ -101,7 +101,7 @@ class TopicUpdateRequestSpec extends Z4jSpec {
     def "should handle null topic component in constructor and wither"() {
         when:
         TopicUpdateRequest request = new TopicUpdateRequest(null)
-        Topic replacement = new Topic("Updates").setId(99L)
+        Topic replacement = new Topic("Updates").withId(99L)
         TopicUpdateRequest updated = request.withTopic(replacement)
         String json = objectMapper.writeValueAsString(request)
         Map map = objectMapper.readValue(json, Map.class)

@@ -30,7 +30,7 @@ class CategoryResponseSpec extends Z4jSpec {
 
     def "should create CategoryResponse with canonical constructor and builder"() {
         given:
-        Category expected = new Category("Billing").setId(202L)
+        Category expected = new Category("Billing").withId(202L)
 
         when:
         CategoryResponse direct = new CategoryResponse(expected)
@@ -51,8 +51,8 @@ class CategoryResponseSpec extends Z4jSpec {
 
     def "should update category using record wither"() {
         given:
-        Category originalCategory = new Category("Old Name").setId(1L)
-        Category newCategory = new Category("New Name").setId(2L)
+        Category originalCategory = new Category("Old Name").withId(1L)
+        Category newCategory = new Category("New Name").withId(2L)
         CategoryResponse response = new CategoryResponse(originalCategory)
 
         when:
@@ -71,7 +71,7 @@ class CategoryResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize CategoryResponse"() {
         given:
-        Category expected = new Category("Support").setId(777L)
+        Category expected = new Category("Support").withId(777L)
         CategoryResponse response = new CategoryResponse(expected)
 
         when:
@@ -97,7 +97,7 @@ class CategoryResponseSpec extends Z4jSpec {
     def "should handle null category component in constructor and wither"() {
         when:
         CategoryResponse response = new CategoryResponse(null)
-        Category replacement = new Category("General").setId(88L)
+        Category replacement = new Category("General").withId(88L)
         CategoryResponse updated = response.withCategory(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

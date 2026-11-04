@@ -20,27 +20,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-
 import java.time.ZonedDateTime;
-import lol.pbu.z4j.Generated;
 
 /**
- * Category
+ * Category in Zendesk Guide Help Center.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@EqualsAndHashCode
-@ToString
-@Getter
-@Setter
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         Category.JSON_PROPERTY_NAME,
         Category.JSON_PROPERTY_CREATED_AT,
@@ -52,11 +43,21 @@ import lol.pbu.z4j.Generated;
         Category.JSON_PROPERTY_POSITION,
         Category.JSON_PROPERTY_SOURCE_LOCALE,
         Category.JSON_PROPERTY_UPDATED_AT,
-        Category.JSON_PROPERTY_URL,
+        Category.JSON_PROPERTY_URL
 })
-@Serdeable
-@Generated
-public class Category {
+public record Category(
+        @NotNull @JsonProperty(JSON_PROPERTY_NAME) String name,
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ZonedDateTime createdAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_DESCRIPTION) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String description,
+        @Nullable @JsonProperty(JSON_PROPERTY_HTML_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String htmlUrl,
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_LOCALE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) LocaleAbbreviation localeAbbreviation,
+        @Nullable @JsonProperty(JSON_PROPERTY_OUTDATED) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean outdated,
+        @Nullable @JsonProperty(JSON_PROPERTY_POSITION) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long position,
+        @Nullable @JsonProperty(JSON_PROPERTY_SOURCE_LOCALE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String sourceLocale,
+        @Nullable @JsonProperty(JSON_PROPERTY_UPDATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ZonedDateTime updatedAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String url
+) implements CategoryBuilder.With {
 
     public static final String JSON_PROPERTY_NAME = "name";
     public static final String JSON_PROPERTY_CREATED_AT = "created_at";
@@ -70,95 +71,11 @@ public class Category {
     public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
     public static final String JSON_PROPERTY_URL = "url";
 
-    /**
-     * The name of the category
-     */
-    @NotNull
-    @JsonProperty(JSON_PROPERTY_NAME)
-    private String name;
-
-    /**
-     * The time at which the category was created
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ZonedDateTime createdAt;
-
-    /**
-     * The description of the category
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DESCRIPTION)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String description;
-
-    /**
-     * The url of this category in Help Center
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_HTML_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String htmlUrl;
-
-    /**
-     * Automatically assigned when creating categories
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    /**
-     * The locale where the category is displayed
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_LOCALE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private LocaleAbbreviation localeAbbreviation;
-
-    /**
-     * Whether the category is out of date
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_OUTDATED)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean outdated;
-
-    /**
-     * The position of this category relative to other categories
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_POSITION)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long position;
-
-    /**
-     * The source (default) locale of the category
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SOURCE_LOCALE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String sourceLocale;
-
-    /**
-     * The time at which the category was last updated
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_UPDATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ZonedDateTime updatedAt;
-
-    /**
-     * The API url of this category
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String url;
-
     public Category(String name) {
-        this.name = name;
+        this(name, null, null, null, null, null, null, null, null, null, null);
     }
 
+    public Category() {
+        this(null, null, null, null, null, null, null, null, null, null, null);
+    }
 }

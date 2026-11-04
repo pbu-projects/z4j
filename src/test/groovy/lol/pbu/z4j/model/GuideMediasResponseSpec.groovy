@@ -30,7 +30,7 @@ class GuideMediasResponseSpec extends Z4jSpec {
 
     def "should create GuideMediasResponse with canonical constructor and builder"() {
         given:
-        GuideMedia media = new GuideMedia().setId("01MEDIA1").setName("banner.png")
+        GuideMedia media = new GuideMedia().withId("01MEDIA1").withName("banner.png")
         List<GuideMedia> list = [media]
         Meta expectedMeta = MetaBuilder.builder().hasMore(true).afterCursor("cursor_1").build()
 
@@ -58,8 +58,8 @@ class GuideMediasResponseSpec extends Z4jSpec {
 
     def "should update GuideMediasResponse using record withers and addRecordsItem method"() {
         given:
-        GuideMedia first = new GuideMedia().setId("01M1").setName("one.png")
-        GuideMedia second = new GuideMedia().setId("01M2").setName("two.png")
+        GuideMedia first = new GuideMedia().withId("01M1").withName("one.png")
+        GuideMedia second = new GuideMedia().withId("01M2").withName("two.png")
         Meta meta1 = MetaBuilder.builder().hasMore(false).build()
         Meta meta2 = MetaBuilder.builder().hasMore(true).afterCursor("after_2").build()
         GuideMediasResponse response = new GuideMediasResponse([first], meta1)
@@ -93,7 +93,7 @@ class GuideMediasResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize GuideMediasResponse"() {
         given:
-        GuideMedia media = new GuideMedia().setId("01M555").setName("logo.svg")
+        GuideMedia media = new GuideMedia().withId("01M555").withName("logo.svg")
         Meta expectedMeta = MetaBuilder.builder().hasMore(false).build()
         GuideMediasResponse response = new GuideMediasResponse([media], expectedMeta)
 

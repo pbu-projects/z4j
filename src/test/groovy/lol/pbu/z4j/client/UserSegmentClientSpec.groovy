@@ -66,7 +66,7 @@ class UserSegmentClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         cleanup:
-        userSegmentClient.deleteUserSegment(userSegment.getId()).block()
+        userSegmentClient.deleteUserSegment(userSegment.id()).block()
 
         where:
         [userType, segmentName] << userSegmentFixtures.getUserSegments().collect { [it.getUserType(), it.getSegmentName()] }
@@ -77,13 +77,13 @@ class UserSegmentClientSpec extends Z4jSpec {
         UserSegment userSegment = createUserSegment(userType, segmentName)
 
         when: "delete user segment from previous step"
-        userSegmentClient.deleteUserSegment(userSegment.getId()).block()
+        userSegmentClient.deleteUserSegment(userSegment.id()).block()
 
         then:
         noExceptionThrown()
 
         cleanup:
-        userSegmentClient.deleteUserSegment(userSegment.getId()).block()
+        userSegmentClient.deleteUserSegment(userSegment.id()).block()
 
         where:
         [userType, segmentName] << userSegmentFixtures.getUserSegments().collect { [it.getUserType(), it.getSegmentName()] }
@@ -94,7 +94,7 @@ class UserSegmentClientSpec extends Z4jSpec {
         UserSegment userSegment = createUserSegment(userType, segmentName)
 
         when: "list sections with user segment from previous step"
-        userSegmentClient.listUserSegmentSections(userSegment.getId()).block()
+        userSegmentClient.listUserSegmentSections(userSegment.id()).block()
 
         then:
         noExceptionThrown()
@@ -108,13 +108,13 @@ class UserSegmentClientSpec extends Z4jSpec {
         UserSegment userSegment = createUserSegment(userType, segmentName)
 
         when: "list topics with user segment from previous step"
-        userSegmentClient.listUserSegmentTopics(userSegment.getId()).block()
+        userSegmentClient.listUserSegmentTopics(userSegment.id()).block()
 
         then:
         noExceptionThrown()
 
         cleanup:
-        userSegmentClient.deleteUserSegment(userSegment.getId()).block()
+        userSegmentClient.deleteUserSegment(userSegment.id()).block()
 
         where:
         [userType, segmentName] << userSegmentFixtures.getUserSegments().collect { [it.getUserType(), it.getSegmentName()] }
@@ -125,7 +125,7 @@ class UserSegmentClientSpec extends Z4jSpec {
         def userSegment = createUserSegment(userType, segmentName)
 
         when: "show user segment with user segment ID from previous step"
-        UserSegmentResponse response = userSegmentClient.showUserSegment(userSegment.getId()).block()
+        UserSegmentResponse response = userSegmentClient.showUserSegment(userSegment.id()).block()
 
         and: "query resultant userSegments"
         response.userSegment()
@@ -134,7 +134,7 @@ class UserSegmentClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         cleanup:
-        userSegmentClient.deleteUserSegment(userSegment.getId()).block()
+        userSegmentClient.deleteUserSegment(userSegment.id()).block()
 
         where:
         [userType, segmentName] << userSegmentFixtures.getUserSegments().collect { [it.getUserType(), it.getSegmentName()] }
@@ -145,22 +145,22 @@ class UserSegmentClientSpec extends Z4jSpec {
         def userSegment = createUserSegment(userType, segmentName)
 
         when: "create an update to the user segment object with updated name and opposite user type"
-        userSegment.setName(updatedName)
+        userSegment = userSegment.withName(updatedName)
         if (userType.equalsIgnoreCase("staff")) {
-            userSegment.setUserType("signed_in_users")
+            userSegment = userSegment.withUserType("signed_in_users")
         } else {
-            userSegment.setUserType("staff")
+            userSegment = userSegment.withUserType("staff")
         }
 
         and: "send the update to zendesk"
-        userSegmentClient.updateUserSegment(userSegment.getId(),
+        userSegmentClient.updateUserSegment(userSegment.id(),
                 new CreateUserSegmentRequest(userSegment)).block()
 
         then:
         noExceptionThrown()
 
         cleanup:
-        userSegmentClient.deleteUserSegment(userSegment.getId()).block()
+        userSegmentClient.deleteUserSegment(userSegment.id()).block()
 
         where:
         [userType, segmentName, updatedName] << userSegmentFixtures.getUserSegments().collect { [it.getUserType(), it.getSegmentName(), it.getUpdatedName()] }

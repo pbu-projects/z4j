@@ -30,7 +30,7 @@ class ArticleUpdateRequestSpec extends Z4jSpec {
 
     def "should create ArticleUpdateRequest with canonical constructor and builder"() {
         given:
-        Article expected = new Article().setTitle("Updated Guide").setId(102L)
+        Article expected = new Article().withTitle("Updated Guide").withId(102L)
 
         when:
         ArticleUpdateRequest direct = new ArticleUpdateRequest(expected)
@@ -52,8 +52,8 @@ class ArticleUpdateRequestSpec extends Z4jSpec {
 
     def "should update article using record wither"() {
         given:
-        Article originalArticle = new Article().setTitle("Old Title").setId(1L)
-        Article newArticle = new Article().setTitle("New Title").setId(2L)
+        Article originalArticle = new Article().withTitle("Old Title").withId(1L)
+        Article newArticle = new Article().withTitle("New Title").withId(2L)
         ArticleUpdateRequest request = new ArticleUpdateRequest(originalArticle)
 
         when:
@@ -72,7 +72,7 @@ class ArticleUpdateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize ArticleUpdateRequest"() {
         given:
-        Article expected = new Article().setTitle("Revised Guide").setId(556L)
+        Article expected = new Article().withTitle("Revised Guide").withId(556L)
         ArticleUpdateRequest request = new ArticleUpdateRequest(expected)
 
         when:
@@ -98,7 +98,7 @@ class ArticleUpdateRequestSpec extends Z4jSpec {
     def "should handle null article component in constructor and wither"() {
         when:
         ArticleUpdateRequest request = new ArticleUpdateRequest(null)
-        Article replacement = new Article().setTitle("Restored").setId(99L)
+        Article replacement = new Article().withTitle("Restored").withId(99L)
         ArticleUpdateRequest updated = request.withArticle(replacement)
         String json = objectMapper.writeValueAsString(request)
         Map map = objectMapper.readValue(json, Map.class)

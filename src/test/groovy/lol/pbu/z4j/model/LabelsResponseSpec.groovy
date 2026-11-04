@@ -30,7 +30,7 @@ class LabelsResponseSpec extends Z4jSpec {
 
     def "should create LabelsResponse with canonical constructor and builder"() {
         given:
-        Label item = new Label("help-center").setId(101L)
+        Label item = new Label("help-center").withId(101L)
         List<Label> list = [item]
 
         when:
@@ -56,8 +56,8 @@ class LabelsResponseSpec extends Z4jSpec {
 
     def "should update labels using record wither and addLabelsItem method"() {
         given:
-        Label first = new Label("old-label").setId(1L)
-        Label second = new Label("new-label").setId(2L)
+        Label first = new Label("old-label").withId(1L)
+        Label second = new Label("new-label").withId(2L)
         LabelsResponse response = new LabelsResponse([first])
 
         when:
@@ -87,7 +87,7 @@ class LabelsResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize LabelsResponse"() {
         given:
-        Label item = new Label("troubleshooting").setId(555L)
+        Label item = new Label("troubleshooting").withId(555L)
         LabelsResponse response = new LabelsResponse([item])
 
         when:
@@ -113,7 +113,7 @@ class LabelsResponseSpec extends Z4jSpec {
     def "should handle null labels component in constructor, wither, and serde"() {
         when:
         LabelsResponse response = new LabelsResponse(null)
-        Label item = new Label("faq").setId(99L)
+        Label item = new Label("faq").withId(99L)
         LabelsResponse updated = response.withLabels([item])
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

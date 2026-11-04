@@ -20,23 +20,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
 /**
- * Label
+ * Label for Help Center articles.
  *
  * @author Jonathan-Zollinger
  * @since 0.3.0
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         Label.JSON_PROPERTY_ID,
         Label.JSON_PROPERTY_URL,
@@ -44,9 +38,13 @@ import lol.pbu.z4j.Generated;
         Label.JSON_PROPERTY_CREATED_AT,
         Label.JSON_PROPERTY_UPDATED_AT
 })
-@Serdeable
-@Generated
-public class Label {
+public record Label(
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String url,
+        @NotNull @JsonProperty(JSON_PROPERTY_NAME) String name,
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String createdAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_UPDATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String updatedAt
+) implements LabelBuilder.With {
 
     public static final String JSON_PROPERTY_ID = "id";
     public static final String JSON_PROPERTY_URL = "url";
@@ -54,47 +52,11 @@ public class Label {
     public static final String JSON_PROPERTY_CREATED_AT = "created_at";
     public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
 
-    /**
-     * Automatically assigned when the label is created
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    /**
-     * The API url of this label
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String url;
-
-    /**
-     * The name of the label
-     */
-    @NotNull
-    @JsonProperty(JSON_PROPERTY_NAME)
-    private String name;
-
-    /**
-     * The time the label was created
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String createdAt;
-
-    /**
-     * The time at which the label was last updated
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_UPDATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String updatedAt;
-
     public Label(String name) {
-        this.name = name;
+        this(null, null, name, null, null);
     }
 
+    public Label() {
+        this(null, null, null, null, null);
+    }
 }
