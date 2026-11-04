@@ -22,16 +22,15 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import lol.pbu.z4j.Generated;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * <h1>Zendesk Background Job Status Lifecycle.</h1>
@@ -59,8 +58,8 @@ import lol.pbu.z4j.Generated;
  *         <pre>{@code
  *         List<JobStatusResult> results = status.getJobStatusResults();
  *         for (JobStatusResult result : results) {
- *             Long ticketId = result.getId();
- *             Boolean success = result.getSuccess();
+ *             Long ticketId = result.id();
+ *             Boolean success = result.success();
  *         }
  *         }</pre>
  *     </li>
@@ -150,15 +149,15 @@ public class JobStatus {
     }
 
     private static JobStatusResult toJobStatusResult(Map<String, Object> map) {
-        JobStatusResult res = new JobStatusResult();
-        res.setId(parseLongId(map.get(FIELD_ID)));
-        res.setAction(getStringValue(map.get(FIELD_ACTION)));
-        res.setStatus(getStringValue(map.get(FIELD_STATUS)));
-        res.setSuccess(parseBoolean(map.get(FIELD_SUCCESS)));
-        res.setTitle(getStringValue(map.get(FIELD_TITLE)));
-        res.setError(getStringValue(map.get(FIELD_ERROR)));
-        res.setDetails(getStringValue(map.get(FIELD_DETAILS)));
-        return res;
+        return new JobStatusResult(
+                parseLongId(map.get(FIELD_ID)),
+                getStringValue(map.get(FIELD_ACTION)),
+                getStringValue(map.get(FIELD_STATUS)),
+                parseBoolean(map.get(FIELD_SUCCESS)),
+                getStringValue(map.get(FIELD_TITLE)),
+                getStringValue(map.get(FIELD_ERROR)),
+                getStringValue(map.get(FIELD_DETAILS))
+        );
     }
 
     private static @Nullable Long parseLongId(@Nullable Object idObj) {
@@ -204,13 +203,13 @@ public class JobStatus {
 
     private static Map<String, Object> toResultMap(JobStatusResult res) {
         Map<String, Object> map = new LinkedHashMap<>();
-        putIfNotNull(map, FIELD_ID, res.getId());
-        putIfNotNull(map, FIELD_ACTION, res.getAction());
-        putIfNotNull(map, FIELD_STATUS, res.getStatus());
-        putIfNotNull(map, FIELD_SUCCESS, res.getSuccess());
-        putIfNotNull(map, FIELD_TITLE, res.getTitle());
-        putIfNotNull(map, FIELD_ERROR, res.getError());
-        putIfNotNull(map, FIELD_DETAILS, res.getDetails());
+        putIfNotNull(map, FIELD_ID, res.id());
+        putIfNotNull(map, FIELD_ACTION, res.action());
+        putIfNotNull(map, FIELD_STATUS, res.status());
+        putIfNotNull(map, FIELD_SUCCESS, res.success());
+        putIfNotNull(map, FIELD_TITLE, res.title());
+        putIfNotNull(map, FIELD_ERROR, res.error());
+        putIfNotNull(map, FIELD_DETAILS, res.details());
         return map;
     }
 

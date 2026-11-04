@@ -27,8 +27,8 @@ class CustomStatusesResponseSpec extends Specification {
     def "should create CustomStatusesResponse with canonical constructor, convenience constructor, and builder"() {
         given:
         TicketFieldCustomStatusObject status = new TicketFieldCustomStatusObject()
-                .setId(101L)
-                .setAgentLabel("In Review")
+                .withId(101L)
+                .withAgentLabel("In Review")
         List<TicketFieldCustomStatusObject> statuses = [status]
 
         when:
@@ -72,8 +72,8 @@ class CustomStatusesResponseSpec extends Specification {
 
     def "should update CustomStatusesResponse using record withers"() {
         given:
-        TicketFieldCustomStatusObject first = new TicketFieldCustomStatusObject().setId(1L).setAgentLabel("First")
-        TicketFieldCustomStatusObject second = new TicketFieldCustomStatusObject().setId(2L).setAgentLabel("Second")
+        TicketFieldCustomStatusObject first = new TicketFieldCustomStatusObject().withId(1L).withAgentLabel("First")
+        TicketFieldCustomStatusObject second = new TicketFieldCustomStatusObject().withId(2L).withAgentLabel("Second")
         CustomStatusesResponse response = new CustomStatusesResponse([first], 1, "next1", "prev1")
 
         when:
@@ -101,8 +101,8 @@ class CustomStatusesResponseSpec extends Specification {
     def "should round-trip serialize and deserialize CustomStatusesResponse"() {
         given:
         TicketFieldCustomStatusObject status = new TicketFieldCustomStatusObject()
-                .setId(202L)
-                .setAgentLabel("Awaiting Customer")
+                .withId(202L)
+                .withAgentLabel("Awaiting Customer")
         CustomStatusesResponse response = new CustomStatusesResponse([status], 1, "https://example.com/next", "https://example.com/prev")
 
         when:

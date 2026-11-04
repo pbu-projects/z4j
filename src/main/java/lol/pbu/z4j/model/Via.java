@@ -20,44 +20,30 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
+import jakarta.validation.Valid;
 
 /**
- * An object explaining how the ticket was created. See the <a href=\"/documentation/ticketing/reference-guides/via-object-reference\">Via object reference</a>
+ * Describes how an audit event or ticket was created.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         Via.JSON_PROPERTY_CHANNEL,
-        Via.JSON_PROPERTY_SOURCE,
+        Via.JSON_PROPERTY_SOURCE
 })
-@Serdeable
-@Generated
-public class Via {
+public record Via(
+        @Nullable @JsonProperty(JSON_PROPERTY_CHANNEL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String channel,
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_SOURCE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ViaSource source
+) implements ViaBuilder.With {
 
     public static final String JSON_PROPERTY_CHANNEL = "channel";
     public static final String JSON_PROPERTY_SOURCE = "source";
 
-    /**
-     * This tells you how the ticket or event was created. Examples: \"web\", \"mobile\", \"rule\", \"system\"
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CHANNEL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String channel;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SOURCE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ViaSource source;
-
+    public Via() {
+        this(null, null);
+    }
 }

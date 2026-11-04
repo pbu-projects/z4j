@@ -31,9 +31,9 @@ class CustomStatusResponseSpec extends Z4jSpec {
     def "should create CustomStatusResponse with canonical constructor and builder"() {
         given:
         TicketFieldCustomStatusObject expected = new TicketFieldCustomStatusObject()
-                .setId(101L)
-                .setAgentLabel("Pending Approval")
-                .setEndUserLabel("Awaiting Review")
+                .withId(101L)
+                .withAgentLabel("Pending Approval")
+                .withEndUserLabel("Awaiting Review")
 
         when:
         CustomStatusResponse direct = new CustomStatusResponse(expected)
@@ -56,8 +56,8 @@ class CustomStatusResponseSpec extends Z4jSpec {
 
     def "should update customStatus using record wither"() {
         given:
-        TicketFieldCustomStatusObject original = new TicketFieldCustomStatusObject().setId(1L).setAgentLabel("Draft")
-        TicketFieldCustomStatusObject updatedStatus = new TicketFieldCustomStatusObject().setId(2L).setAgentLabel("In Review")
+        TicketFieldCustomStatusObject original = new TicketFieldCustomStatusObject().withId(1L).withAgentLabel("Draft")
+        TicketFieldCustomStatusObject updatedStatus = new TicketFieldCustomStatusObject().withId(2L).withAgentLabel("In Review")
         CustomStatusResponse response = new CustomStatusResponse(original)
 
         when:
@@ -77,9 +77,9 @@ class CustomStatusResponseSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize CustomStatusResponse"() {
         given:
         TicketFieldCustomStatusObject expected = new TicketFieldCustomStatusObject()
-                .setId(555L)
-                .setAgentLabel("Investigating")
-                .setEndUserLabel("We are looking into it")
+                .withId(555L)
+                .withAgentLabel("Investigating")
+                .withEndUserLabel("We are looking into it")
         CustomStatusResponse response = new CustomStatusResponse(expected)
 
         when:
@@ -106,7 +106,7 @@ class CustomStatusResponseSpec extends Z4jSpec {
     def "should handle null customStatus component in constructor and wither"() {
         when:
         CustomStatusResponse response = new CustomStatusResponse(null)
-        TicketFieldCustomStatusObject replacement = new TicketFieldCustomStatusObject().setId(99L).setAgentLabel("Closed")
+        TicketFieldCustomStatusObject replacement = new TicketFieldCustomStatusObject().withId(99L).withAgentLabel("Closed")
         CustomStatusResponse updated = response.withCustomStatus(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

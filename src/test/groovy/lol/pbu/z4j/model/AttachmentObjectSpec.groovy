@@ -56,8 +56,8 @@ class AttachmentObjectSpec extends Z4jSpec {
         given:
         def att = new AttachmentObject().setId(202L).setFileName("doc.pdf")
         def expectedUpload = new AttachmentUploadResponseUpload()
-                .setToken("tok_123")
-                .setAttachment(att)
+                .withToken("tok_123")
+                .withAttachment(att)
                 .addAttachmentsItem(att)
 
         when:

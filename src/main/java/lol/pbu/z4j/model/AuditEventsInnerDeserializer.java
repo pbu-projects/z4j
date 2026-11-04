@@ -25,10 +25,6 @@ import io.micronaut.serde.ObjectMapper;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
-import lol.pbu.z4j.Generated;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -37,6 +33,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.StreamSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Custom deserializer for {@link AuditEventsInner} supporting polymorphic and arbitrary payloads.
@@ -45,7 +43,6 @@ import java.util.stream.StreamSupport;
  * @since 0.3.2
  */
 @Singleton
-@Generated
 public class AuditEventsInnerDeserializer implements Deserializer<AuditEventsInner> {
 
     private static final Logger log = LoggerFactory.getLogger(AuditEventsInnerDeserializer.class);
@@ -72,27 +69,27 @@ public class AuditEventsInnerDeserializer implements Deserializer<AuditEventsInn
             return null;
         }
 
-        AuditEventsInner event = new AuditEventsInner();
+        AuditEventsInnerBuilder builder = AuditEventsInnerBuilder.builder();
 
-        populateId(node, event);
-        populateStringFields(node, event);
-        populateBody(node, event);
-        preserveUnmappedFieldsIfBodyEmpty(node, event);
-        populateValues(node, event);
-        populateVia(node, event);
-        populateRecipients(node, event);
+        populateId(node, builder);
+        populateStringFields(node, builder);
+        populateBody(node, builder);
+        preserveUnmappedFieldsIfBodyEmpty(node, builder);
+        populateValues(node, builder);
+        populateVia(node, builder);
+        populateRecipients(node, builder);
 
-        return event;
+        return builder.build();
     }
 
-    private void populateId(JsonNode node, AuditEventsInner event) {
+    private void populateId(JsonNode node, AuditEventsInnerBuilder builder) {
         JsonNode idNode = node.get("id");
         if (idNode != null) {
             if (idNode.isNumber()) {
-                event.setId(idNode.getLongValue());
+                builder.id(idNode.getLongValue());
             } else if (idNode.isString()) {
                 try {
-                    event.setId(Long.parseLong(idNode.getStringValue().trim()));
+                    builder.id(Long.parseLong(idNode.getStringValue().trim()));
                 } catch (NumberFormatException _) {
                     // Ignore non-numeric id
                 }
@@ -100,41 +97,41 @@ public class AuditEventsInnerDeserializer implements Deserializer<AuditEventsInn
         }
     }
 
-    private void populateStringFields(JsonNode node, AuditEventsInner event) {
+    private void populateStringFields(JsonNode node, AuditEventsInnerBuilder builder) {
         JsonNode typeNode = node.get("type");
         if (typeNode != null && !typeNode.isNull()) {
-            event.setType(typeNode.isString() ? typeNode.getStringValue() : typeNode.coerceStringValue());
+            builder.type(typeNode.isString() ? typeNode.getStringValue() : typeNode.coerceStringValue());
         }
 
         JsonNode fieldNameNode = node.get("field_name");
         if (fieldNameNode != null && !fieldNameNode.isNull()) {
-            event.setFieldName(fieldNameNode.isString() ? fieldNameNode.getStringValue() : fieldNameNode.coerceStringValue());
+            builder.fieldName(fieldNameNode.isString() ? fieldNameNode.getStringValue() : fieldNameNode.coerceStringValue());
         }
 
         JsonNode subjectNode = node.get("subject");
         if (subjectNode != null && !subjectNode.isNull()) {
-            event.setSubject(subjectNode.isString() ? subjectNode.getStringValue() : subjectNode.coerceStringValue());
+            builder.subject(subjectNode.isString() ? subjectNode.getStringValue() : subjectNode.coerceStringValue());
         }
     }
 
-    private void populateBody(JsonNode node, AuditEventsInner event) throws IOException {
+    private void populateBody(JsonNode node, AuditEventsInnerBuilder builder) throws IOException {
         JsonNode bodyNode = node.get("body");
         if (bodyNode != null && !bodyNode.isNull()) {
             if (bodyNode.isString()) {
-                event.setBody(bodyNode.getStringValue());
+                builder.body(bodyNode.getStringValue());
             } else {
                 ObjectMapper mapper = objectMapperProvider.get();
                 if (mapper != null) {
-                    event.setBody(mapper.writeValueAsString(bodyNode));
+                    builder.body(mapper.writeValueAsString(bodyNode));
                 } else {
-                    event.setBody(bodyNode.coerceStringValue());
+                    builder.body(bodyNode.coerceStringValue());
                 }
             }
         }
     }
 
-    private void preserveUnmappedFieldsIfBodyEmpty(JsonNode node, AuditEventsInner event) throws IOException {
-        if (event.getBody() != null && !event.getBody().isBlank()) {
+    private void preserveUnmappedFieldsIfBodyEmpty(JsonNode node, AuditEventsInnerBuilder builder) throws IOException {
+        if (builder.body() != null && !builder.body().isBlank()) {
             return;
         }
         Map<String, Object> unmapped = new LinkedHashMap<>();
@@ -146,30 +143,30 @@ public class AuditEventsInnerDeserializer implements Deserializer<AuditEventsInn
         if (!unmapped.isEmpty()) {
             ObjectMapper mapper = objectMapperProvider.get();
             if (mapper != null) {
-                event.setBody(mapper.writeValueAsString(unmapped));
+                builder.body(mapper.writeValueAsString(unmapped));
             }
         }
     }
 
-    private void populateValues(JsonNode node, AuditEventsInner event) {
+    private void populateValues(JsonNode node, AuditEventsInnerBuilder builder) {
         JsonNode valueNode = node.get("value");
         if (valueNode != null && !valueNode.isNull()) {
-            event.setValue(extractArbitraryValue(valueNode));
+            builder.value(extractArbitraryValue(valueNode));
         }
 
         JsonNode prevValueNode = node.get("previous_value");
         if (prevValueNode != null && !prevValueNode.isNull()) {
-            event.setPreviousValue(extractArbitraryValue(prevValueNode));
+            builder.previousValue(extractArbitraryValue(prevValueNode));
         }
     }
 
-    private void populateVia(JsonNode node, AuditEventsInner event) {
+    private void populateVia(JsonNode node, AuditEventsInnerBuilder builder) {
         JsonNode viaNode = node.get("via");
         if (viaNode != null && !viaNode.isNull()) {
             try {
                 ObjectMapper mapper = objectMapperProvider.get();
                 if (mapper != null) {
-                    event.setVia(mapper.readValueFromTree(viaNode, Via.class));
+                    builder.via(mapper.readValueFromTree(viaNode, Via.class));
                 }
             } catch (Exception e) {
                 log.debug("Failed to deserialize audit event 'via' structure, ignoring to preserve audit stream: {}", e.getMessage());
@@ -177,7 +174,7 @@ public class AuditEventsInnerDeserializer implements Deserializer<AuditEventsInn
         }
     }
 
-    private void populateRecipients(JsonNode node, AuditEventsInner event) {
+    private void populateRecipients(JsonNode node, AuditEventsInnerBuilder builder) {
         JsonNode recipientsNode = node.get("recipients");
         if (recipientsNode != null && recipientsNode.isArray()) {
             List<Long> recipients = new ArrayList<>();
@@ -192,7 +189,7 @@ public class AuditEventsInnerDeserializer implements Deserializer<AuditEventsInn
                     }
                 }
             }
-            event.setRecipients(recipients);
+            builder.recipients(recipients);
         }
     }
 

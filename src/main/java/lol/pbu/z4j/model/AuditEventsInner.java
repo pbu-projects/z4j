@@ -20,24 +20,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
+import io.soabase.recordbuilder.core.RecordBuilder;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**
- * AuditEventsInner
+ * Single event entry within a ticket audit trail.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         AuditEventsInner.JSON_PROPERTY_BODY,
         AuditEventsInner.JSON_PROPERTY_FIELD_NAME,
@@ -47,11 +41,19 @@ import java.util.List;
         AuditEventsInner.JSON_PROPERTY_PREVIOUS_VALUE,
         AuditEventsInner.JSON_PROPERTY_VIA,
         AuditEventsInner.JSON_PROPERTY_SUBJECT,
-        AuditEventsInner.JSON_PROPERTY_RECIPIENTS,
+        AuditEventsInner.JSON_PROPERTY_RECIPIENTS
 })
-@Serdeable
-@Generated
-public class AuditEventsInner {
+public record AuditEventsInner(
+        @Nullable @JsonProperty(JSON_PROPERTY_BODY) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String body,
+        @Nullable @JsonProperty(JSON_PROPERTY_FIELD_NAME) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String fieldName,
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_TYPE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String type,
+        @Nullable @JsonProperty(JSON_PROPERTY_VALUE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Object value,
+        @Nullable @JsonProperty(JSON_PROPERTY_PREVIOUS_VALUE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Object previousValue,
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_VIA) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Via via,
+        @Nullable @JsonProperty(JSON_PROPERTY_SUBJECT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String subject,
+        @Nullable @JsonProperty(JSON_PROPERTY_RECIPIENTS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<Long> recipients
+) implements AuditEventsInnerBuilder.With {
 
     public static final String JSON_PROPERTY_BODY = "body";
     public static final String JSON_PROPERTY_FIELD_NAME = "field_name";
@@ -63,49 +65,7 @@ public class AuditEventsInner {
     public static final String JSON_PROPERTY_SUBJECT = "subject";
     public static final String JSON_PROPERTY_RECIPIENTS = "recipients";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_BODY)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String body;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_FIELD_NAME)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String fieldName;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TYPE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String type;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_VALUE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Object value;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_PREVIOUS_VALUE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Object previousValue;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_VIA)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Via via;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SUBJECT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String subject;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_RECIPIENTS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<Long> recipients;
-
+    public AuditEventsInner() {
+        this(null, null, null, null, null, null, null, null, null);
+    }
 }

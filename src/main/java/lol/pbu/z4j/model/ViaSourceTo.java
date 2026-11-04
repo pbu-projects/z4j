@@ -20,41 +20,29 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
- * ViaSourceTo
+ * Details about the destination entity receiving the message or ticket.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         ViaSourceTo.JSON_PROPERTY_ADDRESS,
-        ViaSourceTo.JSON_PROPERTY_NAME,
+        ViaSourceTo.JSON_PROPERTY_NAME
 })
-@Serdeable
-@Generated
-public class ViaSourceTo {
+public record ViaSourceTo(
+        @Nullable @JsonProperty(JSON_PROPERTY_ADDRESS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String address,
+        @Nullable @JsonProperty(JSON_PROPERTY_NAME) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String name
+) implements ViaSourceToBuilder.With {
 
     public static final String JSON_PROPERTY_ADDRESS = "address";
     public static final String JSON_PROPERTY_NAME = "name";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ADDRESS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String address;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_NAME)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String name;
-
+    public ViaSourceTo() {
+        this(null, null);
+    }
 }

@@ -20,36 +20,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
 /**
- * CustomFieldOptionObject
+ * Option item for custom dropdown and multi-select ticket fields.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@EqualsAndHashCode
-@ToString
-@Getter
-@Setter
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         CustomFieldOption.JSON_PROPERTY_NAME,
         CustomFieldOption.JSON_PROPERTY_VALUE,
         CustomFieldOption.JSON_PROPERTY_ID,
         CustomFieldOption.JSON_PROPERTY_POSITION,
         CustomFieldOption.JSON_PROPERTY_RAW_NAME,
-        CustomFieldOption.JSON_PROPERTY_URL,
+        CustomFieldOption.JSON_PROPERTY_URL
 })
-@Serdeable
-@Generated
-public class CustomFieldOption {
+public record CustomFieldOption(
+        @NotNull @JsonProperty(JSON_PROPERTY_NAME) String name,
+        @NotNull @JsonProperty(JSON_PROPERTY_VALUE) String value,
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_POSITION) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer position,
+        @Nullable @JsonProperty(JSON_PROPERTY_RAW_NAME) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String rawName,
+        @Nullable @JsonProperty(JSON_PROPERTY_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String url
+) implements CustomFieldOptionBuilder.With {
 
     public static final String JSON_PROPERTY_NAME = "name";
     public static final String JSON_PROPERTY_VALUE = "value";
@@ -58,55 +55,7 @@ public class CustomFieldOption {
     public static final String JSON_PROPERTY_RAW_NAME = "raw_name";
     public static final String JSON_PROPERTY_URL = "url";
 
-    /**
-     * Name of the dropdown option
-     */
-    @NotNull
-    @JsonProperty(JSON_PROPERTY_NAME)
-    private String name;
-
-    /**
-     * Value of the dropdown option
-     */
-    @NotNull
-    @JsonProperty(JSON_PROPERTY_VALUE)
-    private String value;
-
-    /**
-     * Automatically assigned upon creation
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    /**
-     * Position of the dropdown option
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_POSITION)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer position;
-
-    /**
-     * Raw name of the dropdown option
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_RAW_NAME)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String rawName;
-
-    /**
-     * URL of the dropdown option
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String url;
-
     public CustomFieldOption(String name, String value) {
-        this.name = name;
-        this.value = value;
+        this(name, value, null, null, null, null);
     }
-
 }

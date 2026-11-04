@@ -20,55 +20,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
- * ViaSourceFrom
+ * Details about the source entity sending the message or ticket.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         ViaSourceFrom.JSON_PROPERTY_ADDRESS,
         ViaSourceFrom.JSON_PROPERTY_ID,
         ViaSourceFrom.JSON_PROPERTY_NAME,
-        ViaSourceFrom.JSON_PROPERTY_TITLE,
+        ViaSourceFrom.JSON_PROPERTY_TITLE
 })
-@Serdeable
-@Generated
-public class ViaSourceFrom {
+public record ViaSourceFrom(
+        @Nullable @JsonProperty(JSON_PROPERTY_ADDRESS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String address,
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_NAME) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String name,
+        @Nullable @JsonProperty(JSON_PROPERTY_TITLE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String title
+) implements ViaSourceFromBuilder.With {
 
     public static final String JSON_PROPERTY_ADDRESS = "address";
     public static final String JSON_PROPERTY_ID = "id";
     public static final String JSON_PROPERTY_NAME = "name";
     public static final String JSON_PROPERTY_TITLE = "title";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ADDRESS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String address;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_NAME)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String name;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TITLE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String title;
-
+    public ViaSourceFrom() {
+        this(null, null, null, null);
+    }
 }
