@@ -20,24 +20,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.util.Map;
 
 /**
- * DeletedTicket
+ * Details of a deleted ticket restored or permanently purged.
  *
  * @author Jonathan-Zollinger
  * @since 0.3.0
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         DeletedTicket.JSON_PROPERTY_ID,
         DeletedTicket.JSON_PROPERTY_SUBJECT,
@@ -46,9 +39,14 @@ import java.util.Map;
         DeletedTicket.JSON_PROPERTY_DELETED_AT,
         DeletedTicket.JSON_PROPERTY_PREVIOUS_STATE
 })
-@Serdeable
-@Generated
-public class DeletedTicket {
+public record DeletedTicket(
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_SUBJECT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String subject,
+        @Nullable @JsonProperty(JSON_PROPERTY_DESCRIPTION) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String description,
+        @Nullable @JsonProperty(JSON_PROPERTY_ACTOR) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Map<String, Object> actor,
+        @Nullable @JsonProperty(JSON_PROPERTY_DELETED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String deletedAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_PREVIOUS_STATE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String previousState
+) implements DeletedTicketBuilder.With {
 
     public static final String JSON_PROPERTY_ID = "id";
     public static final String JSON_PROPERTY_SUBJECT = "subject";
@@ -57,33 +55,7 @@ public class DeletedTicket {
     public static final String JSON_PROPERTY_DELETED_AT = "deleted_at";
     public static final String JSON_PROPERTY_PREVIOUS_STATE = "previous_state";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SUBJECT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String subject;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DESCRIPTION)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String description;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ACTOR)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Map<String, Object> actor;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DELETED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String deletedAt;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_PREVIOUS_STATE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String previousState;
+    public DeletedTicket() {
+        this(null, null, null, null, null, null);
+    }
 }

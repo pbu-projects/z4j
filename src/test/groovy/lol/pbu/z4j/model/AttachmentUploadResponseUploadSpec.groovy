@@ -26,7 +26,7 @@ class AttachmentUploadResponseUploadSpec extends Specification {
 
     def "should create AttachmentUploadResponseUpload with constructors and builder"() {
         given:
-        AttachmentObject expectedAttachment = new AttachmentObject().setId(10L).setFileName("photo.png")
+        AttachmentObject expectedAttachment = new AttachmentObject().withId(10L).withFileName("photo.png")
         List<AttachmentObject> expectedAttachments = [expectedAttachment]
 
         when:
@@ -59,8 +59,8 @@ class AttachmentUploadResponseUploadSpec extends Specification {
 
     def "should update AttachmentUploadResponseUpload with record withers and addAttachmentsItem"() {
         given:
-        AttachmentObject item1 = new AttachmentObject().setId(1L).setFileName("one.pdf")
-        AttachmentObject item2 = new AttachmentObject().setId(2L).setFileName("two.pdf")
+        AttachmentObject item1 = new AttachmentObject().withId(1L).withFileName("one.pdf")
+        AttachmentObject item2 = new AttachmentObject().withId(2L).withFileName("two.pdf")
         AttachmentUploadResponseUpload initial = new AttachmentUploadResponseUpload("tok_initial", null, null)
 
         when:
@@ -92,7 +92,7 @@ class AttachmentUploadResponseUploadSpec extends Specification {
 
     def "should round-trip serialize and deserialize AttachmentUploadResponseUpload"() {
         given:
-        AttachmentObject expectedAttachment = new AttachmentObject().setId(99L).setFileName("scan.pdf")
+        AttachmentObject expectedAttachment = new AttachmentObject().withId(99L).withFileName("scan.pdf")
         AttachmentUploadResponseUpload upload = new AttachmentUploadResponseUpload("tok_99", expectedAttachment, [expectedAttachment])
 
         when:

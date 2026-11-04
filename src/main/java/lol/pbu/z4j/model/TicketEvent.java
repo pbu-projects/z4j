@@ -15,57 +15,71 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
+import jakarta.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import lol.pbu.z4j.Generated;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 /**
- * TicketEvent
+ * Event entry from incremental ticket event exports.
+ *
  * @author Jonathan-Zollinger
  * @since 0.2.7
  */
-@Data
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Serdeable
-@Generated
-public class TicketEvent implements Exportable {
-    @Nullable
-    @JsonProperty("id")
-    private Long id;
+@RecordBuilder
+@JsonPropertyOrder({
+        TicketEvent.JSON_PROPERTY_ID,
+        TicketEvent.JSON_PROPERTY_TICKET_ID,
+        TicketEvent.JSON_PROPERTY_EVENT_TYPE,
+        TicketEvent.JSON_PROPERTY_VIA,
+        TicketEvent.JSON_PROPERTY_CREATED_AT,
+        TicketEvent.JSON_PROPERTY_AUTHOR_ID,
+        TicketEvent.JSON_PROPERTY_VALUE,
+        TicketEvent.JSON_PROPERTY_METADATA,
+        TicketEvent.JSON_PROPERTY_AUDIT_EVENTS
+})
+public record TicketEvent(
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_TICKET_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long ticketId,
+        @Nullable @JsonProperty(JSON_PROPERTY_EVENT_TYPE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String eventType,
+        @Nullable @JsonProperty(JSON_PROPERTY_VIA) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Object via,
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String createdAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_AUTHOR_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long authorId,
+        @Nullable @JsonProperty(JSON_PROPERTY_VALUE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Object value,
+        @Nullable @JsonProperty(JSON_PROPERTY_METADATA) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Map<String, Object> metadata,
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_AUDIT_EVENTS) @JsonAlias({"child_events", "events"}) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid AuditEventsInner> auditEvents
+) implements Exportable, TicketEventBuilder.With {
 
-    @Nullable
-    @JsonProperty("ticket_id")
-    private Long ticketId;
+    public static final String JSON_PROPERTY_ID = "id";
+    public static final String JSON_PROPERTY_TICKET_ID = "ticket_id";
+    public static final String JSON_PROPERTY_EVENT_TYPE = "event_type";
+    public static final String JSON_PROPERTY_VIA = "via";
+    public static final String JSON_PROPERTY_CREATED_AT = "created_at";
+    public static final String JSON_PROPERTY_AUTHOR_ID = "author_id";
+    public static final String JSON_PROPERTY_VALUE = "value";
+    public static final String JSON_PROPERTY_METADATA = "metadata";
+    public static final String JSON_PROPERTY_AUDIT_EVENTS = "audit_events";
+    public static final String JSON_PROPERTY_CHILD_EVENTS = "child_events";
 
-    @Nullable
-    @JsonProperty("event_type")
-    private String eventType;
+    public TicketEvent() {
+        this(null, null, null, null, null, null, null, null, null);
+    }
 
-    @Nullable
-    @JsonProperty("via")
-    private Object via;
+    public TicketEvent(Long id) {
+        this(id, null, null, null, null, null, null, null, null);
+    }
 
-    @Nullable
-    @JsonProperty("created_at")
-    private String createdAt;
-
-    @Nullable
-    @JsonProperty("author_id")
-    private Long authorId;
-
-    @Nullable
-    @JsonProperty("value")
-    private Object value;
-
-    @Nullable
-    @JsonProperty("metadata")
-    private Map<String, Object> metadata;
+    public TicketEvent addAuditEventsItem(AuditEventsInner auditEventsItem) {
+        List<AuditEventsInner> newAuditEvents = auditEvents == null ? new ArrayList<>() : new ArrayList<>(auditEvents);
+        newAuditEvents.add(auditEventsItem);
+        return withAuditEvents(newAuditEvents);
+    }
 }

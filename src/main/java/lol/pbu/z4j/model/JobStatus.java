@@ -22,110 +22,50 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import lol.pbu.z4j.Generated;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 /**
- * <h1>Zendesk Background Job Status Lifecycle.</h1>
- * <p>When calling asynchronous or batch endpoints in Zendesk (such as {@code TicketClient.createManyTickets}),
- * Zendesk returns an immediate {@link JobStatusResponse} wrapping this {@link JobStatus} with status "queued" or "working".</p>
- *
- * <h3>Working with Background Jobs:</h3>
- * <ol>
- *     <li>Extract the job status ID from the initial response:
- *         <pre>{@code
- *         JobStatusResponse response = ticketClient.createManyTickets(createRequest).block();
- *         String jobId = response.getJobStatus().getId();
- *         }</pre>
- *     </li>
- *     <li>Poll {@code JobStatusClient.showJobStatus(jobId)} until {@link #getStatus()} is {@code "completed"} or {@code "failed"}:
- *         <pre>{@code
- *         JobStatus status = jobStatusClient.showJobStatus(jobId).block().getJobStatus();
- *         while ("queued".equals(status.getStatus()) || "working".equals(status.getStatus())) {
- *             Thread.sleep(1000);
- *             status = jobStatusClient.showJobStatus(jobId).block().getJobStatus();
- *         }
- *         }</pre>
- *     </li>
- *     <li>Access child operation results via {@link #getJobStatusResults()}:
- *         <pre>{@code
- *         List<JobStatusResult> results = status.getJobStatusResults();
- *         for (JobStatusResult result : results) {
- *             Long ticketId = result.id();
- *             Boolean success = result.success();
- *         }
- *         }</pre>
- *     </li>
- * </ol>
+ * Zendesk background job status tracking asynchronous progress.
  *
  * @author Jonathan-Zollinger
  * @since 0.2.3
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder({
-        "id",
-        "url",
-        "total",
-        "progress",
-        "status",
-        "message",
-        "job_type",
-        "results"
-})
 @Serdeable
 @Introspected
-@Generated
-public class JobStatus {
+@RecordBuilder
+@JsonPropertyOrder({
+        JobStatus.JSON_PROPERTY_ID,
+        JobStatus.JSON_PROPERTY_URL,
+        JobStatus.JSON_PROPERTY_TOTAL,
+        JobStatus.JSON_PROPERTY_PROGRESS,
+        JobStatus.JSON_PROPERTY_STATUS,
+        JobStatus.JSON_PROPERTY_MESSAGE,
+        JobStatus.JSON_PROPERTY_JOB_TYPE,
+        JobStatus.JSON_PROPERTY_RESULTS
+})
+public record JobStatus(
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String id,
+        @Nullable @JsonProperty(JSON_PROPERTY_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String url,
+        @Nullable @JsonProperty(JSON_PROPERTY_TOTAL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer total,
+        @Nullable @JsonProperty(JSON_PROPERTY_PROGRESS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer progress,
+        @Nullable @JsonProperty(JSON_PROPERTY_STATUS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String status,
+        @Nullable @JsonProperty(JSON_PROPERTY_MESSAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String message,
+        @Nullable @JsonProperty(JSON_PROPERTY_JOB_TYPE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String jobType,
+        @Nullable @JsonProperty(JSON_PROPERTY_RESULTS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<Map<String, Object>> results
+) implements JobStatusBuilder.With {
 
-    @Nullable
-    @JsonProperty("id")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String id;
-
-    @Nullable
-    @JsonProperty("url")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String url;
-
-    @Nullable
-    @JsonProperty("total")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer total;
-
-    @Nullable
-    @JsonProperty("progress")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer progress;
-
-    @Nullable
-    @JsonProperty("status")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String status;
-
-    @Nullable
-    @JsonProperty("message")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String message;
-
-    @Nullable
-    @JsonProperty("job_type")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String jobType;
-
-    @Nullable
-    @JsonProperty("results")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<Map<String, Object>> results;
+    public static final String JSON_PROPERTY_ID = "id";
+    public static final String JSON_PROPERTY_URL = "url";
+    public static final String JSON_PROPERTY_TOTAL = "total";
+    public static final String JSON_PROPERTY_PROGRESS = "progress";
+    public static final String JSON_PROPERTY_STATUS = "status";
+    public static final String JSON_PROPERTY_MESSAGE = "message";
+    public static final String JSON_PROPERTY_JOB_TYPE = "job_type";
+    public static final String JSON_PROPERTY_RESULTS = "results";
 
     private static final String FIELD_ID = "id";
     private static final String FIELD_ACTION = "action";
@@ -135,17 +75,43 @@ public class JobStatus {
     private static final String FIELD_ERROR = "error";
     private static final String FIELD_DETAILS = "details";
 
-    /**
-     * Converts the raw map results to strongly-typed {@link JobStatusResult} objects.
-     *
-     * @return List of typed {@link JobStatusResult} entries, or null if results are not present
-     */
+    public JobStatus {
+        if (status == null && message != null) {
+            status = "completed";
+        }
+    }
+
+    public JobStatus() {
+        this(null, null, null, null, null, null, null, null);
+    }
+
+    public JobStatus(String status) {
+        this(null, null, null, null, status, null, null, null);
+    }
+
+    public JobStatus(String status, String message) {
+        this(null, null, null, null, status, message, null, null);
+    }
+
     @JsonIgnore
     public @Nullable List<JobStatusResult> getJobStatusResults() {
         if (results == null) {
             return null;
         }
         return results.stream().map(JobStatus::toJobStatusResult).toList();
+    }
+
+    public JobStatus withJobStatusResults(@Nullable List<JobStatusResult> jobStatusResults) {
+        if (jobStatusResults == null) {
+            return withResults(null);
+        }
+        return withResults(new ArrayList<>(jobStatusResults.stream().map(JobStatus::toResultMap).toList()));
+    }
+
+    public JobStatus addResultsItem(Map<String, Object> resultsItem) {
+        List<Map<String, Object>> newResults = results == null ? new ArrayList<>() : new ArrayList<>(results);
+        newResults.add(resultsItem);
+        return withResults(newResults);
     }
 
     private static JobStatusResult toJobStatusResult(Map<String, Object> map) {
@@ -183,22 +149,6 @@ public class JobStatus {
             return null;
         }
         return val instanceof Boolean b ? b : Boolean.parseBoolean(String.valueOf(val));
-    }
-
-    /**
-     * Sets typed {@link JobStatusResult} entries by converting them into the underlying results map.
-     *
-     * @param jobStatusResults the list of typed job status results
-     * @return this {@link JobStatus} instance
-     */
-    @JsonIgnore
-    public JobStatus setJobStatusResults(@Nullable List<JobStatusResult> jobStatusResults) {
-        if (jobStatusResults == null) {
-            this.results = null;
-            return this;
-        }
-        this.results = new ArrayList<>(jobStatusResults.stream().map(JobStatus::toResultMap).toList());
-        return this;
     }
 
     private static Map<String, Object> toResultMap(JobStatusResult res) {

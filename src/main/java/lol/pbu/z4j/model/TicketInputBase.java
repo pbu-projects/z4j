@@ -15,332 +15,122 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
 /**
- * Base abstract class for Ticket creation and update payload models to eliminate duplication.
+ * Common interface for ticket create and update request payloads.
  *
- * @param <T> Concrete builder/model subtype for chainable method returns
+ * @author Jonathan-Zollinger
+ * @since 0.1.1
  */
-@Accessors(chain = true)
-@EqualsAndHashCode
-@ToString
-@Getter
-@Setter
 @Serdeable
-@SuppressWarnings("unchecked")
-@Generated
-public abstract class TicketInputBase<T extends TicketInputBase<T>> {
+public interface TicketInputBase {
 
-    public static final String JSON_PROPERTY_COMMENT = "comment";
-    public static final String JSON_PROPERTY_ADDITIONAL_COLLABORATORS = "additional_collaborators";
-    public static final String JSON_PROPERTY_ASSIGNEE_EMAIL = "assignee_email";
-    public static final String JSON_PROPERTY_ASSIGNEE_ID = "assignee_id";
-    public static final String JSON_PROPERTY_ATTRIBUTE_VALUE_IDS = "attribute_value_ids";
-    public static final String JSON_PROPERTY_COLLABORATOR_IDS = "collaborator_ids";
-    public static final String JSON_PROPERTY_CUSTOM_FIELDS = "custom_fields";
-    public static final String JSON_PROPERTY_CUSTOM_STATUS_ID = "custom_status_id";
-    public static final String JSON_PROPERTY_DUE_AT = "due_at";
-    public static final String JSON_PROPERTY_EMAIL_CCS = "email_ccs";
-    public static final String JSON_PROPERTY_EXTERNAL_ID = "external_id";
-    public static final String JSON_PROPERTY_FOLLOWERS = "followers";
-    public static final String JSON_PROPERTY_GROUP_ID = "group_id";
-    public static final String JSON_PROPERTY_ORGANIZATION_ID = "organization_id";
-    public static final String JSON_PROPERTY_PRIORITY = "priority";
-    public static final String JSON_PROPERTY_PROBLEM_ID = "problem_id";
-    public static final String JSON_PROPERTY_REQUESTER_ID = "requester_id";
-    public static final String JSON_PROPERTY_SAFE_UPDATE = "safe_update";
-    public static final String JSON_PROPERTY_SHARING_AGREEMENT_IDS = "sharing_agreement_ids";
-    public static final String JSON_PROPERTY_STATUS = "status";
-    public static final String JSON_PROPERTY_SUBJECT = "subject";
-    public static final String JSON_PROPERTY_TAGS = "tags";
-    public static final String JSON_PROPERTY_ADDITIONAL_TAGS = "additional_tags";
-    public static final String JSON_PROPERTY_REMOVE_TAGS = "remove_tags";
-    public static final String JSON_PROPERTY_TYPE = "type";
-    public static final String JSON_PROPERTY_UPDATED_STAMP = "updated_stamp";
+    String JSON_PROPERTY_COMMENT = "comment";
+    String JSON_PROPERTY_ADDITIONAL_COLLABORATORS = "additional_collaborators";
+    String JSON_PROPERTY_ASSIGNEE_EMAIL = "assignee_email";
+    String JSON_PROPERTY_ASSIGNEE_ID = "assignee_id";
+    String JSON_PROPERTY_ATTRIBUTE_VALUE_IDS = "attribute_value_ids";
+    String JSON_PROPERTY_COLLABORATOR_IDS = "collaborator_ids";
+    String JSON_PROPERTY_CUSTOM_FIELDS = "custom_fields";
+    String JSON_PROPERTY_CUSTOM_STATUS_ID = "custom_status_id";
+    String JSON_PROPERTY_DUE_AT = "due_at";
+    String JSON_PROPERTY_EMAIL_CCS = "email_ccs";
+    String JSON_PROPERTY_EXTERNAL_ID = "external_id";
+    String JSON_PROPERTY_FOLLOWERS = "followers";
+    String JSON_PROPERTY_GROUP_ID = "group_id";
+    String JSON_PROPERTY_ORGANIZATION_ID = "organization_id";
+    String JSON_PROPERTY_PRIORITY = "priority";
+    String JSON_PROPERTY_PROBLEM_ID = "problem_id";
+    String JSON_PROPERTY_REQUESTER_ID = "requester_id";
+    String JSON_PROPERTY_SAFE_UPDATE = "safe_update";
+    String JSON_PROPERTY_SHARING_AGREEMENT_IDS = "sharing_agreement_ids";
+    String JSON_PROPERTY_STATUS = "status";
+    String JSON_PROPERTY_SUBJECT = "subject";
+    String JSON_PROPERTY_TAGS = "tags";
+    String JSON_PROPERTY_ADDITIONAL_TAGS = "additional_tags";
+    String JSON_PROPERTY_REMOVE_TAGS = "remove_tags";
+    String JSON_PROPERTY_TYPE = "type";
+    String JSON_PROPERTY_UPDATED_STAMP = "updated_stamp";
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_ADDITIONAL_COLLABORATORS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@Valid Collaborator> additionalCollaborators;
+    List<Collaborator> additionalCollaborators();
 
     @Nullable
-    @Email
-    @JsonProperty(JSON_PROPERTY_ASSIGNEE_EMAIL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected String assigneeEmail;
+    List<String> additionalTags();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_ASSIGNEE_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Long assigneeId;
+    String assigneeEmail();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_ATTRIBUTE_VALUE_IDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@NotNull Long> attributeValueIds;
+    Long assigneeId();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_COLLABORATOR_IDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@NotNull Long> collaboratorIds;
+    List<Long> attributeValueIds();
 
     @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_COMMENT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected TicketComment comment;
+    List<Long> collaboratorIds();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_CUSTOM_FIELDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@Valid TicketCustomField> customFields;
+    TicketComment comment();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Long customStatusId;
+    List<TicketCustomField> customFields();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_DUE_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected ZonedDateTime dueAt;
+    Long customStatusId();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_EMAIL_CCS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@Valid EmailCC> emailCcs;
+    ZonedDateTime dueAt();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_EXTERNAL_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected String externalId;
+    List<EmailCC> emailCcs();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_FOLLOWERS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@Valid Follower> followers;
+    String externalId();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_GROUP_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Long groupId;
+    List<Follower> followers();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Long organizationId;
+    Long groupId();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_PROBLEM_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Long problemId;
+    Long organizationId();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_REQUESTER_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Long requesterId;
+    TicketUpdateInputPriority priority();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_SAFE_UPDATE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected Boolean safeUpdate;
+    Long problemId();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_SHARING_AGREEMENT_IDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@NotNull Long> sharingAgreementIds;
+    List<String> removeTags();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_SUBJECT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected String subject;
+    Long requesterId();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_TAGS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@NotNull String> tags;
+    Boolean safeUpdate();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_ADDITIONAL_TAGS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@NotNull String> additionalTags;
+    List<Long> sharingAgreementIds();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_REMOVE_TAGS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected List<@NotNull String> removeTags;
+    TicketUpdateInputStatus status();
 
     @Nullable
-    @JsonProperty(JSON_PROPERTY_UPDATED_STAMP)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    protected ZonedDateTime updatedStamp;
+    String subject();
 
-    public T addAdditionalCollaboratorsItem(Collaborator additionalCollaboratorsItem) {
-        if (additionalCollaborators == null) {
-            additionalCollaborators = new ArrayList<>();
-        }
-        additionalCollaborators.add(additionalCollaboratorsItem);
-        return (T) this;
-    }
+    @Nullable
+    List<String> tags();
 
-    public T addAttributeValueIdsItem(Long attributeValueIdsItem) {
-        if (attributeValueIds == null) {
-            attributeValueIds = new ArrayList<>();
-        }
-        attributeValueIds.add(attributeValueIdsItem);
-        return (T) this;
-    }
+    @Nullable
+    TicketUpdateInputType type();
 
-    public T addCollaboratorIdsItem(Long collaboratorIdsItem) {
-        if (collaboratorIds == null) {
-            collaboratorIds = new ArrayList<>();
-        }
-        collaboratorIds.add(collaboratorIdsItem);
-        return (T) this;
-    }
-
-    public T addCustomFieldsItem(TicketCustomField customFieldsItem) {
-        if (customFields == null) {
-            customFields = new ArrayList<>();
-        }
-        customFields.add(customFieldsItem);
-        return (T) this;
-    }
-
-    public T addEmailCcsItem(EmailCC emailCcsItem) {
-        if (emailCcs == null) {
-            emailCcs = new ArrayList<>();
-        }
-        emailCcs.add(emailCcsItem);
-        return (T) this;
-    }
-
-    public T addFollowersItem(Follower followersItem) {
-        if (followers == null) {
-            followers = new ArrayList<>();
-        }
-        followers.add(followersItem);
-        return (T) this;
-    }
-
-    public T addSharingAgreementIdsItem(Long sharingAgreementIdsItem) {
-        if (sharingAgreementIds == null) {
-            sharingAgreementIds = new ArrayList<>();
-        }
-        sharingAgreementIds.add(sharingAgreementIdsItem);
-        return (T) this;
-    }
-
-    public T addTagsItem(String tagsItem) {
-        if (tags == null) {
-            tags = new ArrayList<>();
-        }
-        tags.add(tagsItem);
-        return (T) this;
-    }
-
-    public T addAdditionalTagsItem(String additionalTagsItem) {
-        if (additionalTags == null) {
-            additionalTags = new ArrayList<>();
-        }
-        additionalTags.add(additionalTagsItem);
-        return (T) this;
-    }
-
-    public T addRemoveTagsItem(String removeTagsItem) {
-        if (removeTags == null) {
-            removeTags = new ArrayList<>();
-        }
-        removeTags.add(removeTagsItem);
-        return (T) this;
-    }
-
-    public @Nullable List<String> getAdditionalTags() {
-        return additionalTags;
-    }
-
-    public T setAdditionalTags(@Nullable List<String> additionalTags) {
-        this.additionalTags = additionalTags;
-        return (T) this;
-    }
-
-    public @Nullable List<String> getRemoveTags() {
-        return removeTags;
-    }
-
-    public T setRemoveTags(@Nullable List<String> removeTags) {
-        this.removeTags = removeTags;
-        return (T) this;
-    }
-
-    public @Nullable Long getCustomStatusId() {
-        return customStatusId;
-    }
-
-    public T setCustomStatusId(@Nullable Long customStatusId) {
-        this.customStatusId = customStatusId;
-        return (T) this;
-    }
-
-    public @Nullable Long getAssigneeId() {
-        return assigneeId;
-    }
-
-    public T setAssigneeId(@Nullable Long assigneeId) {
-        this.assigneeId = assigneeId;
-        return (T) this;
-    }
-
-    public @Nullable Long getGroupId() {
-        return groupId;
-    }
-
-    public T setGroupId(@Nullable Long groupId) {
-        this.groupId = groupId;
-        return (T) this;
-    }
-
-    public @Nullable Long getOrganizationId() {
-        return organizationId;
-    }
-
-    public T setOrganizationId(@Nullable Long organizationId) {
-        this.organizationId = organizationId;
-        return (T) this;
-    }
-
-    public @Nullable Long getProblemId() {
-        return problemId;
-    }
-
-    public T setProblemId(@Nullable Long problemId) {
-        this.problemId = problemId;
-        return (T) this;
-    }
-
-    public @Nullable Long getRequesterId() {
-        return requesterId;
-    }
-
-    public T setRequesterId(@Nullable Long requesterId) {
-        this.requesterId = requesterId;
-        return (T) this;
-    }
+    @Nullable
+    ZonedDateTime updatedStamp();
 }

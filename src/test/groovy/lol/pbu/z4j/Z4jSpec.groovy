@@ -64,9 +64,9 @@ class Z4jSpec extends Specification {
 
     TicketResponse createTicketForTest() {
         ticketsAdminClient = ticketsAdminClient ?: adminCtx.getBean(TicketClient.class)
-        TicketComment ticketComment = new TicketComment().setBody(faker.chuckNorris().fact())
+        TicketComment ticketComment = new TicketComment(faker.chuckNorris().fact())
         TicketCreateInput createTicketInput = new TicketCreateInput(ticketComment)
-        createTicketInput.setRawSubject(faker.chuckNorris().fact())
+                .withRawSubject(faker.chuckNorris().fact())
         TicketCreateRequest createTicketRequest = new TicketCreateRequest(createTicketInput)
         return ticketsAdminClient.createTicket(createTicketRequest).block()
     }

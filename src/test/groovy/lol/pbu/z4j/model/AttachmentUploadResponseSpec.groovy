@@ -32,7 +32,7 @@ class AttachmentUploadResponseSpec extends Z4jSpec {
         given:
         AttachmentUploadResponseUpload expected = new AttachmentUploadResponseUpload()
                 .withToken("tok_101")
-                .withAttachment(new AttachmentObject().setId(201L).setFileName("report.pdf"))
+                .withAttachment(new AttachmentObject().withId(201L).withFileName("report.pdf"))
 
         when:
         AttachmentUploadResponse direct = new AttachmentUploadResponse(expected)
@@ -77,7 +77,7 @@ class AttachmentUploadResponseSpec extends Z4jSpec {
         given:
         AttachmentUploadResponseUpload expected = new AttachmentUploadResponseUpload()
                 .withToken("tok_555")
-                .withAttachment(new AttachmentObject().setId(777L).setFileName("photo.jpg"))
+                .withAttachment(new AttachmentObject().withId(777L).withFileName("photo.jpg"))
         AttachmentUploadResponse response = new AttachmentUploadResponse(expected)
 
         when:

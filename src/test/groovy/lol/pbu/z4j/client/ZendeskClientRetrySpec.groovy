@@ -168,8 +168,8 @@ class ZendeskClientRetrySpec extends Specification {
         ])
         TicketClient client = ctx.getBean(TicketClient)
 
-        TicketComment comment = new TicketComment().setBody("Test body")
-        TicketCreateInput input = new TicketCreateInput(comment).setRawSubject("Test subject")
+        TicketComment comment = new TicketComment("Test body")
+        TicketCreateInput input = new TicketCreateInput(comment).withRawSubject("Test subject")
         TicketCreateRequest request = new TicketCreateRequest(input)
 
         when:

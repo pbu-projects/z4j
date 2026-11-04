@@ -20,29 +20,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
 /**
- * TicketCreateInput
+ * Payload data for creating new tickets.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@Data
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         TicketInputBase.JSON_PROPERTY_COMMENT,
         TicketInputBase.JSON_PROPERTY_ADDITIONAL_COLLABORATORS,
@@ -81,11 +74,48 @@ import lol.pbu.z4j.Generated;
         TicketCreateInput.JSON_PROPERTY_SUBMITTER_ID,
         TicketCreateInput.JSON_PROPERTY_TICKET_FORM_ID,
         TicketCreateInput.JSON_PROPERTY_VIA,
-        TicketCreateInput.JSON_PROPERTY_VIA_FOLLOWUP_SOURCE_ID,
+        TicketCreateInput.JSON_PROPERTY_VIA_FOLLOWUP_SOURCE_ID
 })
-@Serdeable
-@Generated
-public class TicketCreateInput extends TicketInputBase<TicketCreateInput> {
+public record TicketCreateInput(
+        @Nullable @Valid @JsonProperty(TicketInputBase.JSON_PROPERTY_COMMENT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) TicketComment comment,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_ADDITIONAL_COLLABORATORS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Collaborator> additionalCollaborators,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_ADDITIONAL_TAGS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@NotNull String> additionalTags,
+        @Nullable @Email @JsonProperty(TicketInputBase.JSON_PROPERTY_ASSIGNEE_EMAIL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String assigneeEmail,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_ASSIGNEE_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long assigneeId,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_ATTRIBUTE_VALUE_IDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@NotNull Long> attributeValueIds,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_COLLABORATOR_IDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@NotNull Long> collaboratorIds,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_CUSTOM_FIELDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid TicketCustomField> customFields,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_CUSTOM_STATUS_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long customStatusId,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_DUE_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ZonedDateTime dueAt,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_EMAIL_CCS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid EmailCC> emailCcs,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_EXTERNAL_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String externalId,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_FOLLOWERS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Follower> followers,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_GROUP_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long groupId,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_ORGANIZATION_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long organizationId,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_PRIORITY) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) TicketUpdateInputPriority priority,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_PROBLEM_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long problemId,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_REMOVE_TAGS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@NotNull String> removeTags,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_REQUESTER_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long requesterId,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_SAFE_UPDATE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean safeUpdate,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_SHARING_AGREEMENT_IDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@NotNull Long> sharingAgreementIds,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_STATUS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) TicketUpdateInputStatus status,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_SUBJECT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String subject,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_TAGS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@NotNull String> tags,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_TYPE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) TicketUpdateInputType type,
+        @Nullable @JsonProperty(TicketInputBase.JSON_PROPERTY_UPDATED_STAMP) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ZonedDateTime updatedStamp,
+        @Nullable @JsonProperty(JSON_PROPERTY_BRAND_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long brandId,
+        @Nullable @JsonProperty(JSON_PROPERTY_COLLABORATORS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Collaborator> collaborators,
+        @Nullable @JsonProperty(JSON_PROPERTY_EMAIL_CC_IDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@NotNull Long> emailCcIds,
+        @Nullable @JsonProperty(JSON_PROPERTY_FOLLOWER_IDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@NotNull Long> followerIds,
+        @Nullable @JsonProperty(JSON_PROPERTY_MACRO_IDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@NotNull Long> macroIds,
+        @Nullable @JsonProperty(JSON_PROPERTY_RAW_SUBJECT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String rawSubject,
+        @Nullable @JsonProperty(JSON_PROPERTY_RECIPIENT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String recipient,
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_REQUESTER) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) TicketRequester requester,
+        @Nullable @JsonProperty(JSON_PROPERTY_SUBMITTER_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long submitterId,
+        @Nullable @JsonProperty(JSON_PROPERTY_TICKET_FORM_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long ticketFormId,
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_VIA) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Via via,
+        @Nullable @JsonProperty(JSON_PROPERTY_VIA_FOLLOWUP_SOURCE_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long viaFollowupSourceId
+) implements TicketInputBase, TicketCreateInputBuilder.With {
 
     public static final String JSON_PROPERTY_BRAND_ID = "brand_id";
     public static final String JSON_PROPERTY_COLLABORATORS = "collaborators";
@@ -100,125 +130,99 @@ public class TicketCreateInput extends TicketInputBase<TicketCreateInput> {
     public static final String JSON_PROPERTY_VIA = "via";
     public static final String JSON_PROPERTY_VIA_FOLLOWUP_SOURCE_ID = "via_followup_source_id";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_PRIORITY)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private TicketUpdateInputPriority priority;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_STATUS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private TicketUpdateInputStatus status;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TYPE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private TicketUpdateInputType type;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_BRAND_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long brandId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_COLLABORATORS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid Collaborator> collaborators;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_EMAIL_CC_IDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Long> emailCcIds;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_FOLLOWER_IDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Long> followerIds;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_MACRO_IDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull Long> macroIds;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_RAW_SUBJECT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String rawSubject;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_RECIPIENT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String recipient;
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_REQUESTER)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private TicketRequester requester;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SUBMITTER_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long submitterId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TICKET_FORM_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long ticketFormId;
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_VIA)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Via via;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_VIA_FOLLOWUP_SOURCE_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long viaFollowupSourceId;
+    public TicketCreateInput() {
+        this(null);
+    }
 
     public TicketCreateInput(TicketComment comment) {
-        this.comment = comment;
+        this(comment, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
     }
 
     public TicketCreateInput addCollaboratorsItem(Collaborator collaboratorsItem) {
-        if (collaborators == null) {
-            collaborators = new ArrayList<>();
-        }
-        collaborators.add(collaboratorsItem);
-        return this;
+        List<Collaborator> newCollaborators = collaborators == null ? new ArrayList<>() : new ArrayList<>(collaborators);
+        newCollaborators.add(collaboratorsItem);
+        return withCollaborators(newCollaborators);
     }
 
     public TicketCreateInput addEmailCcIdsItem(Long emailCcIdsItem) {
-        if (emailCcIds == null) {
-            emailCcIds = new ArrayList<>();
-        }
-        emailCcIds.add(emailCcIdsItem);
-        return this;
+        List<Long> newEmailCcIds = emailCcIds == null ? new ArrayList<>() : new ArrayList<>(emailCcIds);
+        newEmailCcIds.add(emailCcIdsItem);
+        return withEmailCcIds(newEmailCcIds);
     }
 
     public TicketCreateInput addFollowerIdsItem(Long followerIdsItem) {
-        if (followerIds == null) {
-            followerIds = new ArrayList<>();
-        }
-        followerIds.add(followerIdsItem);
-        return this;
+        List<Long> newFollowerIds = followerIds == null ? new ArrayList<>() : new ArrayList<>(followerIds);
+        newFollowerIds.add(followerIdsItem);
+        return withFollowerIds(newFollowerIds);
     }
 
     public TicketCreateInput addMacroIdsItem(Long macroIdsItem) {
-        if (macroIds == null) {
-            macroIds = new ArrayList<>();
-        }
-        macroIds.add(macroIdsItem);
-        return this;
+        List<Long> newMacroIds = macroIds == null ? new ArrayList<>() : new ArrayList<>(macroIds);
+        newMacroIds.add(macroIdsItem);
+        return withMacroIds(newMacroIds);
     }
 
-    public @Nullable TicketRequester getRequester() {
-        return requester;
+    public TicketCreateInput addAdditionalCollaboratorsItem(Collaborator additionalCollaboratorsItem) {
+        List<Collaborator> newItems = additionalCollaborators == null ? new ArrayList<>() : new ArrayList<>(additionalCollaborators);
+        newItems.add(additionalCollaboratorsItem);
+        return withAdditionalCollaborators(newItems);
     }
 
-    public TicketCreateInput setRequester(@Nullable TicketRequester requester) {
-        this.requester = requester;
-        return this;
+    public TicketCreateInput addAttributeValueIdsItem(Long attributeValueIdsItem) {
+        List<Long> newItems = attributeValueIds == null ? new ArrayList<>() : new ArrayList<>(attributeValueIds);
+        newItems.add(attributeValueIdsItem);
+        return withAttributeValueIds(newItems);
+    }
+
+    public TicketCreateInput addCollaboratorIdsItem(Long collaboratorIdsItem) {
+        List<Long> newItems = collaboratorIds == null ? new ArrayList<>() : new ArrayList<>(collaboratorIds);
+        newItems.add(collaboratorIdsItem);
+        return withCollaboratorIds(newItems);
+    }
+
+    public TicketCreateInput addCustomFieldsItem(TicketCustomField customFieldsItem) {
+        List<TicketCustomField> newItems = customFields == null ? new ArrayList<>() : new ArrayList<>(customFields);
+        newItems.add(customFieldsItem);
+        return withCustomFields(newItems);
+    }
+
+    public TicketCreateInput addEmailCcsItem(EmailCC emailCcsItem) {
+        List<EmailCC> newItems = emailCcs == null ? new ArrayList<>() : new ArrayList<>(emailCcs);
+        newItems.add(emailCcsItem);
+        return withEmailCcs(newItems);
+    }
+
+    public TicketCreateInput addFollowersItem(Follower followersItem) {
+        List<Follower> newItems = followers == null ? new ArrayList<>() : new ArrayList<>(followers);
+        newItems.add(followersItem);
+        return withFollowers(newItems);
+    }
+
+    public TicketCreateInput addSharingAgreementIdsItem(Long sharingAgreementIdsItem) {
+        List<Long> newItems = sharingAgreementIds == null ? new ArrayList<>() : new ArrayList<>(sharingAgreementIds);
+        newItems.add(sharingAgreementIdsItem);
+        return withSharingAgreementIds(newItems);
+    }
+
+    public TicketCreateInput addTagsItem(String tagsItem) {
+        List<String> newItems = tags == null ? new ArrayList<>() : new ArrayList<>(tags);
+        newItems.add(tagsItem);
+        return withTags(newItems);
+    }
+
+    public TicketCreateInput addAdditionalTagsItem(String additionalTagsItem) {
+        List<String> newItems = additionalTags == null ? new ArrayList<>() : new ArrayList<>(additionalTags);
+        newItems.add(additionalTagsItem);
+        return withAdditionalTags(newItems);
+    }
+
+    public TicketCreateInput addRemoveTagsItem(String removeTagsItem) {
+        List<String> newItems = removeTags == null ? new ArrayList<>() : new ArrayList<>(removeTags);
+        newItems.add(removeTagsItem);
+        return withRemoveTags(newItems);
+    }
+
+    public TicketCreateInput withCustomStatusId(Integer customStatusId) {
+        return withCustomStatusId(customStatusId != null ? customStatusId.longValue() : null);
     }
 }

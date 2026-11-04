@@ -30,7 +30,7 @@ class TicketCreateRequestSpec extends Z4jSpec {
 
     def "should create TicketCreateRequest with canonical constructor and builder"() {
         given:
-        TicketCreateInput expected = new TicketCreateInput(new TicketComment().setBody("Help needed")).setSubject("Support Request")
+        TicketCreateInput expected = new TicketCreateInput(new TicketComment("Help needed")).withSubject("Support Request")
 
         when:
         TicketCreateRequest direct = new TicketCreateRequest(expected)
@@ -54,8 +54,8 @@ class TicketCreateRequestSpec extends Z4jSpec {
 
     def "should update ticket using record wither"() {
         given:
-        TicketCreateInput original = new TicketCreateInput(new TicketComment().setBody("Original body")).setSubject("Original")
-        TicketCreateInput replacement = new TicketCreateInput(new TicketComment().setBody("Updated body")).setSubject("Updated")
+        TicketCreateInput original = new TicketCreateInput(new TicketComment("Original body")).withSubject("Original")
+        TicketCreateInput replacement = new TicketCreateInput(new TicketComment("Updated body")).withSubject("Updated")
         TicketCreateRequest request = new TicketCreateRequest(original)
 
         when:
@@ -74,7 +74,7 @@ class TicketCreateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize TicketCreateRequest"() {
         given:
-        TicketCreateInput expected = new TicketCreateInput(new TicketComment().setBody("Printer is offline")).setSubject("Printer Issue")
+        TicketCreateInput expected = new TicketCreateInput(new TicketComment("Printer is offline")).withSubject("Printer Issue")
         TicketCreateRequest request = new TicketCreateRequest(expected)
 
         when:
@@ -98,7 +98,7 @@ class TicketCreateRequestSpec extends Z4jSpec {
 
     def "should handle null ticket component in constructor, wither, and serde"() {
         given:
-        TicketCreateInput replacement = new TicketCreateInput(new TicketComment().setBody("New body")).setSubject("New Subject")
+        TicketCreateInput replacement = new TicketCreateInput(new TicketComment("New body")).withSubject("New Subject")
 
         when:
         TicketCreateRequest request = new TicketCreateRequest(null)

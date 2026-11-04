@@ -30,7 +30,7 @@ class TicketUpdateRequestSpec extends Z4jSpec {
 
     def "should create TicketUpdateRequest with canonical constructor and builder"() {
         given:
-        TicketUpdateInput expected = new TicketUpdateInput().setSubject("Updated Subject").setTicketFormId(101L)
+        TicketUpdateInput expected = new TicketUpdateInput().withSubject("Updated Subject").withTicketFormId(101L)
 
         when:
         TicketUpdateRequest direct = new TicketUpdateRequest(expected)
@@ -54,8 +54,8 @@ class TicketUpdateRequestSpec extends Z4jSpec {
 
     def "should update ticket using record wither"() {
         given:
-        TicketUpdateInput original = new TicketUpdateInput().setSubject("Original Update")
-        TicketUpdateInput replacement = new TicketUpdateInput().setSubject("Replacement Update")
+        TicketUpdateInput original = new TicketUpdateInput().withSubject("Original Update")
+        TicketUpdateInput replacement = new TicketUpdateInput().withSubject("Replacement Update")
         TicketUpdateRequest request = new TicketUpdateRequest(original)
 
         when:
@@ -74,7 +74,7 @@ class TicketUpdateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize TicketUpdateRequest"() {
         given:
-        TicketUpdateInput expected = new TicketUpdateInput().setSubject("Resolved Ticket").setTicketFormId(555L)
+        TicketUpdateInput expected = new TicketUpdateInput().withSubject("Resolved Ticket").withTicketFormId(555L)
         TicketUpdateRequest request = new TicketUpdateRequest(expected)
 
         when:
@@ -99,7 +99,7 @@ class TicketUpdateRequestSpec extends Z4jSpec {
 
     def "should handle null ticket component in constructor, wither, and serde"() {
         given:
-        TicketUpdateInput replacement = new TicketUpdateInput().setSubject("Fallback Subject")
+        TicketUpdateInput replacement = new TicketUpdateInput().withSubject("Fallback Subject")
 
         when:
         TicketUpdateRequest request = new TicketUpdateRequest(null)

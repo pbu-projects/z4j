@@ -30,7 +30,7 @@ class JobStatusResponseSpec extends Z4jSpec {
 
     def "should create JobStatusResponse with canonical constructor and builder"() {
         given:
-        JobStatus expected = new JobStatus().setId("job_101").setStatus("queued").setProgress(0)
+        JobStatus expected = new JobStatus().withId("job_101").withStatus("queued").withProgress(0)
 
         when:
         JobStatusResponse direct = new JobStatusResponse(expected)
@@ -53,8 +53,8 @@ class JobStatusResponseSpec extends Z4jSpec {
 
     def "should update jobStatus using record wither"() {
         given:
-        JobStatus original = new JobStatus().setId("job_1").setStatus("queued")
-        JobStatus updatedJobStatus = new JobStatus().setId("job_2").setStatus("working")
+        JobStatus original = new JobStatus().withId("job_1").withStatus("queued")
+        JobStatus updatedJobStatus = new JobStatus().withId("job_2").withStatus("working")
         JobStatusResponse response = new JobStatusResponse(original)
 
         when:
@@ -73,7 +73,7 @@ class JobStatusResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize JobStatusResponse"() {
         given:
-        JobStatus expected = new JobStatus().setId("job_555").setStatus("completed").setProgress(100)
+        JobStatus expected = new JobStatus().withId("job_555").withStatus("completed").withProgress(100)
         JobStatusResponse response = new JobStatusResponse(expected)
 
         when:
@@ -100,7 +100,7 @@ class JobStatusResponseSpec extends Z4jSpec {
     def "should handle null jobStatus component by defaulting to completed status"() {
         when:
         JobStatusResponse response = new JobStatusResponse(null)
-        JobStatus replacement = new JobStatus().setId("job_99").setStatus("failed")
+        JobStatus replacement = new JobStatus().withId("job_99").withStatus("failed")
         JobStatusResponse updated = response.withJobStatus(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

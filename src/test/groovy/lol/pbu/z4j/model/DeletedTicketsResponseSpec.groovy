@@ -30,7 +30,7 @@ class DeletedTicketsResponseSpec extends Z4jSpec {
 
     def "should create DeletedTicketsResponse with canonical constructor and builder"() {
         given:
-        DeletedTicket ticket = new DeletedTicket().setId(101L).setSubject("Deleted Ticket")
+        DeletedTicket ticket = new DeletedTicket().withId(101L).withSubject("Deleted Ticket")
         List<DeletedTicket> list = [ticket]
         Long expectedCount = 1L
         String expectedNext = "https://example.zendesk.com/api/v2/deleted_tickets.json?page=2"
@@ -66,8 +66,8 @@ class DeletedTicketsResponseSpec extends Z4jSpec {
 
     def "should update DeletedTicketsResponse using record withers and addDeletedTicketsItem method"() {
         given:
-        DeletedTicket first = new DeletedTicket().setId(1L).setSubject("First")
-        DeletedTicket second = new DeletedTicket().setId(2L).setSubject("Second")
+        DeletedTicket first = new DeletedTicket().withId(1L).withSubject("First")
+        DeletedTicket second = new DeletedTicket().withId(2L).withSubject("Second")
         DeletedTicketsResponse response = new DeletedTicketsResponse([first], 1L, "next_1", "prev_1")
 
         when:
@@ -112,7 +112,7 @@ class DeletedTicketsResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize DeletedTicketsResponse"() {
         given:
-        DeletedTicket ticket = new DeletedTicket().setId(555L).setSubject("Trashed Ticket")
+        DeletedTicket ticket = new DeletedTicket().withId(555L).withSubject("Trashed Ticket")
         DeletedTicketsResponse response = new DeletedTicketsResponse(
                 [ticket],
                 1L,

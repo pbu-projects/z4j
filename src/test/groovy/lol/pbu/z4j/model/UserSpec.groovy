@@ -34,7 +34,7 @@ class UserSpec extends Specification {
     def "can create user with getters setters and fluent chaining"() {
         given:
         def now = ZonedDateTime.of(2026, 1, 15, 10, 30, 0, 0, ZoneOffset.UTC)
-        def photoAttachment = new Attachment().setId(555L).setFileName("avatar.png")
+        def photoAttachment = new Attachment().withId(555L).withFileName("avatar.png")
 
         when:
         def user = new User()
