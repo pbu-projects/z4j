@@ -3,8 +3,7 @@
 The cloud-native Java client for Zendesk.
 
 ## About The Project
-
-**z4j** is a lightweight, reflection-free Java client for the Zendesk API. Built with Micronaut, it focuses on low memory use, fast startup, and native GraalVM support—tested directly against Zendesk's API to catch issues before your code ships.
+Built with Micronaut, z4j focuses on low memory use, fast startup, and native GraalVM support.
 
 ## Runtime Performance
 
