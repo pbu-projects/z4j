@@ -91,6 +91,7 @@ tasks.withType<Javadoc>().configureEach {
 
 tasks.processResources {
     exclude("logback.xml", "**/logback.xml")
+    exclude("*.yaml", "*.yml", "**/*.yaml", "**/*.yml")
 }
 
 micronaut {
