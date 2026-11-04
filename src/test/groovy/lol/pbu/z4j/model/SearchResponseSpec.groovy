@@ -30,7 +30,7 @@ class SearchResponseSpec extends Z4jSpec {
 
     def "should create SearchResponse with canonical constructor and builder"() {
         given:
-        SearchResult result = new SearchResult().setId(10L).setName("Result 1")
+        SearchResult result = new SearchResult().withId(10L).withName("Result 1")
         User user = new User().setId(20L).setName("User 1")
         Organization org = new Organization().setId(30L)
         Group group = new Group()
@@ -83,8 +83,8 @@ class SearchResponseSpec extends Z4jSpec {
 
     def "should update SearchResponse using record withers"() {
         given:
-        SearchResult r1 = new SearchResult().setId(1L)
-        SearchResult r2 = new SearchResult().setId(2L)
+        SearchResult r1 = new SearchResult().withId(1L)
+        SearchResult r2 = new SearchResult().withId(2L)
         User u1 = new User().setId(11L)
         User u2 = new User().setId(12L)
         Organization o1 = new Organization().setId(21L)
@@ -129,7 +129,7 @@ class SearchResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize SearchResponse"() {
         given:
-        SearchResult result = new SearchResult().setId(100L).setName("Ticket Search Result")
+        SearchResult result = new SearchResult().withId(100L).withName("Ticket Search Result")
         User user = new User().setId(200L).setName("Sideloaded User")
         Organization org = new Organization().setId(300L)
         Group group = new Group()

@@ -30,8 +30,7 @@ class PostCommentCreateRequestSpec extends Z4jSpec {
 
     def "should create PostCommentCreateRequest with canonical constructor and builder"() {
         given:
-        PostComment expected = new PostComment("Helpful feedback").setPostId(101L)
-        expected.setId(201L)
+        PostComment expected = new PostComment("Helpful feedback").withPostId(101L).withId(201L)
 
         when:
         PostCommentCreateRequest direct = new PostCommentCreateRequest(expected)
@@ -55,10 +54,8 @@ class PostCommentCreateRequestSpec extends Z4jSpec {
 
     def "should update comment using record wither"() {
         given:
-        PostComment original = new PostComment("Original text").setPostId(1L)
-        original.setId(10L)
-        PostComment replacement = new PostComment("Replacement text").setPostId(2L)
-        replacement.setId(20L)
+        PostComment original = new PostComment("Original text").withPostId(1L).withId(10L)
+        PostComment replacement = new PostComment("Replacement text").withPostId(2L).withId(20L)
         PostCommentCreateRequest request = new PostCommentCreateRequest(original)
 
         when:
@@ -77,8 +74,7 @@ class PostCommentCreateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize PostCommentCreateRequest"() {
         given:
-        PostComment expected = new PostComment("Community discussion comment").setPostId(404L)
-        expected.setId(808L)
+        PostComment expected = new PostComment("Community discussion comment").withPostId(404L).withId(808L)
         PostCommentCreateRequest request = new PostCommentCreateRequest(expected)
 
         when:
@@ -105,8 +101,7 @@ class PostCommentCreateRequestSpec extends Z4jSpec {
     def "should handle null comment component in constructor and wither"() {
         when:
         PostCommentCreateRequest request = new PostCommentCreateRequest(null)
-        PostComment replacement = new PostComment("Fresh reply")
-        replacement.setId(99L)
+        PostComment replacement = new PostComment("Fresh reply").withId(99L)
         PostCommentCreateRequest updated = request.withComment(replacement)
         String json = objectMapper.writeValueAsString(request)
         Map map = objectMapper.readValue(json, Map.class)

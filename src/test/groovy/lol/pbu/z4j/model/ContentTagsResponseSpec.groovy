@@ -30,7 +30,7 @@ class ContentTagsResponseSpec extends Z4jSpec {
 
     def "should create ContentTagsResponse with canonical constructor and builder"() {
         given:
-        ContentTag tag = new ContentTag().setId("01TAG1").setName("billing")
+        ContentTag tag = new ContentTag().withId("01TAG1").withName("billing")
         List<ContentTag> list = [tag]
         Meta expectedMeta = MetaBuilder.builder().hasMore(true).afterCursor("after_1").build()
 
@@ -58,8 +58,8 @@ class ContentTagsResponseSpec extends Z4jSpec {
 
     def "should update ContentTagsResponse using record withers and addRecordsItem method"() {
         given:
-        ContentTag first = new ContentTag().setId("01TAG1").setName("billing")
-        ContentTag second = new ContentTag().setId("01TAG2").setName("account")
+        ContentTag first = new ContentTag().withId("01TAG1").withName("billing")
+        ContentTag second = new ContentTag().withId("01TAG2").withName("account")
         Meta meta1 = MetaBuilder.builder().hasMore(false).build()
         Meta meta2 = MetaBuilder.builder().hasMore(true).afterCursor("next_cursor").build()
         ContentTagsResponse response = new ContentTagsResponse([first], meta1)
@@ -94,7 +94,7 @@ class ContentTagsResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize ContentTagsResponse"() {
         given:
-        ContentTag tag = new ContentTag().setId("01TAG555").setName("onboarding")
+        ContentTag tag = new ContentTag().withId("01TAG555").withName("onboarding")
         Meta expectedMeta = MetaBuilder.builder().hasMore(false).afterCursor("cursor_end").build()
         ContentTagsResponse response = new ContentTagsResponse([tag], expectedMeta)
 

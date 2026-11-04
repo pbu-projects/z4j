@@ -15,57 +15,87 @@
  */
 package lol.pbu.z4j.model
 
-import lol.pbu.z4j.Z4jSpec
-import spock.lang.Unroll
+import io.micronaut.serde.ObjectMapper
+import spock.lang.Shared
+import spock.lang.Specification
 
-class SearchSpec extends Z4jSpec {
+class SearchSpec extends Specification {
 
-    @Unroll
-    def "should create Search with correct properties"() {
+    @Shared
+    ObjectMapper objectMapper = ObjectMapper.getDefault()
+
+    def "should create Search with constructors and builder"() {
         given:
-        // SearchResultsInner is an interface, so we use a concrete implementation.
-        // Assuming 'Article' is one such implementation.
-        def article1 = new Article().withLocaleAbbreviation(LocaleAbbreviation.BULGARIAN)
-                .withPermissionGroupId(faker.number().randomNumber()).withTitle(faker.book().author())
-
-        def article2 = new Article().withLocaleAbbreviation(LocaleAbbreviation.GERMAN)
-                .withPermissionGroupId(faker.number().randomNumber()).withTitle(faker.book().author())
-
-        List<SearchResultsInner> searchResults = [article1, article2]
+        Post post = new Post("Search post").withId(101L)
+        PostComment comment = new PostComment("Search comment").withId(201L)
+        List<SearchResultsInner> list = [post, comment]
 
         when:
-        def search = new Search(searchResults)
+        Search direct = new Search(list)
+        Search noArg = new Search()
+        Search built = SearchBuilder.builder()
+                .results(list)
+                .build()
 
         then:
-        search.results == searchResults
-        search.results.size() == 2
+        verifyAll(direct) {
+            results() == list
+            results().size() == 2
+        }
+        verifyAll(noArg) {
+            results() != null
+            results().isEmpty()
+        }
+        verifyAll(built) {
+            it == direct
+        }
     }
 
-    @Unroll
-    def "should add item to results"() {
+    def "should update Search using record wither and addResultsItem"() {
         given:
-        def initialArticle = new Article()
-                .withLocaleAbbreviation(LocaleAbbreviation.JAPANESE)
-                .withId(faker.number().randomNumber())
-                .withTitle(faker.book().title())
-
-        List<SearchResultsInner> initialResults = [initialArticle]
-        def search = new Search(initialResults)
-
-        Article newResult = new Article()
-                .withLocaleAbbreviation(LocaleAbbreviation.JAPANESE)
-                .withId(faker.number().randomNumber())
-                .withTitle(faker.book().title())
+        Post post1 = new Post("First hit").withId(1L)
+        Post post2 = new Post("Second hit").withId(2L)
+        Search search = new Search([post1])
+        Search searchNull = new Search(null)
 
         when:
-        def returnedSearch = search.addResultsItem(newResult)
+        Search updatedWither = search.withResults([post2])
+        Search updatedAdded = search.addResultsItem(post2)
+        Search updatedFromNull = searchNull.addResultsItem(post1)
 
         then:
-        "the add method should be chainable"
-        returnedSearch == search
+        verifyAll(search) {
+            results().size() == 1
+            results().first() == post1
+        }
+        verifyAll(updatedWither) {
+            results().size() == 1
+            results().first() == post2
+        }
+        verifyAll(updatedAdded) {
+            results().size() == 2
+            results().containsAll([post1, post2])
+        }
+        verifyAll(updatedFromNull) {
+            results().size() == 1
+            results().first() == post1
+        }
+    }
 
-        and: "the new item should be added to the list"
-        search.results.size() == 2
-        search.results.contains(newResult)
+    def "should serialize Search to JSON"() {
+        given:
+        Post post = new Post("Search Hit").withId(555L)
+        Search search = new Search([post])
+
+        when:
+        String json = objectMapper.writeValueAsString(search)
+        Map map = objectMapper.readValue(json, Map.class)
+
+        then:
+        verifyAll(map) {
+            containsKey("results")
+            get("results") instanceof List
+            ((List) get("results")).size() == 1
+        }
     }
 }

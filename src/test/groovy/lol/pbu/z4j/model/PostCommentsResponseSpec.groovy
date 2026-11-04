@@ -30,8 +30,7 @@ class PostCommentsResponseSpec extends Z4jSpec {
 
     def "should create PostCommentsResponse with canonical constructor and builder"() {
         given:
-        PostComment item = new PostComment("Helpful feedback").setPostId(101L)
-        item.setId(201L)
+        PostComment item = new PostComment("Helpful feedback").withPostId(101L).withId(201L)
         List<PostComment> list = [item]
 
         when:
@@ -57,10 +56,8 @@ class PostCommentsResponseSpec extends Z4jSpec {
 
     def "should update comments using record wither and addCommentsItem method"() {
         given:
-        PostComment first = new PostComment("First reply")
-        first.setId(1L)
-        PostComment second = new PostComment("Second reply")
-        second.setId(2L)
+        PostComment first = new PostComment("First reply").withId(1L)
+        PostComment second = new PostComment("Second reply").withId(2L)
         PostCommentsResponse response = new PostCommentsResponse([first])
 
         when:
@@ -90,8 +87,7 @@ class PostCommentsResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize PostCommentsResponse"() {
         given:
-        PostComment item = new PostComment("Community discussion comment").setPostId(404L)
-        item.setId(555L)
+        PostComment item = new PostComment("Community discussion comment").withPostId(404L).withId(555L)
         PostCommentsResponse response = new PostCommentsResponse([item])
 
         when:
@@ -117,8 +113,7 @@ class PostCommentsResponseSpec extends Z4jSpec {
     def "should handle null comments component in constructor, wither, and serde"() {
         when:
         PostCommentsResponse response = new PostCommentsResponse(null)
-        PostComment item = new PostComment("Fresh reply")
-        item.setId(99L)
+        PostComment item = new PostComment("Fresh reply").withId(99L)
         PostCommentsResponse updated = response.withComments([item])
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

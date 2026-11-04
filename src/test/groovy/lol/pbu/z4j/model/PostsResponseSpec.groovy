@@ -30,7 +30,7 @@ class PostsResponseSpec extends Z4jSpec {
 
     def "should create PostsResponse with canonical constructor and builder"() {
         given:
-        Post item = new Post("Community Announcement").setId(101L)
+        Post item = new Post("Community Announcement").withId(101L)
         List<Post> list = [item]
 
         when:
@@ -56,8 +56,8 @@ class PostsResponseSpec extends Z4jSpec {
 
     def "should update posts using record wither and addPostsItem method"() {
         given:
-        Post first = new Post("Old Post").setId(1L)
-        Post second = new Post("New Post").setId(2L)
+        Post first = new Post("Old Post").withId(1L)
+        Post second = new Post("New Post").withId(2L)
         PostsResponse response = new PostsResponse([first])
 
         when:
@@ -87,7 +87,7 @@ class PostsResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize PostsResponse"() {
         given:
-        Post item = new Post("Release Notes").setDetails("Version 1.0 is live").setId(555L)
+        Post item = new Post("Release Notes").withDetails("Version 1.0 is live").withId(555L)
         PostsResponse response = new PostsResponse([item])
 
         when:
@@ -113,7 +113,7 @@ class PostsResponseSpec extends Z4jSpec {
     def "should handle null posts component in constructor, wither, and serde"() {
         when:
         PostsResponse response = new PostsResponse(null)
-        Post item = new Post("Maintenance Notice").setId(99L)
+        Post item = new Post("Maintenance Notice").withId(99L)
         PostsResponse updated = response.withPosts([item])
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

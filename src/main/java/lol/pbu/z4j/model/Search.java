@@ -17,56 +17,35 @@ package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
 /**
- * Search
+ * Search response containing Help Center articles and community posts.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@EqualsAndHashCode
-@ToString
-@Getter
-@Setter
-@JsonPropertyOrder(Search.JSON_PROPERTY_RESULTS)
 @Serdeable
-@Generated
-public class Search {
+@RecordBuilder
+@JsonPropertyOrder(Search.JSON_PROPERTY_RESULTS)
+public record Search(
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_RESULTS) List<@Valid SearchResultsInner> results
+) implements SearchBuilder.With {
 
     public static final String JSON_PROPERTY_RESULTS = "results";
 
-    /**
-     * An array with the base articles or community posts
-     */
-    @NotNull
-    @JsonProperty(JSON_PROPERTY_RESULTS)
-    private List<@Valid SearchResultsInner> results = new ArrayList<>();
-
-    public Search(List<@Valid SearchResultsInner> results) {
-        this.results = results;
+    public Search() {
+        this(new ArrayList<>());
     }
 
-    /**
-     * Add an item to the results property in a chainable fashion.
-     *
-     * @return The same instance of Search for chaining.
-     */
     public Search addResultsItem(SearchResultsInner resultsItem) {
-        results.add(resultsItem);
-        return this;
+        List<SearchResultsInner> list = results != null ? new ArrayList<>(results) : new ArrayList<>();
+        list.add(resultsItem);
+        return withResults(list);
     }
-
 }

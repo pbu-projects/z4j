@@ -31,10 +31,10 @@ class RedirectRuleResponseSpec extends Z4jSpec {
     def "should create RedirectRuleResponse with canonical constructor and builder"() {
         given:
         RedirectRule expected = new RedirectRule()
-                .setId("rule_101")
-                .setRedirectFrom("/old-path")
-                .setRedirectTo("/new-path")
-                .setRedirectStatus(301)
+                .withId("rule_101")
+                .withRedirectFrom("/old-path")
+                .withRedirectTo("/new-path")
+                .withRedirectStatus(301)
 
         when:
         RedirectRuleResponse direct = new RedirectRuleResponse(expected)
@@ -59,8 +59,8 @@ class RedirectRuleResponseSpec extends Z4jSpec {
 
     def "should update redirectRule using record wither"() {
         given:
-        RedirectRule original = new RedirectRule().setId("rule_1").setRedirectFrom("/v1").setRedirectTo("/v2")
-        RedirectRule updatedRule = new RedirectRule().setId("rule_2").setRedirectFrom("/v2").setRedirectTo("/v3")
+        RedirectRule original = new RedirectRule().withId("rule_1").withRedirectFrom("/v1").withRedirectTo("/v2")
+        RedirectRule updatedRule = new RedirectRule().withId("rule_2").withRedirectFrom("/v2").withRedirectTo("/v3")
         RedirectRuleResponse response = new RedirectRuleResponse(original)
 
         when:
@@ -80,10 +80,10 @@ class RedirectRuleResponseSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize RedirectRuleResponse"() {
         given:
         RedirectRule expected = new RedirectRule()
-                .setId("rule_555")
-                .setRedirectFrom("/legacy-docs")
-                .setRedirectTo("/current-docs")
-                .setRedirectStatus(302)
+                .withId("rule_555")
+                .withRedirectFrom("/legacy-docs")
+                .withRedirectTo("/current-docs")
+                .withRedirectStatus(302)
         RedirectRuleResponse response = new RedirectRuleResponse(expected)
 
         when:
@@ -111,7 +111,7 @@ class RedirectRuleResponseSpec extends Z4jSpec {
     def "should handle null redirectRule component in constructor and wither"() {
         when:
         RedirectRuleResponse response = new RedirectRuleResponse(null)
-        RedirectRule replacement = new RedirectRule().setId("rule_99").setRedirectFrom("/start").setRedirectTo("/finish")
+        RedirectRule replacement = new RedirectRule().withId("rule_99").withRedirectFrom("/start").withRedirectTo("/finish")
         RedirectRuleResponse updated = response.withRedirectRule(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

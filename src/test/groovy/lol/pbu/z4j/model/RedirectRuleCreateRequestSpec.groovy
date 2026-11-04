@@ -30,7 +30,7 @@ class RedirectRuleCreateRequestSpec extends Z4jSpec {
 
     def "should create RedirectRuleCreateRequest with constructors and builder"() {
         given:
-        RedirectRule expected = new RedirectRule("/old-path", "/new-path", 301).setId("rule_101")
+        RedirectRule expected = new RedirectRule("/old-path", "/new-path", 301).withId("rule_101")
 
         when:
         RedirectRuleCreateRequest byParams = new RedirectRuleCreateRequest("/old-path", "/new-path", 301)
@@ -63,8 +63,8 @@ class RedirectRuleCreateRequestSpec extends Z4jSpec {
 
     def "should update redirectRule using record wither"() {
         given:
-        RedirectRule original = new RedirectRule().setId("rule_1").setRedirectFrom("/v1").setRedirectTo("/v2")
-        RedirectRule updatedRule = new RedirectRule().setId("rule_2").setRedirectFrom("/v2").setRedirectTo("/v3")
+        RedirectRule original = new RedirectRule().withId("rule_1").withRedirectFrom("/v1").withRedirectTo("/v2")
+        RedirectRule updatedRule = new RedirectRule().withId("rule_2").withRedirectFrom("/v2").withRedirectTo("/v3")
         RedirectRuleCreateRequest request = new RedirectRuleCreateRequest(original)
 
         when:
@@ -84,10 +84,10 @@ class RedirectRuleCreateRequestSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize RedirectRuleCreateRequest"() {
         given:
         RedirectRule expected = new RedirectRule()
-                .setId("rule_555")
-                .setRedirectFrom("/legacy-docs")
-                .setRedirectTo("/current-docs")
-                .setRedirectStatus(302)
+                .withId("rule_555")
+                .withRedirectFrom("/legacy-docs")
+                .withRedirectTo("/current-docs")
+                .withRedirectStatus(302)
         RedirectRuleCreateRequest request = new RedirectRuleCreateRequest(expected)
 
         when:
@@ -115,7 +115,7 @@ class RedirectRuleCreateRequestSpec extends Z4jSpec {
     def "should handle null redirectRule component in constructor and wither"() {
         when:
         RedirectRuleCreateRequest request = new RedirectRuleCreateRequest(null)
-        RedirectRule replacement = new RedirectRule().setId("rule_99").setRedirectFrom("/start").setRedirectTo("/finish")
+        RedirectRule replacement = new RedirectRule().withId("rule_99").withRedirectFrom("/start").withRedirectTo("/finish")
         RedirectRuleCreateRequest updated = request.withRedirectRule(replacement)
         String json = objectMapper.writeValueAsString(request)
         Map map = objectMapper.readValue(json, Map.class)

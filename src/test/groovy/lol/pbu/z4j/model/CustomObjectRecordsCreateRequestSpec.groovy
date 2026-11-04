@@ -30,7 +30,7 @@ class CustomObjectRecordsCreateRequestSpec extends Z4jSpec {
 
     def "should create CustomObjectRecordsCreateRequest with canonical constructor and builder"() {
         given:
-        CustomObjectRecord expected = new CustomObjectRecord().setId("rec_101").setName("Laptop Asset").setCustomObjectKey("device")
+        CustomObjectRecord expected = new CustomObjectRecord().withId("rec_101").withName("Laptop Asset").withCustomObjectKey("device")
 
         when:
         CustomObjectRecordsCreateRequest direct = new CustomObjectRecordsCreateRequest(expected)
@@ -56,8 +56,8 @@ class CustomObjectRecordsCreateRequestSpec extends Z4jSpec {
 
     def "should update customObjectRecord using record wither"() {
         given:
-        CustomObjectRecord original = new CustomObjectRecord().setId("rec_1").setName("Old Asset")
-        CustomObjectRecord replacement = new CustomObjectRecord().setId("rec_2").setName("New Asset")
+        CustomObjectRecord original = new CustomObjectRecord().withId("rec_1").withName("Old Asset")
+        CustomObjectRecord replacement = new CustomObjectRecord().withId("rec_2").withName("New Asset")
         CustomObjectRecordsCreateRequest request = new CustomObjectRecordsCreateRequest(original)
 
         when:
@@ -76,7 +76,7 @@ class CustomObjectRecordsCreateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize CustomObjectRecordsCreateRequest"() {
         given:
-        CustomObjectRecord expected = new CustomObjectRecord().setId("rec_555").setName("Monitor Asset").setCustomObjectKey("hardware")
+        CustomObjectRecord expected = new CustomObjectRecord().withId("rec_555").withName("Monitor Asset").withCustomObjectKey("hardware")
         CustomObjectRecordsCreateRequest request = new CustomObjectRecordsCreateRequest(expected)
 
         when:
@@ -102,7 +102,7 @@ class CustomObjectRecordsCreateRequestSpec extends Z4jSpec {
 
     def "should handle null customObjectRecord component in constructor, wither, and serde"() {
         given:
-        CustomObjectRecord replacement = new CustomObjectRecord().setId("rec_99").setName("Backup Asset")
+        CustomObjectRecord replacement = new CustomObjectRecord().withId("rec_99").withName("Backup Asset")
 
         when:
         CustomObjectRecordsCreateRequest request = new CustomObjectRecordsCreateRequest(null)

@@ -15,39 +15,163 @@
  */
 package lol.pbu.z4j.model
 
-import lol.pbu.z4j.Z4jSpec
+import io.micronaut.serde.ObjectMapper
+import spock.lang.Shared
+import spock.lang.Specification
 
-class CustomObjectSpec extends Z4jSpec {
+import java.time.ZonedDateTime
 
-    def "should instantiate and set properties on CustomObject"() {
+class CustomObjectSpec extends Specification {
+
+    @Shared
+    ObjectMapper objectMapper = ObjectMapper.getDefault()
+
+    def "should create CustomObject with constructors and builder"() {
         given:
-        def obj = new CustomObject("test_key", "Test Title", "Test Plurals")
+        ZonedDateTime now = ZonedDateTime.parse("2026-03-12T10:00:00Z")
 
         when:
-        obj.setDescription("A description")
-           .setRawTitle("Raw Title")
-           .setRawTitlePluralized("Raw Plural")
-           .setRawDescription("Raw Desc")
-           .setIncludeInListView(true)
-           .setAllowsAttachments(true)
-           .setAllowsPhotos(false)
-           .setCreatedByUserId("123")
-           .setUpdatedByUserId("456")
-           .setUrl("https://example.zendesk.com/custom_objects/test_key")
+        CustomObject direct = new CustomObject(
+                "device",
+                "Device",
+                "Devices",
+                "Office hardware asset",
+                "Raw Device",
+                "Raw Devices",
+                "Raw description",
+                true,
+                true,
+                false,
+                "user_101",
+                "user_202",
+                "https://example.com/custom_objects/device",
+                now,
+                now
+        )
+        CustomObject threeArg = new CustomObject("server", "Server", "Servers")
+        CustomObject noArg = new CustomObject()
+        CustomObject built = CustomObjectBuilder.builder()
+                .key("device")
+                .title("Device")
+                .titlePluralized("Devices")
+                .description("Office hardware asset")
+                .rawTitle("Raw Device")
+                .rawTitlePluralized("Raw Devices")
+                .rawDescription("Raw description")
+                .includeInListView(true)
+                .allowsAttachments(true)
+                .allowsPhotos(false)
+                .createdByUserId("user_101")
+                .updatedByUserId("user_202")
+                .url("https://example.com/custom_objects/device")
+                .createdAt(now)
+                .updatedAt(now)
+                .build()
 
         then:
-        obj.key == "test_key"
-        obj.title == "Test Title"
-        obj.titlePluralized == "Test Plurals"
-        obj.description == "A description"
-        obj.rawTitle == "Raw Title"
-        obj.rawTitlePluralized == "Raw Plural"
-        obj.rawDescription == "Raw Desc"
-        obj.includeInListView
-        obj.allowsAttachments
-        !obj.allowsPhotos
-        obj.createdByUserId == "123"
-        obj.updatedByUserId == "456"
-        obj.url == "https://example.zendesk.com/custom_objects/test_key"
+        verifyAll(direct) {
+            key() == "device"
+            title() == "Device"
+            titlePluralized() == "Devices"
+            description() == "Office hardware asset"
+            rawTitle() == "Raw Device"
+            rawTitlePluralized() == "Raw Devices"
+            rawDescription() == "Raw description"
+            includeInListView() == true
+            allowsAttachments() == true
+            allowsPhotos() == false
+            createdByUserId() == "user_101"
+            updatedByUserId() == "user_202"
+            url() == "https://example.com/custom_objects/device"
+            createdAt() == now
+            updatedAt() == now
+        }
+        verifyAll(threeArg) {
+            key() == "server"
+            title() == "Server"
+            titlePluralized() == "Servers"
+            description() == null
+            createdByUserId() == null
+        }
+        verifyAll(noArg) {
+            key() == null
+            title() == null
+            titlePluralized() == null
+            description() == null
+        }
+        verifyAll(built) {
+            it == direct
+        }
+    }
+
+    def "should update CustomObject using record withers"() {
+        given:
+        CustomObject initial = new CustomObject("asset", "Asset", "Assets")
+        ZonedDateTime now = ZonedDateTime.parse("2026-03-12T14:00:00Z")
+
+        when:
+        CustomObject updated = initial
+                .withKey("vehicle")
+                .withTitle("Vehicle")
+                .withTitlePluralized("Vehicles")
+                .withDescription("Company vehicle")
+                .withRawTitle("Raw Vehicle")
+                .withRawTitlePluralized("Raw Vehicles")
+                .withRawDescription("Raw vehicle desc")
+                .withIncludeInListView(false)
+                .withAllowsAttachments(false)
+                .withAllowsPhotos(true)
+                .withCreatedByUserId("user_303")
+                .withUpdatedByUserId("user_404")
+                .withUrl("https://example.com/custom_objects/vehicle")
+                .withCreatedAt(now)
+                .withUpdatedAt(now)
+
+        then:
+        verifyAll(updated) {
+            key() == "vehicle"
+            title() == "Vehicle"
+            titlePluralized() == "Vehicles"
+            description() == "Company vehicle"
+            rawTitle() == "Raw Vehicle"
+            rawTitlePluralized() == "Raw Vehicles"
+            rawDescription() == "Raw vehicle desc"
+            includeInListView() == false
+            allowsAttachments() == false
+            allowsPhotos() == true
+            createdByUserId() == "user_303"
+            updatedByUserId() == "user_404"
+            url() == "https://example.com/custom_objects/vehicle"
+            createdAt() == now
+            updatedAt() == now
+        }
+    }
+
+    def "should round-trip serialize and deserialize CustomObject"() {
+        given:
+        CustomObject object = new CustomObject("license", "Software License", "Software Licenses")
+                .withDescription("Track enterprise software keys")
+                .withIncludeInListView(true)
+                .withAllowsAttachments(true)
+                .withCreatedByUserId("admin_user")
+
+        when:
+        String json = objectMapper.writeValueAsString(object)
+        Map map = objectMapper.readValue(json, Map.class)
+        CustomObject deserialized = objectMapper.readValue(json, CustomObject.class)
+
+        then:
+        verifyAll(map) {
+            get("key") == "license"
+            get("title") == "Software License"
+            get("title_pluralized") == "Software Licenses"
+            get("description") == "Track enterprise software keys"
+            get("include_in_list_view") == true
+            get("allows_attachments") == true
+            get("created_by_user_id") == "admin_user"
+        }
+        verifyAll(deserialized) {
+            it == object
+        }
     }
 }

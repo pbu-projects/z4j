@@ -33,7 +33,7 @@ class CustomObjectRecordsClientPaginationSpec extends Z4jSpec {
         // Create multiple records to ensure pagination works
         for (int i = 0; i < 3; i++) {
             def createPayload = new CustomObjectRecordsCreateRequest(
-                new CustomObjectRecord().setName((objData.recordName as String) + " " + UUID.randomUUID().toString().substring(0, 8))
+                new CustomObjectRecord().withName((objData.recordName as String) + " " + UUID.randomUUID().toString().substring(0, 8))
             )
             def createResponse = adminObjectRecordsClient.createCustomObjectRecord(customObjectKey, createPayload).block()
             createdRecordIds.add(createResponse?.customObjectRecord()?.id)

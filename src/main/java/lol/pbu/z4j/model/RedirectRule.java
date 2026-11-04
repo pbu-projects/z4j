@@ -20,22 +20,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
- * RedirectRule object representing URL redirect rules in Zendesk Guide.
+ * URL redirect rule in Zendesk Guide.
  *
  * @author Jonathan-Zollinger
  * @since 0.3.0
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         RedirectRule.JSON_PROPERTY_ID,
         RedirectRule.JSON_PROPERTY_BRAND_ID,
@@ -45,9 +39,15 @@ import lol.pbu.z4j.Generated;
         RedirectRule.JSON_PROPERTY_CREATED_AT,
         RedirectRule.JSON_PROPERTY_UPDATED_AT
 })
-@Serdeable
-@Generated
-public class RedirectRule {
+public record RedirectRule(
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String id,
+        @Nullable @JsonProperty(JSON_PROPERTY_BRAND_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String brandId,
+        @Nullable @JsonProperty(JSON_PROPERTY_REDIRECT_FROM) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String redirectFrom,
+        @Nullable @JsonProperty(JSON_PROPERTY_REDIRECT_TO) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String redirectTo,
+        @Nullable @JsonProperty(JSON_PROPERTY_REDIRECT_STATUS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer redirectStatus,
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String createdAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_UPDATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String updatedAt
+) implements RedirectRuleBuilder.With {
 
     public static final String JSON_PROPERTY_ID = "id";
     public static final String JSON_PROPERTY_BRAND_ID = "brand_id";
@@ -57,44 +57,11 @@ public class RedirectRule {
     public static final String JSON_PROPERTY_CREATED_AT = "created_at";
     public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String id;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_BRAND_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String brandId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_REDIRECT_FROM)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String redirectFrom;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_REDIRECT_TO)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String redirectTo;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_REDIRECT_STATUS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer redirectStatus;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String createdAt;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_UPDATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String updatedAt;
+    public RedirectRule() {
+        this(null, null, null, null, null, null, null);
+    }
 
     public RedirectRule(String redirectFrom, String redirectTo, Integer redirectStatus) {
-        this.redirectFrom = redirectFrom;
-        this.redirectTo = redirectTo;
-        this.redirectStatus = redirectStatus;
+        this(null, null, redirectFrom, redirectTo, redirectStatus, null, null);
     }
 }

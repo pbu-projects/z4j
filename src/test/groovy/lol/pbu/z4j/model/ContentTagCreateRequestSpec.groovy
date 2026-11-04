@@ -30,7 +30,7 @@ class ContentTagCreateRequestSpec extends Z4jSpec {
 
     def "should create ContentTagCreateRequest with constructors and builder"() {
         given:
-        ContentTag expected = new ContentTag("troubleshooting").setId("01ARZ3NDEK")
+        ContentTag expected = new ContentTag("troubleshooting").withId("01ARZ3NDEK")
 
         when:
         ContentTagCreateRequest byName = new ContentTagCreateRequest("troubleshooting")
@@ -77,7 +77,7 @@ class ContentTagCreateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize ContentTagCreateRequest"() {
         given:
-        ContentTag expected = new ContentTag("security").setId("01ARZ3NDEK001")
+        ContentTag expected = new ContentTag("security").withId("01ARZ3NDEK001")
         ContentTagCreateRequest request = new ContentTagCreateRequest(expected)
 
         when:
@@ -103,7 +103,7 @@ class ContentTagCreateRequestSpec extends Z4jSpec {
     def "should handle null contentTag component in constructor and wither"() {
         when:
         ContentTagCreateRequest request = new ContentTagCreateRequest((ContentTag) null)
-        ContentTag replacement = new ContentTag("created").setId("01ARZ3NDEK099")
+        ContentTag replacement = new ContentTag("created").withId("01ARZ3NDEK099")
         ContentTagCreateRequest updated = request.withContentTag(replacement)
         String json = objectMapper.writeValueAsString(request)
         Map map = objectMapper.readValue(json, Map.class)
