@@ -1,14 +1,17 @@
 <img src="src/main/docs/z4j.svg" width="200" alt="z4j logo"> 
 
-The ultra-lightweight, cloud-native Java client for the Zendesk API
+The cloud-native Java client for Zendesk.
 
 ## About The Project
 
-A zippy Zendesk client built for heavy lifting, z4j pairs Micronaut’s lightning-fast architecture and minimal footprint with a testing suite so rigorous it’s borderline obsessive.
+**z4j** is a lightweight, reflection-free Java client for the Zendesk API. Built with Micronaut, it focuses on low memory use, fast startup, and native GraalVM support—tested directly against Zendesk's API to catch issues before your code ships.
 
-## Getting Started
+## Runtime Performance
 
+Compared to traditional reflection-based clients like CloudBees:
 
+* **Zero reflection:** Serialization is handled at compile time without runtime reflection caches.
+* **Low memory overhead:** Designed for lean execution in CLI tools and containerized services.
 
 ### Installation
 
@@ -16,7 +19,7 @@ A zippy Zendesk client built for heavy lifting, z4j pairs Micronaut’s lightnin
 
 | Gradle Kotlin                                  | Gradle                                        |
 |:-----------------------------------------------|:----------------------------------------------|
-| <pre>implementation("lol.pbu:z4j:0.3.7")</pre> | <pre>implementation 'lol.pbu:z4j:0.3.7'</pre> |
+| <pre>implementation("lol.pbu:z4j:0.3.10")</pre> | <pre>implementation 'lol.pbu:z4j:0.3.10'</pre> |
 
 **Maven**
 
@@ -24,7 +27,7 @@ A zippy Zendesk client built for heavy lifting, z4j pairs Micronaut’s lightnin
 <dependency>
 	<groupId>lol.pbu</groupId>
 	<artifactId>z4j</artifactId>
-	<version>0.3.7</version>
+	<version>0.3.10</version>
 </dependency>
 ```
 
