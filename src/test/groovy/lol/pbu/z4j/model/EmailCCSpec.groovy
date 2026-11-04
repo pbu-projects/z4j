@@ -16,58 +16,63 @@
 package lol.pbu.z4j.model
 
 import io.micronaut.serde.ObjectMapper
-import lol.pbu.z4j.Z4jSpec
 import spock.lang.Shared
+import spock.lang.Specification
 
-class EmailCCSpec extends Z4jSpec {
+class EmailCCSpec extends Specification {
 
     @Shared
-    ObjectMapper objectMapper
+    ObjectMapper objectMapper = ObjectMapper.getDefault()
 
-    void setupSpec() {
-        objectMapper = adminCtx.getBean(ObjectMapper.class)
-    }
-
-    def "should construct EmailCC with Long userId"() {
+    def "should create EmailCC with canonical constructor and builder"() {
         when:
-        EmailCC emailCC = new EmailCC(EmailCCAllOfAction.PUT, "user@example.com", 12345L, "Test User")
+        EmailCC direct = new EmailCC(EmailCCAllOfAction.PUT, "user@example.com", 12345L, "Test User")
+        EmailCC built = EmailCCBuilder.builder()
+                .action(EmailCCAllOfAction.PUT)
+                .userEmail("user@example.com")
+                .userId(12345L)
+                .userName("Test User")
+                .build()
 
         then:
-        verifyAll(emailCC) {
-            action == EmailCCAllOfAction.PUT
-            userEmail == "user@example.com"
-            userId == 12345L
-            userName == "Test User"
+        verifyAll(direct) {
+            action() == EmailCCAllOfAction.PUT
+            userEmail() == "user@example.com"
+            userId() == 12345L
+            userName() == "Test User"
+        }
+        verifyAll(built) {
+            it == direct
+            action() == EmailCCAllOfAction.PUT
+            userEmail() == "user@example.com"
+            userId() == 12345L
+            userName() == "Test User"
         }
     }
 
-    def "should support chaining setters on EmailCC"() {
+    def "should update EmailCC using record withers"() {
         given:
-        EmailCC emailCC = new EmailCC()
+        EmailCC original = new EmailCC(EmailCCAllOfAction.PUT, "user@example.com", 12345L, "Test User")
 
         when:
-        emailCC.setAction(EmailCCAllOfAction.PUT)
-                .setUserEmail("user@example.com")
-                .setUserId(99999L)
-                .setUserName("Test User")
+        EmailCC updated = original
+                .withAction(EmailCCAllOfAction.DELETE)
+                .withUserEmail("other@example.com")
+                .withUserId(67890L)
+                .withUserName("Other User")
 
         then:
-        verifyAll(emailCC) {
-            action == EmailCCAllOfAction.PUT
-            userEmail == "user@example.com"
-            userId == 99999L
-            userName == "Test User"
+        verifyAll(original) {
+            action() == EmailCCAllOfAction.PUT
+            userEmail() == "user@example.com"
+            userId() == 12345L
+            userName() == "Test User"
         }
-    }
-
-    def "should handle null userId in constructor and setter without ambiguity"() {
-        when:
-        EmailCC emailCC = new EmailCC(EmailCCAllOfAction.PUT, "user@example.com", null, "Test User")
-        emailCC.setUserId(null)
-
-        then:
-        verifyAll(emailCC) {
-            userId == null
+        verifyAll(updated) {
+            action() == EmailCCAllOfAction.DELETE
+            userEmail() == "other@example.com"
+            userId() == 67890L
+            userName() == "Other User"
         }
     }
 
@@ -81,10 +86,10 @@ class EmailCCSpec extends Z4jSpec {
 
         then:
         verifyAll(map) {
-            it["action"] == "put"
-            it["user_email"] == "user@example.com"
-            it["user_id"] == 12345
-            it["user_name"] == "Test User"
+            get("action") == "put"
+            get("user_email") == "user@example.com"
+            get("user_id") == 12345
+            get("user_name") == "Test User"
         }
     }
 
@@ -97,10 +102,10 @@ class EmailCCSpec extends Z4jSpec {
 
         then:
         verifyAll(emailCC) {
-            action == EmailCCAllOfAction.PUT
-            userEmail == "user@example.com"
-            userId == 12345L
-            userName == "Test User"
+            action() == EmailCCAllOfAction.PUT
+            userEmail() == "user@example.com"
+            userId() == 12345L
+            userName() == "Test User"
         }
     }
 
@@ -113,10 +118,56 @@ class EmailCCSpec extends Z4jSpec {
 
         then:
         verifyAll(emailCC) {
-            action == EmailCCAllOfAction.PUT
-            userEmail == "user@example.com"
-            userId == 12345L
-            userName == "Test User"
+            action() == EmailCCAllOfAction.PUT
+            userEmail() == "user@example.com"
+            userId() == 12345L
+            userName() == "Test User"
+        }
+    }
+
+    def "should handle null components in EmailCC constructor, wither, and serde"() {
+        when:
+        EmailCC empty = new EmailCC(null, null, null, null)
+        EmailCC built = EmailCCBuilder.builder().build()
+        EmailCC cleared = new EmailCC(EmailCCAllOfAction.PUT, "user@example.com", 12345L, "Test User")
+                .withAction(null)
+                .withUserEmail(null)
+                .withUserId(null)
+                .withUserName(null)
+        String json = objectMapper.writeValueAsString(empty)
+        Map map = objectMapper.readValue(json, Map.class)
+        EmailCC deserialized = objectMapper.readValue(json, EmailCC.class)
+
+        then:
+        verifyAll(empty) {
+            action() == null
+            userEmail() == null
+            userId() == null
+            userName() == null
+        }
+        verifyAll(built) {
+            it == empty
+            action() == null
+            userEmail() == null
+            userId() == null
+            userName() == null
+        }
+        verifyAll(cleared) {
+            it == empty
+            action() == null
+            userEmail() == null
+            userId() == null
+            userName() == null
+        }
+        verifyAll(map) {
+            isEmpty()
+        }
+        verifyAll(deserialized) {
+            it == empty
+            action() == null
+            userEmail() == null
+            userId() == null
+            userName() == null
         }
     }
 }

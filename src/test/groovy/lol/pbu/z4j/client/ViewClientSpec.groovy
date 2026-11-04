@@ -88,7 +88,7 @@ class ViewClientSpec extends Z4jSpec {
         verifyAll(response) {
             it != null
             viewCount() != null
-            viewCount().getViewId() == firstActiveViewId
+            viewCount().viewId() == firstActiveViewId
         }
     }
 

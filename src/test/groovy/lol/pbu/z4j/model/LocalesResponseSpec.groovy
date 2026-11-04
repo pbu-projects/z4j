@@ -30,7 +30,7 @@ class LocalesResponseSpec extends Z4jSpec {
 
     def "should create LocalesResponse with canonical constructor and builder"() {
         given:
-        Locale item = new Locale().setId(101L).setName("English").setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+        Locale item = LocaleBuilder.builder().id(101L).name("English").localeAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES).build()
         List<Locale> list = [item]
 
         when:
@@ -56,8 +56,8 @@ class LocalesResponseSpec extends Z4jSpec {
 
     def "should update locales using record wither and addLocalesItem method"() {
         given:
-        Locale first = new Locale().setId(1L).setName("English")
-        Locale second = new Locale().setId(2L).setName("Spanish")
+        Locale first = LocaleBuilder.builder().id(1L).name("English").build()
+        Locale second = LocaleBuilder.builder().id(2L).name("Spanish").build()
         LocalesResponse response = new LocalesResponse([first])
 
         when:
@@ -87,7 +87,7 @@ class LocalesResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize LocalesResponse"() {
         given:
-        Locale item = new Locale().setId(555L).setName("French").setLocaleAbbreviation(LocaleAbbreviation.FRENCH)
+        Locale item = LocaleBuilder.builder().id(555L).name("French").localeAbbreviation(LocaleAbbreviation.FRENCH).build()
         LocalesResponse response = new LocalesResponse([item])
 
         when:
@@ -113,7 +113,7 @@ class LocalesResponseSpec extends Z4jSpec {
     def "should handle null locales component in constructor, wither, and serde"() {
         when:
         LocalesResponse response = new LocalesResponse(null)
-        Locale item = new Locale().setId(99L).setName("German")
+        Locale item = LocaleBuilder.builder().id(99L).name("German").build()
         LocalesResponse updated = response.withLocales([item])
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

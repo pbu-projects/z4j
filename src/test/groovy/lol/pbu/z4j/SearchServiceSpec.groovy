@@ -86,7 +86,7 @@ class SearchServiceSpec extends Z4jSpec {
         def client = Mock(SearchClient)
         def service = new SearchService()
         service.searchClient = client
-        def response = new ExportResponse<Ticket>([], null, new Meta(hasMore: false), null)
+        def response = new ExportResponse<Ticket>([], null, new Meta(false, null, null), null)
         
         client.exportTicket(_, _, _) >> Mono.just(response)
 

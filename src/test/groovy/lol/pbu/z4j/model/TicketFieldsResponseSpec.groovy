@@ -33,8 +33,8 @@ class TicketFieldsResponseSpec extends Z4jSpec {
         given:
         TicketField field = new TicketField().setId(301L).setTitle("Priority Field")
         List<TicketField> list = [field]
-        Meta expectedMeta = new Meta().setHasMore(true).setAfterCursor("cursor_1")
-        Links expectedLinks = new Links().setNext(URI.create("https://example.zendesk.com/api/v2/ticket_fields.json?page[after]=cursor_1").toURL())
+        Meta expectedMeta = MetaBuilder.builder().hasMore(true).afterCursor("cursor_1").build()
+        Links expectedLinks = LinksBuilder.builder().next(URI.create("https://example.zendesk.com/api/v2/ticket_fields.json?page[after]=cursor_1").toURL()).build()
 
         when:
         TicketFieldsResponse direct = new TicketFieldsResponse(list, expectedMeta, expectedLinks)
@@ -65,10 +65,10 @@ class TicketFieldsResponseSpec extends Z4jSpec {
         given:
         TicketField first = new TicketField().setId(1L).setTitle("First Field")
         TicketField second = new TicketField().setId(2L).setTitle("Second Field")
-        Meta meta1 = new Meta().setHasMore(false)
-        Meta meta2 = new Meta().setHasMore(true).setAfterCursor("after_2")
-        Links links1 = new Links().setPrev(URI.create("https://example.zendesk.com/prev").toURL())
-        Links links2 = new Links().setNext(URI.create("https://example.zendesk.com/next").toURL())
+        Meta meta1 = MetaBuilder.builder().hasMore(false).build()
+        Meta meta2 = MetaBuilder.builder().hasMore(true).afterCursor("after_2").build()
+        Links links1 = LinksBuilder.builder().prev(URI.create("https://example.zendesk.com/prev").toURL()).build()
+        Links links2 = LinksBuilder.builder().next(URI.create("https://example.zendesk.com/next").toURL()).build()
         TicketFieldsResponse response = new TicketFieldsResponse([first], meta1, links1)
 
         when:
@@ -109,8 +109,8 @@ class TicketFieldsResponseSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize TicketFieldsResponse"() {
         given:
         TicketField field = new TicketField().setId(444L).setTitle("Custom Text")
-        Meta expectedMeta = new Meta().setHasMore(false).setAfterCursor("cursor_444")
-        Links expectedLinks = new Links().setNext(URI.create("https://example.zendesk.com/api/v2/ticket_fields.json?page[after]=cursor_444").toURL())
+        Meta expectedMeta = MetaBuilder.builder().hasMore(false).afterCursor("cursor_444").build()
+        Links expectedLinks = LinksBuilder.builder().next(URI.create("https://example.zendesk.com/api/v2/ticket_fields.json?page[after]=cursor_444").toURL()).build()
         TicketFieldsResponse response = new TicketFieldsResponse([field], expectedMeta, expectedLinks)
 
         when:

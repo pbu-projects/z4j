@@ -281,7 +281,7 @@ class UserSpec extends Specification {
 
     def "can serialize and deserialize UserCountResponse and UserCountResponseCount"() {
         given:
-        def expectedCount = new UserCountResponseCount().setValue(42L)
+        def expectedCount = UserCountResponseCountBuilder.builder().value(42L).build()
         def response = new UserCountResponse(expectedCount)
 
         when:

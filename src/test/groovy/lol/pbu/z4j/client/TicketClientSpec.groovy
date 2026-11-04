@@ -240,7 +240,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "can call listTicketFields when using a(n) #clientType client and #creator flag"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored, Boolean creator, Locale locale) {
         when:
-        client.listTicketFields(locale.getLocaleAbbreviation(), creator).block()
+        client.listTicketFields(locale.localeAbbreviation(), creator).block()
 
         then:
         noExceptionThrown()
@@ -253,7 +253,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "calling listTicketFields when using a(n) #clientType client and #creator flag fails"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored, Boolean creator, Locale locale) {
         when:
-        client.listTicketFields(locale.getLocaleAbbreviation(), creator).block()
+        client.listTicketFields(locale.localeAbbreviation(), creator).block()
 
         then:
         thrown(HttpClientException)
@@ -266,7 +266,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "can paginate listTicketFields with cursor pagination"() {
         given:
-        LocaleAbbreviation locale = accountLocales.first().getLocaleAbbreviation()
+        LocaleAbbreviation locale = accountLocales.first().localeAbbreviation()
         ensureMoreThan100TicketFields(locale)
 
         when:
@@ -276,10 +276,10 @@ class TicketClientSpec extends Z4jSpec {
             if (page.ticketFields() != null) {
                 allFields.addAll(page.ticketFields())
             }
-            if (!(page.meta()?.getHasMore()) || page.meta()?.getAfterCursor() == null) {
+            if (!Boolean.TRUE.equals(page.meta()?.hasMore()) || page.meta()?.afterCursor() == null) {
                 break
             }
-            page = ticketsAdminClient.listTicketFields(locale, null, page.meta().getAfterCursor(), 100).block()
+            page = ticketsAdminClient.listTicketFields(locale, null, page.meta().afterCursor(), 100).block()
         }
 
         then:
@@ -289,7 +289,7 @@ class TicketClientSpec extends Z4jSpec {
 
     private void ensureMoreThan100TicketFields(LocaleAbbreviation locale) {
         TicketFieldsResponse firstPage = ticketsAdminClient.listTicketFields(locale, null, null, 100).block()
-        if (firstPage.meta()?.getHasMore()) {
+        if (Boolean.TRUE.equals(firstPage.meta()?.hasMore())) {
             return
         }
 
@@ -305,7 +305,7 @@ class TicketClientSpec extends Z4jSpec {
         int maxAttempts = 10
         for (int i = 0; i < maxAttempts; i++) {
             TicketFieldsResponse refreshed = ticketsAdminClient.listTicketFields(locale, null, null, 100).block()
-            if (refreshed.meta()?.getHasMore()) {
+            if (Boolean.TRUE.equals(refreshed.meta()?.hasMore())) {
                 return
             }
             sleep(2000)
@@ -868,13 +868,15 @@ class TicketClientSpec extends Z4jSpec {
         String ccEmail = "cc-user-${entropy}@example.com"
         String ccName = "CC User ${entropy}"
 
-        EmailCC ccWithId = new EmailCC()
-                .setAction(EmailCCAllOfAction.PUT)
-                .setUserId(disposableUserId)
-        EmailCC ccWithEmail = new EmailCC()
-                .setAction(EmailCCAllOfAction.PUT)
-                .setUserEmail(ccEmail)
-                .setUserName(ccName)
+        EmailCC ccWithId = EmailCCBuilder.builder()
+                .action(EmailCCAllOfAction.PUT)
+                .userId(disposableUserId)
+                .build()
+        EmailCC ccWithEmail = EmailCCBuilder.builder()
+                .action(EmailCCAllOfAction.PUT)
+                .userEmail(ccEmail)
+                .userName(ccName)
+                .build()
 
         TicketComment comment = new TicketComment().setBody("Ticket created with email CCs ${entropy}")
         TicketCreateInput input = new TicketCreateInput(comment)

@@ -20,50 +20,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
 /**
- * Follower
+ * Follower update entry for a ticket.
  *
+ * @param action whether to add or remove the follower
+ * @param userEmail email address of the follower
+ * @param userId unique ID of the follower
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         Follower.JSON_PROPERTY_ACTION,
         Follower.JSON_PROPERTY_USER_EMAIL,
         Follower.JSON_PROPERTY_USER_ID,
 })
-@Serdeable
-@Generated
-public class Follower {
+public record Follower(
+        @Nullable @JsonProperty(JSON_PROPERTY_ACTION) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) EmailCCAllOfAction action,
+        @Nullable @Email @JsonProperty(JSON_PROPERTY_USER_EMAIL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String userEmail,
+        @Nullable @JsonProperty(JSON_PROPERTY_USER_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String userId
+) implements FollowerBuilder.With {
 
     public static final String JSON_PROPERTY_ACTION = "action";
     public static final String JSON_PROPERTY_USER_EMAIL = "user_email";
     public static final String JSON_PROPERTY_USER_ID = "user_id";
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ACTION)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private EmailCCAllOfAction action;
-
-    @Nullable
-    @Email
-    @JsonProperty(JSON_PROPERTY_USER_EMAIL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String userEmail;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_USER_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String userId;
-
 }

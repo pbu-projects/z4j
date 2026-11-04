@@ -68,9 +68,9 @@ public class SearchService {
         final String finalQuery = ticketPreface + " " + query;
 
         return searchClient.exportTicket(finalQuery, pageSize, null).expand(page -> {
-            if (null != page.meta() && page.meta().getHasMore() && null != page.meta().getAfterCursor()) {
-                log.debug("sending query for {} with cursor {}", finalQuery, page.meta().getAfterCursor().substring(0, Math.min(page.meta().getAfterCursor().length(), 6)));
-                return searchClient.exportTicket(finalQuery, pageSize, page.meta().getAfterCursor());
+            if (null != page.meta() && Boolean.TRUE.equals(page.meta().hasMore()) && null != page.meta().afterCursor()) {
+                log.debug("sending query for {} with cursor {}", finalQuery, page.meta().afterCursor().substring(0, Math.min(page.meta().afterCursor().length(), 6)));
+                return searchClient.exportTicket(finalQuery, pageSize, page.meta().afterCursor());
             }
             return Mono.empty();
         }).flatMapIterable(ExportResponse::results).cast(Ticket.class);

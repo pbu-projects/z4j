@@ -33,7 +33,7 @@ class UserCountResponseSpec extends Z4jSpec {
     def "should create UserCountResponse with canonical constructor and builder"() {
         given:
         ZonedDateTime now = ZonedDateTime.parse("2026-11-03T10:15:30Z")
-        UserCountResponseCount expected = new UserCountResponseCount().setValue(120L).setRefreshedAt(now)
+        UserCountResponseCount expected = UserCountResponseCountBuilder.builder().value(120L).refreshedAt(now).build()
 
         when:
         UserCountResponse direct = new UserCountResponse(expected)
@@ -54,8 +54,8 @@ class UserCountResponseSpec extends Z4jSpec {
 
     def "should update count using record wither"() {
         given:
-        UserCountResponseCount original = new UserCountResponseCount().setValue(5L)
-        UserCountResponseCount replacement = new UserCountResponseCount().setValue(15L)
+        UserCountResponseCount original = UserCountResponseCountBuilder.builder().value(5L).build()
+        UserCountResponseCount replacement = UserCountResponseCountBuilder.builder().value(15L).build()
         UserCountResponse response = new UserCountResponse(original)
 
         when:
@@ -75,7 +75,7 @@ class UserCountResponseSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize UserCountResponse"() {
         given:
         ZonedDateTime timestamp = ZonedDateTime.parse("2026-11-03T09:30:00Z")
-        UserCountResponseCount expected = new UserCountResponseCount().setValue(888L).setRefreshedAt(timestamp)
+        UserCountResponseCount expected = UserCountResponseCountBuilder.builder().value(888L).refreshedAt(timestamp).build()
         UserCountResponse response = new UserCountResponse(expected)
 
         when:
@@ -100,7 +100,7 @@ class UserCountResponseSpec extends Z4jSpec {
     def "should handle null count component in constructor and wither"() {
         when:
         UserCountResponse response = new UserCountResponse(null)
-        UserCountResponseCount replacement = new UserCountResponseCount().setValue(42L)
+        UserCountResponseCount replacement = UserCountResponseCountBuilder.builder().value(42L).build()
         UserCountResponse updated = response.withCount(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

@@ -37,10 +37,11 @@ class ArticlesResponseSpec extends Z4jSpec {
                 .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
                 .setPermissionGroupId(42L)
         List<Article> list = [item]
-        Meta expectedMeta = new Meta().setHasMore(true).setAfterCursor("cursor_after").setBeforeCursor("cursor_before")
-        Links expectedLinks = new Links()
-                .setNext(URI.create("https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page[after]=cursor_after").toURL())
-                .setPrev(URI.create("https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page[before]=cursor_before").toURL())
+        Meta expectedMeta = MetaBuilder.builder().hasMore(true).afterCursor("cursor_after").beforeCursor("cursor_before").build()
+        Links expectedLinks = LinksBuilder.builder()
+                .next(URI.create("https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page[after]=cursor_after").toURL())
+                .prev(URI.create("https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page[before]=cursor_before").toURL())
+                .build()
 
         when:
         ArticlesResponse direct = new ArticlesResponse(list, expectedMeta, expectedLinks, 42, "next_url", "prev_url", 2, 5, 10)
@@ -86,8 +87,8 @@ class ArticlesResponseSpec extends Z4jSpec {
         given:
         Article first = new Article().setId(1L).setTitle("Article 1")
         Article second = new Article().setId(2L).setTitle("Article 2")
-        Meta expectedMeta = new Meta().setHasMore(false)
-        Links expectedLinks = new Links().setNext(URI.create("https://example.zendesk.com/next").toURL())
+        Meta expectedMeta = MetaBuilder.builder().hasMore(false).build()
+        Links expectedLinks = LinksBuilder.builder().next(URI.create("https://example.zendesk.com/next").toURL()).build()
         ArticlesResponse response = new ArticlesResponse([first], null, null, null, null, null, null, null, null)
 
         when:

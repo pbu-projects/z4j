@@ -18,3 +18,7 @@ runner {
         enabled true
     }
 }
+
+// Warm up Micronaut serde introspections to prevent lock ordering cycle under parallel test execution
+io.micronaut.serde.ObjectMapper.getDefault()
+

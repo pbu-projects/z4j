@@ -16,28 +16,28 @@
 package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
  * Meta response found in cursor paginated responses.
  *
+ * @param hasMore true if more results exist after this page
+ * @param afterCursor cursor string for fetching the next page
+ * @param beforeCursor cursor string for fetching the previous page
  * @author Jonathan-Zollinger
  * @since 0.1.4
  */
-@Data
-@EqualsAndHashCode
-@Accessors(chain = true)
 @Serdeable
-@Generated
-public class Meta {
-    @JsonProperty("has_more")
-    private Boolean hasMore;
-    @JsonProperty("after_cursor")
-    private String afterCursor;
-    @JsonProperty("before_cursor")
-    private String beforeCursor;
+@RecordBuilder
+public record Meta(
+        @Nullable @JsonProperty(JSON_PROPERTY_HAS_MORE) Boolean hasMore,
+        @Nullable @JsonProperty(JSON_PROPERTY_AFTER_CURSOR) String afterCursor,
+        @Nullable @JsonProperty(JSON_PROPERTY_BEFORE_CURSOR) String beforeCursor
+) implements MetaBuilder.With {
+
+    public static final String JSON_PROPERTY_HAS_MORE = "has_more";
+    public static final String JSON_PROPERTY_AFTER_CURSOR = "after_cursor";
+    public static final String JSON_PROPERTY_BEFORE_CURSOR = "before_cursor";
 }

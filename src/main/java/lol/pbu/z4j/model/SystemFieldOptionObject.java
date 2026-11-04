@@ -20,47 +20,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
- * SystemFieldOptionObject
+ * Option name and value pair for a system ticket field.
  *
+ * @param name name of the system field option
+ * @param value value of the system field option
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         SystemFieldOptionObject.JSON_PROPERTY_NAME,
         SystemFieldOptionObject.JSON_PROPERTY_VALUE,
 })
-@Serdeable
-@Generated
-public class SystemFieldOptionObject {
+public record SystemFieldOptionObject(
+        @Nullable @JsonProperty(JSON_PROPERTY_NAME) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String name,
+        @Nullable @JsonProperty(JSON_PROPERTY_VALUE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String value
+) implements SystemFieldOptionObjectBuilder.With {
 
     public static final String JSON_PROPERTY_NAME = "name";
     public static final String JSON_PROPERTY_VALUE = "value";
-
-    /**
-     * Name of the system field option
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_NAME)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String name;
-
-    /**
-     * Value of the system field option
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_VALUE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String value;
-
 }

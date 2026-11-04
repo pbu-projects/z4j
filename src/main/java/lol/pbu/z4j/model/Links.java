@@ -1,19 +1,41 @@
+/*
+ * Copyright 2026 Peanut Butter Unicorn, LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.net.URL;
-import lol.pbu.z4j.Generated;
 
-@Data
-@Accessors(chain = true)
-@EqualsAndHashCode
+/**
+ * Navigation links for cursor-paginated responses.
+ *
+ * @param prev URL for the previous page of results
+ * @param next URL for the next page of results
+ * @author Jonathan-Zollinger
+ * @since 0.1.4
+ */
 @Serdeable
-@Generated
-public class Links {
-    private URL prev;
-    private URL next;
+@RecordBuilder
+public record Links(
+        @Nullable @JsonProperty(JSON_PROPERTY_PREV) URL prev,
+        @Nullable @JsonProperty(JSON_PROPERTY_NEXT) URL next
+) implements LinksBuilder.With {
+
+    public static final String JSON_PROPERTY_PREV = "prev";
+    public static final String JSON_PROPERTY_NEXT = "next";
 }

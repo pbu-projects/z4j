@@ -33,10 +33,11 @@ class TicketsResponseSpec extends Z4jSpec {
         given:
         Ticket ticket = new Ticket().setId(101L).setSubject("Support Request")
         List<Ticket> list = [ticket]
-        Meta expectedMeta = new Meta().setHasMore(true).setAfterCursor("cursor_after").setBeforeCursor("cursor_before")
-        Links expectedLinks = new Links()
-                .setNext(URI.create("https://example.zendesk.com/api/v2/views/1/tickets.json?page[after]=cursor_after").toURL())
-                .setPrev(URI.create("https://example.zendesk.com/api/v2/views/1/tickets.json?page[before]=cursor_before").toURL())
+        Meta expectedMeta = MetaBuilder.builder().hasMore(true).afterCursor("cursor_after").beforeCursor("cursor_before").build()
+        Links expectedLinks = LinksBuilder.builder()
+                .next(URI.create("https://example.zendesk.com/api/v2/views/1/tickets.json?page[after]=cursor_after").toURL())
+                .prev(URI.create("https://example.zendesk.com/api/v2/views/1/tickets.json?page[before]=cursor_before").toURL())
+                .build()
 
         when:
         TicketsResponse direct = new TicketsResponse(list, expectedMeta, expectedLinks, 42)
@@ -70,10 +71,10 @@ class TicketsResponseSpec extends Z4jSpec {
         given:
         Ticket existingTicket = new Ticket(faker.number().randomNumber())
         Ticket newTicket = new Ticket(faker.number().randomNumber())
-        Meta meta1 = new Meta().setHasMore(false)
-        Meta meta2 = new Meta().setHasMore(true).setAfterCursor("after_2")
-        Links links1 = new Links().setPrev(URI.create("https://example.zendesk.com/prev").toURL())
-        Links links2 = new Links().setNext(URI.create("https://example.zendesk.com/next").toURL())
+        Meta meta1 = MetaBuilder.builder().hasMore(false).build()
+        Meta meta2 = MetaBuilder.builder().hasMore(true).afterCursor("after_2").build()
+        Links links1 = LinksBuilder.builder().prev(URI.create("https://example.zendesk.com/prev").toURL()).build()
+        Links links2 = LinksBuilder.builder().next(URI.create("https://example.zendesk.com/next").toURL()).build()
         TicketsResponse response = new TicketsResponse([existingTicket], meta1, links1, 1)
 
         when:

@@ -20,43 +20,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
 /**
- * Collaborator
+ * Collaborator added to a ticket by name and email address.
  *
+ * @param email email address of the collaborator
+ * @param name display name of the collaborator
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         Collaborator.JSON_PROPERTY_EMAIL,
         Collaborator.JSON_PROPERTY_NAME,
 })
-@Serdeable
-@Generated
-public class Collaborator {
+public record Collaborator(
+        @Nullable @Email @JsonProperty(JSON_PROPERTY_EMAIL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String email,
+        @Nullable @JsonProperty(JSON_PROPERTY_NAME) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String name
+) implements CollaboratorBuilder.With {
 
     public static final String JSON_PROPERTY_EMAIL = "email";
     public static final String JSON_PROPERTY_NAME = "name";
-
-    @Nullable
-    @Email
-    @JsonProperty(JSON_PROPERTY_EMAIL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String email;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_NAME)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String name;
-
 }
