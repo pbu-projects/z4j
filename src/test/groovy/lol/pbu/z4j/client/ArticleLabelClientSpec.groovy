@@ -165,8 +165,10 @@ class ArticleLabelClientSpec extends Z4jSpec {
 
         then: "the list contains the created label"
         noExceptionThrown()
-        listResp?.labels != null
-        listResp.labels.any { it.id == labelId }
+        verifyAll(listResp) {
+            labels() != null
+            labels().any { it.id == labelId }
+        }
 
         cleanup: "delete created label"
         if (labelId != null) {
@@ -196,8 +198,10 @@ class ArticleLabelClientSpec extends Z4jSpec {
 
         then: "both calls return the expected label"
         noExceptionThrown()
-        allLabels?.labels != null
-        allLabels.labels.any { it.id == labelId }
+        verifyAll(allLabels) {
+            labels() != null
+            labels().any { it.id == labelId }
+        }
         verifyAll(showResp) {
             it != null
             label() != null
@@ -233,7 +237,7 @@ class ArticleLabelClientSpec extends Z4jSpec {
 
         then: "label is removed from article"
         noExceptionThrown()
-        !articleLabels.labels.any { it.id == labelId }
+        !articleLabels.labels().any { it.id == labelId }
 
         cleanup: "delete the label globally"
         if (labelId != null) {

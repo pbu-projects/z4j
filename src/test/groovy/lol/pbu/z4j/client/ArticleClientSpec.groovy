@@ -52,7 +52,7 @@ class ArticleClientSpec extends Z4jSpec {
         adminArticleClient = adminCtx.getBean(ArticleClient.class)
         agentArticleClient = agentCtx.getBean(ArticleClient.class)
         userArticleClient = userCtx.getBean(ArticleClient.class)
-        allLocales = userCtx.getBean(LocaleClient.class).listLocales().block().locales.collect { it.localeAbbreviation }
+        allLocales = userCtx.getBean(LocaleClient.class).listLocales().block().locales().collect { it.localeAbbreviation }
         articleFixtures = FixtureLoader.loadFixture("/fixtures/article_fixtures.yaml", ArticleFixtures.class)
 
         for (LocaleAbbreviation loc : allLocales) {

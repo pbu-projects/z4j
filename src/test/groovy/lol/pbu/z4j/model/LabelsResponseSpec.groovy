@@ -15,38 +15,126 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.serde.ObjectMapper
 import lol.pbu.z4j.Z4jSpec
-import spock.lang.Unroll
+import spock.lang.Shared
 
 class LabelsResponseSpec extends Z4jSpec {
 
-    @Unroll
-    def "should add labels item"() {
-        given:
-        def labelsResponse = new LabelsResponse()
-        labelsResponse.labels == null
-        def label = new Label(faker.lorem().word())
+    @Shared
+    ObjectMapper objectMapper
 
-        when:
-        labelsResponse.addLabelsItem(label)
-
-        then:
-        labelsResponse.labels.size() == 1
-        labelsResponse.labels.getAt(0) == label
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
     }
 
-    @Unroll
-    def "add labels item to existing list"() {
+    def "should create LabelsResponse with canonical constructor and builder"() {
         given:
-        def existingLabel = new Label(faker.lorem().word())
-        def labelsResponse = new LabelsResponse(labels: [existingLabel])
-        def newLabel = new Label(faker.lorem().word())
+        Label item = new Label("help-center").setId(101L)
+        List<Label> list = [item]
 
         when:
-        labelsResponse.addLabelsItem(newLabel)
+        LabelsResponse direct = new LabelsResponse(list)
+        LabelsResponse built = LabelsResponseBuilder.builder()
+                .labels(list)
+                .build()
 
         then:
-        labelsResponse.labels.size() == 2
-        labelsResponse.labels.containsAll([existingLabel, newLabel])
+        verifyAll(direct) {
+            labels() == list
+            labels().size() == 1
+            labels().first().id == 101L
+            labels().first().name == "help-center"
+        }
+        verifyAll(built) {
+            labels() == list
+            labels().size() == 1
+            labels().first().id == 101L
+            labels().first().name == "help-center"
+        }
+    }
+
+    def "should update labels using record wither and addLabelsItem method"() {
+        given:
+        Label first = new Label("old-label").setId(1L)
+        Label second = new Label("new-label").setId(2L)
+        LabelsResponse response = new LabelsResponse([first])
+
+        when:
+        LabelsResponse withNewList = response.withLabels([second])
+        LabelsResponse withAdded = response.addLabelsItem(second)
+        LabelsResponse fromNull = new LabelsResponse(null).addLabelsItem(first)
+
+        then:
+        verifyAll(response) {
+            labels().size() == 1
+            labels().first().id == 1L
+        }
+        verifyAll(withNewList) {
+            labels().size() == 1
+            labels().first().id == 2L
+        }
+        verifyAll(withAdded) {
+            labels().size() == 2
+            labels().first().id == 1L
+            labels().last().id == 2L
+        }
+        verifyAll(fromNull) {
+            labels().size() == 1
+            labels().first().id == 1L
+        }
+    }
+
+    def "should round-trip serialize and deserialize LabelsResponse"() {
+        given:
+        Label item = new Label("troubleshooting").setId(555L)
+        LabelsResponse response = new LabelsResponse([item])
+
+        when:
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        LabelsResponse deserialized = objectMapper.readValue(json, LabelsResponse.class)
+
+        then:
+        verifyAll(map) {
+            containsKey("labels")
+            get("labels") instanceof List
+            ((List) get("labels")).size() == 1
+        }
+        verifyAll(deserialized) {
+            it == response
+            labels() != null
+            labels().size() == 1
+            labels().first().id == 555L
+            labels().first().name == "troubleshooting"
+        }
+    }
+
+    def "should handle null labels component in constructor, wither, and serde"() {
+        when:
+        LabelsResponse response = new LabelsResponse(null)
+        Label item = new Label("faq").setId(99L)
+        LabelsResponse updated = response.withLabels([item])
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        LabelsResponse deserialized = objectMapper.readValue(json, LabelsResponse.class)
+
+        then:
+        verifyAll(response) {
+            labels() == null
+        }
+        verifyAll(updated) {
+            labels() != null
+            labels().size() == 1
+            labels().first().id == 99L
+        }
+        verifyAll(map) {
+            isEmpty()
+            !containsKey("labels")
+        }
+        verifyAll(deserialized) {
+            it == response
+            labels() == null
+        }
     }
 }

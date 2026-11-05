@@ -15,60 +15,22 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.micronaut.core.annotation.Creator;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
-/**
- * <h1>OAuth Token Response.</h1>
- * <p>Represents the response from Zendesk OAuth token endpoint.</p>
- *
- * @author Jonathan-Zollinger
- * @since 0.4.0
- */
-@Getter
-@Setter
-@Accessors(chain = true)
 @Serdeable
-@Generated
-public class OAuthTokenResponse {
+@RecordBuilder
+public record OAuthTokenResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_ACCESS_TOKEN) String accessToken,
+        @Nullable @JsonProperty(JSON_PROPERTY_TOKEN_TYPE) String tokenType,
+        @Nullable @JsonProperty(JSON_PROPERTY_EXPIRES_IN) Long expiresIn,
+        @Nullable @JsonProperty(JSON_PROPERTY_SCOPE) String scope
+) implements OAuthTokenResponseBuilder.With {
 
-    @Nullable
-    @JsonProperty("access_token")
-    private String accessToken;
-
-    @Nullable
-    @JsonProperty("token_type")
-    private String tokenType;
-
-    @Nullable
-    @JsonProperty("expires_in")
-    private Long expiresIn;
-
-    @Nullable
-    @JsonProperty("scope")
-    private String scope;
-
-    public OAuthTokenResponse() {
-    }
-
-    @Creator
-    @JsonCreator
-    public OAuthTokenResponse(
-            @JsonProperty("access_token") @Nullable String accessToken,
-            @JsonProperty("token_type") @Nullable String tokenType,
-            @JsonProperty("expires_in") @Nullable Long expiresIn,
-            @JsonProperty("scope") @Nullable String scope
-    ) {
-        this.accessToken = accessToken;
-        this.tokenType = tokenType;
-        this.expiresIn = expiresIn;
-        this.scope = scope;
-    }
+    public static final String JSON_PROPERTY_ACCESS_TOKEN = "access_token";
+    public static final String JSON_PROPERTY_TOKEN_TYPE = "token_type";
+    public static final String JSON_PROPERTY_EXPIRES_IN = "expires_in";
+    public static final String JSON_PROPERTY_SCOPE = "scope";
 }

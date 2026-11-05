@@ -65,15 +65,17 @@ class PermissionGroupClientSpec extends Z4jSpec {
 
         then: "response is received without error"
         noExceptionThrown()
-        response != null
-        response.getPermissionGroups() != null
-        !response.getPermissionGroups().isEmpty()
+        verifyAll(response) {
+            it != null
+            permissionGroups() != null
+            !permissionGroups().isEmpty()
+        }
     }
 
     def "can show existing permission group as admin"() {
         given: "an existing permission group from the list"
         PermissionGroupsResponse listResponse = adminPermissionGroupClient.listPermissionGroups().block()
-        Long existingId = listResponse.getPermissionGroups().first().getId()
+        Long existingId = listResponse.permissionGroups().first().getId()
 
         when: "showing the permission group by id"
         PermissionGroupResponse response = adminPermissionGroupClient.showPermissionGroup(existingId).block()

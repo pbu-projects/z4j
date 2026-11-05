@@ -15,39 +15,131 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.serde.ObjectMapper
 import lol.pbu.z4j.Z4jSpec
-import spock.lang.Unroll
+import spock.lang.Shared
 
 class PostCommentsResponseSpec extends Z4jSpec {
 
-    @Unroll
-    def "should add comments item"() {
-        given:
-        def postCommentsResponse = new PostCommentsResponse()
-        postCommentsResponse.comments == null
-        def postComment = new PostComment(faker.lorem().sentence())
+    @Shared
+    ObjectMapper objectMapper
 
-        when:
-        postCommentsResponse.addCommentsItem(postComment)
-
-        then:
-        postCommentsResponse.comments.size() == 1
-        postCommentsResponse.comments.getAt(0) == postComment
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
     }
 
-    @Unroll
-    def "add comments item to existing list"() {
+    def "should create PostCommentsResponse with canonical constructor and builder"() {
         given:
-        def existingPostComment = new PostComment(faker.lorem().sentence())
-        def postCommentsResponse = new PostCommentsResponse(comments: [existingPostComment])
-        def newPostComment = new PostComment(faker.lorem().sentence())
+        PostComment item = new PostComment("Helpful feedback").setPostId(101L)
+        item.setId(201L)
+        List<PostComment> list = [item]
 
         when:
-        postCommentsResponse.addCommentsItem(newPostComment)
+        PostCommentsResponse direct = new PostCommentsResponse(list)
+        PostCommentsResponse built = PostCommentsResponseBuilder.builder()
+                .comments(list)
+                .build()
 
         then:
-        postCommentsResponse.comments.size() == 2
-        postCommentsResponse.comments.containsAll([existingPostComment, newPostComment])
+        verifyAll(direct) {
+            comments() == list
+            comments().size() == 1
+            comments().first().id == 201L
+            comments().first().body == "Helpful feedback"
+        }
+        verifyAll(built) {
+            comments() == list
+            comments().size() == 1
+            comments().first().id == 201L
+            comments().first().body == "Helpful feedback"
+        }
+    }
+
+    def "should update comments using record wither and addCommentsItem method"() {
+        given:
+        PostComment first = new PostComment("First reply")
+        first.setId(1L)
+        PostComment second = new PostComment("Second reply")
+        second.setId(2L)
+        PostCommentsResponse response = new PostCommentsResponse([first])
+
+        when:
+        PostCommentsResponse withNewList = response.withComments([second])
+        PostCommentsResponse withAdded = response.addCommentsItem(second)
+        PostCommentsResponse fromNull = new PostCommentsResponse(null).addCommentsItem(first)
+
+        then:
+        verifyAll(response) {
+            comments().size() == 1
+            comments().first().id == 1L
+        }
+        verifyAll(withNewList) {
+            comments().size() == 1
+            comments().first().id == 2L
+        }
+        verifyAll(withAdded) {
+            comments().size() == 2
+            comments().first().id == 1L
+            comments().last().id == 2L
+        }
+        verifyAll(fromNull) {
+            comments().size() == 1
+            comments().first().id == 1L
+        }
+    }
+
+    def "should round-trip serialize and deserialize PostCommentsResponse"() {
+        given:
+        PostComment item = new PostComment("Community discussion comment").setPostId(404L)
+        item.setId(555L)
+        PostCommentsResponse response = new PostCommentsResponse([item])
+
+        when:
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        PostCommentsResponse deserialized = objectMapper.readValue(json, PostCommentsResponse.class)
+
+        then:
+        verifyAll(map) {
+            containsKey("comments")
+            get("comments") instanceof List
+            ((List) get("comments")).size() == 1
+        }
+        verifyAll(deserialized) {
+            it == response
+            comments() != null
+            comments().size() == 1
+            comments().first().id == 555L
+            comments().first().body == "Community discussion comment"
+        }
+    }
+
+    def "should handle null comments component in constructor, wither, and serde"() {
+        when:
+        PostCommentsResponse response = new PostCommentsResponse(null)
+        PostComment item = new PostComment("Fresh reply")
+        item.setId(99L)
+        PostCommentsResponse updated = response.withComments([item])
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        PostCommentsResponse deserialized = objectMapper.readValue(json, PostCommentsResponse.class)
+
+        then:
+        verifyAll(response) {
+            comments() == null
+        }
+        verifyAll(updated) {
+            comments() != null
+            comments().size() == 1
+            comments().first().id == 99L
+        }
+        verifyAll(map) {
+            isEmpty()
+            !containsKey("comments")
+        }
+        verifyAll(deserialized) {
+            it == response
+            comments() == null
+        }
     }
 }
-

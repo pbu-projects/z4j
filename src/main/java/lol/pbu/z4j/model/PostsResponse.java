@@ -15,53 +15,25 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
-/**
- * PostsResponse
- * @author Jonathan-Zollinger
- * @since 0.1.1
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(PostsResponse.JSON_PROPERTY_POSTS)
 @Serdeable
-@Generated
-public class PostsResponse {
+@RecordBuilder
+public record PostsResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_POSTS) List<@Valid Post> posts
+) implements PostsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_POSTS = "posts";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_POSTS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid Post> posts;
-
-    /**
-     * Add an item to the posts property in a chainable fashion.
-     *
-     * @return The same instance of PostsResponse for chaining.
-     */
-    public PostsResponse addPostsItem(Post postsItem) {
-        if (posts == null) {
-            posts = new ArrayList<>();
-        }
-        posts.add(postsItem);
-        return this;
+    public PostsResponse addPostsItem(Post item) {
+        List<Post> list = new ArrayList<>(posts != null ? posts : List.of());
+        list.add(item);
+        return new PostsResponse(list);
     }
-
 }
