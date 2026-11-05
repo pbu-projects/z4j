@@ -62,6 +62,7 @@ dependencies {
     testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.22.4")
     testImplementation("ch.qos.logback:logback-classic")
     testImplementation("io.projectreactor:reactor-test")
+    testImplementation("com.cloudbees.thirdparty:zendesk-java-client:1.2.0")
 }
 
 java {
@@ -173,7 +174,11 @@ tasks.withType<Test> {
         }
     }
 
-    useJUnitPlatform()
+    useJUnitPlatform {
+        if (!project.hasProperty("benchmark") && System.getProperty("benchmark") == null) {
+            excludeTags("benchmark")
+        }
+    }
     testLogging {
         events = setOf(FAILED)
         exceptionFormat = FULL
@@ -191,6 +196,15 @@ tasks.withType<Test> {
         override fun beforeTest(testDescriptor: TestDescriptor) {}
         override fun afterTest(testDescriptor: TestDescriptor, result: TestResult) {}
     })
+}
+
+val benchmark = tasks.register<Test>("benchmark") {
+    description = "Runs live benchmark performance comparison tests."
+    group = "verification"
+    useJUnitPlatform {
+        includeTags("benchmark")
+    }
+    systemProperty("benchmark", "true")
 }
 
 
