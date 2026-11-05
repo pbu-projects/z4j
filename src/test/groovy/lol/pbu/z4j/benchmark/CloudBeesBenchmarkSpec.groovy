@@ -17,10 +17,8 @@ package lol.pbu.z4j.benchmark
 
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import java.time.Duration
-import lol.pbu.z4j.SearchService
 import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.client.JobStatusClient
-import lol.pbu.z4j.client.SearchClient
 import lol.pbu.z4j.client.TicketClient
 import lol.pbu.z4j.model.JobStatusResponse
 import lol.pbu.z4j.model.Ticket as Z4jTicket
@@ -46,12 +44,6 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
     TicketClient ticketsClient
 
     @Shared
-    SearchClient searchClient
-
-    @Shared
-    SearchService searchService
-
-    @Shared
     JobStatusClient jobStatusClient
 
     @Shared
@@ -61,8 +53,6 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
 
     def setupSpec() {
         ticketsClient = adminCtx.getBean(TicketClient)
-        searchClient = adminCtx.getBean(SearchClient)
-        searchService = adminCtx.getBean(SearchService)
         jobStatusClient = adminCtx.getBean(JobStatusClient)
 
         String url = System.getenv("Z4J_URL")
@@ -76,14 +66,11 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
 
         // Warm up connection pools, thread groups, and deserializers for both clients
         try {
-            Iterator<CbTicket> cbIter = cloudBeesClient.getTicketsFromSearch("type:ticket").iterator()
-            if (cbIter.hasNext()) {
-                cbIter.next()
-            }
+            cloudBeesClient.getTickets(1L)
         } catch (Exception ignored) {}
 
         try {
-            searchService.getTickets("type:ticket", 1).take(1).blockLast(Duration.ofSeconds(15))
+            ticketsClient.showMultipleTickets(List.of(1L)).block(Duration.ofSeconds(15))
         } catch (Exception ignored) {}
 
         System.gc()
@@ -102,32 +89,34 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
     }
 
     @Execution(ExecutionMode.SAME_THREAD)
-    def "Live Benchmark: Stream & parse #count tickets (CloudBees vs z4j)"(int count) {
+    def "Live Benchmark: Fetch & parse #count tickets (CloudBees vs z4j)"(int count) {
         given: "A tagged cohort of #count tickets in the sandbox"
         String tag = "z4j_bench_${count}_${System.currentTimeMillis()}"
         seededTicketIds = seedBenchmarkTickets(count, tag)
 
-        when: "Fetching via CloudBees (blocking iterator with Jackson Databind)"
+        when: "Fetching via CloudBees (blocking show_many with Jackson Databind)"
         System.gc()
         Thread.sleep(200)
 
         long memBeforeCb = Runtime.runtime.totalMemory() - Runtime.runtime.freeMemory()
         long startCb = System.nanoTime()
 
-        List<CbTicket> cbTickets = cloudBeesClient.getTicketsFromSearch("type:ticket tags:" + tag).toList()
+        long firstCbId = seededTicketIds[0]
+        long[] restCbIds = (seededTicketIds.size() > 1 ? seededTicketIds[1..-1] : []) as long[]
+        List<CbTicket> cbTickets = cloudBeesClient.getTickets(firstCbId, restCbIds)
         long durationCbMs = (System.nanoTime() - startCb) / 1_000_000
         long memAfterCb = Runtime.runtime.totalMemory() - Runtime.runtime.freeMemory()
 
-        and: "Fetching via z4j (reactive Netty and Micronaut Serde records)"
+        and: "Fetching via z4j (reactive Netty show_many and Micronaut Serde records)"
         System.gc()
         Thread.sleep(200)
 
         long memBeforeZ4j = Runtime.runtime.totalMemory() - Runtime.runtime.freeMemory()
         long startZ4j = System.nanoTime()
 
-        List<Z4jTicket> z4jTickets = searchService.getTickets("tags:" + tag)
-                .collectList()
-                .block(Duration.ofMinutes(2))
+        List<Z4jTicket> z4jTickets = ticketsClient.showMultipleTickets(seededTicketIds)
+                .block(Duration.ofMinutes(1))
+                .tickets()
         long durationZ4jMs = (System.nanoTime() - startZ4j) / 1_000_000
         long memAfterZ4j = Runtime.runtime.totalMemory() - Runtime.runtime.freeMemory()
 
@@ -174,7 +163,7 @@ z4j Duration       : ${durationZ4jMs} ms | Delta Heap: ${String.format('%.2f', (
             JobStatusResponse status = jobStatusClient.showJobStatus(jobId).block(Duration.ofSeconds(30))
             if ("completed".equalsIgnoreCase(status.jobStatus().status())) {
                 List<Long> completedIds = status.jobStatus().getJobStatusResults().collect { it.id() }
-                // Immediately register seeded IDs so cleanup deletes them if indexing fails
+                // Immediately register seeded IDs so cleanup deletes them if needed
                 seededTicketIds.addAll(completedIds)
                 return completedIds
             }
@@ -186,17 +175,6 @@ z4j Duration       : ${durationZ4jMs} ms | Delta Heap: ${String.format('%.2f', (
 
         if (!ids) {
             throw new IllegalStateException("Timed out waiting for ticket batch job to complete: " + jobId)
-        }
-
-        // Wait for search indexer to index the new tickets
-        boolean indexed = (1..60).any {
-            Thread.sleep(1000)
-            Integer indexedCount = searchClient.count("type:ticket tags:" + tag).block(Duration.ofSeconds(30))?.count() ?: 0
-            indexedCount >= count
-        }
-
-        if (!indexed) {
-            throw new IllegalStateException("Timed out waiting for search indexer to index tagged tickets: " + tag)
         }
 
         return ids
