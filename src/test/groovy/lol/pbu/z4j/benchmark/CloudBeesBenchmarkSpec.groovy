@@ -114,10 +114,7 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
         long memBeforeCb = Runtime.runtime.totalMemory() - Runtime.runtime.freeMemory()
         long startCb = System.nanoTime()
 
-        List<CbTicket> cbTickets = []
-        for (CbTicket t : cloudBeesClient.getTicketsFromSearch("type:ticket tags:" + tag)) {
-            cbTickets << t
-        }
+        List<CbTicket> cbTickets = cloudBeesClient.getTicketsFromSearch("type:ticket tags:" + tag).toList()
         long durationCbMs = (System.nanoTime() - startCb) / 1_000_000
         long memAfterCb = Runtime.runtime.totalMemory() - Runtime.runtime.freeMemory()
 
@@ -172,39 +169,33 @@ z4j Duration       : ${durationZ4jMs} ms | Delta Heap: ${String.format('%.2f', (
         JobStatusResponse job = ticketsClient.createManyTickets(inputs).block(Duration.ofMinutes(1))
         String jobId = job.jobStatus().id()
 
-        List<Long> ids = []
-        int pollAttempts = 0
-        while (pollAttempts < 60) {
+        List<Long> ids = (1..60).findResult {
+            Thread.sleep(1000)
             JobStatusResponse status = jobStatusClient.showJobStatus(jobId).block(Duration.ofSeconds(30))
             if ("completed".equalsIgnoreCase(status.jobStatus().status())) {
-                ids = status.jobStatus().getJobStatusResults().collect { it.id() }
+                List<Long> completedIds = status.jobStatus().getJobStatusResults().collect { it.id() }
                 // Immediately register seeded IDs so cleanup deletes them if indexing fails
-                seededTicketIds.addAll(ids)
-                break
+                seededTicketIds.addAll(completedIds)
+                return completedIds
             }
             if ("failed".equalsIgnoreCase(status.jobStatus().status())) {
                 throw new IllegalStateException("Ticket batch creation failed: " + status.jobStatus().message())
             }
-            Thread.sleep(1000)
-            pollAttempts++
+            return null
         }
 
-        if (ids.isEmpty()) {
+        if (!ids) {
             throw new IllegalStateException("Timed out waiting for ticket batch job to complete: " + jobId)
         }
 
         // Wait for search indexer to index the new tickets
-        int indexAttempts = 0
-        while (indexAttempts < 60) {
-            Integer indexedCount = searchClient.count("type:ticket tags:" + tag).block(Duration.ofSeconds(30))?.count() ?: 0
-            if (indexedCount >= count) {
-                break
-            }
+        boolean indexed = (1..60).any {
             Thread.sleep(1000)
-            indexAttempts++
+            Integer indexedCount = searchClient.count("type:ticket tags:" + tag).block(Duration.ofSeconds(30))?.count() ?: 0
+            indexedCount >= count
         }
 
-        if (indexAttempts >= 60) {
+        if (!indexed) {
             throw new IllegalStateException("Timed out waiting for search indexer to index tagged tickets: " + tag)
         }
 
