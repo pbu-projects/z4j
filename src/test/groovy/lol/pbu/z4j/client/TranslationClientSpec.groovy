@@ -183,7 +183,7 @@ class TranslationClientSpec extends Z4jSpec {
 
         then:
         noExceptionThrown()
-        verifyAll(response.translation) {
+        verifyAll(response.translation()) {
             id != null
             locale == localeAbbreviation
         }
@@ -269,7 +269,7 @@ class TranslationClientSpec extends Z4jSpec {
 
         then:
         noExceptionThrown()
-        showResponse.translation.id == transResponse.translation.id
+        showResponse.translation().id == transResponse.translation().id
 
         when: "listing translations"
         def listResponse = translationClient.listTranslations("articles", createdArticleId).block()
@@ -322,7 +322,7 @@ class TranslationClientSpec extends Z4jSpec {
 
         then:
         noExceptionThrown()
-        updateResponse.translation.title == title + " Updated"
+        updateResponse.translation().title == title + " Updated"
 
         cleanup:
         try {
@@ -404,7 +404,7 @@ class TranslationClientSpec extends Z4jSpec {
                         .setBody(body)
         )
         def transResponse = adminTranslationClient.createTranslation("articles", createdArticleId, req).block()
-        def createdTranslationId = transResponse.translation.id
+        def createdTranslationId = transResponse.translation().id
 
         when: "deleting the translation"
         translationClient.deleteTranslation(createdTranslationId).block()
@@ -446,7 +446,7 @@ class TranslationClientSpec extends Z4jSpec {
                         .setBody(body)
         )
         def transResponse = adminTranslationClient.createTranslation("articles", createdArticleId, req).block()
-        def createdTranslationId = transResponse.translation.id
+        def createdTranslationId = transResponse.translation().id
 
         when: "deleting the translation"
         translationClient.deleteTranslation(createdTranslationId).block()
@@ -637,8 +637,8 @@ class TranslationClientSpec extends Z4jSpec {
         verifyAll {
             listResp?.translations != null
             !listResp.translations.isEmpty()
-            showResp?.translation != null
-            showResp.translation.locale == defaultLocale
+            showResp?.translation() != null
+            showResp.translation().locale == defaultLocale
         }
 
         where:
@@ -663,7 +663,7 @@ class TranslationClientSpec extends Z4jSpec {
 
         when: "creating article translation"
         TranslationResponse created = translationClient.createArticleTranslation(testArticle.id, createReq).block()
-        translationId = created?.translation?.id
+        translationId = created?.translation()?.id
 
         and: "updating article translation"
         TranslationUpdateRequest updateReq = new TranslationUpdateRequest(
@@ -674,11 +674,11 @@ class TranslationClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll {
-            created?.translation != null
-            created.translation.id != null
-            created.translation.locale == localeAbbreviation
-            updated?.translation != null
-            updated.translation.title == updatedTitle
+            created?.translation() != null
+            created.translation().id != null
+            created.translation().locale == localeAbbreviation
+            updated?.translation() != null
+            updated.translation().title == updatedTitle
         }
 
         cleanup:
@@ -753,8 +753,8 @@ class TranslationClientSpec extends Z4jSpec {
         verifyAll {
             listResp?.translations != null
             !listResp.translations.isEmpty()
-            showResp?.translation != null
-            showResp.translation.locale == defaultLocale
+            showResp?.translation() != null
+            showResp.translation().locale == defaultLocale
         }
 
         where:
@@ -779,7 +779,7 @@ class TranslationClientSpec extends Z4jSpec {
 
         when: "creating section translation"
         TranslationResponse created = translationClient.createSectionTranslation(testSection.id, createReq).block()
-        translationId = created?.translation?.id
+        translationId = created?.translation()?.id
 
         and: "updating section translation"
         TranslationUpdateRequest updateReq = new TranslationUpdateRequest(
@@ -790,11 +790,11 @@ class TranslationClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll {
-            created?.translation != null
-            created.translation.id != null
-            created.translation.locale == localeAbbreviation
-            updated?.translation != null
-            updated.translation.title == updatedTitle
+            created?.translation() != null
+            created.translation().id != null
+            created.translation().locale == localeAbbreviation
+            updated?.translation() != null
+            updated.translation().title == updatedTitle
         }
 
         cleanup:
@@ -869,8 +869,8 @@ class TranslationClientSpec extends Z4jSpec {
         verifyAll {
             listResp?.translations != null
             !listResp.translations.isEmpty()
-            showResp?.translation != null
-            showResp.translation.locale == defaultLocale
+            showResp?.translation() != null
+            showResp.translation().locale == defaultLocale
         }
 
         where:
@@ -895,7 +895,7 @@ class TranslationClientSpec extends Z4jSpec {
 
         when: "creating category translation"
         TranslationResponse created = translationClient.createCategoryTranslation(testCategory.id, createReq).block()
-        translationId = created?.translation?.id
+        translationId = created?.translation()?.id
 
         and: "updating category translation"
         TranslationUpdateRequest updateReq = new TranslationUpdateRequest(
@@ -906,11 +906,11 @@ class TranslationClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll {
-            created?.translation != null
-            created.translation.id != null
-            created.translation.locale == localeAbbreviation
-            updated?.translation != null
-            updated.translation.title == updatedTitle
+            created?.translation() != null
+            created.translation().id != null
+            created.translation().locale == localeAbbreviation
+            updated?.translation() != null
+            updated.translation().title == updatedTitle
         }
 
         cleanup:

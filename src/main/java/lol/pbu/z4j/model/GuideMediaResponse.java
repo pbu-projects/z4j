@@ -15,65 +15,19 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
-/**
- * GuideMediaResponse
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder({
-        GuideMediaResponse.JSON_PROPERTY_GUIDE_MEDIA,
-        GuideMediaResponse.JSON_PROPERTY_MEDIA
-})
 @Serdeable
-@Generated
-public class GuideMediaResponse {
+@RecordBuilder
+public record GuideMediaResponse(
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_MEDIA) @JsonAlias(JSON_PROPERTY_GUIDE_MEDIA) GuideMedia media
+) implements GuideMediaResponseBuilder.With {
 
     public static final String JSON_PROPERTY_GUIDE_MEDIA = "guide_media";
     public static final String JSON_PROPERTY_MEDIA = "media";
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_GUIDE_MEDIA)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private GuideMedia guideMedia;
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_MEDIA)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private GuideMedia media;
-
-    public GuideMediaResponse(GuideMedia guideMedia) {
-        this.guideMedia = guideMedia;
-        this.media = guideMedia;
-    }
-
-    public GuideMedia getGuideMedia() {
-        return guideMedia != null ? guideMedia : media;
-    }
-
-    public GuideMediaResponse setMedia(GuideMedia media) {
-        this.media = media;
-        if (this.guideMedia == null) {
-            this.guideMedia = media;
-        }
-        return this;
-    }
 }

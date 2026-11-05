@@ -129,24 +129,28 @@ class VoteClientSpec extends Z4jSpec {
 
         when: "creating vote on article"
         VoteResponse response = adminVoteClient.createVoteOnArticle(testArticle.id, req).block()
-        voteId = response?.vote?.id
-        userId = response?.vote?.userId
+        voteId = response?.vote()?.id
+        userId = response?.vote()?.userId
 
         then: "vote is created with value 1"
         noExceptionThrown()
         response != null
-        response.vote != null
-        response.vote.id != null
-        response.vote.value == 1
+        verifyAll(response.vote()) {
+            it != null
+            id != null
+            value == 1
+        }
 
         when: "showing vote by id"
         VoteResponse shown = adminVoteClient.showVote(voteId).block()
 
         then: "shown vote matches created vote"
         noExceptionThrown()
-        shown?.vote != null
-        shown.vote.id == voteId
-        shown.vote.value == 1
+        verifyAll(shown?.vote()) {
+            it != null
+            id == voteId
+            value == 1
+        }
 
         when: "listing votes on article"
         VotesResponse articleVotes = null
@@ -200,21 +204,25 @@ class VoteClientSpec extends Z4jSpec {
 
         when: "upvoting the article directly"
         VoteResponse upResp = adminVoteClient.upvoteArticle(testArticle.id).block()
-        voteId = upResp?.vote?.id
+        voteId = upResp?.vote()?.id
 
         then: "upvote response has value 1"
         noExceptionThrown()
-        upResp?.vote != null
-        upResp.vote.id != null
-        upResp.vote.value == 1
+        verifyAll(upResp?.vote()) {
+            it != null
+            id != null
+            value == 1
+        }
 
         when: "downvoting the article directly"
         VoteResponse downResp = adminVoteClient.downvoteArticle(testArticle.id).block()
 
         then: "downvote response has value -1"
         noExceptionThrown()
-        downResp?.vote != null
-        downResp.vote.value == -1
+        verifyAll(downResp?.vote()) {
+            it != null
+            value == -1
+        }
 
         cleanup: "delete created vote"
         if (voteId != null) {
@@ -232,21 +240,25 @@ class VoteClientSpec extends Z4jSpec {
 
         when: "upvoting the article directly with locale"
         VoteResponse upResp = adminVoteClient.upvoteArticle(defaultLocale, testArticle.id).block()
-        voteId = upResp?.vote?.id
+        voteId = upResp?.vote()?.id
 
         then: "upvote response has value 1"
         noExceptionThrown()
-        upResp?.vote != null
-        upResp.vote.id != null
-        upResp.vote.value == 1
+        verifyAll(upResp?.vote()) {
+            it != null
+            id != null
+            value == 1
+        }
 
         when: "downvoting the article directly with locale"
         VoteResponse downResp = adminVoteClient.downvoteArticle(defaultLocale, testArticle.id).block()
 
         then: "downvote response has value -1"
         noExceptionThrown()
-        downResp?.vote != null
-        downResp.vote.value == -1
+        verifyAll(downResp?.vote()) {
+            it != null
+            value == -1
+        }
 
         cleanup: "delete created vote"
         if (voteId != null) {

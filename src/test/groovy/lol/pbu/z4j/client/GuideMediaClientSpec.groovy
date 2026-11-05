@@ -117,12 +117,12 @@ class GuideMediaClientSpec extends Z4jSpec {
         GuideMediaResponse created = adminGuideMediaClient.createGuideMedia(
                 new GuideMediaCreateRequest(assetUploadId, filename)
         ).block()
-        mediaId = created?.guideMedia?.id
+        mediaId = created?.media()?.id
 
         then: "guide media is created"
         noExceptionThrown()
-        assert created?.guideMedia != null
-        verifyAll(created.guideMedia) {
+        assert created?.media() != null
+        verifyAll(created.media()) {
             id != null
             name == filename
         }
@@ -132,8 +132,8 @@ class GuideMediaClientSpec extends Z4jSpec {
 
         then: "shown media matches created media"
         noExceptionThrown()
-        assert shown?.guideMedia != null
-        verifyAll(shown.guideMedia) {
+        assert shown?.media() != null
+        verifyAll(shown.media()) {
             id == mediaId
             name == filename
         }
@@ -146,8 +146,8 @@ class GuideMediaClientSpec extends Z4jSpec {
 
         then: "media is renamed"
         noExceptionThrown()
-        assert renamed?.guideMedia != null
-        verifyAll(renamed.guideMedia) {
+        assert renamed?.media() != null
+        verifyAll(renamed.media()) {
             id == mediaId
             name == renamedFilename
         }
@@ -191,7 +191,7 @@ class GuideMediaClientSpec extends Z4jSpec {
         GuideMediaResponse created = adminGuideMediaClient.createGuideMedia(
                 new GuideMediaCreateRequest(uploadResp1.getAssetUploadId(), initialFilename)
         ).block()
-        String mediaId = created?.guideMedia?.id
+        String mediaId = created?.media()?.id
 
         and: "a replacement upload asset"
         byte[] payload2 = "Replaced guide media ${entropy}".getBytes(StandardCharsets.UTF_8)
@@ -219,8 +219,8 @@ class GuideMediaClientSpec extends Z4jSpec {
 
         then: "replacement response returns updated media"
         noExceptionThrown()
-        assert replaced?.guideMedia != null
-        verifyAll(replaced.guideMedia) {
+        assert replaced?.media() != null
+        verifyAll(replaced.media()) {
             id == mediaId
             name == replacedFilename
         }
@@ -267,7 +267,7 @@ class GuideMediaClientSpec extends Z4jSpec {
         GuideMediaResponse created = adminGuideMediaClient.createGuideMedia(
                 new GuideMediaCreateRequest(uploadResp.getAssetUploadId(), filename)
         ).block()
-        String mediaId = created?.guideMedia?.id
+        String mediaId = created?.media()?.id
 
         when: "unauthorized client attempts to delete media"
         client.deleteGuideMedia(mediaId).block()

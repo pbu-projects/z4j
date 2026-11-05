@@ -64,12 +64,12 @@ class ContentTagClientSpec extends Z4jSpec {
         ContentTagResponse created = adminContentTagClient.createContentTag(
                 new ContentTagCreateRequest(initialName)
         ).block()
-        tagId = created?.contentTag?.id
+        tagId = created?.contentTag()?.id
 
         then: "tag is created successfully"
         noExceptionThrown()
-        assert created?.contentTag != null
-        verifyAll(created.contentTag) {
+        assert created?.contentTag() != null
+        verifyAll(created.contentTag()) {
             id != null
             name == initialName
         }
@@ -79,8 +79,8 @@ class ContentTagClientSpec extends Z4jSpec {
 
         then: "tag is returned with same properties"
         noExceptionThrown()
-        assert shown?.contentTag != null
-        verifyAll(shown.contentTag) {
+        assert shown?.contentTag() != null
+        verifyAll(shown.contentTag()) {
             id == tagId
             name == initialName
         }
@@ -104,8 +104,8 @@ class ContentTagClientSpec extends Z4jSpec {
 
         then: "tag name is updated"
         noExceptionThrown()
-        assert updated?.contentTag != null
-        verifyAll(updated.contentTag) {
+        assert updated?.contentTag() != null
+        verifyAll(updated.contentTag()) {
             name == updatedName
         }
 
@@ -134,8 +134,8 @@ class ContentTagClientSpec extends Z4jSpec {
         ContentTagResponse tag2 = adminContentTagClient.createContentTag(
                 new ContentTagCreateRequest("job_b_${entropy}")
         ).block()
-        String tag1Id = tag1?.contentTag?.id
-        String tag2Id = tag2?.contentTag?.id
+        String tag1Id = tag1?.contentTag()?.id
+        String tag2Id = tag2?.contentTag()?.id
 
         when: "creating a content tags job to delete the tags"
         JobStatusResponse response = adminContentTagClient.createContentTagsJob(

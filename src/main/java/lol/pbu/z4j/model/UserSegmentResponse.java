@@ -15,38 +15,17 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
-/**
- * UserSegmentResponse
- * @author Jonathan-Zollinger
- * @since 0.1.1
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(UserSegmentResponse.JSON_PROPERTY_USER_SEGMENT)
 @Serdeable
-@Generated
-public class UserSegmentResponse {
+@RecordBuilder
+public record UserSegmentResponse(
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_USER_SEGMENT) UserSegment userSegment
+) implements UserSegmentResponseBuilder.With {
 
     public static final String JSON_PROPERTY_USER_SEGMENT = "user_segment";
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_USER_SEGMENT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private UserSegment userSegment;
-
 }
