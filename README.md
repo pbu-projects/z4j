@@ -18,7 +18,7 @@ Compared to traditional reflection-based clients like CloudBees:
 
 | Gradle Kotlin                                  | Gradle                                        |
 |:-----------------------------------------------|:----------------------------------------------|
-| <pre>implementation("lol.pbu:z4j:0.3.10")</pre> | <pre>implementation 'lol.pbu:z4j:0.3.10'</pre> |
+| <pre>implementation("lol.pbu:z4j:0.4.0")</pre> | <pre>implementation 'lol.pbu:z4j:0.4.0'</pre> |
 
 **Maven**
 
@@ -26,7 +26,7 @@ Compared to traditional reflection-based clients like CloudBees:
 <dependency>
 	<groupId>lol.pbu</groupId>
 	<artifactId>z4j</artifactId>
-	<version>0.3.10</version>
+	<version>0.4.0</version>
 </dependency>
 ```
 
