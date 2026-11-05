@@ -19,33 +19,27 @@ import spock.lang.Specification
 
 class IncrementalCursorPaginationResponseSpec extends Specification {
 
-    static class SampleCursorResponse extends IncrementalCursorPaginationResponse<String> {
-        List<String> items = []
+    static record SampleCursorResponse(
+            List<String> results,
+            String cursor,
+            String afterCursor,
+            String beforeCursor,
+            Boolean endOfStream,
+            Integer count
+    ) implements IncrementalCursorPaginationResponse<String> {}
 
-        @Override
-        List<String> getResults() {
-            return items
-        }
-    }
-
-    def "cursor pagination response properties work as expected"() {
-        given:
-        def response = new SampleCursorResponse()
-        response.items = ["item1", "item2"]
-
+    def "cursor pagination response interface methods work as expected"() {
         when:
-        response.setCursor("cur1")
-                .setAfterCursor("after1")
-                .setBeforeCursor("before1")
-                .setEndOfStream(true)
-                .setCount(10)
+        def response = new SampleCursorResponse(["item1", "item2"], "cur1", "after1", "before1", true, 10)
 
         then:
-        response.getCursor() == "cur1"
-        response.getAfterCursor() == "after1"
-        response.getBeforeCursor() == "before1"
-        response.getEndOfStream() == true
-        response.getCount() == 10
-        response.getResults() == ["item1", "item2"]
+        verifyAll(response) {
+            cursor() == "cur1"
+            afterCursor() == "after1"
+            beforeCursor() == "before1"
+            endOfStream() == true
+            count() == 10
+            results() == ["item1", "item2"]
+        }
     }
 }

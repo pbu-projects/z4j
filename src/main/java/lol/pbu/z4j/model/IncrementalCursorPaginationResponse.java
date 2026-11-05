@@ -16,46 +16,39 @@
 package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.serde.annotation.Serdeable;
-import lombok.Data;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
 import java.util.List;
 
 /**
- * Base class for cursor-based incremental export responses.
+ * Shared interface for cursor-based incremental export responses.
  *
+ * @param <T> the exported item type
  * @author Jonathan-Zollinger
  * @since 0.2.7
  */
-@Data
-@Accessors(chain = true)
-@Serdeable
-@Generated
-public abstract class IncrementalCursorPaginationResponse<T> {
-    @Nullable
-    @JsonProperty("cursor")
-    private String cursor;
+public interface IncrementalCursorPaginationResponse<T> {
+
+    String JSON_PROPERTY_CURSOR = "cursor";
+    String JSON_PROPERTY_AFTER_CURSOR = "after_cursor";
+    String JSON_PROPERTY_BEFORE_CURSOR = "before_cursor";
+    String JSON_PROPERTY_END_OF_STREAM = "end_of_stream";
+    String JSON_PROPERTY_COUNT = "count";
 
     @Nullable
-    @JsonProperty("after_cursor")
-    private String afterCursor;
+    String cursor();
 
     @Nullable
-    @JsonProperty("before_cursor")
-    private String beforeCursor;
+    String afterCursor();
 
     @Nullable
-    @JsonProperty("end_of_stream")
-    private Boolean endOfStream;
+    String beforeCursor();
 
     @Nullable
-    @JsonProperty("count")
-    private Integer count;
+    Boolean endOfStream();
+
+    @Nullable
+    Integer count();
 
     @JsonIgnore
-    public abstract List<T> getResults();
+    List<T> results();
 }

@@ -17,15 +17,11 @@ package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
 /**
  * Response payload containing ticket form status associations from Zendesk.
@@ -33,28 +29,24 @@ import lol.pbu.z4j.Generated;
  * @author Jonathan-Zollinger
  * @since 0.2.6
  */
-@Accessors(chain = true)
-@Data
-@EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
-@AllArgsConstructor
 @Serdeable
-@Generated
-public class TicketFormStatusesResponse extends OffsetPaginationResponse {
+@RecordBuilder
+@JsonPropertyOrder({
+        TicketFormStatusesResponse.JSON_PROPERTY_TICKET_FORM_STATUSES,
+        OffsetPaginationResponse.JSON_PROPERTY_COUNT,
+        OffsetPaginationResponse.JSON_PROPERTY_NEXT_PAGE,
+        OffsetPaginationResponse.JSON_PROPERTY_PREVIOUS_PAGE
+})
+public record TicketFormStatusesResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_TICKET_FORM_STATUSES) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<TicketFormStatus> ticketFormStatuses,
+        @Nullable @JsonProperty(JSON_PROPERTY_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer count,
+        @Nullable @JsonProperty(JSON_PROPERTY_NEXT_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String nextPage,
+        @Nullable @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String previousPage
+) implements OffsetPaginationResponse, TicketFormStatusesResponseBuilder.With {
 
     public static final String JSON_PROPERTY_TICKET_FORM_STATUSES = "ticket_form_statuses";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TICKET_FORM_STATUSES)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<TicketFormStatus> ticketFormStatuses;
-
-    /**
-     * Record-style accessor for modern syntax compatibility.
-     *
-     * @return the list of ticket form statuses
-     */
-    public @Nullable List<TicketFormStatus> ticketFormStatuses() {
-        return ticketFormStatuses;
+    public TicketFormStatusesResponse(@Nullable List<TicketFormStatus> ticketFormStatuses) {
+        this(ticketFormStatuses, null, null, null);
     }
 }
