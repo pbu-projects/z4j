@@ -15,177 +15,152 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.context.ApplicationContext
 import io.micronaut.serde.ObjectMapper
-import spock.lang.AutoCleanup
+import lol.pbu.z4j.Z4jSpec
 import spock.lang.Shared
-import spock.lang.Specification
 
-class SourceLocaleRequestSpec extends Specification {
-
-    @Shared
-    @AutoCleanup
-    ApplicationContext context
+class SourceLocaleRequestSpec extends Z4jSpec {
 
     @Shared
     ObjectMapper objectMapper
 
     void setupSpec() {
-        context = ApplicationContext.run()
-        objectMapper = context.getBean(ObjectMapper)
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
     }
 
-    def "can instantiate and use SourceLocaleRequest getters and setters"() {
+    def "should create SourceLocaleRequest with canonical constructor, convenience constructors, and builder"() {
+        when:
+        SourceLocaleRequest canonical = new SourceLocaleRequest(
+                LocaleAbbreviation.ENGLISH_UNITED_STATES,
+                LocaleAbbreviation.FRENCH,
+                LocaleAbbreviation.GERMAN
+        )
+        SourceLocaleRequest twoArg = new SourceLocaleRequest(
+                LocaleAbbreviation.FRENCH,
+                LocaleAbbreviation.GERMAN
+        )
+        SourceLocaleRequest singleArg = new SourceLocaleRequest(LocaleAbbreviation.SPANISH)
+        SourceLocaleRequest built = SourceLocaleRequestBuilder.builder()
+                .articleLocale(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                .categoryLocale(LocaleAbbreviation.FRENCH)
+                .sectionLocale(LocaleAbbreviation.GERMAN)
+                .build()
+
+        then:
+        verifyAll(canonical) {
+            articleLocale() == LocaleAbbreviation.ENGLISH_UNITED_STATES
+            categoryLocale() == LocaleAbbreviation.FRENCH
+            sectionLocale() == LocaleAbbreviation.GERMAN
+            sourceLocale() == LocaleAbbreviation.ENGLISH_UNITED_STATES
+        }
+        verifyAll(twoArg) {
+            articleLocale() == null
+            categoryLocale() == LocaleAbbreviation.FRENCH
+            sectionLocale() == LocaleAbbreviation.GERMAN
+            sourceLocale() == LocaleAbbreviation.FRENCH
+        }
+        verifyAll(singleArg) {
+            articleLocale() == LocaleAbbreviation.SPANISH
+            categoryLocale() == LocaleAbbreviation.SPANISH
+            sectionLocale() == LocaleAbbreviation.SPANISH
+            sourceLocale() == LocaleAbbreviation.SPANISH
+        }
+        verifyAll(built) {
+            it == canonical
+            articleLocale() == LocaleAbbreviation.ENGLISH_UNITED_STATES
+            categoryLocale() == LocaleAbbreviation.FRENCH
+            sectionLocale() == LocaleAbbreviation.GERMAN
+        }
+    }
+
+    def "should evaluate sourceLocale fallback order and update via withers and withSourceLocale"() {
         given:
         SourceLocaleRequest req = new SourceLocaleRequest(LocaleAbbreviation.ENGLISH_UNITED_STATES)
 
-        expect:
-        verifyAll(req) {
-            articleLocale == LocaleAbbreviation.ENGLISH_UNITED_STATES
-            categoryLocale == LocaleAbbreviation.ENGLISH_UNITED_STATES
-            sectionLocale == LocaleAbbreviation.ENGLISH_UNITED_STATES
-            sourceLocale == LocaleAbbreviation.ENGLISH_UNITED_STATES
-        }
-
         when:
-        req.setSourceLocale(LocaleAbbreviation.FRENCH)
+        SourceLocaleRequest updatedAll = req.withSourceLocale(LocaleAbbreviation.FRENCH)
+        SourceLocaleRequest withoutArticle = updatedAll.withArticleLocale(null)
+        SourceLocaleRequest withoutCategory = withoutArticle.withCategoryLocale(null)
+        SourceLocaleRequest withoutSection = withoutCategory.withSectionLocale(null)
 
         then:
-        verifyAll(req) {
-            articleLocale == LocaleAbbreviation.FRENCH
-            categoryLocale == LocaleAbbreviation.FRENCH
-            sectionLocale == LocaleAbbreviation.FRENCH
-            sourceLocale == LocaleAbbreviation.FRENCH
+        verifyAll(updatedAll) {
+            articleLocale() == LocaleAbbreviation.FRENCH
+            categoryLocale() == LocaleAbbreviation.FRENCH
+            sectionLocale() == LocaleAbbreviation.FRENCH
+            sourceLocale() == LocaleAbbreviation.FRENCH
         }
-
-        when:
-        req.setArticleLocale(null)
-
-        then:
-        verifyAll(req) {
-            articleLocale == null
-            sourceLocale == LocaleAbbreviation.FRENCH
+        verifyAll(withoutArticle) {
+            articleLocale() == null
+            categoryLocale() == LocaleAbbreviation.FRENCH
+            sectionLocale() == LocaleAbbreviation.FRENCH
+            sourceLocale() == LocaleAbbreviation.FRENCH
         }
-
-        when:
-        req.setCategoryLocale(null)
-
-        then:
-        verifyAll(req) {
-            categoryLocale == null
-            sourceLocale == LocaleAbbreviation.FRENCH
+        verifyAll(withoutCategory) {
+            articleLocale() == null
+            categoryLocale() == null
+            sectionLocale() == LocaleAbbreviation.FRENCH
+            sourceLocale() == LocaleAbbreviation.FRENCH
         }
-
-        when:
-        req.setSectionLocale(null)
-
-        then:
-        verifyAll(req) {
-            sectionLocale == null
-            sourceLocale == null
+        verifyAll(withoutSection) {
+            articleLocale() == null
+            categoryLocale() == null
+            sectionLocale() == null
+            sourceLocale() == null
         }
     }
 
-    def "subclasses inherit from SourceLocaleRequest"() {
+    def "should round-trip serialize and deserialize SourceLocaleRequest"() {
         given:
-        ArticleSourceLocaleRequest artReq = new ArticleSourceLocaleRequest(LocaleAbbreviation.FRENCH)
-        CategorySourceLocaleRequest catReq = new CategorySourceLocaleRequest(LocaleAbbreviation.GERMAN)
-        SectionSourceLocaleRequest secReq = new SectionSourceLocaleRequest(LocaleAbbreviation.SPANISH)
+        SourceLocaleRequest request = new SourceLocaleRequest(
+                LocaleAbbreviation.ENGLISH_UNITED_STATES,
+                LocaleAbbreviation.FRENCH,
+                LocaleAbbreviation.GERMAN
+        )
 
-        expect:
-        verifyAll {
-            artReq instanceof SourceLocaleRequest
-            catReq instanceof SourceLocaleRequest
-            secReq instanceof SourceLocaleRequest
-            artReq.articleLocale == LocaleAbbreviation.FRENCH
-            artReq.sourceLocale == LocaleAbbreviation.FRENCH
-            catReq.categoryLocale == LocaleAbbreviation.GERMAN
-            catReq.sourceLocale == LocaleAbbreviation.GERMAN
-            secReq.sectionLocale == LocaleAbbreviation.SPANISH
-            secReq.sourceLocale == LocaleAbbreviation.SPANISH
-        }
-    }
-
-    def "can serialize and deserialize ArticleSourceLocaleRequest"() {
-        given:
-        ArticleSourceLocaleRequest request = new ArticleSourceLocaleRequest(LocaleAbbreviation.FRENCH)
-
-        when: "serializing to JSON"
+        when:
         String json = objectMapper.writeValueAsString(request)
         Map map = objectMapper.readValue(json, Map.class)
-
-        then: "only article_locale is present in the output"
-        verifyAll(map) {
-            containsKey("article_locale")
-            get("article_locale") == "fr"
-            !containsKey("category_locale")
-            !containsKey("section_locale")
-            !containsKey("source_locale")
-        }
-
-        when: "deserializing back to ArticleSourceLocaleRequest"
-        ArticleSourceLocaleRequest deserialized = objectMapper.readValue(json, ArticleSourceLocaleRequest.class)
+        SourceLocaleRequest deserialized = objectMapper.readValue(json, SourceLocaleRequest.class)
 
         then:
+        verifyAll(map) {
+            get("article_locale") == "en-us"
+            get("category_locale") == "fr"
+            get("section_locale") == "de"
+            !containsKey("source_locale")
+            !containsKey("sourceLocale")
+        }
         verifyAll(deserialized) {
-            articleLocale == LocaleAbbreviation.FRENCH
-            sourceLocale == LocaleAbbreviation.FRENCH
-            categoryLocale == null
-            sectionLocale == null
+            it == request
+            articleLocale() == LocaleAbbreviation.ENGLISH_UNITED_STATES
+            categoryLocale() == LocaleAbbreviation.FRENCH
+            sectionLocale() == LocaleAbbreviation.GERMAN
+            sourceLocale() == LocaleAbbreviation.ENGLISH_UNITED_STATES
         }
     }
 
-    def "can serialize and deserialize CategorySourceLocaleRequest and SectionSourceLocaleRequest"() {
+    def "should omit null fields during SourceLocaleRequest serialization"() {
         given:
-        CategorySourceLocaleRequest catReq = new CategorySourceLocaleRequest(LocaleAbbreviation.GERMAN)
-        SectionSourceLocaleRequest secReq = new SectionSourceLocaleRequest(LocaleAbbreviation.SPANISH)
+        SourceLocaleRequest request = new SourceLocaleRequest(null, LocaleAbbreviation.GERMAN, null)
 
-        when: "serializing CategorySourceLocaleRequest"
-        String catJson = objectMapper.writeValueAsString(catReq)
-        Map catMap = objectMapper.readValue(catJson, Map.class)
+        when:
+        String json = objectMapper.writeValueAsString(request)
+        Map map = objectMapper.readValue(json, Map.class)
+        SourceLocaleRequest deserialized = objectMapper.readValue(json, SourceLocaleRequest.class)
 
         then:
-        verifyAll(catMap) {
-            containsKey("category_locale")
+        verifyAll(map) {
+            !containsKey("article_locale")
             get("category_locale") == "de"
-            !containsKey("article_locale")
             !containsKey("section_locale")
-            !containsKey("source_locale")
         }
-
-        when: "deserializing CategorySourceLocaleRequest"
-        CategorySourceLocaleRequest catDeserialized = objectMapper.readValue(catJson, CategorySourceLocaleRequest.class)
-
-        then:
-        verifyAll(catDeserialized) {
-            categoryLocale == LocaleAbbreviation.GERMAN
-            sourceLocale == LocaleAbbreviation.GERMAN
-            articleLocale == null
-            sectionLocale == null
-        }
-
-        when: "serializing SectionSourceLocaleRequest"
-        String secJson = objectMapper.writeValueAsString(secReq)
-        Map secMap = objectMapper.readValue(secJson, Map.class)
-
-        then:
-        verifyAll(secMap) {
-            containsKey("section_locale")
-            get("section_locale") == "es"
-            !containsKey("article_locale")
-            !containsKey("category_locale")
-            !containsKey("source_locale")
-        }
-
-        when: "deserializing SectionSourceLocaleRequest"
-        SectionSourceLocaleRequest secDeserialized = objectMapper.readValue(secJson, SectionSourceLocaleRequest.class)
-
-        then:
-        verifyAll(secDeserialized) {
-            sectionLocale == LocaleAbbreviation.SPANISH
-            sourceLocale == LocaleAbbreviation.SPANISH
-            articleLocale == null
-            categoryLocale == null
+        verifyAll(deserialized) {
+            it == request
+            articleLocale() == null
+            categoryLocale() == LocaleAbbreviation.GERMAN
+            sectionLocale() == null
+            sourceLocale() == LocaleAbbreviation.GERMAN
         }
     }
 }

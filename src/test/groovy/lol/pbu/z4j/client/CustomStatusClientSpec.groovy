@@ -18,10 +18,16 @@ package lol.pbu.z4j.client
 import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
+import lol.pbu.z4j.model.CustomStatusCreateRequest
+import lol.pbu.z4j.model.CustomStatusResponse
+import lol.pbu.z4j.model.CustomStatusesResponse
 import lol.pbu.z4j.model.TicketComment
 import lol.pbu.z4j.model.TicketCreateInput
 import lol.pbu.z4j.model.TicketCreateRequest
+import lol.pbu.z4j.model.TicketFieldCustomStatusObject
 import lol.pbu.z4j.model.TicketFieldCustomStatusObjectStatusCategory
+import lol.pbu.z4j.model.TicketFormStatus
+import lol.pbu.z4j.model.TicketFormStatusesResponse
 import lol.pbu.z4j.model.TicketUpdateInput
 import lol.pbu.z4j.model.TicketUpdateRequest
 import spock.lang.Shared
@@ -221,15 +227,15 @@ class CustomStatusClientSpec extends Z4jSpec {
 
     def "response models provide both JavaBean getters and record-style accessors"() {
         given: "models constructed with sample data"
-        def statusObj = new lol.pbu.z4j.model.TicketFieldCustomStatusObject().tap {
+        def statusObj = new TicketFieldCustomStatusObject().tap {
             id = 101L
             agentLabel = "Testing"
         }
-        def singleResp = new lol.pbu.z4j.model.CustomStatusResponse(statusObj)
-        def listResp = new lol.pbu.z4j.model.CustomStatusesResponse([statusObj])
-        def formStatus = new lol.pbu.z4j.model.TicketFormStatus("abc", 101L, 202L)
-        def formStatusesResp = new lol.pbu.z4j.model.TicketFormStatusesResponse([formStatus])
-        def createReq = new lol.pbu.z4j.model.CustomStatusCreateRequest(statusObj)
+        def singleResp = new CustomStatusResponse(statusObj)
+        def listResp = new CustomStatusesResponse([statusObj])
+        def formStatus = new TicketFormStatus("abc", 101L, 202L)
+        def formStatusesResp = new TicketFormStatusesResponse([formStatus])
+        def createReq = new CustomStatusCreateRequest(statusObj)
 
         expect: "record-style accessors and models return expected references"
         verifyAll {
@@ -246,7 +252,7 @@ class CustomStatusClientSpec extends Z4jSpec {
             formStatusesResp.ticketFormStatuses() == formStatusesResp.getTicketFormStatuses()
             formStatusesResp.ticketFormStatuses().size() == 1
 
-            createReq.customStatus() == createReq.getCustomStatus()
+            createReq.customStatus() == statusObj
         }
     }
 }

@@ -15,48 +15,25 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * UsersRequest
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(UsersRequest.JSON_PROPERTY_USERS)
 @Serdeable
-@Generated
-public class UsersRequest {
+@RecordBuilder
+public record UsersRequest(
+        @Nullable @JsonProperty(JSON_PROPERTY_USERS) List<@Valid User> users
+) implements UsersRequestBuilder.With {
 
     public static final String JSON_PROPERTY_USERS = "users";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_USERS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid User> users;
-
     public UsersRequest addUsersItem(User userItem) {
-        if (users == null) {
-            users = new ArrayList<>();
-        }
-        users.add(userItem);
-        return this;
+        List<User> list = new ArrayList<>(users != null ? users : List.of());
+        list.add(userItem);
+        return new UsersRequest(list);
     }
 }

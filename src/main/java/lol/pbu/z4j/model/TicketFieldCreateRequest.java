@@ -16,20 +16,16 @@
 package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.*;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
+import jakarta.validation.Valid;
 
-@Accessors(chain = true)
-@EqualsAndHashCode
-@ToString
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Serdeable
-@Generated
-public class TicketFieldCreateRequest {
-    @JsonProperty("ticket_field")
-    private TicketField ticketField;
+@RecordBuilder
+public record TicketFieldCreateRequest(
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_TICKET_FIELD) TicketField ticketField
+) implements TicketFieldCreateRequestBuilder.With {
+
+    public static final String JSON_PROPERTY_TICKET_FIELD = "ticket_field";
 }

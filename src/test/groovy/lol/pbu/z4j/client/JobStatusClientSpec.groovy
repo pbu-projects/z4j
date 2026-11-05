@@ -40,7 +40,7 @@ class JobStatusClientSpec extends Z4jSpec {
             Long ticketId = tickets.first().getId()
             TicketUpdateInput updateInput = new TicketUpdateInput()
                     .setComment(new TicketComment().setBody("Job status setup test").setIsPublic(false))
-            TicketUpdateRequest updateRequest = new TicketUpdateRequest().setTicket(updateInput)
+            TicketUpdateRequest updateRequest = new TicketUpdateRequest(updateInput)
             JobStatusResponse response = ticketClient.updateManyTickets(ticketId.toString(), updateRequest).block()
             jobId = response?.jobStatus()?.id
         }
