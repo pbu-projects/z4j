@@ -30,7 +30,7 @@ class UserRequestSpec extends Z4jSpec {
 
     def "should create UserRequest with canonical constructor and builder"() {
         given:
-        User expected = new User().setId(101L).setName("Alice Smith").setEmail("alice@example.com")
+        User expected = new User().withId(101L).withName("Alice Smith").withEmail("alice@example.com")
 
         when:
         UserRequest direct = new UserRequest(expected)
@@ -56,8 +56,8 @@ class UserRequestSpec extends Z4jSpec {
 
     def "should update user using record wither"() {
         given:
-        User original = new User().setId(1L).setName("Old User")
-        User replacement = new User().setId(2L).setName("New User")
+        User original = new User().withId(1L).withName("Old User")
+        User replacement = new User().withId(2L).withName("New User")
         UserRequest request = new UserRequest(original)
 
         when:
@@ -76,7 +76,7 @@ class UserRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize UserRequest"() {
         given:
-        User expected = new User().setId(555L).setName("Bob Jones").setEmail("bob@example.com")
+        User expected = new User().withId(555L).withName("Bob Jones").withEmail("bob@example.com")
         UserRequest request = new UserRequest(expected)
 
         when:
@@ -102,7 +102,7 @@ class UserRequestSpec extends Z4jSpec {
 
     def "should handle null user component in constructor, wither, and serde"() {
         given:
-        User replacement = new User().setId(99L).setName("Replacement User")
+        User replacement = new User().withId(99L).withName("Replacement User")
 
         when:
         UserRequest request = new UserRequest(null)

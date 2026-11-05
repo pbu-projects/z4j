@@ -17,7 +17,7 @@ class ViewClientSpec extends Z4jSpec {
         adminViewClient = adminCtx.getBean(ViewClient.class)
         def views = adminViewClient.listActiveViews().block().views()
         if (views != null && !views.isEmpty()) {
-            firstActiveViewId = views.get(0).getId()
+            firstActiveViewId = views.get(0).id()
         }
     }
 
@@ -57,7 +57,7 @@ class ViewClientSpec extends Z4jSpec {
         verifyAll(response) {
             it != null
             view() != null
-            view().getId() == firstActiveViewId
+            view().id() == firstActiveViewId
         }
     }
 

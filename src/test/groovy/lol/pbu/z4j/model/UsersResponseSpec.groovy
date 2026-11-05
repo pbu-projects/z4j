@@ -30,7 +30,7 @@ class UsersResponseSpec extends Z4jSpec {
 
     def "should create UsersResponse with canonical constructor and builder"() {
         given:
-        User user = new User().setId(801L).setName("Active User")
+        User user = new User().withId(801L).withName("Active User")
         List<User> list = [user]
         Long expectedCount = 1L
         String expectedNext = "https://example.zendesk.com/api/v2/users.json?page=2"
@@ -66,8 +66,8 @@ class UsersResponseSpec extends Z4jSpec {
 
     def "should update UsersResponse using record withers and addUsersItem method"() {
         given:
-        User first = new User().setId(1L).setName("First User")
-        User second = new User().setId(2L).setName("Second User")
+        User first = new User().withId(1L).withName("First User")
+        User second = new User().withId(2L).withName("Second User")
         UsersResponse response = new UsersResponse([first], 1L, "next_1", "prev_1")
 
         when:
@@ -112,7 +112,7 @@ class UsersResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize UsersResponse"() {
         given:
-        User user = new User().setId(901L).setName("Agent User")
+        User user = new User().withId(901L).withName("Agent User")
         UsersResponse response = new UsersResponse(
                 [user],
                 1L,

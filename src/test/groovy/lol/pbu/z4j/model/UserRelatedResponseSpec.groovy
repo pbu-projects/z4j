@@ -31,10 +31,10 @@ class UserRelatedResponseSpec extends Z4jSpec {
     def "should create UserRelatedResponse with canonical constructor and builder"() {
         given:
         UserRelated expected = new UserRelated()
-                .setAssignedTickets(5)
-                .setCcdTickets(2)
-                .setOrganizationSubscriptions(1)
-                .setRequestedTickets(10)
+                .withAssignedTickets(5)
+                .withCcdTickets(2)
+                .withOrganizationSubscriptions(1)
+                .withRequestedTickets(10)
 
         when:
         UserRelatedResponse direct = new UserRelatedResponse(expected)
@@ -59,8 +59,8 @@ class UserRelatedResponseSpec extends Z4jSpec {
 
     def "should update userRelated using record wither"() {
         given:
-        UserRelated original = new UserRelated().setAssignedTickets(1)
-        UserRelated replacement = new UserRelated().setAssignedTickets(8)
+        UserRelated original = new UserRelated().withAssignedTickets(1)
+        UserRelated replacement = new UserRelated().withAssignedTickets(8)
         UserRelatedResponse response = new UserRelatedResponse(original)
 
         when:
@@ -80,10 +80,10 @@ class UserRelatedResponseSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize UserRelatedResponse"() {
         given:
         UserRelated expected = new UserRelated()
-                .setAssignedTickets(15)
-                .setCcdTickets(4)
-                .setOrganizationSubscriptions(3)
-                .setRequestedTickets(25)
+                .withAssignedTickets(15)
+                .withCcdTickets(4)
+                .withOrganizationSubscriptions(3)
+                .withRequestedTickets(25)
         UserRelatedResponse response = new UserRelatedResponse(expected)
 
         when:
@@ -111,7 +111,7 @@ class UserRelatedResponseSpec extends Z4jSpec {
     def "should handle null userRelated component in constructor and wither"() {
         when:
         UserRelatedResponse response = new UserRelatedResponse(null)
-        UserRelated replacement = new UserRelated().setAssignedTickets(42)
+        UserRelated replacement = new UserRelated().withAssignedTickets(42)
         UserRelatedResponse updated = response.withUserRelated(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

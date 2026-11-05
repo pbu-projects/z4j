@@ -20,28 +20,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 /**
- * User object in the Zendesk Support Api
+ * User object in the Zendesk Support Api.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         User.JSON_PROPERTY_ID,
         User.JSON_PROPERTY_AGENT_BRAND_IDS,
@@ -85,9 +78,49 @@ import java.util.Map;
         User.JSON_PROPERTY_CREATED_AT,
         User.JSON_PROPERTY_UPDATED_AT
 })
-@Serdeable
-@Generated
-public class User implements Exportable {
+public record User(
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_AGENT_BRAND_IDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<Long> agentBrandIds,
+        @Nullable @JsonProperty(JSON_PROPERTY_EMAIL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String email,
+        @Nullable @JsonProperty(JSON_PROPERTY_NAME) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String name,
+        @Nullable @JsonProperty(JSON_PROPERTY_ROLE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String role,
+        @Nullable @JsonProperty(JSON_PROPERTY_ACTIVE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean active,
+        @Nullable @JsonProperty(JSON_PROPERTY_ALIAS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String alias,
+        @Nullable @JsonProperty(JSON_PROPERTY_CHAT_ONLY) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean chatOnly,
+        @Nullable @JsonProperty(JSON_PROPERTY_CUSTOM_ROLE_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long customRoleId,
+        @Nullable @JsonProperty(JSON_PROPERTY_DEFAULT_GROUP_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long defaultGroupId,
+        @Nullable @JsonProperty(JSON_PROPERTY_DETAILS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String details,
+        @Nullable @JsonProperty(JSON_PROPERTY_EXTERNAL_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String externalId,
+        @Nullable @JsonProperty(JSON_PROPERTY_IANA_TIME_ZONE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String ianaTimeZone,
+        @Nullable @JsonProperty(JSON_PROPERTY_LAST_LOGIN_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ZonedDateTime lastLoginAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_LOCALE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String locale,
+        @Nullable @JsonProperty(JSON_PROPERTY_LOCALE_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long localeId,
+        @Nullable @JsonProperty(JSON_PROPERTY_MODERATOR) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean moderator,
+        @Nullable @JsonProperty(JSON_PROPERTY_NOTES) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String notes,
+        @Nullable @JsonProperty(JSON_PROPERTY_ONLY_PRIVATE_COMMENTS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean onlyPrivateComments,
+        @Nullable @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long organizationId,
+        @Nullable @JsonProperty(JSON_PROPERTY_PHONE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String phone,
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_PHOTO) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Attachment photo,
+        @Nullable @JsonProperty(JSON_PROPERTY_REMOTE_PHOTO_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String remotePhotoUrl,
+        @Nullable @JsonProperty(JSON_PROPERTY_REPORT_CSV) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean reportCsv,
+        @Nullable @JsonProperty(JSON_PROPERTY_RESTRICTED_AGENT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean restrictedAgent,
+        @Nullable @JsonProperty(JSON_PROPERTY_ROLE_TYPE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer roleType,
+        @Nullable @JsonProperty(JSON_PROPERTY_SHARED) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean shared,
+        @Nullable @JsonProperty(JSON_PROPERTY_SHARED_AGENT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean sharedAgent,
+        @Nullable @JsonProperty(JSON_PROPERTY_SHARED_PHONE_NUMBER) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean sharedPhoneNumber,
+        @Nullable @JsonProperty(JSON_PROPERTY_SIGNATURE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String signature,
+        @Nullable @JsonProperty(JSON_PROPERTY_SUSPENDED) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean suspended,
+        @Nullable @JsonProperty(JSON_PROPERTY_TAGS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<String> tags,
+        @Nullable @JsonProperty(JSON_PROPERTY_TICKET_RESTRICTION) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String ticketRestriction,
+        @Nullable @JsonProperty(JSON_PROPERTY_TIME_ZONE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String timeZone,
+        @Nullable @JsonProperty(JSON_PROPERTY_TWO_FACTOR_AUTH_ENABLED) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean twoFactorAuthEnabled,
+        @Nullable @JsonProperty(JSON_PROPERTY_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String url,
+        @Nullable @JsonProperty(JSON_PROPERTY_USER_FIELDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Map<String, Object> userFields,
+        @Nullable @JsonProperty(JSON_PROPERTY_VERIFIED) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean verified,
+        @Nullable @JsonProperty(JSON_PROPERTY_AUTHENTICITY_TOKEN) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String authenticityToken,
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ZonedDateTime createdAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_UPDATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ZonedDateTime updatedAt
+) implements Exportable, UserBuilder.With {
 
     public static final String JSON_PROPERTY_ID = "id";
     public static final String JSON_PROPERTY_AGENT_BRAND_IDS = "agent_brand_ids";
@@ -131,217 +164,19 @@ public class User implements Exportable {
     public static final String JSON_PROPERTY_CREATED_AT = "created_at";
     public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_AGENT_BRAND_IDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<Long> agentBrandIds;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_EMAIL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String email;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_NAME)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String name;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ROLE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String role;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ACTIVE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean active;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ALIAS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String alias;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CHAT_ONLY)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean chatOnly;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CUSTOM_ROLE_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long customRoleId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DEFAULT_GROUP_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long defaultGroupId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DETAILS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String details;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_EXTERNAL_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String externalId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_IANA_TIME_ZONE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String ianaTimeZone;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_LAST_LOGIN_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ZonedDateTime lastLoginAt;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_LOCALE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String locale;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_LOCALE_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long localeId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_MODERATOR)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean moderator;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_NOTES)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String notes;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ONLY_PRIVATE_COMMENTS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean onlyPrivateComments;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ORGANIZATION_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long organizationId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_PHONE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String phone;
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_PHOTO)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Attachment photo;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_REMOTE_PHOTO_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String remotePhotoUrl;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_REPORT_CSV)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean reportCsv;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_RESTRICTED_AGENT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean restrictedAgent;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ROLE_TYPE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer roleType;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SHARED)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean shared;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SHARED_AGENT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean sharedAgent;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SHARED_PHONE_NUMBER)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean sharedPhoneNumber;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SIGNATURE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String signature;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SUSPENDED)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean suspended;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TAGS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<String> tags;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TICKET_RESTRICTION)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String ticketRestriction;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TIME_ZONE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String timeZone;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TWO_FACTOR_AUTH_ENABLED)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean twoFactorAuthEnabled;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String url;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_USER_FIELDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Map<String, Object> userFields;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_VERIFIED)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean verified;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_AUTHENTICITY_TOKEN)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String authenticityToken;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ZonedDateTime createdAt;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_UPDATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ZonedDateTime updatedAt;
+    public User() {
+        this(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    }
 
     public User addTagsItem(String tagsItem) {
-        if (tags == null) {
-            tags = new ArrayList<>();
-        }
-        tags.add(tagsItem);
-        return this;
+        List<String> newTags = tags == null ? new ArrayList<>() : new ArrayList<>(tags);
+        newTags.add(tagsItem);
+        return withTags(newTags);
+    }
+
+    public User addAgentBrandIdsItem(Long agentBrandIdsItem) {
+        List<Long> newAgentBrandIds = agentBrandIds == null ? new ArrayList<>() : new ArrayList<>(agentBrandIds);
+        newAgentBrandIds.add(agentBrandIdsItem);
+        return withAgentBrandIds(newAgentBrandIds);
     }
 }

@@ -252,10 +252,10 @@ class IncrementalServiceSpec extends Z4jSpec {
 
     def "getRecordId extracts ID correctly across supported types"() {
         expect:
-        IncrementalService.getRecordId(new Organization(id: 10L)) == 10L
+        IncrementalService.getRecordId(new Organization(10L)) == 10L
         IncrementalService.getRecordId(new TicketEvent(20L)) == 20L
-        IncrementalService.getRecordId(new Ticket().setId(30L)) == 30L
-        IncrementalService.getRecordId(new User(id: 40L)) == 40L
+        IncrementalService.getRecordId(new Ticket().withId(30L)) == 30L
+        IncrementalService.getRecordId(new User().withId(40L)) == 40L
         IncrementalService.getRecordId("unsupported string") == null
         IncrementalService.getRecordId(null) == null
     }

@@ -30,8 +30,8 @@ class UsersRequestSpec extends Z4jSpec {
 
     def "should create UsersRequest with canonical constructor and builder"() {
         given:
-        User user1 = new User().setId(101L).setName("User 1")
-        User user2 = new User().setId(102L).setName("User 2")
+        User user1 = new User().withId(101L).withName("User 1")
+        User user2 = new User().withId(102L).withName("User 2")
         List<User> items = [user1, user2]
 
         when:
@@ -58,8 +58,8 @@ class UsersRequestSpec extends Z4jSpec {
 
     def "should update users using record wither and addUsersItem method"() {
         given:
-        User user1 = new User().setId(1L).setName("User 1")
-        User user2 = new User().setId(2L).setName("User 2")
+        User user1 = new User().withId(1L).withName("User 1")
+        User user2 = new User().withId(2L).withName("User 2")
         UsersRequest request = new UsersRequest([user1])
 
         when:
@@ -89,8 +89,8 @@ class UsersRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize UsersRequest"() {
         given:
-        User user1 = new User().setId(555L).setName("Batch User 1")
-        User user2 = new User().setId(777L).setName("Batch User 2")
+        User user1 = new User().withId(555L).withName("Batch User 1")
+        User user2 = new User().withId(777L).withName("Batch User 2")
         UsersRequest request = new UsersRequest([user1, user2])
 
         when:
@@ -115,7 +115,7 @@ class UsersRequestSpec extends Z4jSpec {
 
     def "should handle null users component in constructor, wither, and serde"() {
         given:
-        User replacement = new User().setId(99L).setName("Replacement User")
+        User replacement = new User().withId(99L).withName("Replacement User")
 
         when:
         UsersRequest request = new UsersRequest(null)

@@ -30,7 +30,7 @@ class CreatePermissionGroupRequestSpec extends Z4jSpec {
 
     def "should create CreatePermissionGroupRequest with canonical constructor and builder"() {
         given:
-        PermissionGroup expected = new PermissionGroup("Editors").setId(101L)
+        PermissionGroup expected = new PermissionGroup("Editors").withId(101L)
 
         when:
         CreatePermissionGroupRequest direct = new CreatePermissionGroupRequest(expected)
@@ -52,8 +52,8 @@ class CreatePermissionGroupRequestSpec extends Z4jSpec {
 
     def "should update permissionGroup using record wither"() {
         given:
-        PermissionGroup originalGroup = new PermissionGroup("Reviewers").setId(1L)
-        PermissionGroup newGroup = new PermissionGroup("Publishers").setId(2L)
+        PermissionGroup originalGroup = new PermissionGroup("Reviewers").withId(1L)
+        PermissionGroup newGroup = new PermissionGroup("Publishers").withId(2L)
         CreatePermissionGroupRequest request = new CreatePermissionGroupRequest(originalGroup)
 
         when:
@@ -72,7 +72,7 @@ class CreatePermissionGroupRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize CreatePermissionGroupRequest"() {
         given:
-        PermissionGroup expected = new PermissionGroup("Admins").setId(555L)
+        PermissionGroup expected = new PermissionGroup("Admins").withId(555L)
         CreatePermissionGroupRequest request = new CreatePermissionGroupRequest(expected)
 
         when:
@@ -98,7 +98,7 @@ class CreatePermissionGroupRequestSpec extends Z4jSpec {
     def "should handle null permissionGroup component in constructor and wither"() {
         when:
         CreatePermissionGroupRequest request = new CreatePermissionGroupRequest(null)
-        PermissionGroup replacement = new PermissionGroup("Created").setId(99L)
+        PermissionGroup replacement = new PermissionGroup("Created").withId(99L)
         CreatePermissionGroupRequest updated = request.withPermissionGroup(replacement)
         String json = objectMapper.writeValueAsString(request)
         Map map = objectMapper.readValue(json, Map.class)

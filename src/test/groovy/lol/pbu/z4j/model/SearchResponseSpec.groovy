@@ -31,8 +31,8 @@ class SearchResponseSpec extends Z4jSpec {
     def "should create SearchResponse with canonical constructor and builder"() {
         given:
         SearchResult result = new SearchResult().withId(10L).withName("Result 1")
-        User user = new User().setId(20L).setName("User 1")
-        Organization org = new Organization().setId(30L)
+        User user = new User().withId(20L).withName("User 1")
+        Organization org = new Organization().withId(30L)
         Group group = new Group()
 
         when:
@@ -85,10 +85,10 @@ class SearchResponseSpec extends Z4jSpec {
         given:
         SearchResult r1 = new SearchResult().withId(1L)
         SearchResult r2 = new SearchResult().withId(2L)
-        User u1 = new User().setId(11L)
-        User u2 = new User().setId(12L)
-        Organization o1 = new Organization().setId(21L)
-        Organization o2 = new Organization().setId(22L)
+        User u1 = new User().withId(11L)
+        User u2 = new User().withId(12L)
+        Organization o1 = new Organization().withId(21L)
+        Organization o2 = new Organization().withId(22L)
         Group g1 = new Group()
         Group g2 = new Group()
         SearchResponse response = new SearchResponse(1, "f1", "n1", "p1", [r1], [u1], [o1], [g1])
@@ -130,8 +130,8 @@ class SearchResponseSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize SearchResponse"() {
         given:
         SearchResult result = new SearchResult().withId(100L).withName("Ticket Search Result")
-        User user = new User().setId(200L).setName("Sideloaded User")
-        Organization org = new Organization().setId(300L)
+        User user = new User().withId(200L).withName("Sideloaded User")
+        Organization org = new Organization().withId(300L)
         Group group = new Group()
         SearchResponse response = new SearchResponse(
                 1,

@@ -30,7 +30,7 @@ class UserResponseSpec extends Z4jSpec {
 
     def "should create UserResponse with canonical constructor and builder"() {
         given:
-        User expected = new User().setId(101L).setName("Jane Doe").setEmail("jane@example.com")
+        User expected = new User().withId(101L).withName("Jane Doe").withEmail("jane@example.com")
 
         when:
         UserResponse direct = new UserResponse(expected)
@@ -53,8 +53,8 @@ class UserResponseSpec extends Z4jSpec {
 
     def "should update user using record wither"() {
         given:
-        User original = new User().setId(1L).setName("Old Name")
-        User updatedUser = new User().setId(2L).setName("New Name")
+        User original = new User().withId(1L).withName("Old Name")
+        User updatedUser = new User().withId(2L).withName("New Name")
         UserResponse response = new UserResponse(original)
 
         when:
@@ -73,7 +73,7 @@ class UserResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize UserResponse"() {
         given:
-        User expected = new User().setId(555L).setName("Alex Smith").setEmail("alex@example.com")
+        User expected = new User().withId(555L).withName("Alex Smith").withEmail("alex@example.com")
         UserResponse response = new UserResponse(expected)
 
         when:
@@ -101,7 +101,7 @@ class UserResponseSpec extends Z4jSpec {
     def "should handle null user component in constructor and wither"() {
         when:
         UserResponse response = new UserResponse(null)
-        User replacement = new User().setId(99L).setName("Replacement User")
+        User replacement = new User().withId(99L).withName("Replacement User")
         UserResponse updated = response.withUser(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

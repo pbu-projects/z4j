@@ -30,7 +30,7 @@ class TicketFieldCreateRequestSpec extends Z4jSpec {
 
     def "should create TicketFieldCreateRequest with canonical constructor and builder"() {
         given:
-        TicketField expected = new TicketField("Order Number", "text").setId(101L)
+        TicketField expected = new TicketField("Order Number", "text").withId(101L)
 
         when:
         TicketFieldCreateRequest direct = new TicketFieldCreateRequest(expected)
@@ -56,8 +56,8 @@ class TicketFieldCreateRequestSpec extends Z4jSpec {
 
     def "should update ticketField using record wither"() {
         given:
-        TicketField original = new TicketField("Old Field", "text").setId(1L)
-        TicketField replacement = new TicketField("New Field", "integer").setId(2L)
+        TicketField original = new TicketField("Old Field", "text").withId(1L)
+        TicketField replacement = new TicketField("New Field", "integer").withId(2L)
         TicketFieldCreateRequest request = new TicketFieldCreateRequest(original)
 
         when:
@@ -76,7 +76,7 @@ class TicketFieldCreateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize TicketFieldCreateRequest"() {
         given:
-        TicketField expected = new TicketField("Serial Number", "text").setId(555L)
+        TicketField expected = new TicketField("Serial Number", "text").withId(555L)
         TicketFieldCreateRequest request = new TicketFieldCreateRequest(expected)
 
         when:
@@ -102,7 +102,7 @@ class TicketFieldCreateRequestSpec extends Z4jSpec {
 
     def "should handle null ticketField component in constructor, wither, and serde"() {
         given:
-        TicketField replacement = new TicketField("Fallback Field", "text").setId(99L)
+        TicketField replacement = new TicketField("Fallback Field", "text").withId(99L)
 
         when:
         TicketFieldCreateRequest request = new TicketFieldCreateRequest(null)

@@ -20,55 +20,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
- * UserRelated
+ * Counts of tickets and subscriptions related to a user.
  *
  * @author Jonathan-Zollinger
  * @since 0.3.0
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         UserRelated.JSON_PROPERTY_ASSIGNED_TICKETS,
         UserRelated.JSON_PROPERTY_CCD_TICKETS,
         UserRelated.JSON_PROPERTY_ORGANIZATION_SUBSCRIPTIONS,
         UserRelated.JSON_PROPERTY_REQUESTED_TICKETS
 })
-@Serdeable
-@Generated
-public class UserRelated {
+public record UserRelated(
+        @Nullable @JsonProperty(JSON_PROPERTY_ASSIGNED_TICKETS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer assignedTickets,
+        @Nullable @JsonProperty(JSON_PROPERTY_CCD_TICKETS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer ccdTickets,
+        @Nullable @JsonProperty(JSON_PROPERTY_ORGANIZATION_SUBSCRIPTIONS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer organizationSubscriptions,
+        @Nullable @JsonProperty(JSON_PROPERTY_REQUESTED_TICKETS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer requestedTickets
+) implements UserRelatedBuilder.With {
 
     public static final String JSON_PROPERTY_ASSIGNED_TICKETS = "assigned_tickets";
     public static final String JSON_PROPERTY_CCD_TICKETS = "ccd_tickets";
     public static final String JSON_PROPERTY_ORGANIZATION_SUBSCRIPTIONS = "organization_subscriptions";
     public static final String JSON_PROPERTY_REQUESTED_TICKETS = "requested_tickets";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ASSIGNED_TICKETS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer assignedTickets;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CCD_TICKETS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer ccdTickets;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ORGANIZATION_SUBSCRIPTIONS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer organizationSubscriptions;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_REQUESTED_TICKETS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer requestedTickets;
-
+    public UserRelated() {
+        this(null, null, null, null);
+    }
 }

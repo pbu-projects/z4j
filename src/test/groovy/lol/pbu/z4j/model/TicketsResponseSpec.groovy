@@ -31,7 +31,7 @@ class TicketsResponseSpec extends Z4jSpec {
 
     def "should create TicketsResponse with canonical constructor and builder"() {
         given:
-        Ticket ticket = new Ticket().setId(101L).setSubject("Support Request")
+        Ticket ticket = new Ticket().withId(101L).withSubject("Support Request")
         List<Ticket> list = [ticket]
         Meta expectedMeta = MetaBuilder.builder().hasMore(true).afterCursor("cursor_after").beforeCursor("cursor_before").build()
         Links expectedLinks = LinksBuilder.builder()

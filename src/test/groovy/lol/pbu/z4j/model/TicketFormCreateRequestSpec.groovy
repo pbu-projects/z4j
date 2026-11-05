@@ -30,7 +30,7 @@ class TicketFormCreateRequestSpec extends Z4jSpec {
 
     def "should create TicketFormCreateRequest with canonical constructor and builder"() {
         given:
-        TicketForm expected = new TicketForm().setId(101L).setName("Hardware Request Form").setDisplayName("Hardware Support")
+        TicketForm expected = new TicketForm().withId(101L).withName("Hardware Request Form").withDisplayName("Hardware Support")
 
         when:
         TicketFormCreateRequest direct = new TicketFormCreateRequest(expected)
@@ -56,8 +56,8 @@ class TicketFormCreateRequestSpec extends Z4jSpec {
 
     def "should update ticketForm using record wither"() {
         given:
-        TicketForm original = new TicketForm().setId(1L).setName("Old Form")
-        TicketForm replacement = new TicketForm().setId(2L).setName("New Form")
+        TicketForm original = new TicketForm().withId(1L).withName("Old Form")
+        TicketForm replacement = new TicketForm().withId(2L).withName("New Form")
         TicketFormCreateRequest request = new TicketFormCreateRequest(original)
 
         when:
@@ -76,7 +76,7 @@ class TicketFormCreateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize TicketFormCreateRequest"() {
         given:
-        TicketForm expected = new TicketForm().setId(555L).setName("Billing Form").setDisplayName("Billing Inquiry")
+        TicketForm expected = new TicketForm().withId(555L).withName("Billing Form").withDisplayName("Billing Inquiry")
         TicketFormCreateRequest request = new TicketFormCreateRequest(expected)
 
         when:
@@ -102,7 +102,7 @@ class TicketFormCreateRequestSpec extends Z4jSpec {
 
     def "should handle null ticketForm component in constructor, wither, and serde"() {
         given:
-        TicketForm replacement = new TicketForm().setId(99L).setName("Fallback Form")
+        TicketForm replacement = new TicketForm().withId(99L).withName("Fallback Form")
 
         when:
         TicketFormCreateRequest request = new TicketFormCreateRequest(null)

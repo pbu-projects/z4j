@@ -26,7 +26,7 @@ class ViewRowSpec extends Specification {
 
     def "should create ViewRow with constructors and builder"() {
         given:
-        Ticket expectedTicket = new Ticket().setId(505L).setSubject("View ticket")
+        Ticket expectedTicket = new Ticket().withId(505L).withSubject("View ticket")
         Map<String, Object> props = [custom_column: "custom_val"]
 
         when:
@@ -60,8 +60,8 @@ class ViewRowSpec extends Specification {
 
     def "should update ViewRow with record withers"() {
         given:
-        Ticket initialTicket = new Ticket().setId(1L)
-        Ticket updatedTicket = new Ticket().setId(2L)
+        Ticket initialTicket = new Ticket().withId(1L)
+        Ticket updatedTicket = new Ticket().withId(2L)
         ViewRow initial = new ViewRow(initialTicket)
 
         when:
@@ -78,7 +78,7 @@ class ViewRowSpec extends Specification {
 
     def "should round-trip serialize and deserialize ViewRow"() {
         given:
-        Ticket ticket = new Ticket().setId(777L).setSubject("Serialization Test")
+        Ticket ticket = new Ticket().withId(777L).withSubject("Serialization Test")
         ViewRow row = new ViewRow(ticket, [priority_score: 95])
 
         when:

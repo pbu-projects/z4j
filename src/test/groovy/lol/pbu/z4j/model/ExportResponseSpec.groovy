@@ -32,7 +32,7 @@ class ExportResponseSpec extends Z4jSpec {
 
     def "should create ExportResponse with canonical constructor and builder"() {
         given:
-        Ticket ticket = new Ticket().setId(101L).setSubject("Exported Ticket")
+        Ticket ticket = new Ticket().withId(101L).withSubject("Exported Ticket")
         List<Ticket> expectedResults = [ticket]
         Meta expectedMeta = MetaBuilder.builder().hasMore(true).afterCursor("cursor_1").build()
         Links expectedLinks = LinksBuilder.builder().next(URI.create("https://example.zendesk.com/api/v2/search/export?page[after]=cursor_1").toURL()).build()
@@ -64,8 +64,8 @@ class ExportResponseSpec extends Z4jSpec {
 
     def "should update ExportResponse using record withers"() {
         given:
-        Ticket ticket1 = new Ticket().setId(1L)
-        Ticket ticket2 = new Ticket().setId(2L)
+        Ticket ticket1 = new Ticket().withId(1L)
+        Ticket ticket2 = new Ticket().withId(2L)
         Meta meta1 = MetaBuilder.builder().hasMore(false).build()
         Meta meta2 = MetaBuilder.builder().hasMore(true).afterCursor("after_2").build()
         Links links1 = LinksBuilder.builder().prev(URI.create("https://example.zendesk.com/prev").toURL()).build()
@@ -96,7 +96,7 @@ class ExportResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize ExportResponse"() {
         given:
-        Ticket ticket = new Ticket().setId(555L).setSubject("Search Export")
+        Ticket ticket = new Ticket().withId(555L).withSubject("Search Export")
         Meta expectedMeta = MetaBuilder.builder().hasMore(false).afterCursor("cursor_555").build()
         Links expectedLinks = LinksBuilder.builder().next(URI.create("https://example.zendesk.com/next").toURL()).build()
         ExportResponse<Ticket> response = new ExportResponse<>([ticket], "ticket_facets", expectedMeta, expectedLinks)

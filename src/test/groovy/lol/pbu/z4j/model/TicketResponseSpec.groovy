@@ -30,7 +30,7 @@ class TicketResponseSpec extends Z4jSpec {
 
     def "should create TicketResponse with canonical constructor and builder"() {
         given:
-        Ticket expected = new Ticket().setId(101L).setSubject("Printer offline").setDescription("Cannot print documents")
+        Ticket expected = new Ticket().withId(101L).withSubject("Printer offline").withDescription("Cannot print documents")
 
         when:
         TicketResponse direct = new TicketResponse(expected)
@@ -53,8 +53,8 @@ class TicketResponseSpec extends Z4jSpec {
 
     def "should update ticket using record wither"() {
         given:
-        Ticket original = new Ticket().setId(1L).setSubject("Old Subject")
-        Ticket updatedTicket = new Ticket().setId(2L).setSubject("New Subject")
+        Ticket original = new Ticket().withId(1L).withSubject("Old Subject")
+        Ticket updatedTicket = new Ticket().withId(2L).withSubject("New Subject")
         TicketResponse response = new TicketResponse(original)
 
         when:
@@ -73,7 +73,7 @@ class TicketResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize TicketResponse"() {
         given:
-        Ticket expected = new Ticket().setId(555L).setSubject("Network Outage").setDescription("Main switch rebooted")
+        Ticket expected = new Ticket().withId(555L).withSubject("Network Outage").withDescription("Main switch rebooted")
         TicketResponse response = new TicketResponse(expected)
 
         when:
@@ -100,7 +100,7 @@ class TicketResponseSpec extends Z4jSpec {
     def "should handle null ticket component in constructor and wither"() {
         when:
         TicketResponse response = new TicketResponse(null)
-        Ticket replacement = new Ticket().setId(99L).setSubject("Resolved Ticket")
+        Ticket replacement = new Ticket().withId(99L).withSubject("Resolved Ticket")
         TicketResponse updated = response.withTicket(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

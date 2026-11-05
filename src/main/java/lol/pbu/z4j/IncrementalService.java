@@ -317,13 +317,13 @@ public class IncrementalService {
 
     static Object getRecordId(Object record) {
         if (record instanceof Organization org) {
-            return org.getId();
+            return org.id();
         } else if (record instanceof TicketEvent event) {
             return event.id();
         } else if (record instanceof Ticket ticket) {
-            return ticket.getId();
+            return ticket.id();
         } else if (record instanceof User user) {
-            return user.getId();
+            return user.id();
         }
         return null;
     }

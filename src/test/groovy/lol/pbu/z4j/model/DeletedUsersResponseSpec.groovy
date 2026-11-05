@@ -30,7 +30,7 @@ class DeletedUsersResponseSpec extends Z4jSpec {
 
     def "should create DeletedUsersResponse with canonical constructor and builder"() {
         given:
-        User user = new User().setId(201L).setName("Deleted User")
+        User user = new User().withId(201L).withName("Deleted User")
         List<User> list = [user]
         Long expectedCount = 1L
         String expectedNext = "https://example.zendesk.com/api/v2/deleted_users.json?page=2"
@@ -66,8 +66,8 @@ class DeletedUsersResponseSpec extends Z4jSpec {
 
     def "should update DeletedUsersResponse using record withers and addDeletedUsersItem method"() {
         given:
-        User first = new User().setId(1L).setName("First User")
-        User second = new User().setId(2L).setName("Second User")
+        User first = new User().withId(1L).withName("First User")
+        User second = new User().withId(2L).withName("Second User")
         DeletedUsersResponse response = new DeletedUsersResponse([first], 1L, "next_1", "prev_1")
 
         when:
@@ -112,7 +112,7 @@ class DeletedUsersResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize DeletedUsersResponse"() {
         given:
-        User user = new User().setId(601L).setName("Deleted One")
+        User user = new User().withId(601L).withName("Deleted One")
         DeletedUsersResponse response = new DeletedUsersResponse(
                 [user],
                 1L,

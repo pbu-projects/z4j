@@ -30,7 +30,7 @@ class DeletedUserResponseSpec extends Z4jSpec {
 
     def "should create DeletedUserResponse with canonical constructor and builder"() {
         given:
-        User expected = new User().setId(501L).setName("Deleted Person").setEmail("deleted@example.com")
+        User expected = new User().withId(501L).withName("Deleted Person").withEmail("deleted@example.com")
 
         when:
         DeletedUserResponse direct = new DeletedUserResponse(expected)
@@ -53,8 +53,8 @@ class DeletedUserResponseSpec extends Z4jSpec {
 
     def "should update deletedUser using record wither"() {
         given:
-        User original = new User().setId(1L).setName("User One")
-        User replacement = new User().setId(2L).setName("User Two")
+        User original = new User().withId(1L).withName("User One")
+        User replacement = new User().withId(2L).withName("User Two")
         DeletedUserResponse response = new DeletedUserResponse(original)
 
         when:
@@ -73,7 +73,7 @@ class DeletedUserResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize DeletedUserResponse"() {
         given:
-        User expected = new User().setId(501L).setName("Deleted Person").setEmail("deleted@example.com")
+        User expected = new User().withId(501L).withName("Deleted Person").withEmail("deleted@example.com")
         DeletedUserResponse response = new DeletedUserResponse(expected)
 
         when:
@@ -100,7 +100,7 @@ class DeletedUserResponseSpec extends Z4jSpec {
     def "should handle null deletedUser component in constructor and wither"() {
         when:
         DeletedUserResponse response = new DeletedUserResponse(null)
-        User replacement = new User().setId(99L).setName("Restored User")
+        User replacement = new User().withId(99L).withName("Restored User")
         DeletedUserResponse updated = response.withDeletedUser(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

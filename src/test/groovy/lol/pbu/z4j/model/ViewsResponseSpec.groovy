@@ -26,7 +26,7 @@ class ViewsResponseSpec extends Specification {
 
     def "should create ViewsResponse with canonical constructor, convenience constructor, and builder"() {
         given:
-        View view = new View().setId(101L).setTitle("Unassigned Tickets").setActive(true)
+        View view = new View().withId(101L).withTitle("Unassigned Tickets").withActive(true)
         List<View> expectedViews = [view]
 
         when:
@@ -70,8 +70,8 @@ class ViewsResponseSpec extends Specification {
 
     def "should update ViewsResponse using record withers"() {
         given:
-        View first = new View().setId(1L).setTitle("First View")
-        View second = new View().setId(2L).setTitle("Second View")
+        View first = new View().withId(1L).withTitle("First View")
+        View second = new View().withId(2L).withTitle("Second View")
         ViewsResponse response = new ViewsResponse([first], 1, "next1", "prev1")
 
         when:
@@ -98,7 +98,7 @@ class ViewsResponseSpec extends Specification {
 
     def "should round-trip serialize and deserialize ViewsResponse"() {
         given:
-        View view = new View().setId(303L).setTitle("Open Support Queue").setActive(true)
+        View view = new View().withId(303L).withTitle("Open Support Queue").withActive(true)
         ViewsResponse response = new ViewsResponse([view], 1, "https://example.com/next", "https://example.com/prev")
 
         when:

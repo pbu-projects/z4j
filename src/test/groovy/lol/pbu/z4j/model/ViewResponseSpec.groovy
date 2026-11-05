@@ -30,7 +30,7 @@ class ViewResponseSpec extends Z4jSpec {
 
     def "should create ViewResponse with canonical constructor and builder"() {
         given:
-        View expected = new View().setId(101L).setTitle("Unassigned Tickets").setActive(true)
+        View expected = new View().withId(101L).withTitle("Unassigned Tickets").withActive(true)
 
         when:
         ViewResponse direct = new ViewResponse(expected)
@@ -53,8 +53,8 @@ class ViewResponseSpec extends Z4jSpec {
 
     def "should update view using record wither"() {
         given:
-        View original = new View().setId(1L).setTitle("Old View")
-        View updatedView = new View().setId(2L).setTitle("New View")
+        View original = new View().withId(1L).withTitle("Old View")
+        View updatedView = new View().withId(2L).withTitle("New View")
         ViewResponse response = new ViewResponse(original)
 
         when:
@@ -73,7 +73,7 @@ class ViewResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize ViewResponse"() {
         given:
-        View expected = new View().setId(555L).setTitle("My Open Tickets").setActive(true)
+        View expected = new View().withId(555L).withTitle("My Open Tickets").withActive(true)
         ViewResponse response = new ViewResponse(expected)
 
         when:
@@ -100,7 +100,7 @@ class ViewResponseSpec extends Z4jSpec {
     def "should handle null view component in constructor and wither"() {
         when:
         ViewResponse response = new ViewResponse(null)
-        View replacement = new View().setId(99L).setTitle("Pending Review")
+        View replacement = new View().withId(99L).withTitle("Pending Review")
         ViewResponse updated = response.withView(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

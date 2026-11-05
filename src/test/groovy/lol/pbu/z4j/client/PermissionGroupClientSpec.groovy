@@ -75,7 +75,7 @@ class PermissionGroupClientSpec extends Z4jSpec {
     def "can show existing permission group as admin"() {
         given: "an existing permission group from the list"
         PermissionGroupsResponse listResponse = adminPermissionGroupClient.listPermissionGroups().block()
-        Long existingId = listResponse.permissionGroups().first().getId()
+        Long existingId = listResponse.permissionGroups().first().id()
 
         when: "showing the permission group by id"
         PermissionGroupResponse response = adminPermissionGroupClient.showPermissionGroup(existingId).block()
@@ -93,7 +93,7 @@ class PermissionGroupClientSpec extends Z4jSpec {
         String groupName = "Test PG " + UUID.randomUUID().toString()
         PermissionGroup newGroup = new PermissionGroup(groupName)
         if (!staffUserSegmentIds.isEmpty()) {
-            newGroup.setPublish([staffUserSegmentIds.first()])
+            newGroup = newGroup.withPublish([staffUserSegmentIds.first()])
         }
         CreatePermissionGroupRequest createRequest = new CreatePermissionGroupRequest(newGroup)
         Long createdId = null

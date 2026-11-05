@@ -26,7 +26,7 @@ class IncrementalUserCursorResponseSpec extends Specification {
 
     def "should create IncrementalUserCursorResponse with canonical constructor, convenience constructor, and builder"() {
         given:
-        User user = new User().setId(456L).setName("Exported User")
+        User user = new User().withId(456L).withName("Exported User")
         List<User> expectedUsers = [user]
 
         when:
@@ -76,8 +76,8 @@ class IncrementalUserCursorResponseSpec extends Specification {
 
     def "should update IncrementalUserCursorResponse using record withers"() {
         given:
-        User first = new User().setId(1L).setName("User 1")
-        User second = new User().setId(2L).setName("User 2")
+        User first = new User().withId(1L).withName("User 1")
+        User second = new User().withId(2L).withName("User 2")
         IncrementalUserCursorResponse response = new IncrementalUserCursorResponse(
                 [first], "c1", "a1", "b1", false, 1
         )
@@ -114,7 +114,7 @@ class IncrementalUserCursorResponseSpec extends Specification {
 
     def "should round-trip serialize and deserialize IncrementalUserCursorResponse"() {
         given:
-        User user = new User().setId(456L).setName("Jane Doe")
+        User user = new User().withId(456L).withName("Jane Doe")
         IncrementalUserCursorResponse response = new IncrementalUserCursorResponse(
                 [user], "cur_456", "after_456", "before_456", true, 1
         )
