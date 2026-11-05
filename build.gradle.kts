@@ -174,11 +174,7 @@ tasks.withType<Test> {
         }
     }
 
-    useJUnitPlatform {
-        if (!project.hasProperty("benchmark") && System.getProperty("benchmark") == null) {
-            excludeTags("benchmark")
-        }
-    }
+    useJUnitPlatform()
     testLogging {
         events = setOf(FAILED)
         exceptionFormat = FULL
@@ -198,9 +194,17 @@ tasks.withType<Test> {
     })
 }
 
+tasks.named<Test>("test") {
+    useJUnitPlatform {
+        excludeTags("benchmark")
+    }
+}
+
 val benchmark = tasks.register<Test>("benchmark") {
     description = "Runs live benchmark performance comparison tests."
     group = "verification"
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
     useJUnitPlatform {
         includeTags("benchmark")
     }

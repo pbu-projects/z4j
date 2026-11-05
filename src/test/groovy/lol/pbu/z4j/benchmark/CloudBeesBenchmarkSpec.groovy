@@ -33,7 +33,7 @@ import spock.lang.IgnoreIf
 import spock.lang.Shared
 
 @Tag("benchmark")
-@IgnoreIf({ !Boolean.getBoolean("benchmark") && System.getProperty("benchmark") == null && System.getenv("RUN_BENCHMARK") == null })
+@IgnoreIf({ !Boolean.getBoolean("benchmark") && !Boolean.parseBoolean(System.getenv("RUN_BENCHMARK")) })
 @MicronautTest
 class CloudBeesBenchmarkSpec extends Z4jSpec {
 
@@ -53,7 +53,7 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
     Zendesk cloudBeesClient
 
     @Shared
-    List<Long> seededTicketIds = []
+    List<Long> seededTicketIds = Collections.synchronizedList(new ArrayList<Long>())
 
     def setupSpec() {
         ticketsClient = adminCtx.getBean(TicketClient)
@@ -113,6 +113,8 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
         verifyAll {
             cbTickets.size() == 50
             z4jTickets.size() == 50
+            cbTickets*.id.sort() == seededTicketIds.sort()
+            z4jTickets*.id.sort() == seededTicketIds.sort()
         }
 
         println """
@@ -124,7 +126,8 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
 
         cleanup: "Tear down seeded tickets in 1 call to keep sandbox clean"
         if (!seededTicketIds.isEmpty()) {
-            ticketsClient.bulkDeleteTickets(seededTicketIds).block(Duration.ofMinutes(1))
+            ticketsClient.bulkDeleteTickets(new ArrayList<>(seededTicketIds)).block(Duration.ofMinutes(1))
+            seededTicketIds.clear()
         }
     }
 
@@ -143,6 +146,8 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
             JobStatusResponse status = jobStatusClient.showJobStatus(jobId).block(Duration.ofSeconds(30))
             if ("completed".equalsIgnoreCase(status.jobStatus().status())) {
                 ids = status.jobStatus().getJobStatusResults().collect { it.id() }
+                // Immediately register seeded IDs so cleanup deletes them if indexing fails
+                seededTicketIds.addAll(ids)
                 break
             }
             if ("failed".equalsIgnoreCase(status.jobStatus().status())) {
@@ -150,6 +155,10 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
             }
             Thread.sleep(1000)
             pollAttempts++
+        }
+
+        if (ids.isEmpty()) {
+            throw new IllegalStateException("Timed out waiting for ticket batch job to complete: " + jobId)
         }
 
         // Wait for search indexer to index the new tickets
@@ -161,6 +170,10 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
             }
             Thread.sleep(1000)
             indexAttempts++
+        }
+
+        if (indexAttempts >= 60) {
+            throw new IllegalStateException("Timed out waiting for search indexer to index tagged tickets: " + tag)
         }
 
         return ids
