@@ -21,70 +21,45 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
- * <h1>Individual Result Entry in a Background Job Status.</h1>
- * <p>Represents the outcome of an asynchronous batch operation executed for a specific entity in Zendesk.</p>
+ * Individual result entry within a background job status.
  *
  * @author Graeme-Rocher
  * @since 0.3.2
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder({
-        "id",
-        "action",
-        "status",
-        "success",
-        "title",
-        "error",
-        "details"
-})
 @Serdeable
 @Introspected
-@Generated
-public class JobStatusResult {
+@RecordBuilder
+@JsonPropertyOrder({
+        JobStatusResult.JSON_PROPERTY_ID,
+        JobStatusResult.JSON_PROPERTY_ACTION,
+        JobStatusResult.JSON_PROPERTY_STATUS,
+        JobStatusResult.JSON_PROPERTY_SUCCESS,
+        JobStatusResult.JSON_PROPERTY_TITLE,
+        JobStatusResult.JSON_PROPERTY_ERROR,
+        JobStatusResult.JSON_PROPERTY_DETAILS
+})
+public record JobStatusResult(
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_ACTION) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String action,
+        @Nullable @JsonProperty(JSON_PROPERTY_STATUS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String status,
+        @Nullable @JsonProperty(JSON_PROPERTY_SUCCESS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean success,
+        @Nullable @JsonProperty(JSON_PROPERTY_TITLE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String title,
+        @Nullable @JsonProperty(JSON_PROPERTY_ERROR) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String error,
+        @Nullable @JsonProperty(JSON_PROPERTY_DETAILS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String details
+) implements JobStatusResultBuilder.With {
 
-    @Nullable
-    @JsonProperty("id")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
+    public static final String JSON_PROPERTY_ID = "id";
+    public static final String JSON_PROPERTY_ACTION = "action";
+    public static final String JSON_PROPERTY_STATUS = "status";
+    public static final String JSON_PROPERTY_SUCCESS = "success";
+    public static final String JSON_PROPERTY_TITLE = "title";
+    public static final String JSON_PROPERTY_ERROR = "error";
+    public static final String JSON_PROPERTY_DETAILS = "details";
 
-    @Nullable
-    @JsonProperty("action")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String action;
-
-    @Nullable
-    @JsonProperty("status")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String status;
-
-    @Nullable
-    @JsonProperty("success")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean success;
-
-    @Nullable
-    @JsonProperty("title")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String title;
-
-    @Nullable
-    @JsonProperty("error")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String error;
-
-    @Nullable
-    @JsonProperty("details")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String details;
+    public JobStatusResult() {
+        this(null, null, null, null, null, null, null);
+    }
 }

@@ -31,9 +31,9 @@ class CustomStatusCreateRequestSpec extends Z4jSpec {
     def "should create CustomStatusCreateRequest with canonical constructor and builder"() {
         given:
         TicketFieldCustomStatusObject expected = new TicketFieldCustomStatusObject()
-                .setId(101L)
-                .setAgentLabel("Awaiting Vendor")
-                .setEndUserLabel("In Progress")
+                .withId(101L)
+                .withAgentLabel("Awaiting Vendor")
+                .withEndUserLabel("In Progress")
 
         when:
         CustomStatusCreateRequest direct = new CustomStatusCreateRequest(expected)
@@ -59,8 +59,8 @@ class CustomStatusCreateRequestSpec extends Z4jSpec {
 
     def "should update customStatus using record wither"() {
         given:
-        TicketFieldCustomStatusObject original = new TicketFieldCustomStatusObject().setId(1L).setAgentLabel("Drafting")
-        TicketFieldCustomStatusObject replacement = new TicketFieldCustomStatusObject().setId(2L).setAgentLabel("Reviewing")
+        TicketFieldCustomStatusObject original = new TicketFieldCustomStatusObject().withId(1L).withAgentLabel("Drafting")
+        TicketFieldCustomStatusObject replacement = new TicketFieldCustomStatusObject().withId(2L).withAgentLabel("Reviewing")
         CustomStatusCreateRequest request = new CustomStatusCreateRequest(original)
 
         when:
@@ -80,9 +80,9 @@ class CustomStatusCreateRequestSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize CustomStatusCreateRequest"() {
         given:
         TicketFieldCustomStatusObject expected = new TicketFieldCustomStatusObject()
-                .setId(555L)
-                .setAgentLabel("Escalated")
-                .setEndUserLabel("Under Review")
+                .withId(555L)
+                .withAgentLabel("Escalated")
+                .withEndUserLabel("Under Review")
         CustomStatusCreateRequest request = new CustomStatusCreateRequest(expected)
 
         when:

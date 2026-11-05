@@ -15,43 +15,142 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.serde.ObjectMapper
 import lol.pbu.z4j.Z4jSpec
+import spock.lang.Shared
 import spock.lang.Unroll
 
 class TicketViaSpec extends Z4jSpec {
 
+    @Shared
+    ObjectMapper objectMapper = ObjectMapper.getDefault()
+
     @Unroll
-    def "should put source item"() {
+    def "should put source item when source is null"() {
         given:
-        def ticketVia = new TicketVia()
-        ticketVia.source == null
+        TicketVia ticketVia = new TicketVia()
         def key = faker.lorem().word()
         def value = faker.lorem().sentence()
 
         when:
-        ticketVia.putSourceItem(key, value)
+        TicketVia updated = ticketVia.putSourceItem(key, value)
 
         then:
-        ticketVia.source.size() == 1
-        ticketVia.source.get(key) == value
+        verifyAll(updated) {
+            source() != null
+            source().size() == 1
+            source().get(key) == value
+        }
     }
 
     @Unroll
-    def "put source item to existing map"() {
+    def "should put source item to existing map"() {
         given:
         def existingKey = faker.lorem().word()
         def existingValue = faker.lorem().sentence()
-        def ticketVia = new TicketVia(source: [(existingKey): existingValue])
+        TicketVia ticketVia = new TicketVia([(existingKey): existingValue])
         def newKey = faker.lorem().word()
         def newValue = faker.lorem().sentence()
 
         when:
-        ticketVia.putSourceItem(newKey, newValue)
+        TicketVia updated = ticketVia.putSourceItem(newKey, newValue)
 
         then:
-        ticketVia.source.size() == 2
-        ticketVia.source.get(existingKey) == existingValue
-        ticketVia.source.get(newKey) == newValue
+        verifyAll(updated) {
+            source() != null
+            source().size() == 2
+            source().get(existingKey) == existingValue
+            source().get(newKey) == newValue
+        }
+    }
+
+    def "should create TicketVia with constructors and builder"() {
+        given:
+        Map<String, Object> map = [agent: "mobile-app"]
+
+        when:
+        TicketVia direct = new TicketVia("mobile", map)
+        TicketVia noArg = new TicketVia()
+        TicketVia mapArg = new TicketVia(map)
+        TicketVia built = TicketViaBuilder.builder()
+                .channel("mobile")
+                .source(map)
+                .build()
+
+        then:
+        verifyAll(direct) {
+            channel() == "mobile"
+            source() == map
+        }
+        verifyAll(noArg) {
+            channel() == null
+            source() == null
+        }
+        verifyAll(mapArg) {
+            channel() == null
+            source() == map
+        }
+        verifyAll(built) {
+            it == direct
+            channel() == "mobile"
+            source() == map
+        }
+    }
+
+    def "should update TicketVia with record withers"() {
+        given:
+        TicketVia initial = new TicketVia()
+
+        when:
+        TicketVia updated = initial
+                .withChannel("api")
+                .withSource([client: "postman"])
+
+        then:
+        verifyAll(updated) {
+            channel() == "api"
+            source() == [client: "postman"]
+        }
+    }
+
+    def "should round-trip serialize and deserialize TicketVia"() {
+        given:
+        TicketVia via = new TicketVia("web", [rel: "ticket_form"])
+
+        when:
+        String json = objectMapper.writeValueAsString(via)
+        Map map = objectMapper.readValue(json, Map.class)
+        TicketVia deserialized = objectMapper.readValue(json, TicketVia.class)
+
+        then:
+        verifyAll(map) {
+            containsKey("channel")
+            containsKey("source")
+            get("channel") == "web"
+            get("source") == [rel: "ticket_form"]
+        }
+        verifyAll(deserialized) {
+            it == via
+            channel() == "web"
+            source() == [rel: "ticket_form"]
+        }
+    }
+
+    def "should handle null fields in serialization"() {
+        when:
+        TicketVia empty = new TicketVia()
+        String json = objectMapper.writeValueAsString(empty)
+        Map map = objectMapper.readValue(json, Map.class)
+        TicketVia deserialized = objectMapper.readValue(json, TicketVia.class)
+
+        then:
+        verifyAll(map) {
+            isEmpty()
+        }
+        verifyAll(deserialized) {
+            it == empty
+            channel() == null
+            source() == null
+        }
     }
 }
-

@@ -20,24 +20,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.time.ZonedDateTime;
-import lol.pbu.z4j.Generated;
 
 /**
- * TicketFieldCustomStatusObject
+ * Custom ticket status details configured for an account.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         TicketFieldCustomStatusObject.JSON_PROPERTY_ACTIVE,
         TicketFieldCustomStatusObject.JSON_PROPERTY_AGENT_LABEL,
@@ -48,11 +41,20 @@ import lol.pbu.z4j.Generated;
         TicketFieldCustomStatusObject.JSON_PROPERTY_END_USER_LABEL,
         TicketFieldCustomStatusObject.JSON_PROPERTY_ID,
         TicketFieldCustomStatusObject.JSON_PROPERTY_STATUS_CATEGORY,
-        TicketFieldCustomStatusObject.JSON_PROPERTY_UPDATED_AT,
+        TicketFieldCustomStatusObject.JSON_PROPERTY_UPDATED_AT
 })
-@Serdeable
-@Generated
-public class TicketFieldCustomStatusObject {
+public record TicketFieldCustomStatusObject(
+        @Nullable @JsonProperty(JSON_PROPERTY_ACTIVE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean active,
+        @Nullable @JsonProperty(JSON_PROPERTY_AGENT_LABEL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String agentLabel,
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ZonedDateTime createdAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_DEFAULT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean isDefault,
+        @Nullable @JsonProperty(JSON_PROPERTY_DESCRIPTION) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String description,
+        @Nullable @JsonProperty(JSON_PROPERTY_END_USER_DESCRIPTION) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String endUserDescription,
+        @Nullable @JsonProperty(JSON_PROPERTY_END_USER_LABEL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String endUserLabel,
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_STATUS_CATEGORY) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) TicketFieldCustomStatusObjectStatusCategory statusCategory,
+        @Nullable @JsonProperty(JSON_PROPERTY_UPDATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ZonedDateTime updatedAt
+) implements TicketFieldCustomStatusObjectBuilder.With {
 
     public static final String JSON_PROPERTY_ACTIVE = "active";
     public static final String JSON_PROPERTY_AGENT_LABEL = "agent_label";
@@ -65,81 +67,7 @@ public class TicketFieldCustomStatusObject {
     public static final String JSON_PROPERTY_STATUS_CATEGORY = "status_category";
     public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
 
-    /**
-     * If true, if the custom status is set to active. If false, the custom status is set to inactive
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ACTIVE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean active;
-
-    /**
-     * The label displayed to agents
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_AGENT_LABEL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String agentLabel;
-
-    /**
-     * The date and time at which the custom ticket status was created
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ZonedDateTime createdAt;
-
-    /**
-     * If true, the custom status is set to default. If false, the custom status is set to non-default
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DEFAULT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean isDefault;
-
-    /**
-     * The description of when the user should select this custom ticket status
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DESCRIPTION)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String description;
-
-    /**
-     * The description displayed to end users
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_END_USER_DESCRIPTION)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String endUserDescription;
-
-    /**
-     * The label displayed to end users
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_END_USER_LABEL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String endUserLabel;
-
-    /**
-     * Automatically assigned when the custom ticket status is created
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_STATUS_CATEGORY)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private TicketFieldCustomStatusObjectStatusCategory statusCategory;
-
-    /**
-     * The date and time at which the custom ticket status was last updated
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_UPDATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ZonedDateTime updatedAt;
-
+    public TicketFieldCustomStatusObject() {
+        this(null, null, null, null, null, null, null, null, null, null);
+    }
 }

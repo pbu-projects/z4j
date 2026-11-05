@@ -233,10 +233,9 @@ class CustomStatusClientSpec extends Z4jSpec {
 
     def "response models provide both JavaBean getters and record-style accessors"() {
         given: "models constructed with sample data"
-        def statusObj = new TicketFieldCustomStatusObject().tap {
-            id = 101L
-            agentLabel = "Testing"
-        }
+        def statusObj = new TicketFieldCustomStatusObject()
+                .withId(101L)
+                .withAgentLabel("Testing")
         def singleResp = new CustomStatusResponse(statusObj)
         def listResp = new CustomStatusesResponse([statusObj])
         def formStatus = new TicketFormStatus("abc", 101L, 202L)

@@ -20,53 +20,41 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
+import io.soabase.recordbuilder.core.RecordBuilder;
+import jakarta.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
 /**
  * Upload details including token and attachment objects.
  *
+ * @author Jonathan-Zollinger
  * @since 0.2.3
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder({
-        "token",
-        "attachment",
-        "attachments"
-})
 @Serdeable
-@Generated
-public class AttachmentUploadResponseUpload {
+@RecordBuilder
+@JsonPropertyOrder({
+        AttachmentUploadResponseUpload.JSON_PROPERTY_TOKEN,
+        AttachmentUploadResponseUpload.JSON_PROPERTY_ATTACHMENT,
+        AttachmentUploadResponseUpload.JSON_PROPERTY_ATTACHMENTS
+})
+public record AttachmentUploadResponseUpload(
+        @Nullable @JsonProperty(JSON_PROPERTY_TOKEN) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String token,
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_ATTACHMENT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) AttachmentObject attachment,
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_ATTACHMENTS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<AttachmentObject> attachments
+) implements AttachmentUploadResponseUploadBuilder.With {
 
-    @Nullable
-    @JsonProperty("token")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String token;
+    public static final String JSON_PROPERTY_TOKEN = "token";
+    public static final String JSON_PROPERTY_ATTACHMENT = "attachment";
+    public static final String JSON_PROPERTY_ATTACHMENTS = "attachments";
 
-    @Nullable
-    @JsonProperty("attachment")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private AttachmentObject attachment;
-
-    @Nullable
-    @JsonProperty("attachments")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<AttachmentObject> attachments;
+    public AttachmentUploadResponseUpload() {
+        this(null, null, null);
+    }
 
     public AttachmentUploadResponseUpload addAttachmentsItem(AttachmentObject attachmentsItem) {
-        if (attachments == null) {
-            attachments = new ArrayList<>();
-        }
-        attachments.add(attachmentsItem);
-        return this;
+        List<AttachmentObject> newAttachments = attachments == null ? new ArrayList<>() : new ArrayList<>(attachments);
+        newAttachments.add(attachmentsItem);
+        return withAttachments(newAttachments);
     }
 }

@@ -20,63 +20,41 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.util.HashMap;
 import java.util.Map;
-import lol.pbu.z4j.Generated;
 
 /**
- * For more information, see the <a href=\"/documentation/ticketing/reference-guides/via-object-reference\">Via object reference</a>
+ * Describes how a ticket was created.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         TicketVia.JSON_PROPERTY_CHANNEL,
-        TicketVia.JSON_PROPERTY_SOURCE,
+        TicketVia.JSON_PROPERTY_SOURCE
 })
-@Serdeable
-@Generated
-public class TicketVia {
+public record TicketVia(
+        @Nullable @JsonProperty(JSON_PROPERTY_CHANNEL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String channel,
+        @Nullable @JsonProperty(JSON_PROPERTY_SOURCE) @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.USE_DEFAULTS) Map<String, Object> source
+) implements TicketViaBuilder.With {
 
     public static final String JSON_PROPERTY_CHANNEL = "channel";
     public static final String JSON_PROPERTY_SOURCE = "source";
 
-    /**
-     * This tells you how the ticket or event was created. Examples: \"web\", \"mobile\", \"rule\", \"system\"
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CHANNEL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String channel;
-
-    /**
-     * For some channels a source object gives more information about how or why the ticket or event was created
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SOURCE)
-    @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.USE_DEFAULTS)
-    private Map<String, Object> source;
-
-    /**
-     * Set the value for the key for the source map property in a chainable fashion.
-     *
-     * @return The same instance of TicketVia for chaining.
-     */
-    public TicketVia putSourceItem(String key, Object sourceItem) {
-        if (source == null) {
-            source = new HashMap<>();
-        }
-        source.put(key, sourceItem);
-        return this;
+    public TicketVia() {
+        this(null, null);
     }
 
+    public TicketVia(Map<String, Object> source) {
+        this(null, source);
+    }
+
+    public TicketVia putSourceItem(String key, Object sourceItem) {
+        Map<String, Object> newSource = source == null ? new HashMap<>() : new HashMap<>(source);
+        newSource.put(key, sourceItem);
+        return withSource(newSource);
+    }
 }

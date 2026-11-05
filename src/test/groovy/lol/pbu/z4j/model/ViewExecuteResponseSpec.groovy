@@ -26,7 +26,7 @@ class ViewExecuteResponseSpec extends Specification {
 
     def "should create ViewExecuteResponse with canonical constructor and builder"() {
         given:
-        ViewRow row = new ViewRow().setTicket(new Ticket().setId(10L))
+        ViewRow row = new ViewRow(new Ticket().setId(10L))
         List<ViewRow> expectedRows = [row]
         List<Object> expectedColumns = [["id": "subject", "title": "Subject"]]
         List<User> expectedUsers = [new User().setId(20L).setName("Agent")]
@@ -81,8 +81,8 @@ class ViewExecuteResponseSpec extends Specification {
 
     def "should update ViewExecuteResponse using record withers"() {
         given:
-        ViewRow row1 = new ViewRow().setTicket(new Ticket().setId(1L))
-        ViewRow row2 = new ViewRow().setTicket(new Ticket().setId(2L))
+        ViewRow row1 = new ViewRow(new Ticket().setId(1L))
+        ViewRow row2 = new ViewRow(new Ticket().setId(2L))
         User user1 = new User().setId(10L)
         User user2 = new User().setId(20L)
         Group group1 = new Group()
@@ -129,7 +129,7 @@ class ViewExecuteResponseSpec extends Specification {
 
     def "should round-trip serialize and deserialize ViewExecuteResponse"() {
         given:
-        ViewRow row = new ViewRow().setTicket(new Ticket().setId(55L))
+        ViewRow row = new ViewRow(new Ticket().setId(55L))
         User user = new User().setId(66L).setName("Support User")
         Organization org = new Organization(77L)
         ViewExecuteResponse response = new ViewExecuteResponse(

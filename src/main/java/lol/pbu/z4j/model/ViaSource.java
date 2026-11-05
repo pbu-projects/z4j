@@ -20,53 +20,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.*;
-import lombok.experimental.Accessors;
-
-import java.util.HashMap;
-import lol.pbu.z4j.Generated;
 
 /**
- * For some channels a source object gives more information about how or why the ticket or event was created
+ * Contextual source data explaining how or why a ticket or event was created.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         ViaSource.JSON_PROPERTY_FROM,
         ViaSource.JSON_PROPERTY_REL,
-        ViaSource.JSON_PROPERTY_TO,
+        ViaSource.JSON_PROPERTY_TO
 })
-@Serdeable
-@Generated
-public class ViaSource extends HashMap<String, Object> {
+public record ViaSource(
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_FROM) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ViaSourceFrom from,
+        @Nullable @JsonProperty(JSON_PROPERTY_REL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String rel,
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_TO) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ViaSourceTo to
+) implements ViaSourceBuilder.With {
 
     public static final String JSON_PROPERTY_FROM = "from";
     public static final String JSON_PROPERTY_REL = "rel";
     public static final String JSON_PROPERTY_TO = "to";
 
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_FROM)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ViaSourceFrom from;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_REL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String rel;
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_TO)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ViaSourceTo to;
-
+    public ViaSource() {
+        this(null, null, null);
+    }
 }

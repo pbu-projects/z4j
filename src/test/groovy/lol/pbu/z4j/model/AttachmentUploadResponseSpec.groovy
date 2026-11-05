@@ -31,8 +31,8 @@ class AttachmentUploadResponseSpec extends Z4jSpec {
     def "should create AttachmentUploadResponse with canonical constructor and builder"() {
         given:
         AttachmentUploadResponseUpload expected = new AttachmentUploadResponseUpload()
-                .setToken("tok_101")
-                .setAttachment(new AttachmentObject().setId(201L).setFileName("report.pdf"))
+                .withToken("tok_101")
+                .withAttachment(new AttachmentObject().setId(201L).setFileName("report.pdf"))
 
         when:
         AttachmentUploadResponse direct = new AttachmentUploadResponse(expected)
@@ -55,8 +55,8 @@ class AttachmentUploadResponseSpec extends Z4jSpec {
 
     def "should update upload using record wither"() {
         given:
-        AttachmentUploadResponseUpload original = new AttachmentUploadResponseUpload().setToken("tok_1")
-        AttachmentUploadResponseUpload updatedUpload = new AttachmentUploadResponseUpload().setToken("tok_2")
+        AttachmentUploadResponseUpload original = new AttachmentUploadResponseUpload().withToken("tok_1")
+        AttachmentUploadResponseUpload updatedUpload = new AttachmentUploadResponseUpload().withToken("tok_2")
         AttachmentUploadResponse response = new AttachmentUploadResponse(original)
 
         when:
@@ -76,8 +76,8 @@ class AttachmentUploadResponseSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize AttachmentUploadResponse"() {
         given:
         AttachmentUploadResponseUpload expected = new AttachmentUploadResponseUpload()
-                .setToken("tok_555")
-                .setAttachment(new AttachmentObject().setId(777L).setFileName("photo.jpg"))
+                .withToken("tok_555")
+                .withAttachment(new AttachmentObject().setId(777L).setFileName("photo.jpg"))
         AttachmentUploadResponse response = new AttachmentUploadResponse(expected)
 
         when:
@@ -104,7 +104,7 @@ class AttachmentUploadResponseSpec extends Z4jSpec {
     def "should handle null upload component in constructor and wither"() {
         when:
         AttachmentUploadResponse response = new AttachmentUploadResponse(null)
-        AttachmentUploadResponseUpload replacement = new AttachmentUploadResponseUpload().setToken("tok_99")
+        AttachmentUploadResponseUpload replacement = new AttachmentUploadResponseUpload().withToken("tok_99")
         AttachmentUploadResponse updated = response.withUpload(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

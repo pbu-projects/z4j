@@ -17,13 +17,10 @@ package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
  * Association mapping a Zendesk custom ticket status to a specific ticket form.
@@ -31,42 +28,36 @@ import lol.pbu.z4j.Generated;
  * @author Jonathan-Zollinger
  * @since 0.2.6
  */
-@Accessors(chain = true)
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Serdeable
-@Generated
-public class TicketFormStatus {
+@RecordBuilder
+@JsonPropertyOrder({
+        TicketFormStatus.JSON_PROPERTY_ID,
+        TicketFormStatus.JSON_PROPERTY_CUSTOM_STATUS_ID,
+        TicketFormStatus.JSON_PROPERTY_TICKET_FORM_ID
+})
+public record TicketFormStatus(
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String id,
+        @Nullable @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long customStatusId,
+        @Nullable @JsonProperty(JSON_PROPERTY_TICKET_FORM_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long ticketFormId
+) implements TicketFormStatusBuilder.With {
 
     public static final String JSON_PROPERTY_ID = "id";
     public static final String JSON_PROPERTY_CUSTOM_STATUS_ID = "custom_status_id";
     public static final String JSON_PROPERTY_TICKET_FORM_ID = "ticket_form_id";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String id;
+    public TicketFormStatus() {
+        this(null, null, null);
+    }
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long customStatusId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TICKET_FORM_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long ticketFormId;
-
-    public @Nullable String id() {
+    public @Nullable String getId() {
         return id;
     }
 
-    public @Nullable Long customStatusId() {
+    public @Nullable Long getCustomStatusId() {
         return customStatusId;
     }
 
-    public @Nullable Long ticketFormId() {
+    public @Nullable Long getTicketFormId() {
         return ticketFormId;
     }
 }

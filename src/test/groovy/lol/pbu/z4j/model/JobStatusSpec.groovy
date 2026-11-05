@@ -63,22 +63,24 @@ class JobStatusSpec extends Z4jSpec {
         def result = new JobStatusResult()
 
         when:
-        result.setId(42L)
-              .setAction("update")
-              .setStatus("Updated")
-              .setSuccess(true)
-              .setTitle("Ticket title")
-              .setError(null)
-              .setDetails("All good")
+        def updated = result.withId(42L)
+                .withAction("update")
+                .withStatus("Updated")
+                .withSuccess(true)
+                .withTitle("Ticket title")
+                .withError(null)
+                .withDetails("All good")
 
         then:
-        result.id == 42L
-        result.action == "update"
-        result.status == "Updated"
-        result.success == true
-        result.title == "Ticket title"
-        result.error == null
-        result.details == "All good"
+        verifyAll(updated) {
+            id == 42L
+            action == "update"
+            status == "Updated"
+            success == true
+            title == "Ticket title"
+            error == null
+            details == "All good"
+        }
     }
 
     def "should convert raw map results to typed JobStatusResult and vice versa"() {
