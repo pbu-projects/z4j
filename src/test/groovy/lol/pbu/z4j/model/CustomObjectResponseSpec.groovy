@@ -30,7 +30,7 @@ class CustomObjectResponseSpec extends Z4jSpec {
 
     def "should create CustomObjectResponse with canonical constructor and builder"() {
         given:
-        CustomObject expected = new CustomObject("device", "Device", "Devices").setDescription("Office hardware")
+        CustomObject expected = new CustomObject("device", "Device", "Devices").withDescription("Office hardware")
 
         when:
         CustomObjectResponse direct = new CustomObjectResponse(expected)
@@ -73,7 +73,7 @@ class CustomObjectResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize CustomObjectResponse"() {
         given:
-        CustomObject expected = new CustomObject("server", "Server", "Servers").setDescription("Cloud server")
+        CustomObject expected = new CustomObject("server", "Server", "Servers").withDescription("Cloud server")
         CustomObjectResponse response = new CustomObjectResponse(expected)
 
         when:

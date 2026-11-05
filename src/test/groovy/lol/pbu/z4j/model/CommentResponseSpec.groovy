@@ -30,7 +30,7 @@ class CommentResponseSpec extends Z4jSpec {
 
     def "should create CommentResponse with canonical constructor and builder"() {
         given:
-        Comment expected = new Comment().setId(101L).setBody("Great tutorial")
+        Comment expected = new Comment().withId(101L).withBody("Great tutorial")
 
         when:
         CommentResponse direct = new CommentResponse(expected)
@@ -51,8 +51,8 @@ class CommentResponseSpec extends Z4jSpec {
 
     def "should update comment using record wither"() {
         given:
-        Comment original = new Comment().setId(1L).setBody("First draft")
-        Comment updatedComment = new Comment().setId(2L).setBody("Second draft")
+        Comment original = new Comment().withId(1L).withBody("First draft")
+        Comment updatedComment = new Comment().withId(2L).withBody("Second draft")
         CommentResponse response = new CommentResponse(original)
 
         when:
@@ -71,7 +71,7 @@ class CommentResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize CommentResponse"() {
         given:
-        Comment expected = new Comment().setId(555L).setBody("Very helpful tips")
+        Comment expected = new Comment().withId(555L).withBody("Very helpful tips")
         CommentResponse response = new CommentResponse(expected)
 
         when:
@@ -97,7 +97,7 @@ class CommentResponseSpec extends Z4jSpec {
     def "should handle null comment component in constructor and wither"() {
         when:
         CommentResponse response = new CommentResponse(null)
-        Comment replacement = new Comment().setId(99L).setBody("Resolved")
+        Comment replacement = new Comment().withId(99L).withBody("Resolved")
         CommentResponse updated = response.withComment(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

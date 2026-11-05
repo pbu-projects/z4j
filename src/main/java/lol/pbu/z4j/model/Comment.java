@@ -20,26 +20,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
+import jakarta.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
 
 /**
- * Comment
+ * Comment made by an author on an article or item.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-@ToString
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         CommentBase.JSON_PROPERTY_BODY,
         CommentBase.JSON_PROPERTY_LOCALE,
@@ -54,37 +46,37 @@ import lol.pbu.z4j.Generated;
         CommentBase.JSON_PROPERTY_UPDATED_AT,
         CommentBase.JSON_PROPERTY_URL,
         CommentBase.JSON_PROPERTY_VOTE_COUNT,
-        CommentBase.JSON_PROPERTY_VOTE_SUM,
+        CommentBase.JSON_PROPERTY_VOTE_SUM
 })
-@Serdeable
-@Generated
-public class Comment extends CommentBase {
+public record Comment(
+        @Nullable @NotNull @JsonProperty(JSON_PROPERTY_BODY) String body,
+        @Nullable @JsonProperty(JSON_PROPERTY_LOCALE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) LocaleAbbreviation localeAbbreviation,
+        @Nullable @JsonProperty(JSON_PROPERTY_AUTHOR_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long authorId,
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String createdAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_HTML_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String htmlUrl,
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_NON_AUTHOR_EDITOR_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long nonAuthorEditorId,
+        @Nullable @JsonProperty(JSON_PROPERTY_NON_AUTHOR_UPDATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ZonedDateTime nonAuthorUpdatedAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_SOURCE_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long sourceId,
+        @Nullable @JsonProperty(JSON_PROPERTY_SOURCE_TYPE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String sourceType,
+        @Nullable @JsonProperty(JSON_PROPERTY_UPDATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ZonedDateTime updatedAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String url,
+        @Nullable @JsonProperty(JSON_PROPERTY_VOTE_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long voteCount,
+        @Nullable @JsonProperty(JSON_PROPERTY_VOTE_SUM) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long voteSum
+) implements CommentBase, CommentBuilder.With {
 
     public static final String JSON_PROPERTY_SOURCE_ID = "source_id";
     public static final String JSON_PROPERTY_SOURCE_TYPE = "source_type";
 
-    /**
-     * The id of the item on which this comment was made
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SOURCE_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long sourceId;
-
-    /**
-     * The type of the item on which this comment was made. Currently only supports 'Article'
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SOURCE_TYPE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String sourceType;
+    public Comment() {
+        this(null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    }
 
     public Comment(String body) {
-        setBody(body);
+        this(body, null, null, null, null, null, null, null, null, null, null, null, null, null);
     }
 
     public Comment(String body, LocaleAbbreviation localeAbbreviation) {
-        setBody(body);
-        setLocaleAbbreviation(localeAbbreviation);
+        this(body, localeAbbreviation, null, null, null, null, null, null, null, null, null, null, null, null);
     }
 }

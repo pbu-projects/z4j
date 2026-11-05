@@ -30,7 +30,7 @@ class CustomObjectRecordResponseSpec extends Z4jSpec {
 
     def "should create CustomObjectRecordResponse with canonical constructor and builder"() {
         given:
-        CustomObjectRecord expected = new CustomObjectRecord().setId("rec_101").setName("Primary Server")
+        CustomObjectRecord expected = new CustomObjectRecord().withId("rec_101").withName("Primary Server")
 
         when:
         CustomObjectRecordResponse direct = new CustomObjectRecordResponse(expected)
@@ -51,8 +51,8 @@ class CustomObjectRecordResponseSpec extends Z4jSpec {
 
     def "should update customObjectRecord using record wither"() {
         given:
-        CustomObjectRecord original = new CustomObjectRecord().setId("rec_1").setName("Original Record")
-        CustomObjectRecord updatedRecord = new CustomObjectRecord().setId("rec_2").setName("Updated Record")
+        CustomObjectRecord original = new CustomObjectRecord().withId("rec_1").withName("Original Record")
+        CustomObjectRecord updatedRecord = new CustomObjectRecord().withId("rec_2").withName("Updated Record")
         CustomObjectRecordResponse response = new CustomObjectRecordResponse(original)
 
         when:
@@ -71,7 +71,7 @@ class CustomObjectRecordResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize CustomObjectRecordResponse"() {
         given:
-        CustomObjectRecord expected = new CustomObjectRecord().setId("rec_555").setName("Database Cluster")
+        CustomObjectRecord expected = new CustomObjectRecord().withId("rec_555").withName("Database Cluster")
         CustomObjectRecordResponse response = new CustomObjectRecordResponse(expected)
 
         when:
@@ -97,7 +97,7 @@ class CustomObjectRecordResponseSpec extends Z4jSpec {
     def "should handle null customObjectRecord component in constructor and wither"() {
         when:
         CustomObjectRecordResponse response = new CustomObjectRecordResponse(null)
-        CustomObjectRecord replacement = new CustomObjectRecord().setId("rec_99").setName("Backup Unit")
+        CustomObjectRecord replacement = new CustomObjectRecord().withId("rec_99").withName("Backup Unit")
         CustomObjectRecordResponse updated = response.withCustomObjectRecord(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

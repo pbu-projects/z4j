@@ -30,7 +30,7 @@ class ContentTagResponseSpec extends Z4jSpec {
 
     def "should create ContentTagResponse with canonical constructor and builder"() {
         given:
-        ContentTag expected = new ContentTag().setId("tag-101").setName("billing")
+        ContentTag expected = new ContentTag().withId("tag-101").withName("billing")
 
         when:
         ContentTagResponse direct = new ContentTagResponse(expected)
@@ -51,8 +51,8 @@ class ContentTagResponseSpec extends Z4jSpec {
 
     def "should update content tag using record wither"() {
         given:
-        ContentTag original = new ContentTag().setId("tag-1").setName("support")
-        ContentTag updatedTag = new ContentTag().setId("tag-2").setName("sales")
+        ContentTag original = new ContentTag().withId("tag-1").withName("support")
+        ContentTag updatedTag = new ContentTag().withId("tag-2").withName("sales")
         ContentTagResponse response = new ContentTagResponse(original)
 
         when:
@@ -71,7 +71,7 @@ class ContentTagResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize ContentTagResponse"() {
         given:
-        ContentTag expected = new ContentTag().setId("tag-555").setName("general")
+        ContentTag expected = new ContentTag().withId("tag-555").withName("general")
         ContentTagResponse response = new ContentTagResponse(expected)
 
         when:
@@ -97,7 +97,7 @@ class ContentTagResponseSpec extends Z4jSpec {
     def "should handle null content tag component in constructor and wither"() {
         when:
         ContentTagResponse response = new ContentTagResponse(null)
-        ContentTag replacement = new ContentTag().setId("tag-99").setName("finance")
+        ContentTag replacement = new ContentTag().withId("tag-99").withName("finance")
         ContentTagResponse updated = response.withContentTag(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

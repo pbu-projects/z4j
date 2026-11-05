@@ -20,41 +20,45 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import lol.pbu.z4j.Generated;
 
 /**
- * CustomObjectRecord
+ * Custom object record instance in Zendesk.
  *
+ * @author Jonathan-Zollinger
  * @since 0.2.2
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder({
-    CustomObjectRecord.JSON_PROPERTY_ID,
-    CustomObjectRecord.JSON_PROPERTY_NAME,
-    CustomObjectRecord.JSON_PROPERTY_CUSTOM_OBJECT_KEY,
-    CustomObjectRecord.JSON_PROPERTY_CUSTOM_OBJECT_FIELDS,
-    CustomObjectRecord.JSON_PROPERTY_EXTERNAL_ID,
-    CustomObjectRecord.JSON_PROPERTY_PHOTO,
-    CustomObjectRecord.JSON_PROPERTY_CREATED_BY_USER_ID,
-    CustomObjectRecord.JSON_PROPERTY_UPDATED_BY_USER_ID,
-    CustomObjectRecord.JSON_PROPERTY_URL,
-    CustomObjectRecord.JSON_PROPERTY_CREATED_AT,
-    CustomObjectRecord.JSON_PROPERTY_UPDATED_AT,
-})
 @Serdeable
-@Generated
-public class CustomObjectRecord {
+@RecordBuilder
+@JsonPropertyOrder({
+        CustomObjectRecord.JSON_PROPERTY_ID,
+        CustomObjectRecord.JSON_PROPERTY_NAME,
+        CustomObjectRecord.JSON_PROPERTY_CUSTOM_OBJECT_KEY,
+        CustomObjectRecord.JSON_PROPERTY_CUSTOM_OBJECT_FIELDS,
+        CustomObjectRecord.JSON_PROPERTY_EXTERNAL_ID,
+        CustomObjectRecord.JSON_PROPERTY_PHOTO,
+        CustomObjectRecord.JSON_PROPERTY_CREATED_BY_USER_ID,
+        CustomObjectRecord.JSON_PROPERTY_UPDATED_BY_USER_ID,
+        CustomObjectRecord.JSON_PROPERTY_URL,
+        CustomObjectRecord.JSON_PROPERTY_CREATED_AT,
+        CustomObjectRecord.JSON_PROPERTY_UPDATED_AT
+})
+public record CustomObjectRecord(
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String id,
+        @Nullable @JsonProperty(JSON_PROPERTY_NAME) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String name,
+        @Nullable @JsonProperty(JSON_PROPERTY_CUSTOM_OBJECT_KEY) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String customObjectKey,
+        @Nullable @JsonProperty(JSON_PROPERTY_CUSTOM_OBJECT_FIELDS) @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.USE_DEFAULTS) Map<String, Object> customObjectFields,
+        @Nullable @JsonProperty(JSON_PROPERTY_EXTERNAL_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String externalId,
+        @Nullable @JsonProperty(JSON_PROPERTY_PHOTO) @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.USE_DEFAULTS) Map<String, Object> photo,
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_BY_USER_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String createdByUserId,
+        @Nullable @JsonProperty(JSON_PROPERTY_UPDATED_BY_USER_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String updatedByUserId,
+        @Nullable @JsonProperty(JSON_PROPERTY_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String url,
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ZonedDateTime createdAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_UPDATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ZonedDateTime updatedAt
+) implements CustomObjectRecordBuilder.With {
 
     public static final String JSON_PROPERTY_ID = "id";
     public static final String JSON_PROPERTY_NAME = "name";
@@ -68,66 +72,13 @@ public class CustomObjectRecord {
     public static final String JSON_PROPERTY_CREATED_AT = "created_at";
     public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String id;
+    public CustomObjectRecord() {
+        this(null, null, null, null, null, null, null, null, null, null, null);
+    }
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_NAME)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String name;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CUSTOM_OBJECT_KEY)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String customObjectKey;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CUSTOM_OBJECT_FIELDS)
-    @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.USE_DEFAULTS)
-    private Map<String, Object> customObjectFields;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_EXTERNAL_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String externalId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_PHOTO)
-    @JsonInclude(content = JsonInclude.Include.ALWAYS, value = JsonInclude.Include.USE_DEFAULTS)
-    private Map<String, Object> photo;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CREATED_BY_USER_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String createdByUserId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_UPDATED_BY_USER_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String updatedByUserId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String url;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ZonedDateTime createdAt;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_UPDATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ZonedDateTime updatedAt;
-
-    public CustomObjectRecord putCustomObjectFieldsItem(String key, Object customObjectFieldsItem) {
-        if (customObjectFields == null) {
-            customObjectFields = new HashMap<>();
-        }
-        customObjectFields.put(key, customObjectFieldsItem);
-        return this;
+    public CustomObjectRecord putCustomObjectFieldsItem(String key, Object item) {
+        Map<String, Object> map = customObjectFields == null ? new HashMap<>() : new HashMap<>(customObjectFields);
+        map.put(key, item);
+        return withCustomObjectFields(map);
     }
 }

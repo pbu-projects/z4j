@@ -30,7 +30,7 @@ class CommunityPostSearchResponseSpec extends Z4jSpec {
 
     def "should create CommunityPostSearchResponse with canonical constructor and builder"() {
         given:
-        Post item = new Post("Community Search Hit").setId(101L)
+        Post item = new Post("Community Search Hit").withId(101L)
         List<Post> list = [item]
 
         when:
@@ -57,8 +57,8 @@ class CommunityPostSearchResponseSpec extends Z4jSpec {
 
     def "should update results using record wither and addResultsItem method"() {
         given:
-        Post first = new Post("First Post").setId(1L)
-        Post second = new Post("Second Post").setId(2L)
+        Post first = new Post("First Post").withId(1L)
+        Post second = new Post("Second Post").withId(2L)
         CommunityPostSearchResponse response = new CommunityPostSearchResponse([first])
 
         when:
@@ -88,7 +88,7 @@ class CommunityPostSearchResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize CommunityPostSearchResponse"() {
         given:
-        Post item = new Post("Release Notes").setDetails("Version 2.0 is live").setId(555L)
+        Post item = new Post("Release Notes").withDetails("Version 2.0 is live").withId(555L)
         CommunityPostSearchResponse response = new CommunityPostSearchResponse([item])
 
         when:
@@ -114,7 +114,7 @@ class CommunityPostSearchResponseSpec extends Z4jSpec {
     def "should handle null results component in constructor, wither, and serde"() {
         when:
         CommunityPostSearchResponse response = new CommunityPostSearchResponse(null)
-        Post item = new Post("Maintenance Notice").setId(99L)
+        Post item = new Post("Maintenance Notice").withId(99L)
         CommunityPostSearchResponse updated = response.withResults([item])
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

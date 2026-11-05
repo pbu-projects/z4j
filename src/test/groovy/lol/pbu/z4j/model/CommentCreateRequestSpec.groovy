@@ -30,7 +30,7 @@ class CommentCreateRequestSpec extends Z4jSpec {
 
     def "should create CommentCreateRequest with canonical constructor and builder"() {
         given:
-        Comment expected = new Comment("Helpful article!", LocaleAbbreviation.ENGLISH_UNITED_STATES).setId(201L)
+        Comment expected = new Comment("Helpful article!", LocaleAbbreviation.ENGLISH_UNITED_STATES).withId(201L)
 
         when:
         CommentCreateRequest direct = new CommentCreateRequest(expected)
@@ -52,8 +52,8 @@ class CommentCreateRequestSpec extends Z4jSpec {
 
     def "should update comment using record wither"() {
         given:
-        Comment originalComment = new Comment("Initial note", LocaleAbbreviation.ENGLISH_UNITED_STATES).setId(1L)
-        Comment newComment = new Comment("Updated note", LocaleAbbreviation.ENGLISH_UNITED_STATES).setId(2L)
+        Comment originalComment = new Comment("Initial note", LocaleAbbreviation.ENGLISH_UNITED_STATES).withId(1L)
+        Comment newComment = new Comment("Updated note", LocaleAbbreviation.ENGLISH_UNITED_STATES).withId(2L)
         CommentCreateRequest request = new CommentCreateRequest(originalComment)
 
         when:
@@ -72,7 +72,7 @@ class CommentCreateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize CommentCreateRequest"() {
         given:
-        Comment expected = new Comment("Great guide!", LocaleAbbreviation.ENGLISH_UNITED_STATES).setId(555L)
+        Comment expected = new Comment("Great guide!", LocaleAbbreviation.ENGLISH_UNITED_STATES).withId(555L)
         CommentCreateRequest request = new CommentCreateRequest(expected)
 
         when:
@@ -98,7 +98,7 @@ class CommentCreateRequestSpec extends Z4jSpec {
     def "should handle null comment component in constructor and wither"() {
         when:
         CommentCreateRequest request = new CommentCreateRequest(null)
-        Comment replacement = new Comment("Added note", LocaleAbbreviation.ENGLISH_UNITED_STATES).setId(99L)
+        Comment replacement = new Comment("Added note", LocaleAbbreviation.ENGLISH_UNITED_STATES).withId(99L)
         CommentCreateRequest updated = request.withComment(replacement)
         String json = objectMapper.writeValueAsString(request)
         Map map = objectMapper.readValue(json, Map.class)

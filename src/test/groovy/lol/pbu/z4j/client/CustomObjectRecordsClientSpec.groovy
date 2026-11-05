@@ -64,7 +64,7 @@ class CustomObjectRecordsClientSpec extends Z4jSpec {
         def objData = fixtures.customObjects[1] as Map
         String recordName = (objData.recordName as String) + " " + UUID.randomUUID().toString().substring(0, 8)
         def createPayload = new CustomObjectRecordsCreateRequest(
-            new CustomObjectRecord().setName(recordName)
+            new CustomObjectRecord().withName(recordName)
         )
         String createdRecordId = null
 
@@ -85,7 +85,7 @@ class CustomObjectRecordsClientSpec extends Z4jSpec {
 
         when: "updating the record"
         def updatePayload = new CustomObjectRecordsCreateRequest(
-            new CustomObjectRecord().setName(recordName + " Updated")
+            new CustomObjectRecord().withName(recordName + " Updated")
         )
         adminObjectRecordsClient.updateCustomObjectRecord(customObjectKey, createdRecordId, updatePayload).block()
 

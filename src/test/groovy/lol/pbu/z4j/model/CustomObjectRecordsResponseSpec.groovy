@@ -30,7 +30,7 @@ class CustomObjectRecordsResponseSpec extends Z4jSpec {
 
     def "should create CustomObjectRecordsResponse with canonical constructor and builder"() {
         given:
-        CustomObjectRecord record = new CustomObjectRecord().setId("rec_1").setName("Laptop 1")
+        CustomObjectRecord record = new CustomObjectRecord().withId("rec_1").withName("Laptop 1")
         List<CustomObjectRecord> list = [record]
         Map<String, Object> expectedMeta = [has_more: true, after_cursor: "cursor_1"]
         Map<String, Object> expectedLinks = [next: "https://example.zendesk.com/next"]
@@ -59,8 +59,8 @@ class CustomObjectRecordsResponseSpec extends Z4jSpec {
 
     def "should update CustomObjectRecordsResponse using record withers and addCustomObjectRecordsItem method"() {
         given:
-        CustomObjectRecord record1 = new CustomObjectRecord().setId("r1").setName("R1")
-        CustomObjectRecord record2 = new CustomObjectRecord().setId("r2").setName("R2")
+        CustomObjectRecord record1 = new CustomObjectRecord().withId("r1").withName("R1")
+        CustomObjectRecord record2 = new CustomObjectRecord().withId("r2").withName("R2")
         Map<String, Object> meta1 = [has_more: false]
         Map<String, Object> meta2 = [has_more: true]
         Map<String, Object> links1 = [prev: "prev_url"]
@@ -103,7 +103,7 @@ class CustomObjectRecordsResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize CustomObjectRecordsResponse"() {
         given:
-        CustomObjectRecord record = new CustomObjectRecord().setId("rec_99").setName("Asset 99")
+        CustomObjectRecord record = new CustomObjectRecord().withId("rec_99").withName("Asset 99")
         Map<String, Object> expectedMeta = [has_more: false]
         Map<String, Object> expectedLinks = [next: "https://example.zendesk.com/next"]
         CustomObjectRecordsResponse response = new CustomObjectRecordsResponse([record], expectedMeta, expectedLinks)

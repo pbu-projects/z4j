@@ -30,8 +30,7 @@ class PostCommentResponseSpec extends Z4jSpec {
 
     def "should create PostCommentResponse with canonical constructor and builder"() {
         given:
-        PostComment expected = new PostComment("Helpful feedback").setPostId(101L)
-        expected.setId(201L)
+        PostComment expected = new PostComment("Helpful feedback").withPostId(101L).withId(201L)
 
         when:
         PostCommentResponse direct = new PostCommentResponse(expected)
@@ -54,10 +53,8 @@ class PostCommentResponseSpec extends Z4jSpec {
 
     def "should update comment using record wither"() {
         given:
-        PostComment original = new PostComment("Original text").setPostId(1L)
-        original.setId(10L)
-        PostComment replacement = new PostComment("Replacement text").setPostId(2L)
-        replacement.setId(20L)
+        PostComment original = new PostComment("Original text").withPostId(1L).withId(10L)
+        PostComment replacement = new PostComment("Replacement text").withPostId(2L).withId(20L)
         PostCommentResponse response = new PostCommentResponse(original)
 
         when:
@@ -76,8 +73,7 @@ class PostCommentResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize PostCommentResponse"() {
         given:
-        PostComment expected = new PostComment("Community discussion comment").setPostId(404L)
-        expected.setId(808L)
+        PostComment expected = new PostComment("Community discussion comment").withPostId(404L).withId(808L)
         PostCommentResponse response = new PostCommentResponse(expected)
 
         when:
@@ -104,8 +100,7 @@ class PostCommentResponseSpec extends Z4jSpec {
     def "should handle null comment component in constructor and wither"() {
         when:
         PostCommentResponse response = new PostCommentResponse(null)
-        PostComment replacement = new PostComment("Fresh reply")
-        replacement.setId(99L)
+        PostComment replacement = new PostComment("Fresh reply").withId(99L)
         PostCommentResponse updated = response.withComment(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

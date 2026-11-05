@@ -30,7 +30,7 @@ class CommentUpdateRequestSpec extends Z4jSpec {
 
     def "should create CommentUpdateRequest with canonical constructor and builder"() {
         given:
-        Comment expected = new Comment("Edited comment", LocaleAbbreviation.ENGLISH_UNITED_STATES).setId(202L)
+        Comment expected = new Comment("Edited comment", LocaleAbbreviation.ENGLISH_UNITED_STATES).withId(202L)
 
         when:
         CommentUpdateRequest direct = new CommentUpdateRequest(expected)
@@ -52,8 +52,8 @@ class CommentUpdateRequestSpec extends Z4jSpec {
 
     def "should update comment using record wither"() {
         given:
-        Comment originalComment = new Comment("Draft comment", LocaleAbbreviation.ENGLISH_UNITED_STATES).setId(1L)
-        Comment newComment = new Comment("Final comment", LocaleAbbreviation.ENGLISH_UNITED_STATES).setId(2L)
+        Comment originalComment = new Comment("Draft comment", LocaleAbbreviation.ENGLISH_UNITED_STATES).withId(1L)
+        Comment newComment = new Comment("Final comment", LocaleAbbreviation.ENGLISH_UNITED_STATES).withId(2L)
         CommentUpdateRequest request = new CommentUpdateRequest(originalComment)
 
         when:
@@ -72,7 +72,7 @@ class CommentUpdateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize CommentUpdateRequest"() {
         given:
-        Comment expected = new Comment("Revised comment", LocaleAbbreviation.ENGLISH_UNITED_STATES).setId(556L)
+        Comment expected = new Comment("Revised comment", LocaleAbbreviation.ENGLISH_UNITED_STATES).withId(556L)
         CommentUpdateRequest request = new CommentUpdateRequest(expected)
 
         when:
@@ -98,7 +98,7 @@ class CommentUpdateRequestSpec extends Z4jSpec {
     def "should handle null comment component in constructor and wither"() {
         when:
         CommentUpdateRequest request = new CommentUpdateRequest(null)
-        Comment replacement = new Comment("Restored comment", LocaleAbbreviation.ENGLISH_UNITED_STATES).setId(99L)
+        Comment replacement = new Comment("Restored comment", LocaleAbbreviation.ENGLISH_UNITED_STATES).withId(99L)
         CommentUpdateRequest updated = request.withComment(replacement)
         String json = objectMapper.writeValueAsString(request)
         Map map = objectMapper.readValue(json, Map.class)

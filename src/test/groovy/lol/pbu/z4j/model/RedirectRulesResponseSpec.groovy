@@ -30,8 +30,8 @@ class RedirectRulesResponseSpec extends Z4jSpec {
 
     def "should create RedirectRulesResponse and sync records and redirectRules across all compact constructor branches"() {
         given:
-        RedirectRule rule1 = new RedirectRule().setId("01R1").setRedirectFrom("/old").setRedirectTo("/new").setRedirectStatus(301)
-        RedirectRule rule2 = new RedirectRule().setId("01R2").setRedirectFrom("/legacy").setRedirectTo("/modern").setRedirectStatus(302)
+        RedirectRule rule1 = new RedirectRule().withId("01R1").withRedirectFrom("/old").withRedirectTo("/new").withRedirectStatus(301)
+        RedirectRule rule2 = new RedirectRule().withId("01R2").withRedirectFrom("/legacy").withRedirectTo("/modern").withRedirectStatus(302)
         Meta expectedMeta = MetaBuilder.builder().hasMore(false).build()
 
         when:
@@ -76,8 +76,8 @@ class RedirectRulesResponseSpec extends Z4jSpec {
 
     def "should update RedirectRulesResponse using record withers and addRecordsItem method"() {
         given:
-        RedirectRule first = new RedirectRule().setId("01R1").setRedirectFrom("/a").setRedirectTo("/b").setRedirectStatus(301)
-        RedirectRule second = new RedirectRule().setId("01R2").setRedirectFrom("/c").setRedirectTo("/d").setRedirectStatus(302)
+        RedirectRule first = new RedirectRule().withId("01R1").withRedirectFrom("/a").withRedirectTo("/b").withRedirectStatus(301)
+        RedirectRule second = new RedirectRule().withId("01R2").withRedirectFrom("/c").withRedirectTo("/d").withRedirectStatus(302)
         Meta meta1 = MetaBuilder.builder().hasMore(false).build()
         Meta meta2 = MetaBuilder.builder().hasMore(true).afterCursor("cursor_next").build()
         RedirectRulesResponse response = new RedirectRulesResponse([first], [first], meta1)
@@ -115,7 +115,7 @@ class RedirectRulesResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize RedirectRulesResponse"() {
         given:
-        RedirectRule rule = new RedirectRule().setId("01R99").setRedirectFrom("/from").setRedirectTo("/to").setRedirectStatus(301)
+        RedirectRule rule = new RedirectRule().withId("01R99").withRedirectFrom("/from").withRedirectTo("/to").withRedirectStatus(301)
         Meta expectedMeta = MetaBuilder.builder().hasMore(false).build()
         RedirectRulesResponse response = new RedirectRulesResponse([rule], null, expectedMeta)
 

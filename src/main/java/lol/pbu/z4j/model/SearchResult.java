@@ -20,22 +20,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
- * SearchResult
+ * Search result item from the Zendesk Search API.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         SearchResult.JSON_PROPERTY_CREATED_AT,
         SearchResult.JSON_PROPERTY_DEFAULT,
@@ -45,11 +39,19 @@ import lol.pbu.z4j.Generated;
         SearchResult.JSON_PROPERTY_NAME,
         SearchResult.JSON_PROPERTY_RESULT_TYPE,
         SearchResult.JSON_PROPERTY_UPDATED_AT,
-        SearchResult.JSON_PROPERTY_URL,
+        SearchResult.JSON_PROPERTY_URL
 })
-@Serdeable
-@Generated
-public class SearchResult {
+public record SearchResult(
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String createdAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_DEFAULT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean isDefault,
+        @Nullable @JsonProperty(JSON_PROPERTY_DELETED) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean deleted,
+        @Nullable @JsonProperty(JSON_PROPERTY_DESCRIPTION) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String description,
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_NAME) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String name,
+        @Nullable @JsonProperty(JSON_PROPERTY_RESULT_TYPE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String resultType,
+        @Nullable @JsonProperty(JSON_PROPERTY_UPDATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String updatedAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String url
+) implements SearchResultBuilder.With {
 
     public static final String JSON_PROPERTY_CREATED_AT = "created_at";
     public static final String JSON_PROPERTY_DEFAULT = "default";
@@ -61,76 +63,7 @@ public class SearchResult {
     public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
     public static final String JSON_PROPERTY_URL = "url";
 
-    /**
-     * When the resource was created
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String createdAt;
-
-    /**
-     * Flag to indicate whether this is the default resource
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DEFAULT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean isDefault;
-
-    /**
-     * Flag to indicate whether resource has been deleted
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DELETED)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean deleted;
-
-    /**
-     * The description of the resource
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DESCRIPTION)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String description;
-
-    /**
-     * The ID of the resource
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    /**
-     * The name of the resource
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_NAME)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String name;
-
-    /**
-     * The type of the resource
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_RESULT_TYPE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String resultType;
-
-    /**
-     * When the resource was last updated
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_UPDATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String updatedAt;
-
-    /**
-     * The url of the resource
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String url;
-
+    public SearchResult() {
+        this(null, null, null, null, null, null, null, null, null);
+    }
 }

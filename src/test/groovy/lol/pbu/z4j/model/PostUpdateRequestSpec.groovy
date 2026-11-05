@@ -30,7 +30,7 @@ class PostUpdateRequestSpec extends Z4jSpec {
 
     def "should create PostUpdateRequest with canonical constructor and builder"() {
         given:
-        Post expected = new Post("Updated Announcement").setDetails("More product updates").setId(101L)
+        Post expected = new Post("Updated Announcement").withDetails("More product updates").withId(101L)
 
         when:
         PostUpdateRequest direct = new PostUpdateRequest(expected)
@@ -54,8 +54,8 @@ class PostUpdateRequestSpec extends Z4jSpec {
 
     def "should update post using record wither"() {
         given:
-        Post original = new Post("Old Title").setId(1L)
-        Post updatedPost = new Post("New Title").setId(2L)
+        Post original = new Post("Old Title").withId(1L)
+        Post updatedPost = new Post("New Title").withId(2L)
         PostUpdateRequest request = new PostUpdateRequest(original)
 
         when:
@@ -74,7 +74,7 @@ class PostUpdateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize PostUpdateRequest"() {
         given:
-        Post expected = new Post("Release Notes v2").setDetails("Version 2.0 is live").setId(555L)
+        Post expected = new Post("Release Notes v2").withDetails("Version 2.0 is live").withId(555L)
         PostUpdateRequest request = new PostUpdateRequest(expected)
 
         when:
@@ -101,7 +101,7 @@ class PostUpdateRequestSpec extends Z4jSpec {
     def "should handle null post component in constructor and wither"() {
         when:
         PostUpdateRequest request = new PostUpdateRequest(null)
-        Post replacement = new Post("Maintenance Notice").setId(99L)
+        Post replacement = new Post("Maintenance Notice").withId(99L)
         PostUpdateRequest updated = request.withPost(replacement)
         String json = objectMapper.writeValueAsString(request)
         Map map = objectMapper.readValue(json, Map.class)

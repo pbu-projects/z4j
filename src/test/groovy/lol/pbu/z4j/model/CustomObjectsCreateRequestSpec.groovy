@@ -30,7 +30,7 @@ class CustomObjectsCreateRequestSpec extends Z4jSpec {
 
     def "should create CustomObjectsCreateRequest with canonical constructor and builder"() {
         given:
-        CustomObject expected = new CustomObject().setKey("software_license").setTitle("Software License").setTitlePluralized("Software Licenses")
+        CustomObject expected = new CustomObject().withKey("software_license").withTitle("Software License").withTitlePluralized("Software Licenses")
 
         when:
         CustomObjectsCreateRequest direct = new CustomObjectsCreateRequest(expected)
@@ -56,8 +56,8 @@ class CustomObjectsCreateRequestSpec extends Z4jSpec {
 
     def "should update customObject using record wither"() {
         given:
-        CustomObject original = new CustomObject().setKey("old_key").setTitle("Old Object")
-        CustomObject replacement = new CustomObject().setKey("new_key").setTitle("New Object")
+        CustomObject original = new CustomObject().withKey("old_key").withTitle("Old Object")
+        CustomObject replacement = new CustomObject().withKey("new_key").withTitle("New Object")
         CustomObjectsCreateRequest request = new CustomObjectsCreateRequest(original)
 
         when:
@@ -76,7 +76,7 @@ class CustomObjectsCreateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize CustomObjectsCreateRequest"() {
         given:
-        CustomObject expected = new CustomObject().setKey("shipment").setTitle("Shipment").setTitlePluralized("Shipments")
+        CustomObject expected = new CustomObject().withKey("shipment").withTitle("Shipment").withTitlePluralized("Shipments")
         CustomObjectsCreateRequest request = new CustomObjectsCreateRequest(expected)
 
         when:
@@ -102,7 +102,7 @@ class CustomObjectsCreateRequestSpec extends Z4jSpec {
 
     def "should handle null customObject component in constructor, wither, and serde"() {
         given:
-        CustomObject replacement = new CustomObject().setKey("replacement_key").setTitle("Replacement")
+        CustomObject replacement = new CustomObject().withKey("replacement_key").withTitle("Replacement")
 
         when:
         CustomObjectsCreateRequest request = new CustomObjectsCreateRequest(null)
