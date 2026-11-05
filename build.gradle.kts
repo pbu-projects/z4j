@@ -205,10 +205,15 @@ val benchmark = tasks.register<Test>("benchmark") {
     group = "verification"
     testClassesDirs = sourceSets["test"].output.classesDirs
     classpath = sourceSets["test"].runtimeClasspath
+    outputs.upToDateWhen { false }
     useJUnitPlatform {
         includeTags("benchmark")
     }
     systemProperty("benchmark", "true")
+    testLogging {
+        showStandardStreams = true
+        events = setOf(PASSED, FAILED, SKIPPED)
+    }
 }
 
 
