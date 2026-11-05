@@ -15,46 +15,18 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
-/**
- * GuideMediaUploadUrlRequest
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder({
-        GuideMediaUploadUrlRequest.JSON_PROPERTY_CONTENT_TYPE,
-        GuideMediaUploadUrlRequest.JSON_PROPERTY_FILE_SIZE
-})
 @Serdeable
-@Generated
-public class GuideMediaUploadUrlRequest {
+@RecordBuilder
+public record GuideMediaUploadUrlRequest(
+        @Nullable @JsonProperty(JSON_PROPERTY_CONTENT_TYPE) String contentType,
+        @Nullable @JsonProperty(JSON_PROPERTY_FILE_SIZE) Long fileSize
+) implements GuideMediaUploadUrlRequestBuilder.With {
 
     public static final String JSON_PROPERTY_CONTENT_TYPE = "content_type";
     public static final String JSON_PROPERTY_FILE_SIZE = "file_size";
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CONTENT_TYPE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String contentType;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_FILE_SIZE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long fileSize;
-
 }

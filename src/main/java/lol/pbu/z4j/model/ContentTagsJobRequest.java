@@ -17,41 +17,21 @@ package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
-/**
- * ContentTagsJobRequest
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(ContentTagsJobRequest.JSON_PROPERTY_JOB)
 @Serdeable
-@Generated
-public class ContentTagsJobRequest {
+@RecordBuilder
+public record ContentTagsJobRequest(
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_JOB) @JsonInclude(JsonInclude.Include.NON_NULL) ContentTagsJob job
+) implements ContentTagsJobRequestBuilder.With {
 
     public static final String JSON_PROPERTY_JOB = "job";
 
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_JOB)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private ContentTagsJob job;
-
     public ContentTagsJobRequest(String action, List<String> items) {
-        this.job = new ContentTagsJob(action, items);
+        this(new ContentTagsJob(action, items));
     }
 }
