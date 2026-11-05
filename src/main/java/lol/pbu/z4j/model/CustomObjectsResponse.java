@@ -20,42 +20,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
-/**
- * CustomObjectsResponse
- *
- * @since 0.2.2
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(CustomObjectsResponse.JSON_PROPERTY_CUSTOM_OBJECTS)
 @Serdeable
-@Generated
-public class CustomObjectsResponse {
+@RecordBuilder
+@JsonPropertyOrder(CustomObjectsResponse.JSON_PROPERTY_CUSTOM_OBJECTS)
+public record CustomObjectsResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_CUSTOM_OBJECTS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid CustomObject> customObjects
+) implements CustomObjectsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_CUSTOM_OBJECTS = "custom_objects";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CUSTOM_OBJECTS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid CustomObject> customObjects;
-
     public CustomObjectsResponse addCustomObjectsItem(CustomObject customObjectsItem) {
-        if (customObjects == null) {
-            customObjects = new ArrayList<>();
-        }
-        customObjects.add(customObjectsItem);
-        return this;
+        List<CustomObject> list = new ArrayList<>(customObjects != null ? customObjects : List.of());
+        list.add(customObjectsItem);
+        return new CustomObjectsResponse(list);
     }
 }

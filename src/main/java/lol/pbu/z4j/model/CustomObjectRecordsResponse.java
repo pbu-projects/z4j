@@ -20,59 +20,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import lol.pbu.z4j.Generated;
 
-/**
- * CustomObjectRecordsResponse
- *
- * @since 0.2.2
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder({
-    CustomObjectRecordsResponse.JSON_PROPERTY_CUSTOM_OBJECT_RECORDS,
-    CustomObjectRecordsResponse.JSON_PROPERTY_META,
-    CustomObjectRecordsResponse.JSON_PROPERTY_LINKS,
-})
 @Serdeable
-@Generated
-public class CustomObjectRecordsResponse {
+@RecordBuilder
+@JsonPropertyOrder({
+        CustomObjectRecordsResponse.JSON_PROPERTY_CUSTOM_OBJECT_RECORDS,
+        CustomObjectRecordsResponse.JSON_PROPERTY_META,
+        CustomObjectRecordsResponse.JSON_PROPERTY_LINKS
+})
+public record CustomObjectRecordsResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_CUSTOM_OBJECT_RECORDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid CustomObjectRecord> customObjectRecords,
+        @Nullable @JsonProperty(JSON_PROPERTY_META) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Map<String, Object> meta,
+        @Nullable @JsonProperty(JSON_PROPERTY_LINKS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Map<String, Object> links
+) implements CustomObjectRecordsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_CUSTOM_OBJECT_RECORDS = "custom_object_records";
     public static final String JSON_PROPERTY_META = "meta";
     public static final String JSON_PROPERTY_LINKS = "links";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CUSTOM_OBJECT_RECORDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid CustomObjectRecord> customObjectRecords;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_META)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Map<String, Object> meta;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_LINKS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Map<String, Object> links;
-
     public CustomObjectRecordsResponse addCustomObjectRecordsItem(CustomObjectRecord customObjectRecordsItem) {
-        if (customObjectRecords == null) {
-            customObjectRecords = new ArrayList<>();
-        }
-        customObjectRecords.add(customObjectRecordsItem);
-        return this;
+        List<CustomObjectRecord> list = new ArrayList<>(customObjectRecords != null ? customObjectRecords : List.of());
+        list.add(customObjectRecordsItem);
+        return new CustomObjectRecordsResponse(list, meta, links);
     }
 }

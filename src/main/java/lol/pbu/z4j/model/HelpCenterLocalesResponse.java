@@ -17,53 +17,29 @@ package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
-/**
- * HelpCenterLocalesResponse
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         HelpCenterLocalesResponse.JSON_PROPERTY_LOCALES,
         HelpCenterLocalesResponse.JSON_PROPERTY_DEFAULT_LOCALE
 })
-@Serdeable
-@Generated
-public class HelpCenterLocalesResponse {
+public record HelpCenterLocalesResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_LOCALES) List<LocaleAbbreviation> locales,
+        @Nullable @JsonProperty(JSON_PROPERTY_DEFAULT_LOCALE) LocaleAbbreviation defaultLocale
+) implements HelpCenterLocalesResponseBuilder.With {
 
     public static final String JSON_PROPERTY_LOCALES = "locales";
     public static final String JSON_PROPERTY_DEFAULT_LOCALE = "default_locale";
 
-    @JsonProperty(JSON_PROPERTY_LOCALES)
-    private List<LocaleAbbreviation> locales;
-
-    @JsonProperty(JSON_PROPERTY_DEFAULT_LOCALE)
-    private LocaleAbbreviation defaultLocale;
-
-    /**
-     * Add an item to the locales property in a chainable fashion.
-     *
-     * @param localesItem the locale abbreviation to add
-     * @return The same instance of HelpCenterLocalesResponse for chaining.
-     */
     public HelpCenterLocalesResponse addLocalesItem(LocaleAbbreviation localesItem) {
-        if (locales == null) {
-            locales = new ArrayList<>();
-        }
-        locales.add(localesItem);
-        return this;
+        List<LocaleAbbreviation> list = new ArrayList<>(locales != null ? locales : List.of());
+        list.add(localesItem);
+        return new HelpCenterLocalesResponse(list, defaultLocale);
     }
 }

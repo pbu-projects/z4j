@@ -20,9 +20,11 @@ import io.micronaut.http.annotation.*;
 import io.micronaut.http.client.annotation.Client;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lol.pbu.z4j.model.CustomObjectRecord;
 import lol.pbu.z4j.model.CustomObjectRecordResponse;
 import lol.pbu.z4j.model.CustomObjectRecordsCreateRequest;
 import lol.pbu.z4j.model.CustomObjectRecordsResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -93,22 +95,22 @@ public interface CustomObjectRecordsClient {
      * @param customObjectKey Key of custom object (required)
      * @return Flux of all custom object records
      */
-    default reactor.core.publisher.Flux<lol.pbu.z4j.model.CustomObjectRecord> listAllCustomObjectRecords(String customObjectKey) {
+    default Flux<CustomObjectRecord> listAllCustomObjectRecords(String customObjectKey) {
         return listAllCustomObjectRecords(customObjectKey, null);
     }
 
-    default reactor.core.publisher.Flux<lol.pbu.z4j.model.CustomObjectRecord> listAllCustomObjectRecords(String customObjectKey, Long pageSize) {
+    default Flux<CustomObjectRecord> listAllCustomObjectRecords(String customObjectKey, Long pageSize) {
         return listCustomObjectRecords(customObjectKey, null, null, null, null, null, pageSize)
                 .expand(response -> {
-                    if (response.getMeta() != null && Boolean.TRUE.equals(response.getMeta().get("has_more"))) {
-                        String afterCursor = (String) response.getMeta().get("after_cursor");
+                    if (response.meta() != null && Boolean.TRUE.equals(response.meta().get("has_more"))) {
+                        String afterCursor = (String) response.meta().get("after_cursor");
                         if (afterCursor != null) {
                             return listCustomObjectRecords(customObjectKey, null, null, null, null, afterCursor, pageSize);
                         }
                     }
                     return Mono.empty();
                 })
-                .flatMapIterable(CustomObjectRecordsResponse::getCustomObjectRecords);
+                .flatMapIterable(CustomObjectRecordsResponse::customObjectRecords);
     }
 
     /**

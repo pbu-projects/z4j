@@ -15,39 +15,127 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.serde.ObjectMapper
 import lol.pbu.z4j.Z4jSpec
-import spock.lang.Unroll
+import spock.lang.Shared
 
 class CommunityPostSearchResponseSpec extends Z4jSpec {
 
-    @Unroll
-    def "should add results item"() {
-        given:
-        def communityPostSearchResponse = new CommunityPostSearchResponse()
-        communityPostSearchResponse.results == null
-        def post = new Post(faker.lorem().sentence())
+    @Shared
+    ObjectMapper objectMapper
 
-        when:
-        communityPostSearchResponse.addResultsItem(post)
-
-        then:
-        communityPostSearchResponse.results.size() == 1
-        communityPostSearchResponse.results.getAt(0) == post
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
     }
 
-    @Unroll
-    def "add results item to existing list"() {
+    def "should create CommunityPostSearchResponse with canonical constructor and builder"() {
         given:
-        def existingPost = new Post(faker.lorem().sentence())
-        def communityPostSearchResponse = new CommunityPostSearchResponse(results: [existingPost])
-        def newPost = new Post(faker.lorem().sentence())
+        Post item = new Post("Community Search Hit").setId(101L)
+        List<Post> list = [item]
 
         when:
-        communityPostSearchResponse.addResultsItem(newPost)
+        CommunityPostSearchResponse direct = new CommunityPostSearchResponse(list)
+        CommunityPostSearchResponse built = CommunityPostSearchResponseBuilder.builder()
+                .results(list)
+                .build()
 
         then:
-        communityPostSearchResponse.results.size() == 2
-        communityPostSearchResponse.results.containsAll([existingPost, newPost])
+        verifyAll(direct) {
+            results() == list
+            results().size() == 1
+            results().first().id == 101L
+            results().first().title == "Community Search Hit"
+        }
+        verifyAll(built) {
+            it == direct
+            results() == list
+            results().size() == 1
+            results().first().id == 101L
+            results().first().title == "Community Search Hit"
+        }
+    }
+
+    def "should update results using record wither and addResultsItem method"() {
+        given:
+        Post first = new Post("First Post").setId(1L)
+        Post second = new Post("Second Post").setId(2L)
+        CommunityPostSearchResponse response = new CommunityPostSearchResponse([first])
+
+        when:
+        CommunityPostSearchResponse withNewList = response.withResults([second])
+        CommunityPostSearchResponse withAdded = response.addResultsItem(second)
+        CommunityPostSearchResponse fromNull = new CommunityPostSearchResponse(null).addResultsItem(first)
+
+        then:
+        verifyAll(response) {
+            results().size() == 1
+            results().first().id == 1L
+        }
+        verifyAll(withNewList) {
+            results().size() == 1
+            results().first().id == 2L
+        }
+        verifyAll(withAdded) {
+            results().size() == 2
+            results().first().id == 1L
+            results().last().id == 2L
+        }
+        verifyAll(fromNull) {
+            results().size() == 1
+            results().first().id == 1L
+        }
+    }
+
+    def "should round-trip serialize and deserialize CommunityPostSearchResponse"() {
+        given:
+        Post item = new Post("Release Notes").setDetails("Version 2.0 is live").setId(555L)
+        CommunityPostSearchResponse response = new CommunityPostSearchResponse([item])
+
+        when:
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        CommunityPostSearchResponse deserialized = objectMapper.readValue(json, CommunityPostSearchResponse.class)
+
+        then:
+        verifyAll(map) {
+            containsKey("results")
+            get("results") instanceof List
+            ((List) get("results")).size() == 1
+        }
+        verifyAll(deserialized) {
+            it == response
+            results() != null
+            results().size() == 1
+            results().first().id == 555L
+            results().first().title == "Release Notes"
+        }
+    }
+
+    def "should handle null results component in constructor, wither, and serde"() {
+        when:
+        CommunityPostSearchResponse response = new CommunityPostSearchResponse(null)
+        Post item = new Post("Maintenance Notice").setId(99L)
+        CommunityPostSearchResponse updated = response.withResults([item])
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        CommunityPostSearchResponse deserialized = objectMapper.readValue(json, CommunityPostSearchResponse.class)
+
+        then:
+        verifyAll(response) {
+            results() == null
+        }
+        verifyAll(updated) {
+            results() != null
+            results().size() == 1
+            results().first().id == 99L
+        }
+        verifyAll(map) {
+            isEmpty()
+            !containsKey("results")
+        }
+        verifyAll(deserialized) {
+            it == response
+            results() == null
+        }
     }
 }
-

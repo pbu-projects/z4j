@@ -16,75 +16,129 @@
 package lol.pbu.z4j.model
 
 import io.micronaut.serde.ObjectMapper
-import lol.pbu.z4j.Z4jSpec
-import spock.lang.Unroll
-
 import java.net.URI
+import lol.pbu.z4j.Z4jSpec
+import spock.lang.Shared
 
 class ArticlesResponseSpec extends Z4jSpec {
 
-    @Unroll
-    def "should add articles item"() {
-        given:
-        def articlesResponse = new ArticlesResponse()
-        articlesResponse.articles == null
-        def article = new Article().setLocaleAbbreviation(LocaleAbbreviation.BULGARIAN).setPermissionGroupId(faker.number().randomNumber()).setTitle(faker.book().author())
+    @Shared
+    ObjectMapper objectMapper
 
-        when:
-        articlesResponse.addArticlesItem(article)
-
-        then:
-        articlesResponse.articles.size() == 1
-        articlesResponse.articles[0] == article
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
     }
 
-    @Unroll
-    def "add articles item to existing list"() {
+    def "should create ArticlesResponse with canonical constructor and builder"() {
         given:
-        def existingArticle = new Article().setLocaleAbbreviation(LocaleAbbreviation.BULGARIAN).setPermissionGroupId(faker.number().randomNumber()).setTitle(faker.book().author())
-        def articlesResponse = new ArticlesResponse(articles: [existingArticle])
-        def newArticle = new Article().setLocaleAbbreviation(LocaleAbbreviation.FRENCH).setPermissionGroupId(faker.number().randomNumber()).setTitle(faker.book().author())
+        Article item = new Article()
+                .setId(101L)
+                .setTitle("Getting Started")
+                .setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                .setPermissionGroupId(42L)
+        List<Article> list = [item]
+        Meta expectedMeta = new Meta().setHasMore(true).setAfterCursor("cursor_after").setBeforeCursor("cursor_before")
+        Links expectedLinks = new Links()
+                .setNext(URI.create("https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page[after]=cursor_after").toURL())
+                .setPrev(URI.create("https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page[before]=cursor_before").toURL())
 
         when:
-        articlesResponse.addArticlesItem(newArticle)
+        ArticlesResponse direct = new ArticlesResponse(list, expectedMeta, expectedLinks, 42, "next_url", "prev_url", 2, 5, 10)
+        ArticlesResponse built = ArticlesResponseBuilder.builder()
+                .articles(list)
+                .meta(expectedMeta)
+                .links(expectedLinks)
+                .count(42)
+                .nextPage("next_url")
+                .previousPage("prev_url")
+                .page(2)
+                .pageCount(5)
+                .perPage(10)
+                .build()
 
         then:
-        articlesResponse.articles.size() == 2
-        articlesResponse.articles.containsAll([existingArticle, newArticle])
+        verifyAll(direct) {
+            articles() == list
+            meta() == expectedMeta
+            links() == expectedLinks
+            count() == 42
+            nextPage() == "next_url"
+            previousPage() == "prev_url"
+            page() == 2
+            pageCount() == 5
+            perPage() == 10
+        }
+        verifyAll(built) {
+            it == direct
+            articles() == list
+            meta() == expectedMeta
+            links() == expectedLinks
+            count() == 42
+            nextPage() == "next_url"
+            previousPage() == "prev_url"
+            page() == 2
+            pageCount() == 5
+            perPage() == 10
+        }
     }
 
-    def "should instantiate and set pagination fields on ArticlesResponse"() {
+    def "should update ArticlesResponse using record withers and addArticlesItem method"() {
         given:
-        def response = new ArticlesResponse()
-        def meta = new Meta().setHasMore(true).setAfterCursor("cursor_after").setBeforeCursor("cursor_before")
-        def links = new Links().setNext(new URI("https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page[after]=cursor_after").toURL())
-                .setPrev(new URI("https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page[before]=cursor_before").toURL())
+        Article first = new Article().setId(1L).setTitle("Article 1")
+        Article second = new Article().setId(2L).setTitle("Article 2")
+        Meta expectedMeta = new Meta().setHasMore(false)
+        Links expectedLinks = new Links().setNext(URI.create("https://example.zendesk.com/next").toURL())
+        ArticlesResponse response = new ArticlesResponse([first], null, null, null, null, null, null, null, null)
 
         when:
-        response.setMeta(meta)
-                .setLinks(links)
-                .setCount(42)
-                .setPage(1)
-                .setPageCount(5)
-                .setPerPage(10)
-                .setNextPage("https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page=2")
-                .setPreviousPage("https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page=1")
+        ArticlesResponse updated = response
+                .withArticles([second])
+                .withMeta(expectedMeta)
+                .withLinks(expectedLinks)
+                .withCount(10)
+                .withNextPage("https://example.zendesk.com/page2")
+                .withPreviousPage("https://example.zendesk.com/page1")
+                .withPage(1)
+                .withPageCount(2)
+                .withPerPage(5)
+        ArticlesResponse withAdded = response.addArticlesItem(second)
+        ArticlesResponse fromNull = new ArticlesResponse(null, expectedMeta, expectedLinks, 1, "n", "p", 1, 1, 10).addArticlesItem(first)
 
         then:
-        response.meta == meta
-        response.links == links
-        response.count == 42
-        response.page == 1
-        response.pageCount == 5
-        response.perPage == 10
-        response.nextPage == "https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page=2"
-        response.previousPage == "https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page=1"
+        verifyAll(response) {
+            articles().size() == 1
+            articles().first().id == 1L
+            meta() == null
+            links() == null
+        }
+        verifyAll(updated) {
+            articles() == [second]
+            meta() == expectedMeta
+            links() == expectedLinks
+            count() == 10
+            nextPage() == "https://example.zendesk.com/page2"
+            previousPage() == "https://example.zendesk.com/page1"
+            page() == 1
+            pageCount() == 2
+            perPage() == 5
+        }
+        verifyAll(withAdded) {
+            articles().size() == 2
+            articles().first().id == 1L
+            articles().last().id == 2L
+        }
+        verifyAll(fromNull) {
+            articles().size() == 1
+            articles().first().id == 1L
+            meta() == expectedMeta
+            links() == expectedLinks
+            count() == 1
+        }
     }
 
-    def "should round-trip serde ArticlesResponse with pagination metadata"() {
+    def "should round-trip serialize and deserialize ArticlesResponse with pagination metadata"() {
         given:
-        def objectMapper = adminCtx.getBean(ObjectMapper)
-        def json = '''{
+        String json = '''{
   "articles": [
     {
       "id": 12345,
@@ -109,34 +163,62 @@ class ArticlesResponseSpec extends Z4jSpec {
 }'''
 
         when:
-        def response = objectMapper.readValue(json, ArticlesResponse)
+        ArticlesResponse response = objectMapper.readValue(json, ArticlesResponse.class)
+        String serialized = objectMapper.writeValueAsString(response)
+        ArticlesResponse deserialized = objectMapper.readValue(serialized, ArticlesResponse.class)
 
         then:
-        response != null
-        response.articles != null
-        response.articles.size() == 1
-        response.articles[0].id == 12345L
-        response.articles[0].title == "Test Article"
-        response.meta != null
-        response.meta.hasMore == true
-        response.meta.afterCursor == "cursor_after"
-        response.meta.beforeCursor == "cursor_before"
-        response.links != null
-        response.links.next.toString() == "https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page[after]=cursor_after"
-        response.links.prev.toString() == "https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page[before]=cursor_before"
-        response.count == 1
-        response.page == 1
-        response.pageCount == 5
-        response.perPage == 10
-        response.nextPage == "https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page=2"
-        response.previousPage == null
+        verifyAll(response) {
+            articles() != null
+            articles().size() == 1
+            articles().first().id == 12345L
+            articles().first().title == "Test Article"
+            meta() != null
+            meta().hasMore == true
+            meta().afterCursor == "cursor_after"
+            meta().beforeCursor == "cursor_before"
+            links() != null
+            links().next.toString() == "https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page[after]=cursor_after"
+            links().prev.toString() == "https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page[before]=cursor_before"
+            count() == 1
+            page() == 1
+            pageCount() == 5
+            perPage() == 10
+            nextPage() == "https://example.zendesk.com/api/v2/help_center/en-us/articles.json?page=2"
+            previousPage() == null
+        }
+        verifyAll(deserialized) {
+            it == response
+            articles().size() == 1
+            count() == 1
+        }
+    }
 
+    def "should handle null components in ArticlesResponse"() {
         when:
-        def serialized = objectMapper.writeValueAsString(response)
-        def deserialized = objectMapper.readValue(serialized, ArticlesResponse)
+        ArticlesResponse empty = new ArticlesResponse(null, null, null, null, null, null, null, null, null)
+        String json = objectMapper.writeValueAsString(empty)
+        Map map = objectMapper.readValue(json, Map.class)
+        ArticlesResponse deserialized = objectMapper.readValue(json, ArticlesResponse.class)
 
         then:
-        deserialized == response
+        verifyAll(empty) {
+            articles() == null
+            meta() == null
+            links() == null
+            count() == null
+            nextPage() == null
+            previousPage() == null
+            page() == null
+            pageCount() == null
+            perPage() == null
+        }
+        verifyAll(map) {
+            isEmpty()
+        }
+        verifyAll(deserialized) {
+            it == empty
+            articles() == null
+        }
     }
 }
-

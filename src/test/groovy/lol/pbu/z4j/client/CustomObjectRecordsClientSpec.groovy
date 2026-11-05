@@ -98,7 +98,7 @@ class CustomObjectRecordsClientSpec extends Z4jSpec {
         then: "records are returned"
         noExceptionThrown()
         listResponse != null
-        listResponse.customObjectRecords != null
+        listResponse.customObjectRecords() != null
 
         when: "searching for the record"
         def searchResponse = adminObjectRecordsClient.searchCustomObjectRecords(customObjectKey, recordName).block()

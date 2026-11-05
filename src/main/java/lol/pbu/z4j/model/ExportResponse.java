@@ -15,22 +15,23 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
-
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
-@Data
-@Accessors(chain = true)
-@EqualsAndHashCode
 @Serdeable
-@Generated
-public class ExportResponse<T> {
-    private List<T> results;
-    private String facets;
-    private Meta meta;
-    private Links links;
+@RecordBuilder
+public record ExportResponse<T>(
+        @Nullable @JsonProperty(JSON_PROPERTY_RESULTS) List<T> results,
+        @Nullable @JsonProperty(JSON_PROPERTY_FACETS) String facets,
+        @Nullable @JsonProperty(JSON_PROPERTY_META) Meta meta,
+        @Nullable @JsonProperty(JSON_PROPERTY_LINKS) Links links
+) implements ExportResponseBuilder.With<T> {
+
+    public static final String JSON_PROPERTY_RESULTS = "results";
+    public static final String JSON_PROPERTY_FACETS = "facets";
+    public static final String JSON_PROPERTY_META = "meta";
+    public static final String JSON_PROPERTY_LINKS = "links";
 }

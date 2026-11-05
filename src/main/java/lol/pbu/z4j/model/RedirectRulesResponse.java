@@ -20,80 +20,39 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * RedirectRulesResponse
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         RedirectRulesResponse.JSON_PROPERTY_RECORDS,
         RedirectRulesResponse.JSON_PROPERTY_REDIRECT_RULES,
         RedirectRulesResponse.JSON_PROPERTY_META
 })
-@Serdeable
-@Generated
-public class RedirectRulesResponse {
+public record RedirectRulesResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_RECORDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid RedirectRule> records,
+        @Nullable @JsonProperty(JSON_PROPERTY_REDIRECT_RULES) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid RedirectRule> redirectRules,
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_META) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Meta meta
+) implements RedirectRulesResponseBuilder.With {
 
     public static final String JSON_PROPERTY_RECORDS = "records";
     public static final String JSON_PROPERTY_REDIRECT_RULES = "redirect_rules";
     public static final String JSON_PROPERTY_META = "meta";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_RECORDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid RedirectRule> records;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_REDIRECT_RULES)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid RedirectRule> redirectRules;
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_META)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Meta meta;
-
-    public List<RedirectRule> getRecords() {
-        if (records != null) {
-            return records;
+    public RedirectRulesResponse {
+        if (records == null && redirectRules != null) {
+            records = redirectRules;
+        } else if (redirectRules == null && records != null) {
+            redirectRules = records;
         }
-        return redirectRules;
     }
 
-    public List<RedirectRule> getRedirectRules() {
-        if (redirectRules != null) {
-            return redirectRules;
-        }
-        return records;
-    }
-
-    /**
-     * Add an item to the records property in a chainable fashion.
-     *
-     * @param recordsItem the RedirectRule to add
-     * @return The same instance of RedirectRulesResponse for chaining.
-     */
     public RedirectRulesResponse addRecordsItem(RedirectRule recordsItem) {
-        if (records == null) {
-            records = new ArrayList<>();
-        }
-        records.add(recordsItem);
-        return this;
+        List<RedirectRule> list = new ArrayList<>(records != null ? records : List.of());
+        list.add(recordsItem);
+        return new RedirectRulesResponse(list, redirectRules, meta);
     }
 }

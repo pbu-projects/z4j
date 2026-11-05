@@ -56,7 +56,7 @@ class ArticleClientSpec extends Z4jSpec {
         articleFixtures = FixtureLoader.loadFixture("/fixtures/article_fixtures.yaml", ArticleFixtures.class)
 
         for (LocaleAbbreviation loc : allLocales) {
-            def articles = adminArticleClient.listArticles(loc, null, null, null, null).block()?.articles
+            def articles = adminArticleClient.listArticles(loc, null, null, null, null).block()?.articles()
             if (articles != null && !articles.isEmpty()) {
                 validSectionId = articles.get(0).sectionId
                 validPermissionGroupId = articles.get(0).permissionGroupId
@@ -110,8 +110,8 @@ class ArticleClientSpec extends Z4jSpec {
         ArticlesResponse articlesResponse = response.block()
 
         then: "validate the returned article objects have an ID that other tests will require"
-        if (articlesResponse != null && articlesResponse.articles != null && articlesResponse.articles.size() > 0) {
-            articlesResponse.articles.forEach { article -> article.id != null }
+        if (articlesResponse != null && articlesResponse.articles() != null && articlesResponse.articles().size() > 0) {
+            articlesResponse.articles().forEach { article -> article.id != null }
         }
 
         where:
@@ -504,8 +504,8 @@ class ArticleClientSpec extends Z4jSpec {
 
     private Long getOrCreateArticleId() {
         try {
-            def existing = adminArticleClient.listArticles(validLocale).block()?.articles
-            def existingNoLocale = adminArticleClient.listArticlesNoLocale().block()?.articles
+            def existing = adminArticleClient.listArticles(validLocale).block()?.articles()
+            def existingNoLocale = adminArticleClient.listArticlesNoLocale().block()?.articles()
             if (existing != null && !existing.isEmpty() && existingNoLocale != null && !existingNoLocale.isEmpty()) {
                 return existing[0].id
             }
@@ -521,8 +521,8 @@ class ArticleClientSpec extends Z4jSpec {
         Long createdId = adminArticleClient.createArticle(validLocale, validSectionId, req).block().article.id
         for (int i = 0; i < 10; i++) {
             try {
-                def check = adminArticleClient.listArticles(validLocale).block()?.articles
-                def checkNoLocale = adminArticleClient.listArticlesNoLocale().block()?.articles
+                def check = adminArticleClient.listArticles(validLocale).block()?.articles()
+                def checkNoLocale = adminArticleClient.listArticlesNoLocale().block()?.articles()
                 if (check != null && !check.isEmpty() && checkNoLocale != null && !checkNoLocale.isEmpty()) {
                     break
                 }
@@ -545,9 +545,9 @@ class ArticleClientSpec extends Z4jSpec {
         StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticles(validLocale, (String) null, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
-                        articles != null
-                        if (!articles.isEmpty()) {
-                            meta != null
+                        articles() != null
+                        if (!articles().isEmpty()) {
+                            meta() != null
                         }
                     }
                 }
@@ -562,7 +562,7 @@ class ArticleClientSpec extends Z4jSpec {
         StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticles(validLocale)))
                 .assertNext { response ->
                     verifyAll(response) {
-                        articles != null
+                        articles() != null
                     }
                 }
                 .verifyComplete()
@@ -576,9 +576,9 @@ class ArticleClientSpec extends Z4jSpec {
         StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticlesNoLocale((String) null, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
-                        articles != null
-                        if (!articles.isEmpty()) {
-                            meta != null
+                        articles() != null
+                        if (!articles().isEmpty()) {
+                            meta() != null
                         }
                     }
                 }
@@ -593,9 +593,9 @@ class ArticleClientSpec extends Z4jSpec {
         StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticles(validLocale, null, null, null, null, null, null, null, 1, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
-                        articles != null
-                        if (!articles.isEmpty()) {
-                            page != null || meta != null
+                        articles() != null
+                        if (!articles().isEmpty()) {
+                            page() != null || meta() != null
                         }
                     }
                 }
@@ -610,9 +610,9 @@ class ArticleClientSpec extends Z4jSpec {
         StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticles(validLocale, 1, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
-                        articles != null
-                        if (!articles.isEmpty()) {
-                            page != null || meta != null
+                        articles() != null
+                        if (!articles().isEmpty()) {
+                            page() != null || meta() != null
                         }
                     }
                 }
@@ -627,7 +627,7 @@ class ArticleClientSpec extends Z4jSpec {
         StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticlesNoLocale()))
                 .assertNext { response ->
                     verifyAll(response) {
-                        articles != null
+                        articles() != null
                     }
                 }
                 .verifyComplete()
@@ -641,9 +641,9 @@ class ArticleClientSpec extends Z4jSpec {
         StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticlesNoLocale(1, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
-                        articles != null
-                        if (!articles.isEmpty()) {
-                            page != null || meta != null
+                        articles() != null
+                        if (!articles().isEmpty()) {
+                            page() != null || meta() != null
                         }
                     }
                 }
@@ -658,9 +658,9 @@ class ArticleClientSpec extends Z4jSpec {
         StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticles(validLocale, SortArticleBy.POSITION, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
-                        articles != null
-                        if (!articles.isEmpty()) {
-                            meta != null
+                        articles() != null
+                        if (!articles().isEmpty()) {
+                            meta() != null
                         }
                     }
                 }
@@ -675,7 +675,7 @@ class ArticleClientSpec extends Z4jSpec {
         StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticlesNoLocale(SortArticleBy.UPDATED_AT, SortOrder.DESCENDING, (Long) null, (String) null)))
                 .assertNext { response ->
                     verifyAll(response) {
-                        articles != null
+                        articles() != null
                     }
                 }
                 .verifyComplete()
@@ -689,9 +689,9 @@ class ArticleClientSpec extends Z4jSpec {
         StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticlesNoLocale(SortArticleBy.UPDATED_AT, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
-                        articles != null
-                        if (!articles.isEmpty()) {
-                            meta != null
+                        articles() != null
+                        if (!articles().isEmpty()) {
+                            meta() != null
                         }
                     }
                 }
@@ -706,9 +706,9 @@ class ArticleClientSpec extends Z4jSpec {
         StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticlesNoLocale(SortArticleBy.CREATED_AT, SortOrder.ASCENDING, (Long) null, (String) null, (String) null, (String) null, (Integer) null, 1, 10)))
                 .assertNext { response ->
                     verifyAll(response) {
-                        articles != null
-                        if (!articles.isEmpty()) {
-                            page != null || meta != null
+                        articles() != null
+                        if (!articles().isEmpty()) {
+                            page() != null || meta() != null
                         }
                     }
                 }
@@ -724,7 +724,7 @@ class ArticleClientSpec extends Z4jSpec {
         StepVerifier.create(ensureNonEmpty(adminArticleClient.listArticles(validLocale, SortArticleBy.UPDATED_AT, SortOrder.ASCENDING, oneDayAgo, (String) null)))
                 .assertNext { response ->
                     verifyAll(response) {
-                        articles != null
+                        articles() != null
                     }
                 }
                 .verifyComplete()

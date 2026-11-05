@@ -135,12 +135,12 @@ class SearchClientSpec extends Z4jSpec {
 
         when:
         ExportResponse<Ticket> response = client.exportTicket(query, pageSize, null).block()
-        List<Ticket> tickets = response.getResults()
+        List<Ticket> tickets = new ArrayList<>(response.results())
 
         and:
-        while (response.getMeta().getAfterCursor() != null && response.getMeta().getHasMore()) {
-            response = client.exportTicket(query, pageSize, response.getMeta().getAfterCursor()).block()
-            tickets.addAll(response.getResults())
+        while (response.meta().getAfterCursor() != null && response.meta().getHasMore()) {
+            response = client.exportTicket(query, pageSize, response.meta().getAfterCursor()).block()
+            tickets.addAll(response.results())
         }
 
         then:

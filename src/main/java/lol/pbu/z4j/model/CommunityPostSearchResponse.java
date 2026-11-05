@@ -20,48 +20,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
-/**
- * CommunityPostSearchResponse
- * @author Jonathan-Zollinger
- * @since 0.1.1
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(CommunityPostSearchResponse.JSON_PROPERTY_RESULTS)
 @Serdeable
-@Generated
-public class CommunityPostSearchResponse {
+@RecordBuilder
+@JsonPropertyOrder(CommunityPostSearchResponse.JSON_PROPERTY_RESULTS)
+public record CommunityPostSearchResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_RESULTS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Post> results
+) implements CommunityPostSearchResponseBuilder.With {
 
     public static final String JSON_PROPERTY_RESULTS = "results";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_RESULTS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid Post> results;
-
-    /**
-     * Add an item to the results property in a chainable fashion.
-     *
-     * @return The same instance of CommunityPostSearchResponse for chaining.
-     */
     public CommunityPostSearchResponse addResultsItem(Post resultsItem) {
-        if (results == null) {
-            results = new ArrayList<>();
-        }
-        results.add(resultsItem);
-        return this;
+        List<Post> list = new ArrayList<>(results != null ? results : List.of());
+        list.add(resultsItem);
+        return new CommunityPostSearchResponse(list);
     }
-
 }

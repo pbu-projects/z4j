@@ -54,7 +54,7 @@ class GuideMediaClientSpec extends Z4jSpec {
         noExceptionThrown()
         assert response != null
         verifyAll(response) {
-            records != null
+            records() != null
         }
     }
 

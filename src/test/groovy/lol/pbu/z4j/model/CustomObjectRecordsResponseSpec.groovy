@@ -15,34 +15,140 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.serde.ObjectMapper
 import lol.pbu.z4j.Z4jSpec
+import spock.lang.Shared
 
 class CustomObjectRecordsResponseSpec extends Z4jSpec {
 
-    def "should add custom object records item to null list"() {
-        given:
-        def response = new CustomObjectRecordsResponse()
-        def record = new CustomObjectRecord().setName("R1")
+    @Shared
+    ObjectMapper objectMapper
 
-        when:
-        response.addCustomObjectRecordsItem(record)
-
-        then:
-        response.customObjectRecords.size() == 1
-        response.customObjectRecords[0] == record
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
     }
 
-    def "should add custom object records item to existing list"() {
+    def "should create CustomObjectRecordsResponse with canonical constructor and builder"() {
         given:
-        def record1 = new CustomObjectRecord().setName("R1")
-        def record2 = new CustomObjectRecord().setName("R2")
-        def response = new CustomObjectRecordsResponse(customObjectRecords: [record1])
+        CustomObjectRecord record = new CustomObjectRecord().setId("rec_1").setName("Laptop 1")
+        List<CustomObjectRecord> list = [record]
+        Map<String, Object> expectedMeta = [has_more: true, after_cursor: "cursor_1"]
+        Map<String, Object> expectedLinks = [next: "https://example.zendesk.com/next"]
 
         when:
-        response.addCustomObjectRecordsItem(record2)
+        CustomObjectRecordsResponse direct = new CustomObjectRecordsResponse(list, expectedMeta, expectedLinks)
+        CustomObjectRecordsResponse built = CustomObjectRecordsResponseBuilder.builder()
+                .customObjectRecords(list)
+                .meta(expectedMeta)
+                .links(expectedLinks)
+                .build()
 
         then:
-        response.customObjectRecords.size() == 2
-        response.customObjectRecords.containsAll([record1, record2])
+        verifyAll(direct) {
+            customObjectRecords() == list
+            meta() == expectedMeta
+            links() == expectedLinks
+        }
+        verifyAll(built) {
+            it == direct
+            customObjectRecords() == list
+            meta() == expectedMeta
+            links() == expectedLinks
+        }
+    }
+
+    def "should update CustomObjectRecordsResponse using record withers and addCustomObjectRecordsItem method"() {
+        given:
+        CustomObjectRecord record1 = new CustomObjectRecord().setId("r1").setName("R1")
+        CustomObjectRecord record2 = new CustomObjectRecord().setId("r2").setName("R2")
+        Map<String, Object> meta1 = [has_more: false]
+        Map<String, Object> meta2 = [has_more: true]
+        Map<String, Object> links1 = [prev: "prev_url"]
+        Map<String, Object> links2 = [next: "next_url"]
+        CustomObjectRecordsResponse response = new CustomObjectRecordsResponse([record1], meta1, links1)
+
+        when:
+        CustomObjectRecordsResponse updated = response
+                .withCustomObjectRecords([record2])
+                .withMeta(meta2)
+                .withLinks(links2)
+        CustomObjectRecordsResponse withAdded = response.addCustomObjectRecordsItem(record2)
+        CustomObjectRecordsResponse fromNull = new CustomObjectRecordsResponse(null, meta1, links1).addCustomObjectRecordsItem(record1)
+
+        then:
+        verifyAll(response) {
+            customObjectRecords().size() == 1
+            customObjectRecords().first() == record1
+            meta() == meta1
+            links() == links1
+        }
+        verifyAll(updated) {
+            customObjectRecords() == [record2]
+            meta() == meta2
+            links() == links2
+        }
+        verifyAll(withAdded) {
+            customObjectRecords().size() == 2
+            customObjectRecords().containsAll([record1, record2])
+            meta() == meta1
+            links() == links1
+        }
+        verifyAll(fromNull) {
+            customObjectRecords().size() == 1
+            customObjectRecords().first() == record1
+            meta() == meta1
+            links() == links1
+        }
+    }
+
+    def "should round-trip serialize and deserialize CustomObjectRecordsResponse"() {
+        given:
+        CustomObjectRecord record = new CustomObjectRecord().setId("rec_99").setName("Asset 99")
+        Map<String, Object> expectedMeta = [has_more: false]
+        Map<String, Object> expectedLinks = [next: "https://example.zendesk.com/next"]
+        CustomObjectRecordsResponse response = new CustomObjectRecordsResponse([record], expectedMeta, expectedLinks)
+
+        when:
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        CustomObjectRecordsResponse deserialized = objectMapper.readValue(json, CustomObjectRecordsResponse.class)
+
+        then:
+        verifyAll(map) {
+            containsKey("custom_object_records")
+            containsKey("meta")
+            containsKey("links")
+        }
+        verifyAll(deserialized) {
+            it == response
+            customObjectRecords().size() == 1
+            customObjectRecords().first().id == "rec_99"
+            meta() == expectedMeta
+            links() == expectedLinks
+        }
+    }
+
+    def "should handle null components in CustomObjectRecordsResponse"() {
+        when:
+        CustomObjectRecordsResponse empty = new CustomObjectRecordsResponse(null, null, null)
+        String json = objectMapper.writeValueAsString(empty)
+        Map map = objectMapper.readValue(json, Map.class)
+        CustomObjectRecordsResponse deserialized = objectMapper.readValue(json, CustomObjectRecordsResponse.class)
+
+        then:
+        verifyAll(empty) {
+            customObjectRecords() == null
+            meta() == null
+            links() == null
+        }
+        verifyAll(map) {
+            isEmpty()
+        }
+        verifyAll(deserialized) {
+            it == empty
+            customObjectRecords() == null
+            meta() == null
+            links() == null
+        }
     }
 }
