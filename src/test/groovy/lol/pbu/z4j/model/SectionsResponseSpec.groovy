@@ -15,39 +15,126 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.serde.ObjectMapper
 import lol.pbu.z4j.Z4jSpec
-import spock.lang.Unroll
+import spock.lang.Shared
 
 class SectionsResponseSpec extends Z4jSpec {
 
-    @Unroll
-    def "should add sections item"() {
-        given:
-        def sectionsResponse = new SectionsResponse()
-        sectionsResponse.sections == null
-        def section = new Section(LocaleAbbreviation.FRENCH, faker.lorem().sentence())
+    @Shared
+    ObjectMapper objectMapper
 
-        when:
-        sectionsResponse.addSectionsItem(section)
-
-        then:
-        sectionsResponse.sections.size() == 1
-        sectionsResponse.sections[0] == section
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
     }
 
-    @Unroll
-    def "add sections item to existing list"() {
+    def "should create SectionsResponse with canonical constructor and builder"() {
         given:
-        def existingSection = new Section(LocaleAbbreviation.BULGARIAN, faker.lorem().sentence())
-        def sectionsResponse = new SectionsResponse(sections: [existingSection])
-        def newSection = new Section(LocaleAbbreviation.POLISH, faker.lorem().sentence())
+        Section item = new Section().setName("FAQ").setId(101L)
+        List<Section> list = [item]
 
         when:
-        sectionsResponse.addSectionsItem(newSection)
+        SectionsResponse direct = new SectionsResponse(list)
+        SectionsResponse built = SectionsResponseBuilder.builder()
+                .sections(list)
+                .build()
 
         then:
-        sectionsResponse.sections.size() == 2
-        sectionsResponse.sections.containsAll([existingSection, newSection])
+        verifyAll(direct) {
+            sections() == list
+            sections().size() == 1
+            sections().first().id == 101L
+            sections().first().name == "FAQ"
+        }
+        verifyAll(built) {
+            sections() == list
+            sections().size() == 1
+            sections().first().id == 101L
+            sections().first().name == "FAQ"
+        }
+    }
+
+    def "should update sections using record wither and addSectionsItem method"() {
+        given:
+        Section first = new Section().setName("Draft Section").setId(1L)
+        Section second = new Section().setName("Active Section").setId(2L)
+        SectionsResponse response = new SectionsResponse([first])
+
+        when:
+        SectionsResponse withNewList = response.withSections([second])
+        SectionsResponse withAdded = response.addSectionsItem(second)
+        SectionsResponse fromNull = new SectionsResponse(null).addSectionsItem(first)
+
+        then:
+        verifyAll(response) {
+            sections().size() == 1
+            sections().first().id == 1L
+        }
+        verifyAll(withNewList) {
+            sections().size() == 1
+            sections().first().id == 2L
+        }
+        verifyAll(withAdded) {
+            sections().size() == 2
+            sections().first().id == 1L
+            sections().last().id == 2L
+        }
+        verifyAll(fromNull) {
+            sections().size() == 1
+            sections().first().id == 1L
+        }
+    }
+
+    def "should round-trip serialize and deserialize SectionsResponse"() {
+        given:
+        Section item = new Section().setName("Tutorials").setId(555L)
+        SectionsResponse response = new SectionsResponse([item])
+
+        when:
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        SectionsResponse deserialized = objectMapper.readValue(json, SectionsResponse.class)
+
+        then:
+        verifyAll(map) {
+            containsKey("sections")
+            get("sections") instanceof List
+            ((List) get("sections")).size() == 1
+        }
+        verifyAll(deserialized) {
+            it == response
+            sections() != null
+            sections().size() == 1
+            sections().first().id == 555L
+            sections().first().name == "Tutorials"
+        }
+    }
+
+    def "should handle null sections component in constructor, wither, and serde"() {
+        when:
+        SectionsResponse response = new SectionsResponse(null)
+        Section item = new Section().setName("Quickstarts").setId(99L)
+        SectionsResponse updated = response.withSections([item])
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        SectionsResponse deserialized = objectMapper.readValue(json, SectionsResponse.class)
+
+        then:
+        verifyAll(response) {
+            sections() == null
+        }
+        verifyAll(updated) {
+            sections() != null
+            sections().size() == 1
+            sections().first().id == 99L
+        }
+        verifyAll(map) {
+            isEmpty()
+            !containsKey("sections")
+        }
+        verifyAll(deserialized) {
+            it == response
+            sections() == null
+        }
     }
 }
-

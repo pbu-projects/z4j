@@ -281,10 +281,12 @@ class ArticleCommentClientSpec extends Z4jSpec {
 
         then: "both lists contain the created comment"
         noExceptionThrown()
-        listWithLoc?.comments != null
-        listWithLoc.comments.any { it.id == commentId }
-        listNoLoc?.comments != null
-        listNoLoc.comments.any { it.id == commentId }
+        verifyAll {
+            listWithLoc?.comments() != null
+            listWithLoc.comments().any { it.id == commentId }
+            listNoLoc?.comments() != null
+            listNoLoc.comments().any { it.id == commentId }
+        }
 
         cleanup: "delete created comment"
         if (commentId != null) {
@@ -312,8 +314,10 @@ class ArticleCommentClientSpec extends Z4jSpec {
 
         then: "user comments list contains the created comment"
         noExceptionThrown()
-        userComments?.comments != null
-        userComments.comments.any { it.id == commentId }
+        verifyAll {
+            userComments?.comments() != null
+            userComments.comments().any { it.id == commentId }
+        }
 
         cleanup: "delete created comment"
         if (commentId != null) {

@@ -47,7 +47,7 @@ class CategoryClientSpec extends Z4jSpec {
         agentCategoryClient = agentCtx.getBean(CategoryClient.class)
         userCategoryClient = userCtx.getBean(CategoryClient.class)
         allLocales = adminCtx.getBean(LocaleClient.class).listLocales().block().locales.collect { it.localeAbbreviation }
-        userSegments = adminCtx.getBean(UserSegmentClient.class).listUserSegments(null).block().getUserSegments()
+        userSegments = adminCtx.getBean(UserSegmentClient.class).listUserSegments(null).block().userSegments()
         categoryFixtures = FixtureLoader.loadFixture("/fixtures/category_fixtures.yaml", CategoryFixtures.class)
         assert userSegments.size() >= 2
     }

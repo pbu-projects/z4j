@@ -276,7 +276,7 @@ class TranslationClientSpec extends Z4jSpec {
 
         then:
         noExceptionThrown()
-        listResponse.translations.size() >= 1
+        listResponse.translations().size() >= 1
 
         cleanup:
         try {
@@ -635,8 +635,8 @@ class TranslationClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll {
-            listResp?.translations != null
-            !listResp.translations.isEmpty()
+            listResp?.translations() != null
+            !listResp.translations().isEmpty()
             showResp?.translation() != null
             showResp.translation().locale == defaultLocale
         }
@@ -751,8 +751,8 @@ class TranslationClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll {
-            listResp?.translations != null
-            !listResp.translations.isEmpty()
+            listResp?.translations() != null
+            !listResp.translations().isEmpty()
             showResp?.translation() != null
             showResp.translation().locale == defaultLocale
         }
@@ -867,8 +867,8 @@ class TranslationClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         verifyAll {
-            listResp?.translations != null
-            !listResp.translations.isEmpty()
+            listResp?.translations() != null
+            !listResp.translations().isEmpty()
             showResp?.translation() != null
             showResp.translation().locale == defaultLocale
         }

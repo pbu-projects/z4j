@@ -15,53 +15,25 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
-/**
- * CategoriesResponse
- * @author Jonathan-Zollinger
- * @since 0.1.1
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(CategoriesResponse.JSON_PROPERTY_CATEGORIES)
 @Serdeable
-@Generated
-public class CategoriesResponse {
+@RecordBuilder
+public record CategoriesResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_CATEGORIES) List<@Valid Category> categories
+) implements CategoriesResponseBuilder.With {
 
     public static final String JSON_PROPERTY_CATEGORIES = "categories";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CATEGORIES)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid Category> categories;
-
-    /**
-     * Add an item to the categories property in a chainable fashion.
-     *
-     * @return The same instance of CategoriesResponse for chaining.
-     */
-    public CategoriesResponse addCategoriesItem(Category categoriesItem) {
-        if (categories == null) {
-            categories = new ArrayList<>();
-        }
-        categories.add(categoriesItem);
-        return this;
+    public CategoriesResponse addCategoriesItem(Category item) {
+        List<Category> list = new ArrayList<>(categories != null ? categories : List.of());
+        list.add(item);
+        return new CategoriesResponse(list);
     }
-
 }

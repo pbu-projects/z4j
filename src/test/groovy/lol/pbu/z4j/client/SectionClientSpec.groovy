@@ -78,8 +78,10 @@ class SectionClientSpec extends Z4jSpec {
 
         then:
         noExceptionThrown()
-        response != null
-        response.sections != null
+        verifyAll(response) {
+            it != null
+            sections() != null
+        }
 
         where:
         [sectionClient, userType] << [
@@ -95,8 +97,10 @@ class SectionClientSpec extends Z4jSpec {
 
         then:
         noExceptionThrown()
-        response != null
-        response.sections != null
+        verifyAll(response) {
+            it != null
+            sections() != null
+        }
 
         where:
         [sectionClient, userType] << [

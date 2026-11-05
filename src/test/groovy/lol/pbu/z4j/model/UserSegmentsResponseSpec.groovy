@@ -6,7 +6,6 @@
  * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
- *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,39 +14,128 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.serde.ObjectMapper
 import lol.pbu.z4j.Z4jSpec
-import spock.lang.Unroll
+import spock.lang.Shared
 
 class UserSegmentsResponseSpec extends Z4jSpec {
 
-    @Unroll
-    def "should add user segments item"() {
-        given:
-        def userSegmentsResponse = new UserSegmentsResponse()
-        userSegmentsResponse.userSegments == null
-        def userSegment = new UserSegment(faker.lorem().word(), faker.lorem().word())
+    @Shared
+    ObjectMapper objectMapper
 
-        when:
-        userSegmentsResponse.addUserSegmentsItem(userSegment)
-
-        then:
-        userSegmentsResponse.userSegments.size() == 1
-        userSegmentsResponse.userSegments.getAt(0) == userSegment
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
     }
 
-    @Unroll
-    def "add user segments item to existing list"() {
+    def "should create UserSegmentsResponse with canonical constructor and builder"() {
         given:
-        def existingUserSegment = new UserSegment(faker.lorem().word(), faker.lorem().word())
-        def userSegmentsResponse = new UserSegmentsResponse(userSegments: [existingUserSegment])
-        def newUserSegment = new UserSegment(faker.lorem().word(), faker.lorem().word())
+        UserSegment item = new UserSegment("Staff Only", "staff").setId(101L)
+        List<UserSegment> list = [item]
 
         when:
-        userSegmentsResponse.addUserSegmentsItem(newUserSegment)
+        UserSegmentsResponse direct = new UserSegmentsResponse(list)
+        UserSegmentsResponse built = UserSegmentsResponseBuilder.builder()
+                .userSegments(list)
+                .build()
 
         then:
-        userSegmentsResponse.userSegments.size() == 2
-        userSegmentsResponse.userSegments.containsAll([existingUserSegment, newUserSegment])
+        verifyAll(direct) {
+            userSegments() == list
+            userSegments().size() == 1
+            userSegments().first().id == 101L
+            userSegments().first().name == "Staff Only"
+            userSegments().first().userType == "staff"
+        }
+        verifyAll(built) {
+            userSegments() == list
+            userSegments().size() == 1
+            userSegments().first().id == 101L
+            userSegments().first().name == "Staff Only"
+            userSegments().first().userType == "staff"
+        }
+    }
+
+    def "should update user segments using record wither and addUserSegmentsItem method"() {
+        given:
+        UserSegment first = new UserSegment("Original", "staff").setId(1L)
+        UserSegment second = new UserSegment("Updated", "signed_in_users").setId(2L)
+        UserSegmentsResponse response = new UserSegmentsResponse([first])
+
+        when:
+        UserSegmentsResponse withNewList = response.withUserSegments([second])
+        UserSegmentsResponse withAdded = response.addUserSegmentsItem(second)
+        UserSegmentsResponse fromNull = new UserSegmentsResponse(null).addUserSegmentsItem(first)
+
+        then:
+        verifyAll(response) {
+            userSegments().size() == 1
+            userSegments().first().id == 1L
+        }
+        verifyAll(withNewList) {
+            userSegments().size() == 1
+            userSegments().first().id == 2L
+        }
+        verifyAll(withAdded) {
+            userSegments().size() == 2
+            userSegments().first().id == 1L
+            userSegments().last().id == 2L
+        }
+        verifyAll(fromNull) {
+            userSegments().size() == 1
+            userSegments().first().id == 1L
+        }
+    }
+
+    def "should round-trip serialize and deserialize UserSegmentsResponse"() {
+        given:
+        UserSegment item = new UserSegment("VIP Customers", "signed_in_users").setId(555L)
+        UserSegmentsResponse response = new UserSegmentsResponse([item])
+
+        when:
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        UserSegmentsResponse deserialized = objectMapper.readValue(json, UserSegmentsResponse.class)
+
+        then:
+        verifyAll(map) {
+            containsKey("user_segments")
+            get("user_segments") instanceof List
+            ((List) get("user_segments")).size() == 1
+        }
+        verifyAll(deserialized) {
+            it == response
+            userSegments() != null
+            userSegments().size() == 1
+            userSegments().first().id == 555L
+            userSegments().first().name == "VIP Customers"
+        }
+    }
+
+    def "should handle null user segments component in constructor, wither, and serde"() {
+        when:
+        UserSegmentsResponse response = new UserSegmentsResponse(null)
+        UserSegment item = new UserSegment("Community", "signed_in_users").setId(99L)
+        UserSegmentsResponse updated = response.withUserSegments([item])
+        String json = objectMapper.writeValueAsString(response)
+        Map map = objectMapper.readValue(json, Map.class)
+        UserSegmentsResponse deserialized = objectMapper.readValue(json, UserSegmentsResponse.class)
+
+        then:
+        verifyAll(response) {
+            userSegments() == null
+        }
+        verifyAll(updated) {
+            userSegments() != null
+            userSegments().size() == 1
+            userSegments().first().id == 99L
+        }
+        verifyAll(map) {
+            isEmpty()
+            !containsKey("user_segments")
+        }
+        verifyAll(deserialized) {
+            it == response
+            userSegments() == null
+        }
     }
 }
-

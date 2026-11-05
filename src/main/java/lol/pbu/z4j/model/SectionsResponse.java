@@ -15,53 +15,25 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
-/**
- * SectionsResponse
- * @author Jonathan-Zollinger
- * @since 0.1.1
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(SectionsResponse.JSON_PROPERTY_SECTIONS)
 @Serdeable
-@Generated
-public class SectionsResponse {
+@RecordBuilder
+public record SectionsResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_SECTIONS) List<@Valid Section> sections
+) implements SectionsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_SECTIONS = "sections";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SECTIONS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid Section> sections;
-
-    /**
-     * Add an item to the sections property in a chainable fashion.
-     *
-     * @return The same instance of SectionsResponse for chaining.
-     */
-    public SectionsResponse addSectionsItem(Section sectionsItem) {
-        if (sections == null) {
-            sections = new ArrayList<>();
-        }
-        sections.add(sectionsItem);
-        return this;
+    public SectionsResponse addSectionsItem(Section item) {
+        List<Section> list = new ArrayList<>(sections != null ? sections : List.of());
+        list.add(item);
+        return new SectionsResponse(list);
     }
-
 }
