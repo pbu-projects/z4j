@@ -15,39 +15,17 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
-/**
- * DeletedUserResponse
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(DeletedUserResponse.JSON_PROPERTY_DELETED_USER)
 @Serdeable
-@Generated
-public class DeletedUserResponse {
+@RecordBuilder
+public record DeletedUserResponse(
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_DELETED_USER) User deletedUser
+) implements DeletedUserResponseBuilder.With {
 
     public static final String JSON_PROPERTY_DELETED_USER = "deleted_user";
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_DELETED_USER)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private User deletedUser;
-
 }

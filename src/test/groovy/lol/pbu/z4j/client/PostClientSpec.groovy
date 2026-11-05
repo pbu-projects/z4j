@@ -204,11 +204,13 @@ class PostClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         and:
-        response.getComment().getPostId() == sharedPostId
+        response.comment().postId == sharedPostId
 
         cleanup:
         try {
-            adminPostClient.deletePostComment(sharedPostId, response.getComment().getId()).block()
+            if (response?.comment()?.id != null) {
+                adminPostClient.deletePostComment(sharedPostId, response.comment().id).block()
+            }
         } catch (Exception ignored) {}
 
         where:
@@ -241,20 +243,22 @@ class PostClientSpec extends Z4jSpec {
         def createReq = new PostCommentCreateRequest().setComment(
                 new PostComment("Show test comment").setPostId(sharedPostId).setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
-        def created = adminPostClient.createPostComment(sharedPostId, createReq).block().getComment()
+        def created = adminPostClient.createPostComment(sharedPostId, createReq).block().comment()
 
         when:
-        def response = postClient.showPostComment(sharedPostId, created.getId()).block()
+        def response = postClient.showPostComment(sharedPostId, created.id).block()
 
         then:
         noExceptionThrown()
 
         and:
-        response.getComment().getId() == created.getId()
+        response.comment().id == created.id
 
         cleanup:
         try {
-            adminPostClient.deletePostComment(sharedPostId, created.getId()).block()
+            if (created?.id != null) {
+                adminPostClient.deletePostComment(sharedPostId, created.id).block()
+            }
         } catch (Exception ignored) {}
 
         where:
@@ -270,23 +274,25 @@ class PostClientSpec extends Z4jSpec {
         def createReq = new PostCommentCreateRequest().setComment(
                 new PostComment("Original comment body").setPostId(sharedPostId).setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
-        def created = adminPostClient.createPostComment(sharedPostId, createReq).block().getComment()
+        def created = adminPostClient.createPostComment(sharedPostId, createReq).block().comment()
 
         when:
         def updateReq = new PostCommentUpdateRequest().setComment(
                 new PostComment("Updated comment body").setLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         )
-        def response = postClient.updatePostComment(sharedPostId, created.getId(), updateReq).block()
+        def response = postClient.updatePostComment(sharedPostId, created.id, updateReq).block()
 
         then:
         noExceptionThrown()
 
         and:
-        response.getComment().getBody() == "Updated comment body"
+        response.comment().body == "Updated comment body"
 
         cleanup:
         try {
-            adminPostClient.deletePostComment(sharedPostId, created.getId()).block()
+            if (created?.id != null) {
+                adminPostClient.deletePostComment(sharedPostId, created.id).block()
+            }
         } catch (Exception ignored) {}
 
         where:

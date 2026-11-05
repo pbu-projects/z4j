@@ -467,10 +467,12 @@ class TicketClientSpec extends Z4jSpec {
 
         then: "related information is returned"
         noExceptionThrown()
-        response != null
-        response.getTicketRelated() != null
-        response.getTicketRelated().getUrl() != null
-        response.getTicketRelated().getUrl().contains(ticketId.toString())
+        assert response != null
+        verifyAll(response) {
+            ticketRelated() != null
+            ticketRelated().url != null
+            ticketRelated().url.contains(ticketId.toString())
+        }
     }
 
     def "calling getTicketRelatedInformation fails when used with bad credentials"() {

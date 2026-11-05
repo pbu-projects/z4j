@@ -82,7 +82,11 @@ class CustomObjectsClientSpec extends Z4jSpec {
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
-        response != null
+        verifyAll(response) {
+            it != null
+            count() != null
+            limit() != null
+        }
     }
 
     @Unroll

@@ -282,8 +282,8 @@ class UserSpec extends Specification {
 
     def "can serialize and deserialize UserCountResponse and UserCountResponseCount"() {
         given:
-        def count = new UserCountResponseCount().setValue(42L)
-        def response = new UserCountResponse(count)
+        def expectedCount = new UserCountResponseCount().setValue(42L)
+        def response = new UserCountResponse(expectedCount)
 
         when:
         def json = jsonMapper.writeValueAsString(response)
@@ -291,8 +291,8 @@ class UserSpec extends Specification {
 
         then:
         verifyAll(deserialized) {
-            count != null
-            count.value == 42L
+            count() != null
+            count().value == 42L
         }
     }
 
@@ -307,9 +307,9 @@ class UserSpec extends Specification {
 
         then:
         verifyAll(deserialized) {
-            deletedUser != null
-            deletedUser.id == 501L
-            deletedUser.name == "Deleted User"
+            deletedUser() != null
+            deletedUser().id == 501L
+            deletedUser().name == "Deleted User"
         }
     }
 
@@ -353,7 +353,7 @@ class UserSpec extends Specification {
                 .setCcdTickets(2)
                 .setOrganizationSubscriptions(1)
                 .setRequestedTickets(10)
-        def response = new UserRelatedResponse().setUserRelated(related)
+        def response = new UserRelatedResponse(related)
 
         when:
         def json = jsonMapper.writeValueAsString(response)
@@ -361,11 +361,11 @@ class UserSpec extends Specification {
 
         then:
         verifyAll(deserialized) {
-            userRelated != null
-            userRelated.assignedTickets == 5
-            userRelated.ccdTickets == 2
-            userRelated.organizationSubscriptions == 1
-            userRelated.requestedTickets == 10
+            userRelated() != null
+            userRelated().assignedTickets == 5
+            userRelated().ccdTickets == 2
+            userRelated().organizationSubscriptions == 1
+            userRelated().requestedTickets == 10
         }
     }
 }
