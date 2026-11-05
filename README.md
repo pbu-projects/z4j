@@ -12,6 +12,22 @@ Compared to traditional reflection-based clients like CloudBees:
 * **Zero reflection:** Serialization is handled at compile time without runtime reflection caches.
 * **Low memory overhead:** Designed for lean execution in CLI tools and containerized services.
 
+### Memory Benchmark (CloudBees vs z4j)
+
+Here are the memory allocation results when parsing Zendesk tickets into domain models:
+
+| Ticket Cohort | Payload Size | CloudBees (Jackson AST + Reflection) | z4j (Compile-Time Serde Records) | z4j Memory Savings |
+|:---|:---|:---|:---|:---|
+| **25 Tickets** | 43 KB JSON | 50,344 KB (cold start) | 24,401 KB (cold start) | **52% less memory** |
+| **50 Tickets** | 86 KB JSON | 1,661 KB | 520 KB | **69% less memory** |
+| **100 Tickets** | 173 KB JSON | 3,799 KB | 1,035 KB | **73% less memory** |
+
+Run the benchmark locally:
+
+```bash
+./gradlew benchmark
+```
+
 ### Installation
 
 **Gradle**
