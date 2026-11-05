@@ -19,6 +19,7 @@ import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.client.SearchClient
 import spock.lang.Shared
 
+import java.time.Duration
 import java.time.Instant
 
 class RateLimitSpec extends Z4jSpec {
@@ -250,5 +251,66 @@ class RateLimitSpec extends Z4jSpec {
         localTracker.getLatestSnapshot() != null
         localTracker.getLatestSnapshot().isRateLimited()
         localTracker.getLatestSnapshot().retryAfterSeconds == 30
+    }
+
+    def "RateLimitSnapshot calculates effective wait duration and approaching rate limit alias"() {
+        given: "a snapshot with retry-after"
+        def retrySnapshot = RateLimitSnapshot.builder()
+                .statusCode(429)
+                .retryAfterSeconds(30)
+                .build()
+
+        and: "a snapshot with global reset seconds"
+        def resetSnapshot = RateLimitSnapshot.builder()
+                .statusCode(200)
+                .globalResetSeconds(45)
+                .globalRemaining(5)
+                .build()
+
+        and: "a snapshot with neither"
+        def emptySnapshot = new RateLimitSnapshot()
+
+        expect:
+        verifyAll {
+            retrySnapshot.getEffectiveWaitDuration() == Duration.ofSeconds(30)
+            resetSnapshot.getEffectiveWaitDuration() == Duration.ofSeconds(45)
+            resetSnapshot.isApproachingRateLimit(10)
+            !resetSnapshot.isApproachingRateLimit(2)
+            emptySnapshot.getEffectiveWaitDuration() == Duration.ZERO
+            !emptySnapshot.isRateLimited()
+        }
+    }
+
+    def "RateLimitConfiguration retains default values and allows property updates"() {
+        given:
+        def config = new RateLimitConfiguration()
+
+        expect:
+        verifyAll(config) {
+            autoWaitEnabled
+            waitDurationSeconds == 60L
+            approachThreshold == 1
+            requestsPerSecond == 0.0d
+            maxTransientRetries == 0
+            transientRetryDelaySeconds == 1L
+        }
+
+        when:
+        config.setAutoWaitEnabled(false)
+        config.setWaitDurationSeconds(120L)
+        config.setApproachThreshold(5)
+        config.setRequestsPerSecond(10.0d)
+        config.setMaxTransientRetries(3)
+        config.setTransientRetryDelaySeconds(2L)
+
+        then:
+        verifyAll(config) {
+            !autoWaitEnabled
+            waitDurationSeconds == 120L
+            approachThreshold == 5
+            requestsPerSecond == 10.0d
+            maxTransientRetries == 3
+            transientRetryDelaySeconds == 2L
+        }
     }
 }

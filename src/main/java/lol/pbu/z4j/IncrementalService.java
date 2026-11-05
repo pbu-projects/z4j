@@ -15,6 +15,8 @@
  */
 package lol.pbu.z4j;
 
+import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.net.URI;
@@ -32,9 +34,8 @@ import lol.pbu.z4j.model.Organization;
 import lol.pbu.z4j.model.Ticket;
 import lol.pbu.z4j.model.TicketEvent;
 import lol.pbu.z4j.model.User;
-import lombok.Data;
-import lombok.experimental.Accessors;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -44,9 +45,10 @@ import reactor.core.publisher.Mono;
  * @author Jonathan-Zollinger
  * @since 0.2.7
  */
-@Slf4j
 @Singleton
 public class IncrementalService {
+
+    private static final Logger log = LoggerFactory.getLogger(IncrementalService.class);
 
     @Inject
     IncrementalClient incrementalClient;
@@ -71,27 +73,87 @@ public class IncrementalService {
         TICKET, USER, ORGANIZATION, TICKET_EVENT
     }
 
-    @Data
-    @Accessors(chain = true)
+    @Serdeable
+    @RecordBuilder
     @Generated
-    public static class IncrementalPage<T> {
-        private List<T> results;
-        private String cursor;
-        private String afterCursor;
-        private String beforeCursor;
-        private Boolean endOfStream;
-        private Integer count;
+    public record IncrementalPage<T>(
+            List<T> results,
+            String cursor,
+            String afterCursor,
+            String beforeCursor,
+            Boolean endOfStream,
+            Integer count
+    ) implements IncrementalServiceIncrementalPageBuilder.With<T> {
+        public IncrementalPage() {
+            this(null, null, null, null, null, null);
+        }
+
+        public static <T> IncrementalServiceIncrementalPageBuilder<T> builder() {
+            return IncrementalServiceIncrementalPageBuilder.builder();
+        }
+
+        public List<T> getResults() {
+            return results;
+        }
+
+        public String getCursor() {
+            return cursor;
+        }
+
+        public String getAfterCursor() {
+            return afterCursor;
+        }
+
+        public String getBeforeCursor() {
+            return beforeCursor;
+        }
+
+        public Boolean getEndOfStream() {
+            return endOfStream;
+        }
+
+        public Integer getCount() {
+            return count;
+        }
     }
 
-    @Data
-    @Accessors(chain = true)
+    @Serdeable
+    @RecordBuilder
     @Generated
-    public static class IncrementalTimePage<T> {
-        private List<T> results;
-        private Long endTime;
-        private String nextPage;
-        private Boolean endOfStream;
-        private Integer count;
+    public record IncrementalTimePage<T>(
+            List<T> results,
+            Long endTime,
+            String nextPage,
+            Boolean endOfStream,
+            Integer count
+    ) implements IncrementalServiceIncrementalTimePageBuilder.With<T> {
+        public IncrementalTimePage() {
+            this(null, null, null, null, null);
+        }
+
+        public static <T> IncrementalServiceIncrementalTimePageBuilder<T> builder() {
+            return IncrementalServiceIncrementalTimePageBuilder.builder();
+        }
+
+        public List<T> getResults() {
+            return results;
+        }
+
+        public Long getEndTime() {
+            return endTime;
+        }
+
+        public String getNextPage() {
+            return nextPage;
+        }
+
+        public Boolean getEndOfStream() {
+            return endOfStream;
+        }
+
+        public Integer getCount() {
+            return count;
+        }
     }
 
     public static class CursorIncrementalBuilder<T> {
@@ -176,16 +238,14 @@ public class IncrementalService {
                 return Mono.error(new IllegalStateException("Unsupported resource type for cursor export: " + resourceType));
             }
 
-            return mono.map(res -> {
-                IncrementalPage<T> page = new IncrementalPage<>();
-                page.setResults((List<T>) res.results());
-                page.setCursor(res.cursor() != null ? res.cursor() : res.afterCursor());
-                page.setAfterCursor(res.afterCursor());
-                page.setBeforeCursor(res.beforeCursor());
-                page.setEndOfStream(res.endOfStream());
-                page.setCount(res.count());
-                return page;
-            });
+            return mono.map(res -> new IncrementalPage<>(
+                    (List<T>) res.results(),
+                    res.cursor() != null ? res.cursor() : res.afterCursor(),
+                    res.afterCursor(),
+                    res.beforeCursor(),
+                    res.endOfStream(),
+                    res.count()
+            ));
         }
     }
 
@@ -303,15 +363,13 @@ public class IncrementalService {
                 return Mono.error(new IllegalStateException("Unsupported resource type for time export: " + resourceType));
             }
 
-            return mono.map(res -> {
-                IncrementalTimePage<T> page = new IncrementalTimePage<>();
-                page.setResults((List<T>) res.results());
-                page.setEndTime(res.endTime());
-                page.setNextPage(res.nextPage());
-                page.setEndOfStream(res.endOfStream());
-                page.setCount(res.count());
-                return page;
-            });
+            return mono.map(res -> new IncrementalTimePage<>(
+                    (List<T>) res.results(),
+                    res.endTime(),
+                    res.nextPage(),
+                    res.endOfStream(),
+                    res.count()
+            ));
         }
     }
 

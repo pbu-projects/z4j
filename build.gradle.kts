@@ -42,10 +42,7 @@ group = "lol.pbu"
 version = project.properties["z4jVersion"]!!
 
 val dataFakerVersion = project.properties["dataFakerVersion"]!!
-val lombokVersion = project.properties["lombokVersion"]!!
 val recordBuilderVersion = project.properties["recordBuilderVersion"]!!
-
-configurations.create("lombok")
 
 repositories {
     mavenCentral()
@@ -53,16 +50,13 @@ repositories {
 }
 
 dependencies {
-    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
     annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
     annotationProcessor("io.soabase.record-builder:record-builder-processor:${recordBuilderVersion}")
-    compileOnly("org.projectlombok:lombok:${lombokVersion}")
     compileOnly("io.soabase.record-builder:record-builder-core:${recordBuilderVersion}")
     implementation("io.micronaut.reactor:micronaut-reactor-http-client")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     implementation("io.micronaut.validation:micronaut-validation")
     implementation("io.micronaut:micronaut-retry")
-    "lombok"("org.projectlombok:lombok:${lombokVersion}")
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("net.datafaker:datafaker:$dataFakerVersion")
     testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.22.4")

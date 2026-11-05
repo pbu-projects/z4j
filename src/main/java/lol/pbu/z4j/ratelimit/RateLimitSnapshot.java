@@ -17,17 +17,14 @@ package lol.pbu.z4j.ratelimit;
 
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.io.Serializable;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import lol.pbu.z4j.Generated;
 
 /**
  * Snapshot of Zendesk rate limit state after an HTTP response.
@@ -35,30 +32,38 @@ import java.util.Optional;
  * @author Jonathan-Zollinger
  * @since 0.2.3
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Data
 @Serdeable
-public class RateLimitSnapshot implements Serializable {
+@RecordBuilder
+@Generated
+public record RateLimitSnapshot(
+        @Nullable String requestMethod,
+        @Nullable String requestPath,
+        @Nullable String requestUri,
+        int statusCode,
+        @Nullable Integer globalLimit,
+        @Nullable Integer globalRemaining,
+        @Nullable Integer globalResetSeconds,
+        @Nullable Integer retryAfterSeconds,
+        Map<String, EndpointRateLimit> endpointLimits,
+        Instant timestamp
+) implements RateLimitSnapshotBuilder.With, Serializable {
 
-    @Nullable private String requestMethod;
-    @Nullable private String requestPath;
-    @Nullable private String requestUri;
-    private int statusCode;
+    public RateLimitSnapshot {
+        if (endpointLimits == null) {
+            endpointLimits = Collections.emptyMap();
+        }
+        if (timestamp == null) {
+            timestamp = Instant.now();
+        }
+    }
 
-    @Nullable private Integer globalLimit;
-    @Nullable private Integer globalRemaining;
-    @Nullable private Integer globalResetSeconds;
+    public RateLimitSnapshot() {
+        this(null, null, null, 0, null, null, null, null, Collections.emptyMap(), Instant.now());
+    }
 
-    @Nullable private Integer retryAfterSeconds;
-
-    @Builder.Default
-    private Map<String, EndpointRateLimit> endpointLimits = Collections.emptyMap();
-
-    @Builder.Default
-    private Instant timestamp = Instant.now();
+    public static RateLimitSnapshotBuilder builder() {
+        return RateLimitSnapshotBuilder.builder();
+    }
 
     /**
      * @return true if the response was an HTTP 429 Too Many Requests
@@ -79,9 +84,34 @@ public class RateLimitSnapshot implements Serializable {
         }
         if (endpointLimits != null) {
             return endpointLimits.values().stream()
-                    .anyMatch(e -> e.getRemaining() != null && e.getRemaining() <= threshold);
+                    .anyMatch(e -> e.remaining() != null && e.remaining() <= threshold);
         }
         return false;
+    }
+
+    /**
+     * Alias for isApproachingLimit.
+     *
+     * @param threshold Warning threshold
+     * @return true if any remaining quota &lt;= threshold
+     */
+    public boolean isApproachingRateLimit(int threshold) {
+        return isApproachingLimit(threshold);
+    }
+
+    /**
+     * Calculates the effective wait duration based on retry-after or reset headers.
+     *
+     * @return effective wait duration
+     */
+    public Duration getEffectiveWaitDuration() {
+        if (retryAfterSeconds != null && retryAfterSeconds > 0) {
+            return Duration.ofSeconds(retryAfterSeconds);
+        }
+        if (globalResetSeconds != null && globalResetSeconds > 0) {
+            return Duration.ofSeconds(globalResetSeconds);
+        }
+        return Duration.ZERO;
     }
 
     /**
@@ -99,5 +129,45 @@ public class RateLimitSnapshot implements Serializable {
             clean = clean.substring(EndpointRateLimit.PREFIX.length());
         }
         return Optional.ofNullable(endpointLimits.get(clean));
+    }
+
+    public String getRequestMethod() {
+        return requestMethod;
+    }
+
+    public String getRequestPath() {
+        return requestPath;
+    }
+
+    public String getRequestUri() {
+        return requestUri;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public Integer getGlobalLimit() {
+        return globalLimit;
+    }
+
+    public Integer getGlobalRemaining() {
+        return globalRemaining;
+    }
+
+    public Integer getGlobalResetSeconds() {
+        return globalResetSeconds;
+    }
+
+    public Integer getRetryAfterSeconds() {
+        return retryAfterSeconds;
+    }
+
+    public Map<String, EndpointRateLimit> getEndpointLimits() {
+        return endpointLimits;
+    }
+
+    public Instant getTimestamp() {
+        return timestamp;
     }
 }

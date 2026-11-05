@@ -18,9 +18,7 @@ package lol.pbu.z4j.client;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import lol.pbu.z4j.Generated;
 
 /**
@@ -30,32 +28,41 @@ import lol.pbu.z4j.Generated;
  * @author Jonathan-Zollinger
  * @since 0.4.0
  */
-@Getter
-@Setter
-@Accessors(chain = true)
 @Serdeable
+@RecordBuilder
 @Generated
-public class OAuthTokenRequest {
-
-    @JsonProperty("grant_type")
-    private String grantType = "client_credentials";
-
-    @JsonProperty("client_id")
-    private String clientId;
-
-    @JsonProperty("client_secret")
-    private String clientSecret;
-
-    @Nullable
-    @JsonProperty("scope")
-    private String scope;
+public record OAuthTokenRequest(
+        @JsonProperty("grant_type") String grantType,
+        @JsonProperty("client_id") String clientId,
+        @JsonProperty("client_secret") String clientSecret,
+        @Nullable @JsonProperty("scope") String scope
+) implements OAuthTokenRequestBuilder.With {
 
     public OAuthTokenRequest() {
+        this("client_credentials", null, null, null);
     }
 
     public OAuthTokenRequest(String clientId, String clientSecret, String scope) {
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
-        this.scope = scope;
+        this("client_credentials", clientId, clientSecret, scope);
+    }
+
+    public static OAuthTokenRequestBuilder builder() {
+        return OAuthTokenRequestBuilder.builder();
+    }
+
+    public String getGrantType() {
+        return grantType;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public String getClientSecret() {
+        return clientSecret;
+    }
+
+    public String getScope() {
+        return scope;
     }
 }
