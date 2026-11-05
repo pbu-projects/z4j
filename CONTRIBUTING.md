@@ -304,7 +304,7 @@ To minimize runtime memory consumption and avoid dynamic test data generation ov
 
 ### Testing Commandments
 - Methods and features are to have [adequate] unit and integration tests written before any pull request can be accepted.
-- Because we use lombok, we don't need to test setters and getters. Using getters and setters is the preferred way to access class fields.
+- Because we use immutable Java records and RecordBuilder, we do not need to test basic accessors and withers. Using record accessors and builder methods is the preferred way to work with models.
 - Features are to have [adequate] integration and end-to-end tests.
 - Fixes are to have [adequate] unit, integration and end-to-end tests included with the fix for the sake of [regression testing]. Fixes should also document their fixes such that regression testing is properly captured. 
 - Tests should only test one thing

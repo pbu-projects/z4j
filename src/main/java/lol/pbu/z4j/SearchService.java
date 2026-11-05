@@ -20,7 +20,8 @@ import jakarta.inject.Singleton;
 import lol.pbu.z4j.client.SearchClient;
 import lol.pbu.z4j.model.ExportResponse;
 import lol.pbu.z4j.model.Ticket;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -30,9 +31,11 @@ import reactor.core.publisher.Mono;
  * @author Jonathan-Zollinger
  * @since 0.1.3
  */
-@Slf4j
 @Singleton
 public class SearchService {
+
+    private static final Logger log = LoggerFactory.getLogger(SearchService.class);
+
     @Inject
     SearchClient searchClient;
 

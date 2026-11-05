@@ -17,13 +17,9 @@ package lol.pbu.z4j.ratelimit;
 
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.io.Serializable;
+import lol.pbu.z4j.Generated;
 
 /**
  * Represents endpoint-specific rate limits returned by Zendesk
@@ -32,21 +28,46 @@ import java.io.Serializable;
  * @author Jonathan-Zollinger
  * @since 0.2.3
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Data
 @Serdeable
-public class EndpointRateLimit implements Serializable {
+@RecordBuilder
+@Generated
+public record EndpointRateLimit(
+        String name,
+        @Nullable Long total,
+        @Nullable Long remaining,
+        @Nullable Integer resets,
+        @Nullable String rawHeader
+) implements EndpointRateLimitBuilder.With, Serializable {
 
     public static final String PREFIX = "zendesk-ratelimit-";
 
-    private String name;
-    @Nullable private Long total;
-    @Nullable private Long remaining;
-    @Nullable private Integer resets;
-    @Nullable private String rawHeader;
+    public EndpointRateLimit() {
+        this(null, null, null, null, null);
+    }
+
+    public static EndpointRateLimitBuilder builder() {
+        return EndpointRateLimitBuilder.builder();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Long getTotal() {
+        return total;
+    }
+
+    public Long getRemaining() {
+        return remaining;
+    }
+
+    public Integer getResets() {
+        return resets;
+    }
+
+    public String getRawHeader() {
+        return rawHeader;
+    }
 
     /**
      * Parses a Zendesk endpoint rate limit header.
