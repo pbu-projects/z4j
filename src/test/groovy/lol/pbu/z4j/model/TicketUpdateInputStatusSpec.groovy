@@ -15,35 +15,57 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.serde.ObjectMapper
 import lol.pbu.z4j.Z4jSpec
+import spock.lang.Shared
 import spock.lang.Unroll
 
 class TicketUpdateInputStatusSpec extends Z4jSpec {
 
+    @Shared
+    ObjectMapper objectMapper
+
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
+    }
+
     @Unroll
-    def "#status toString() should return #expectedString"() {
+    def "#status toString() and getValue() should return #expectedString"() {
         expect:
-        status.toString() == expectedString
+        verifyAll {
+            status.toString() == expectedString
+            status.getValue() == expectedString
+        }
 
         where:
         status                          | expectedString
         TicketUpdateInputStatus.NEW     | "new"
         TicketUpdateInputStatus.OPEN    | "open"
         TicketUpdateInputStatus.PENDING | "pending"
+        TicketUpdateInputStatus.HOLD    | "hold"
         TicketUpdateInputStatus.SOLVED  | "solved"
         TicketUpdateInputStatus.CLOSED  | "closed"
     }
 
     @Unroll
-    def "fromValue(#stringValue) should return #expectedStatus"() {
-        expect:
-        TicketUpdateInputStatus.fromValue(stringValue) == expectedStatus
+    def "fromValue(#stringValue) and JSON round-trip should return #expectedStatus"() {
+        when:
+        String json = objectMapper.writeValueAsString(expectedStatus)
+        TicketUpdateInputStatus deserialized = objectMapper.readValue(json, TicketUpdateInputStatus.class)
+
+        then:
+        verifyAll {
+            TicketUpdateInputStatus.fromValue(stringValue) == expectedStatus
+            json == "\"${stringValue}\""
+            deserialized == expectedStatus
+        }
 
         where:
         stringValue | expectedStatus
         "new"       | TicketUpdateInputStatus.NEW
         "open"      | TicketUpdateInputStatus.OPEN
         "pending"   | TicketUpdateInputStatus.PENDING
+        "hold"      | TicketUpdateInputStatus.HOLD
         "solved"    | TicketUpdateInputStatus.SOLVED
         "closed"    | TicketUpdateInputStatus.CLOSED
     }

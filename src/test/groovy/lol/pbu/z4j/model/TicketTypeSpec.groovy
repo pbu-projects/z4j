@@ -15,15 +15,27 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.serde.ObjectMapper
 import lol.pbu.z4j.Z4jSpec
+import spock.lang.Shared
 import spock.lang.Unroll
 
 class TicketTypeSpec extends Z4jSpec {
 
+    @Shared
+    ObjectMapper objectMapper
+
+    void setupSpec() {
+        objectMapper = adminCtx.getBean(ObjectMapper.class)
+    }
+
     @Unroll
-    def "#type toString() should return #expectedString"() {
+    def "#type toString() and getValue() should return #expectedString"() {
         expect:
-        type.toString() == expectedString
+        verifyAll {
+            type.toString() == expectedString
+            type.getValue() == expectedString
+        }
 
         where:
         type                | expectedString
@@ -34,9 +46,17 @@ class TicketTypeSpec extends Z4jSpec {
     }
 
     @Unroll
-    def "fromValue(#stringValue) should return #expectedType"() {
-        expect:
-        TicketType.fromValue(stringValue) == expectedType
+    def "fromValue(#stringValue) and JSON round-trip should return #expectedType"() {
+        when:
+        String json = objectMapper.writeValueAsString(expectedType)
+        TicketType deserialized = objectMapper.readValue(json, TicketType.class)
+
+        then:
+        verifyAll {
+            TicketType.fromValue(stringValue) == expectedType
+            json == "\"${stringValue}\""
+            deserialized == expectedType
+        }
 
         where:
         stringValue | expectedType
