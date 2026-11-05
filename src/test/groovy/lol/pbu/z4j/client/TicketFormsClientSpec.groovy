@@ -44,7 +44,7 @@ class TicketFormsClientSpec extends Z4jSpec {
         def request = new TicketFormCreateRequest(form)
 
         def response = adminTicketFormsClient.createTicketForm(request).block()
-        testFormId = response.ticketForm.id
+        testFormId = response?.ticketForm()?.id
         sleep(2000)
     }
 
@@ -83,9 +83,11 @@ class TicketFormsClientSpec extends Z4jSpec {
 
         then: "response deserializes successfully without exception"
         noExceptionThrown()
-        response != null
-        response.ticketForm != null
-        response.ticketForm.id == testFormId
+        verifyAll(response) {
+            it != null
+            ticketForm() != null
+            ticketForm().id == testFormId
+        }
 
         where:
         [client, userType] << [

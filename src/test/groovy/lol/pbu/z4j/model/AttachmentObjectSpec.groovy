@@ -55,19 +55,21 @@ class AttachmentObjectSpec extends Z4jSpec {
     def "should instantiate AttachmentUploadResponse and inner upload"() {
         given:
         def att = new AttachmentObject().setId(202L).setFileName("doc.pdf")
-        def upload = new AttachmentUploadResponseUpload()
+        def expectedUpload = new AttachmentUploadResponseUpload()
                 .setToken("tok_123")
                 .setAttachment(att)
                 .addAttachmentsItem(att)
 
         when:
-        def response = new AttachmentUploadResponse(upload)
+        def response = new AttachmentUploadResponse(expectedUpload)
 
         then:
-        response.upload != null
-        response.upload.token == "tok_123"
-        response.upload.attachment.fileName == "doc.pdf"
-        response.upload.attachments.size() == 1
+        verifyAll(response) {
+            upload() != null
+            upload().token == "tok_123"
+            upload().attachment.fileName == "doc.pdf"
+            upload().attachments.size() == 1
+        }
     }
 
     def "should instantiate AttachmentResponse"() {

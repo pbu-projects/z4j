@@ -151,7 +151,7 @@ class CustomStatusClientSpec extends Z4jSpec {
         def createInput = new TicketCreateInput(comment).tap {
             subject = "Test Custom Status & Form " + UUID.randomUUID().toString().substring(0, 8)
         }
-        def createdTicket = adminTicketClient.createTicket(new TicketCreateRequest(createInput)).block()?.ticket
+        def createdTicket = adminTicketClient.createTicket(new TicketCreateRequest(createInput)).block()?.ticket()
         assert createdTicket?.id != null
         Long createdTicketId = createdTicket.id
 
@@ -171,12 +171,14 @@ class CustomStatusClientSpec extends Z4jSpec {
 
         then: "the ticket is updated with the specified custom status ID and ticket form ID"
         noExceptionThrown()
-        updateResponse != null
-        updateResponse.ticket != null
-        updateResponse.ticket.id == createdTicketId
-        updateResponse.ticket.customStatusId == sampleCustomStatusId
-        if (sampleFormId != null) {
-            updateResponse.ticket.ticketFormId == sampleFormId
+        verifyAll(updateResponse) {
+            it != null
+            ticket() != null
+            ticket().id == createdTicketId
+            ticket().customStatusId == sampleCustomStatusId
+            if (sampleFormId != null) {
+                ticket().ticketFormId == sampleFormId
+            }
         }
 
         cleanup: "delete the test ticket from sandbox"

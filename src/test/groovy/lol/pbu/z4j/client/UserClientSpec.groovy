@@ -51,8 +51,8 @@ class UserClientSpec extends Z4jSpec {
         badUrlUserClient = badUrlCtx.getBean(UserClient)
 
         def meResponse = adminUserClient.showCurrentUser().block()
-        if (meResponse != null && meResponse.getUser() != null) {
-            adminUser = meResponse.getUser()
+        if (meResponse != null && meResponse.user() != null) {
+            adminUser = meResponse.user()
             adminUserId = adminUser.getId()
         }
     }
@@ -200,7 +200,7 @@ class UserClientSpec extends Z4jSpec {
 
         when: "creating user"
         def createdResponse = adminUserClient.createUser(new UserRequest(userToCreate)).block()
-        createdUserId = createdResponse?.getUser()?.getId()
+        createdUserId = createdResponse?.user()?.getId()
 
         then:
         noExceptionThrown()
@@ -278,7 +278,7 @@ class UserClientSpec extends Z4jSpec {
         def createResponse = adminUserClient.createOrUpdateUser(
                 new UserRequest(new User().setName(firstName).setEmail(email).setRole("end-user"))
         ).block()
-        userId = createResponse?.getUser()?.getId()
+        userId = createResponse?.user()?.getId()
 
         then:
         noExceptionThrown()
@@ -327,8 +327,8 @@ class UserClientSpec extends Z4jSpec {
         def user2Response = adminUserClient.createUser(
                 new UserRequest(new User().setName(faker.name().fullName()).setEmail(email2).setRole("end-user"))
         ).block()
-        user1Id = user1Response?.getUser()?.getId()
-        user2Id = user2Response?.getUser()?.getId()
+        user1Id = user1Response?.user()?.getId()
+        user2Id = user2Response?.user()?.getId()
 
         when: "updating many users with uniform attributes"
         def uniformResponse = adminUserClient.updateManyUsers(

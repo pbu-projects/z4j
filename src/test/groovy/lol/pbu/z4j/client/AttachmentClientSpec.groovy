@@ -44,8 +44,8 @@ class AttachmentClientSpec extends Z4jSpec {
                 content
         ).block()
 
-        uploadToken = response?.upload?.token
-        uploadedAttachmentId = response?.upload?.attachment?.id
+        uploadToken = response?.upload()?.token
+        uploadedAttachmentId = response?.upload()?.attachment?.id
     }
 
     def "can upload attachment as agent"() {
@@ -70,14 +70,16 @@ class AttachmentClientSpec extends Z4jSpec {
 
         then: "response contains upload token and attachment metadata"
         noExceptionThrown()
-        response != null
-        response.upload != null
-        response.upload.token != null
-        response.upload.attachment != null
-        response.upload.attachment.id != null
-        response.upload.attachment.fileName == filename
-        response.upload.attachment.contentType != null
-        response.upload.attachment.size == (long) content.length
+        verifyAll(response) {
+            it != null
+            upload() != null
+            upload().token != null
+            upload().attachment != null
+            upload().attachment.id != null
+            upload().attachment.fileName == filename
+            upload().attachment.contentType != null
+            upload().attachment.size == (long) content.length
+        }
     }
 
     def "can upload additional attachment reusing existing token"() {
@@ -98,10 +100,10 @@ class AttachmentClientSpec extends Z4jSpec {
         noExceptionThrown()
         verifyAll(response) {
             it != null
-            upload != null
-            upload.token == uploadToken
-            upload.attachment != null
-            upload.attachment.fileName == filename
+            upload() != null
+            upload().token == uploadToken
+            upload().attachment != null
+            upload().attachment.fileName == filename
         }
     }
 
