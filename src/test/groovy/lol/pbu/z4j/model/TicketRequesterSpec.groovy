@@ -35,17 +35,44 @@ class TicketRequesterSpec extends Z4jSpec {
         def full = new TicketRequester("Bob", "bob@example.com", 123L)
 
         then:
-        emailOnly.name() == null
-        emailOnly.email() == "test@example.com"
-        emailOnly.localeId() == null
+        verifyAll(emailOnly) {
+            name() == null
+            email() == "test@example.com"
+            localeId() == null
+        }
+        verifyAll(nameAndEmail) {
+            name() == "Alice"
+            email() == "alice@example.com"
+            localeId() == null
+        }
+        verifyAll(full) {
+            name() == "Bob"
+            email() == "bob@example.com"
+            localeId() == 123L
+        }
+    }
 
-        nameAndEmail.name() == "Alice"
-        nameAndEmail.email() == "alice@example.com"
-        nameAndEmail.localeId() == null
+    def "should support record builder and withers"() {
+        when:
+        def requester = TicketRequesterBuilder.builder()
+                .name("Taylor")
+                .email("taylor@example.com")
+                .localeId(42L)
+                .build()
 
-        full.name() == "Bob"
-        full.email() == "bob@example.com"
-        full.localeId() == 123L
+        def updated = requester.withName("Morgan")
+
+        then:
+        verifyAll(requester) {
+            name() == "Taylor"
+            email() == "taylor@example.com"
+            localeId() == 42L
+        }
+        verifyAll(updated) {
+            name() == "Morgan"
+            email() == "taylor@example.com"
+            localeId() == 42L
+        }
     }
 
     def "should serialize TicketRequester ignoring null fields"() {
@@ -57,9 +84,11 @@ class TicketRequesterSpec extends Z4jSpec {
         Map map = objectMapper.readValue(json, Map.class)
 
         then:
-        map == [email: "user@example.com"]
-        !map.containsKey("name")
-        !map.containsKey("locale_id")
+        verifyAll(map) {
+            it == [email: "user@example.com"]
+            !containsKey("name")
+            !containsKey("locale_id")
+        }
     }
 
     def "should serialize and deserialize full TicketRequester"() {
@@ -73,9 +102,11 @@ class TicketRequesterSpec extends Z4jSpec {
 
         then:
         map == [name: "Charlie", email: "charlie@example.com", locale_id: 1L]
-        deserialized == requester
-        deserialized.name() == "Charlie"
-        deserialized.email() == "charlie@example.com"
-        deserialized.localeId() == 1L
+        verifyAll(deserialized) {
+            it == requester
+            name() == "Charlie"
+            email() == "charlie@example.com"
+            localeId() == 1L
+        }
     }
 }

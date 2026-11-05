@@ -98,7 +98,7 @@ class CategoryClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         cleanup: "deleting #categoryName from the #localeAbbreviation locale"
-        categoryClient.deleteCategory(localeAbbreviation, response.getCategory().getId())
+        categoryClient.deleteCategory(localeAbbreviation, response.category().id)
 
         where:
         [[categoryClient, userType], localeAbbreviation, [categoryName, description]] << [
@@ -144,9 +144,8 @@ class CategoryClientSpec extends Z4jSpec {
         error.getStatus() == FORBIDDEN
 
         cleanup: "deleting #categoryName from the #localeAbbreviation locale"
-        try {
-            adminCategoryClient.deleteCategory(localeAbbreviation, response.getCategory().getId())
-        } catch (NullPointerException ignored) {
+        if (response?.category()?.id != null) {
+            adminCategoryClient.deleteCategory(localeAbbreviation, response.category().id)
         }
 
         where:
@@ -166,7 +165,7 @@ class CategoryClientSpec extends Z4jSpec {
         CategoryResponse response = categoryClient.createCategory(localeAbbreviation, createCategoryRequest).block()
 
         when:
-        categoryClient.deleteCategory(localeAbbreviation, response.getCategory().getId())
+        categoryClient.deleteCategory(localeAbbreviation, response.category().id)
 
         then:
         noExceptionThrown()
@@ -188,14 +187,14 @@ class CategoryClientSpec extends Z4jSpec {
         CategoryResponse response = adminCategoryClient.createCategory(localeAbbreviation, createCategoryRequest).block()
 
         when:
-        categoryClient.deleteCategory(localeAbbreviation, response.getCategory().getId())
+        categoryClient.deleteCategory(localeAbbreviation, response.category().id)
 
         then:
         noExceptionThrown()
 
         cleanup:
         try {
-            adminCategoryClient.deleteCategory(localeAbbreviation, response.getCategory().getId())
+            adminCategoryClient.deleteCategory(localeAbbreviation, response.category().id)
         } catch (NullPointerException ignored) {
         }
 
