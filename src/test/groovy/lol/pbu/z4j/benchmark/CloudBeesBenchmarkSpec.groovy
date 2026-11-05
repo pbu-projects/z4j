@@ -117,12 +117,20 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
             z4jTickets*.id.sort() == seededTicketIds.sort()
         }
 
-        println """
-    ================ LIVE SANDBOX RESULTS ================
-    CloudBees Duration : ${durationCbMs} ms | Delta Heap: ${(memAfterCb - memBeforeCb) / 1024} KB
-    z4j Duration       : ${durationZ4jMs} ms | Delta Heap: ${(memAfterZ4j - memBeforeZ4j) / 1024} KB
-    ======================================================
-    """
+        String results = """
+======================================================
+              LIVE SANDBOX BENCHMARK
+======================================================
+CloudBees Duration : ${durationCbMs} ms | Delta Heap: ${String.format('%.2f', (memAfterCb - memBeforeCb) / 1024.0)} KB
+z4j Duration       : ${durationZ4jMs} ms | Delta Heap: ${String.format('%.2f', (memAfterZ4j - memBeforeZ4j) / 1024.0)} KB
+======================================================
+"""
+        println results
+        System.err.println results
+
+        File reportDir = new File("build/reports")
+        reportDir.mkdirs()
+        new File(reportDir, "benchmark-results.txt").write(results)
 
         cleanup: "Tear down seeded tickets in 1 call to keep sandbox clean"
         if (!seededTicketIds.isEmpty()) {
