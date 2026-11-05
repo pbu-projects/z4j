@@ -26,13 +26,18 @@ import lol.pbu.z4j.model.JobStatusResponse
 import lol.pbu.z4j.model.Ticket as Z4jTicket
 import lol.pbu.z4j.model.TicketComment
 import lol.pbu.z4j.model.TicketCreateInput
-import spock.lang.Tag
+import org.spockframework.runtime.model.parallel.ExecutionMode
 import org.zendesk.client.v2.Zendesk
 import org.zendesk.client.v2.model.Ticket as CbTicket
+import spock.lang.Execution
 import spock.lang.IgnoreIf
+import spock.lang.Isolated
 import spock.lang.Shared
+import spock.lang.Tag
 
 @Tag("benchmark")
+@Isolated
+@Execution(ExecutionMode.SAME_THREAD)
 @IgnoreIf({ !Boolean.getBoolean("benchmark") && !Boolean.parseBoolean(System.getenv("RUN_BENCHMARK")) })
 @MicronautTest
 class CloudBeesBenchmarkSpec extends Z4jSpec {
@@ -52,7 +57,6 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
     @Shared
     Zendesk cloudBeesClient
 
-    @Shared
     List<Long> seededTicketIds = Collections.synchronizedList(new ArrayList<Long>())
 
     def setupSpec() {
@@ -84,6 +88,11 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
 
         System.gc()
         Thread.sleep(500)
+
+        File reportFile = new File("build/reports/benchmark-results.txt")
+        if (reportFile.exists()) {
+            reportFile.delete()
+        }
     }
 
     def cleanupSpec() {
@@ -92,10 +101,11 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
         }
     }
 
-    def "Live Benchmark: Stream & parse 50 tickets (CloudBees vs z4j)"() {
-        given: "A tagged cohort of 50 tickets in the sandbox"
-        String tag = "z4j_bench_${System.currentTimeMillis()}"
-        seededTicketIds = seedBenchmarkTickets(50, tag)
+    @Execution(ExecutionMode.SAME_THREAD)
+    def "Live Benchmark: Stream & parse #count tickets (CloudBees vs z4j)"(int count) {
+        given: "A tagged cohort of #count tickets in the sandbox"
+        String tag = "z4j_bench_${count}_${System.currentTimeMillis()}"
+        seededTicketIds = seedBenchmarkTickets(count, tag)
 
         when: "Fetching via CloudBees (blocking iterator with Jackson Databind)"
         System.gc()
@@ -126,15 +136,15 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
 
         then: "Both clients retrieved the full cohort"
         verifyAll {
-            cbTickets.size() == 50
-            z4jTickets.size() == 50
+            cbTickets.size() == count
+            z4jTickets.size() == count
             cbTickets*.id.sort() == seededTicketIds.sort()
             z4jTickets*.id.sort() == seededTicketIds.sort()
         }
 
         String results = """
 ======================================================
-              LIVE SANDBOX BENCHMARK
+         LIVE SANDBOX BENCHMARK: ${count} TICKETS
 ======================================================
 CloudBees Duration : ${durationCbMs} ms | Delta Heap: ${String.format('%.2f', (memAfterCb - memBeforeCb) / 1024.0)} KB
 z4j Duration       : ${durationZ4jMs} ms | Delta Heap: ${String.format('%.2f', (memAfterZ4j - memBeforeZ4j) / 1024.0)} KB
@@ -148,6 +158,9 @@ z4j Duration       : ${durationZ4jMs} ms | Delta Heap: ${String.format('%.2f', (
             ticketsClient.bulkDeleteTickets(new ArrayList<>(seededTicketIds)).block(Duration.ofMinutes(1))
             seededTicketIds.clear()
         }
+
+        where:
+        count << [25, 50, 100]
     }
 
     List<Long> seedBenchmarkTickets(int count, String tag) {
@@ -201,6 +214,6 @@ z4j Duration       : ${durationZ4jMs} ms | Delta Heap: ${String.format('%.2f', (
     void saveReport(String results) {
         File reportDir = new File("build/reports")
         reportDir.mkdirs()
-        new File(reportDir, "benchmark-results.txt").write(results)
+        new File(reportDir, "benchmark-results.txt") << results
     }
 }
