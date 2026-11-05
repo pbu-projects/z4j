@@ -15,15 +15,10 @@
  */
 package lol.pbu.z4j.benchmark
 
-import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import io.micronaut.context.ApplicationContext
 import java.time.Duration
-import lol.pbu.z4j.Z4jSpec
-import lol.pbu.z4j.client.JobStatusClient
 import lol.pbu.z4j.client.TicketClient
-import lol.pbu.z4j.model.JobStatusResponse
 import lol.pbu.z4j.model.Ticket as Z4jTicket
-import lol.pbu.z4j.model.TicketComment
-import lol.pbu.z4j.model.TicketCreateInput
 import org.spockframework.runtime.model.parallel.ExecutionMode
 import org.zendesk.client.v2.Zendesk
 import org.zendesk.client.v2.model.Ticket as CbTicket
@@ -31,50 +26,55 @@ import spock.lang.Execution
 import spock.lang.IgnoreIf
 import spock.lang.Isolated
 import spock.lang.Shared
+import spock.lang.Specification
 import spock.lang.Tag
 
 @Tag("benchmark")
 @Isolated
 @Execution(ExecutionMode.SAME_THREAD)
 @IgnoreIf({ !Boolean.getBoolean("benchmark") && !Boolean.parseBoolean(System.getenv("RUN_BENCHMARK")) })
-@MicronautTest
-class CloudBeesBenchmarkSpec extends Z4jSpec {
+class CloudBeesBenchmarkSpec extends Specification {
+
+    @Shared
+    MockZendeskHttpServer mockServer
+
+    @Shared
+    ApplicationContext clientCtx
 
     @Shared
     TicketClient ticketsClient
 
     @Shared
-    JobStatusClient jobStatusClient
-
-    @Shared
     Zendesk cloudBeesClient
 
-    List<Long> seededTicketIds = Collections.synchronizedList(new ArrayList<Long>())
-
     def setupSpec() {
-        ticketsClient = adminCtx.getBean(TicketClient)
-        jobStatusClient = adminCtx.getBean(JobStatusClient)
+        mockServer = new MockZendeskHttpServer()
+        mockServer.start()
 
-        String url = System.getenv("Z4J_URL")
-        String email = System.getenv("Z4J_ADMIN_EMAIL")
-        String token = System.getenv("Z4J_TOKEN")
+        clientCtx = ApplicationContext.run([
+                "micronaut.http.services.zendesk.url"  : mockServer.url,
+                "micronaut.http.services.zendesk.email": "benchmark@example.com",
+                "micronaut.http.services.zendesk.token": "mock-token"
+        ])
+        ticketsClient = clientCtx.getBean(TicketClient)
 
-        cloudBeesClient = new Zendesk.Builder(url)
-                .setUsername(email)
-                .setToken(token)
+        cloudBeesClient = new Zendesk.Builder(mockServer.url)
+                .setUsername("benchmark@example.com")
+                .setToken("mock-token")
                 .build()
 
-        // Warm up connection pools, thread groups, and deserializers for both clients
-        try {
-            cloudBeesClient.getTickets(1L)
-        } catch (Exception ignored) {}
+        // Thorough warmup: 20 rounds of 25 tickets to warm up JIT, caches, and connection pools
+        List<Long> warmupIds = (1..25).collect { (long) (1000 + it) }
+        long firstWarmupId = warmupIds[0]
+        long[] restWarmupIds = warmupIds[1..-1] as long[]
 
-        try {
-            ticketsClient.showMultipleTickets(List.of(1L)).block(Duration.ofSeconds(15))
-        } catch (Exception ignored) {}
+        20.times {
+            cloudBeesClient.getTickets(firstWarmupId, restWarmupIds)
+            ticketsClient.showMultipleTickets(warmupIds).block(Duration.ofSeconds(5))
+        }
 
         System.gc()
-        Thread.sleep(500)
+        Thread.sleep(300)
 
         File reportFile = new File("build/reports/benchmark-results.txt")
         if (reportFile.exists()) {
@@ -86,98 +86,73 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
         if (cloudBeesClient != null) {
             cloudBeesClient.close()
         }
+        if (clientCtx != null) {
+            clientCtx.stop()
+        }
+        if (mockServer != null) {
+            mockServer.stop()
+        }
     }
 
     @Execution(ExecutionMode.SAME_THREAD)
     def "Live Benchmark: Fetch & parse #count tickets (CloudBees vs z4j)"(int count) {
-        given: "A tagged cohort of #count tickets in the sandbox"
-        String tag = "z4j_bench_${count}_${System.currentTimeMillis()}"
-        seededTicketIds = seedBenchmarkTickets(count, tag)
+        given: "A list of #count ticket IDs to request over HTTP"
+        List<Long> ticketIds = (1..count).collect { (long) (1000 + it) }
+        long firstId = ticketIds[0]
+        long[] restIds = (ticketIds.size() > 1 ? ticketIds[1..-1] : []) as long[]
+        int iterations = 10
 
-        when: "Fetching via CloudBees (blocking show_many with Jackson Databind)"
+        when: "Fetching via CloudBees (blocking show_many with Jackson Databind) across multiple iterations"
         System.gc()
-        Thread.sleep(200)
+        Thread.sleep(100)
 
         long memBeforeCb = Runtime.runtime.totalMemory() - Runtime.runtime.freeMemory()
         long startCb = System.nanoTime()
 
-        long firstCbId = seededTicketIds[0]
-        long[] restCbIds = (seededTicketIds.size() > 1 ? seededTicketIds[1..-1] : []) as long[]
-        List<CbTicket> cbTickets = cloudBeesClient.getTickets(firstCbId, restCbIds)
-        long durationCbMs = (System.nanoTime() - startCb) / 1_000_000
+        List<CbTicket> cbTickets = []
+        iterations.times {
+            cbTickets = cloudBeesClient.getTickets(firstId, restIds)
+        }
+        long durationCbMs = (System.nanoTime() - startCb) / (1_000_000 * iterations)
         long memAfterCb = Runtime.runtime.totalMemory() - Runtime.runtime.freeMemory()
 
-        and: "Fetching via z4j (reactive Netty show_many and Micronaut Serde records)"
+        and: "Fetching via z4j (reactive Netty show_many and Micronaut Serde records) across multiple iterations"
         System.gc()
-        Thread.sleep(200)
+        Thread.sleep(100)
 
         long memBeforeZ4j = Runtime.runtime.totalMemory() - Runtime.runtime.freeMemory()
         long startZ4j = System.nanoTime()
 
-        List<Z4jTicket> z4jTickets = ticketsClient.showMultipleTickets(seededTicketIds)
-                .block(Duration.ofMinutes(1))
-                .tickets()
-        long durationZ4jMs = (System.nanoTime() - startZ4j) / 1_000_000
+        List<Z4jTicket> z4jTickets = []
+        iterations.times {
+            z4jTickets = ticketsClient.showMultipleTickets(ticketIds)
+                    .block(Duration.ofSeconds(5))
+                    .tickets()
+        }
+        long durationZ4jMs = (System.nanoTime() - startZ4j) / (1_000_000 * iterations)
         long memAfterZ4j = Runtime.runtime.totalMemory() - Runtime.runtime.freeMemory()
 
-        then: "Both clients retrieved the full cohort"
+        then: "Both clients retrieved the full cohort matching all requested IDs"
         verifyAll {
             cbTickets.size() == count
             z4jTickets.size() == count
-            cbTickets*.id.sort() == seededTicketIds.sort()
-            z4jTickets*.id.sort() == seededTicketIds.sort()
+            cbTickets*.id.sort() == ticketIds.sort()
+            z4jTickets*.id.sort() == ticketIds.sort()
         }
 
         String results = """
 ======================================================
-         LIVE SANDBOX BENCHMARK: ${count} TICKETS
+            BENCHMARK: ${count} TICKETS
 ======================================================
-CloudBees Duration : ${durationCbMs} ms | Delta Heap: ${String.format('%.2f', (memAfterCb - memBeforeCb) / 1024.0)} KB
-z4j Duration       : ${durationZ4jMs} ms | Delta Heap: ${String.format('%.2f', (memAfterZ4j - memBeforeZ4j) / 1024.0)} KB
+CloudBees Duration : ${durationCbMs} ms/call | Delta Heap: ${String.format('%.2f', Math.max(0.0, (memAfterCb - memBeforeCb) / 1024.0))} KB
+z4j Duration       : ${durationZ4jMs} ms/call | Delta Heap: ${String.format('%.2f', Math.max(0.0, (memAfterZ4j - memBeforeZ4j) / 1024.0))} KB
 ======================================================
 """
         println results
         saveReport(results)
 
-        cleanup: "Tear down seeded tickets in 1 call to keep sandbox clean"
-        if (!seededTicketIds.isEmpty()) {
-            ticketsClient.bulkDeleteTickets(new ArrayList<>(seededTicketIds)).block(Duration.ofMinutes(1))
-            seededTicketIds.clear()
-        }
-
         where:
         count << [25, 50, 100]
-    }
-
-    List<Long> seedBenchmarkTickets(int count, String tag) {
-        List<TicketCreateInput> inputs = (1..count).collect { i ->
-            new TicketCreateInput(new TicketComment("Benchmark comment ${i}"))
-                    .withRawSubject("Benchmark Ticket ${i} - ${tag}")
-                    .withTags([tag])
-        }
-        JobStatusResponse job = ticketsClient.createManyTickets(inputs).block(Duration.ofMinutes(1))
-        String jobId = job.jobStatus().id()
-
-        List<Long> ids = (1..60).findResult {
-            Thread.sleep(1000)
-            JobStatusResponse status = jobStatusClient.showJobStatus(jobId).block(Duration.ofSeconds(30))
-            if ("completed".equalsIgnoreCase(status.jobStatus().status())) {
-                List<Long> completedIds = status.jobStatus().getJobStatusResults().collect { it.id() }
-                // Immediately register seeded IDs so cleanup deletes them if needed
-                seededTicketIds.addAll(completedIds)
-                return completedIds
-            }
-            if ("failed".equalsIgnoreCase(status.jobStatus().status())) {
-                throw new IllegalStateException("Ticket batch creation failed: " + status.jobStatus().message())
-            }
-            return null
-        }
-
-        if (!ids) {
-            throw new IllegalStateException("Timed out waiting for ticket batch job to complete: " + jobId)
-        }
-
-        return ids
     }
 
     void saveReport(String results) {

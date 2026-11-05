@@ -216,7 +216,7 @@ val benchmark = tasks.register<Test>("benchmark") {
         events = setOf(PASSED, FAILED, SKIPPED)
     }
     addTestOutputListener { _, event ->
-        if (event.message.contains("LIVE SANDBOX") || event.message.contains("CloudBees") || event.message.contains("z4j") || event.message.contains("=====")) {
+        if (event.message.contains("BENCHMARK") || event.message.contains("CloudBees") || event.message.contains("z4j") || event.message.contains("=====")) {
             logger.lifecycle(event.message.trimEnd())
         }
     }
