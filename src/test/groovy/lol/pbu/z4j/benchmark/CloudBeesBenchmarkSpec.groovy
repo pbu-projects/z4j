@@ -69,6 +69,21 @@ class CloudBeesBenchmarkSpec extends Z4jSpec {
                 .setUsername(email)
                 .setToken(token)
                 .build()
+
+        // Warm up connection pools, thread groups, and deserializers for both clients
+        try {
+            Iterator<CbTicket> cbIter = cloudBeesClient.getTicketsFromSearch("type:ticket").iterator()
+            if (cbIter.hasNext()) {
+                cbIter.next()
+            }
+        } catch (Exception ignored) {}
+
+        try {
+            searchService.getTickets("type:ticket", 1).take(1).blockLast(Duration.ofSeconds(15))
+        } catch (Exception ignored) {}
+
+        System.gc()
+        Thread.sleep(500)
     }
 
     def cleanupSpec() {
