@@ -20,66 +20,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DeletedUsersResponse
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         DeletedUsersResponse.JSON_PROPERTY_DELETED_USERS,
         DeletedUsersResponse.JSON_PROPERTY_COUNT,
         DeletedUsersResponse.JSON_PROPERTY_NEXT_PAGE,
         DeletedUsersResponse.JSON_PROPERTY_PREVIOUS_PAGE
 })
-@Serdeable
-@Generated
-public class DeletedUsersResponse {
+public record DeletedUsersResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_DELETED_USERS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid User> deletedUsers,
+        @Nullable @JsonProperty(JSON_PROPERTY_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long count,
+        @Nullable @JsonProperty(JSON_PROPERTY_NEXT_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String nextPage,
+        @Nullable @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String previousPage
+) implements DeletedUsersResponseBuilder.With {
 
     public static final String JSON_PROPERTY_DELETED_USERS = "deleted_users";
     public static final String JSON_PROPERTY_COUNT = "count";
     public static final String JSON_PROPERTY_NEXT_PAGE = "next_page";
     public static final String JSON_PROPERTY_PREVIOUS_PAGE = "previous_page";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DELETED_USERS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid User> deletedUsers;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_COUNT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long count;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_NEXT_PAGE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String nextPage;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String previousPage;
-
     public DeletedUsersResponse addDeletedUsersItem(User userItem) {
-        if (deletedUsers == null) {
-            deletedUsers = new ArrayList<>();
-        }
-        deletedUsers.add(userItem);
-        return this;
+        List<User> list = new ArrayList<>(deletedUsers != null ? deletedUsers : List.of());
+        list.add(userItem);
+        return new DeletedUsersResponse(list, count, nextPage, previousPage);
     }
 }

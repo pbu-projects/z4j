@@ -20,42 +20,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
-/**
- * TicketFormsResponse
- *
- * @since 0.2.2
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(TicketFormsResponse.JSON_PROPERTY_TICKET_FORMS)
 @Serdeable
-@Generated
-public class TicketFormsResponse {
+@RecordBuilder
+@JsonPropertyOrder(TicketFormsResponse.JSON_PROPERTY_TICKET_FORMS)
+public record TicketFormsResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_TICKET_FORMS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid TicketForm> ticketForms
+) implements TicketFormsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_TICKET_FORMS = "ticket_forms";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TICKET_FORMS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid TicketForm> ticketForms;
-
     public TicketFormsResponse addTicketFormsItem(TicketForm ticketFormsItem) {
-        if (ticketForms == null) {
-            ticketForms = new ArrayList<>();
-        }
-        ticketForms.add(ticketFormsItem);
-        return this;
+        List<TicketForm> list = new ArrayList<>(ticketForms != null ? ticketForms : List.of());
+        list.add(ticketFormsItem);
+        return new TicketFormsResponse(list);
     }
 }

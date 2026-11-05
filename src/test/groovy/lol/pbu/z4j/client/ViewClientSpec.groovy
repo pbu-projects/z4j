@@ -96,7 +96,7 @@ class ViewClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         response != null
-        response.getTickets() != null
+        response.tickets() != null
     }
 
     def "can list tickets for a view with cursor pagination"() {
@@ -109,8 +109,8 @@ class ViewClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         response != null
-        if (response.getTickets() != null && !response.getTickets().isEmpty()) {
-            response.getMeta() != null
+        if (response.tickets() != null && !response.tickets().isEmpty()) {
+            response.meta() != null
         }
     }
 }

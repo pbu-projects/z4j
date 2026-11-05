@@ -74,12 +74,12 @@ class AuditEventsInnerDeserializerSpec extends Specification {
 
         when:
         def resp = objectMapper.readValue(json, TicketAuditsResponse)
-        def event = resp.audits[0].events[0]
+        def event = resp.audits()[0].events[0]
 
         then:
         resp != null
-        resp.audits.size() == 1
-        resp.audits[0].events.size() == 1
+        resp.audits().size() == 1
+        resp.audits()[0].events.size() == 1
         event.type == "AutomaticAnswerSend"
         event.body != null
         event.body.contains("Example article")
@@ -93,12 +93,12 @@ class AuditEventsInnerDeserializerSpec extends Specification {
 
         when:
         def resp = objectMapper.readValue(json, TicketAuditsResponse)
-        def krEvent = resp.audits.collectMany { it.events }.find { it.type == "KnowledgeRequested" }
-        def offeredEvent = resp.audits.collectMany { it.events }.find { it.type == "OfferedToEvent" }
+        def krEvent = resp.audits().collectMany { it.events }.find { it.type == "KnowledgeRequested" }
+        def offeredEvent = resp.audits().collectMany { it.events }.find { it.type == "OfferedToEvent" }
 
         then:
         resp != null
-        resp.audits.size() == 11
+        resp.audits().size() == 11
         krEvent != null
         krEvent.body != null
         krEvent.body.contains("Reference article requested")
@@ -140,12 +140,12 @@ class AuditEventsInnerDeserializerSpec extends Specification {
 
         when:
         def resp = objectMapper.readValue(json, TicketAuditsResponse)
-        def event1 = resp.audits[0].events[0]
-        def event2 = resp.audits[0].events[1]
+        def event1 = resp.audits()[0].events[0]
+        def event2 = resp.audits()[0].events[1]
 
         then:
         resp != null
-        resp.audits.size() == 1
+        resp.audits().size() == 1
         event1.type == "CustomUnknownEventType"
         event1.id == 12345L
         event1.body.contains("dynamic_key")

@@ -20,66 +20,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DeletedTicketsResponse
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         DeletedTicketsResponse.JSON_PROPERTY_DELETED_TICKETS,
         DeletedTicketsResponse.JSON_PROPERTY_COUNT,
         DeletedTicketsResponse.JSON_PROPERTY_NEXT_PAGE,
         DeletedTicketsResponse.JSON_PROPERTY_PREVIOUS_PAGE
 })
-@Serdeable
-@Generated
-public class DeletedTicketsResponse {
+public record DeletedTicketsResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_DELETED_TICKETS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid DeletedTicket> deletedTickets,
+        @Nullable @JsonProperty(JSON_PROPERTY_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long count,
+        @Nullable @JsonProperty(JSON_PROPERTY_NEXT_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String nextPage,
+        @Nullable @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String previousPage
+) implements DeletedTicketsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_DELETED_TICKETS = "deleted_tickets";
     public static final String JSON_PROPERTY_COUNT = "count";
     public static final String JSON_PROPERTY_NEXT_PAGE = "next_page";
     public static final String JSON_PROPERTY_PREVIOUS_PAGE = "previous_page";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DELETED_TICKETS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid DeletedTicket> deletedTickets;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_COUNT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long count;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_NEXT_PAGE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String nextPage;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String previousPage;
-
     public DeletedTicketsResponse addDeletedTicketsItem(DeletedTicket item) {
-        if (deletedTickets == null) {
-            deletedTickets = new ArrayList<>();
-        }
-        deletedTickets.add(item);
-        return this;
+        List<DeletedTicket> list = new ArrayList<>(deletedTickets != null ? deletedTickets : List.of());
+        list.add(item);
+        return new DeletedTicketsResponse(list, count, nextPage, previousPage);
     }
 }

@@ -20,14 +20,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
 /**
  * Response model for the ticket audits endpoint ({@code GET /api/v2/tickets/{ticket_id}/audits}).
@@ -35,43 +30,23 @@ import lol.pbu.z4j.Generated;
  * @author Jonathan-Zollinger
  * @since 0.2.3
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         TicketAuditsResponse.JSON_PROPERTY_AUDITS,
         TicketAuditsResponse.JSON_PROPERTY_COUNT,
         TicketAuditsResponse.JSON_PROPERTY_NEXT_PAGE,
         TicketAuditsResponse.JSON_PROPERTY_PREVIOUS_PAGE,
 })
-@Serdeable
-@Generated
-public class TicketAuditsResponse {
+public record TicketAuditsResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_AUDITS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Audit> audits,
+        @Nullable @JsonProperty(JSON_PROPERTY_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer count,
+        @Nullable @JsonProperty(JSON_PROPERTY_NEXT_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String nextPage,
+        @Nullable @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String previousPage
+) implements TicketAuditsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_AUDITS = "audits";
     public static final String JSON_PROPERTY_COUNT = "count";
     public static final String JSON_PROPERTY_NEXT_PAGE = "next_page";
     public static final String JSON_PROPERTY_PREVIOUS_PAGE = "previous_page";
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_AUDITS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid Audit> audits;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_COUNT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer count;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_NEXT_PAGE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String nextPage;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String previousPage;
-
 }

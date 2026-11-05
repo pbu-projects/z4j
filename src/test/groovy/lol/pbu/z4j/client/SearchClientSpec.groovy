@@ -51,7 +51,7 @@ class SearchClientSpec extends Z4jSpec {
     void "can query the list method when results include more than the page size"() {
         given:
         String ticketQuery = "type:ticket"
-        def ticketCount = adminSearchClient.count(ticketQuery).block().getCount()
+        def ticketCount = adminSearchClient.count(ticketQuery).block().count()
         if (ticketCount < 5) {
             (ticketCount..5).each { createTicketForTest() }
         }
@@ -61,7 +61,7 @@ class SearchClientSpec extends Z4jSpec {
         List<SearchResponse> responses = []
         SearchResponse response = adminSearchClient.list(ticketQuery, null, null, page, 2).block()
         responses << response
-        while (response.nextPage != null && page < 3) {
+        while (response.nextPage() != null && page < 3) {
             response = adminSearchClient.list(ticketQuery, null, null, page, 2).block()
             page++
             responses << response
@@ -78,9 +78,9 @@ class SearchClientSpec extends Z4jSpec {
         then:
         noExceptionThrown()
         response != null
-        response.results != null
-        response.users != null
-        !response.users.isEmpty()
+        response.results() != null
+        response.users() != null
+        !response.users().isEmpty()
     }
 
     @Unroll("a simple user querying the list method fails with #sortBy and #sortOrder")
@@ -131,7 +131,7 @@ class SearchClientSpec extends Z4jSpec {
         given:
         String query = "type:ticket"
         def count = client.count(query).block()
-        int pageSize = Math.max(2, Math.min(1000, (count.getCount() / 2).intValue() + 1))
+        int pageSize = Math.max(2, Math.min(1000, (count.count() / 2).intValue() + 1))
 
         when:
         ExportResponse<Ticket> response = client.exportTicket(query, pageSize, null).block()
@@ -145,8 +145,8 @@ class SearchClientSpec extends Z4jSpec {
 
         then:
         noExceptionThrown()
-        tickets.size() > (count.getCount() * 0.95)
-        tickets.size() < (count.getCount() * 1.05)
+        tickets.size() > (count.count() * 0.95)
+        tickets.size() < (count.count() * 1.05)
 
 
         where:

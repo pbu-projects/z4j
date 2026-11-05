@@ -20,64 +20,31 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
-/**
- * TicketFieldsResponse
- * @author Jonathan-Zollinger
- * @since 0.1.1
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         TicketFieldsResponse.JSON_PROPERTY_TICKET_FIELDS,
         TicketFieldsResponse.JSON_PROPERTY_META,
         TicketFieldsResponse.JSON_PROPERTY_LINKS
 })
-@Serdeable
-@Generated
-public class TicketFieldsResponse {
+public record TicketFieldsResponse(
+        @Nullable @JsonProperty(JSON_PROPERTY_TICKET_FIELDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid TicketField> ticketFields,
+        @Nullable @JsonProperty(JSON_PROPERTY_META) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Meta meta,
+        @Nullable @JsonProperty(JSON_PROPERTY_LINKS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Links links
+) implements TicketFieldsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_TICKET_FIELDS = "ticket_fields";
     public static final String JSON_PROPERTY_META = "meta";
     public static final String JSON_PROPERTY_LINKS = "links";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TICKET_FIELDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid TicketField> ticketFields;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_META)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Meta meta;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_LINKS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Links links;
-
-    /**
-     * Add an item to the ticketFields property in a chainable fashion.
-     *
-     * @return The same instance of TicketFieldsResponse for chaining.
-     */
     public TicketFieldsResponse addTicketFieldsItem(TicketField ticketFieldsItem) {
-        if (ticketFields == null) {
-            ticketFields = new ArrayList<>();
-        }
-        ticketFields.add(ticketFieldsItem);
-        return this;
+        List<TicketField> list = new ArrayList<>(ticketFields != null ? ticketFields : List.of());
+        list.add(ticketFieldsItem);
+        return new TicketFieldsResponse(list, meta, links);
     }
-
 }

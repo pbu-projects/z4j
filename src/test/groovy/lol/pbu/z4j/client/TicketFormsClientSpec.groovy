@@ -65,7 +65,7 @@ class TicketFormsClientSpec extends Z4jSpec {
         then: "response deserializes successfully without exception"
         noExceptionThrown()
         response != null
-        response.ticketForms != null
+        response.ticketForms() != null
 
         where:
         [client, userType] << [
@@ -106,7 +106,7 @@ class TicketFormsClientSpec extends Z4jSpec {
         then: "response deserializes successfully without exception"
         noExceptionThrown()
         response != null
-        response.ticketForms != null
+        response.ticketForms() != null
 
         where:
         [client, userType] << [
