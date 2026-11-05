@@ -216,7 +216,7 @@ val benchmark = tasks.register<Test>("benchmark") {
         events = setOf(PASSED, FAILED, SKIPPED)
     }
     addTestOutputListener { _, event ->
-        if (event.message.contains("BENCHMARK") || event.message.contains("CloudBees") || event.message.contains("z4j") || event.message.contains("=====")) {
+        if (event.message.contains("BENCHMARK") || event.message.contains("CloudBees") || event.message.contains("z4j") || event.message.contains("=====") || event.message.contains("Jackson") || event.message.contains("Serde") || event.message.contains("Transport") || event.message.contains("Pure") || event.message.contains("Pipeline") || event.message.contains("Note:")) {
             logger.lifecycle(event.message.trimEnd())
         }
     }

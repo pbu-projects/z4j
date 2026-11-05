@@ -15,10 +15,16 @@
  */
 package lol.pbu.z4j.benchmark
 
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper as JacksonObjectMapper
+import com.sun.management.ThreadMXBean
 import io.micronaut.context.ApplicationContext
+import io.micronaut.serde.ObjectMapper as SerdeObjectMapper
+import java.lang.management.ManagementFactory
 import java.time.Duration
 import lol.pbu.z4j.client.TicketClient
 import lol.pbu.z4j.model.Ticket as Z4jTicket
+import lol.pbu.z4j.model.TicketsResponse
 import org.spockframework.runtime.model.parallel.ExecutionMode
 import org.zendesk.client.v2.Zendesk
 import org.zendesk.client.v2.model.Ticket as CbTicket
@@ -44,9 +50,6 @@ class CloudBeesBenchmarkSpec extends Specification {
     @Shared
     TicketClient ticketsClient
 
-    @Shared
-    Zendesk cloudBeesClient
-
     def setupSpec() {
         mockServer = new MockZendeskHttpServer()
         mockServer.start()
@@ -58,24 +61,6 @@ class CloudBeesBenchmarkSpec extends Specification {
         ])
         ticketsClient = clientCtx.getBean(TicketClient)
 
-        cloudBeesClient = new Zendesk.Builder(mockServer.url)
-                .setUsername("benchmark@example.com")
-                .setToken("mock-token")
-                .build()
-
-        // Thorough warmup: 20 rounds of 25 tickets to warm up JIT, caches, and connection pools
-        List<Long> warmupIds = (1..25).collect { (long) (1000 + it) }
-        long firstWarmupId = warmupIds[0]
-        long[] restWarmupIds = warmupIds[1..-1] as long[]
-
-        20.times {
-            cloudBeesClient.getTickets(firstWarmupId, restWarmupIds)
-            ticketsClient.showMultipleTickets(warmupIds).block(Duration.ofSeconds(5))
-        }
-
-        System.gc()
-        Thread.sleep(300)
-
         File reportFile = new File("build/reports/benchmark-results.txt")
         if (reportFile.exists()) {
             reportFile.delete()
@@ -83,9 +68,6 @@ class CloudBeesBenchmarkSpec extends Specification {
     }
 
     def cleanupSpec() {
-        if (cloudBeesClient != null) {
-            cloudBeesClient.close()
-        }
         if (clientCtx != null) {
             clientCtx.stop()
         }
@@ -95,57 +77,77 @@ class CloudBeesBenchmarkSpec extends Specification {
     }
 
     @Execution(ExecutionMode.SAME_THREAD)
-    def "Live Benchmark: Fetch & parse #count tickets (CloudBees vs z4j)"(int count) {
+    def "Memory Benchmark: Fetch & parse #count tickets (CloudBees vs z4j)"(int count) {
         given: "A list of #count ticket IDs to request over HTTP"
         List<Long> ticketIds = (1..count).collect { (long) (1000 + it) }
         long firstId = ticketIds[0]
         long[] restIds = (ticketIds.size() > 1 ? ticketIds[1..-1] : []) as long[]
-        int iterations = 10
+        ThreadMXBean mxBean = (ThreadMXBean) ManagementFactory.getThreadMXBean()
 
-        when: "Fetching via CloudBees (blocking show_many with Jackson Databind) across multiple iterations"
+        when: "Fetching via CloudBees starting cold"
         System.gc()
         Thread.sleep(100)
 
-        long memBeforeCb = Runtime.runtime.totalMemory() - Runtime.runtime.freeMemory()
-        long startCb = System.nanoTime()
+        long allocBeforeCb = mxBean.getTotalThreadAllocatedBytes()
+        Zendesk cbClient = new Zendesk.Builder(mockServer.url)
+                .setUsername("benchmark@example.com")
+                .setToken("mock-token")
+                .build()
+        List<CbTicket> cbTickets = cbClient.getTickets(firstId, restIds)
+        long allocAfterCb = mxBean.getTotalThreadAllocatedBytes()
+        long cbAllocKb = (allocAfterCb - allocBeforeCb) / 1024
+        cbClient.close()
 
-        List<CbTicket> cbTickets = []
-        iterations.times {
-            cbTickets = cloudBeesClient.getTickets(firstId, restIds)
-        }
-        long durationCbMs = (System.nanoTime() - startCb) / (1_000_000 * iterations)
-        long memAfterCb = Runtime.runtime.totalMemory() - Runtime.runtime.freeMemory()
-
-        and: "Fetching via z4j (reactive Netty show_many and Micronaut Serde records) across multiple iterations"
+        and: "Fetching via z4j starting cold"
         System.gc()
         Thread.sleep(100)
 
-        long memBeforeZ4j = Runtime.runtime.totalMemory() - Runtime.runtime.freeMemory()
-        long startZ4j = System.nanoTime()
+        long allocBeforeZ4j = mxBean.getTotalThreadAllocatedBytes()
+        List<Z4jTicket> z4jTickets = ticketsClient.showMultipleTickets(ticketIds)
+                .block(Duration.ofSeconds(5))
+                .tickets()
+        long allocAfterZ4j = mxBean.getTotalThreadAllocatedBytes()
+        long z4jAllocKb = (allocAfterZ4j - allocBeforeZ4j) / 1024
 
-        List<Z4jTicket> z4jTickets = []
-        iterations.times {
-            z4jTickets = ticketsClient.showMultipleTickets(ticketIds)
-                    .block(Duration.ofSeconds(5))
-                    .tickets()
+        and: "Benchmarking pure in-memory JSON deserialization without HTTP transport"
+        byte[] payloadBytes = MockZendeskHttpServer.PREGENERATED_RESPONSES.get(count)
+        JacksonObjectMapper jacksonMapper = Zendesk.createMapper()
+        SerdeObjectMapper serdeMapper = clientCtx.getBean(SerdeObjectMapper)
+
+        long tAllocBeforeJackson = mxBean.getCurrentThreadAllocatedBytes()
+        JsonNode tree = jacksonMapper.readTree(payloadBytes)
+        List<CbTicket> jacksonTickets = tree.get("tickets").collect { node ->
+            jacksonMapper.convertValue(node, CbTicket)
         }
-        long durationZ4jMs = (System.nanoTime() - startZ4j) / (1_000_000 * iterations)
-        long memAfterZ4j = Runtime.runtime.totalMemory() - Runtime.runtime.freeMemory()
+        long jacksonAllocKb = (mxBean.getCurrentThreadAllocatedBytes() - tAllocBeforeJackson) / 1024
 
-        then: "Both clients retrieved the full cohort matching all requested IDs"
+        long tAllocBeforeSerde = mxBean.getCurrentThreadAllocatedBytes()
+        TicketsResponse serdeResponse = serdeMapper.readValue(payloadBytes, TicketsResponse)
+        long serdeAllocKb = (mxBean.getCurrentThreadAllocatedBytes() - tAllocBeforeSerde) / 1024
+        long serdeSavingsPercent = Math.round((1.0 - (serdeAllocKb / (double) jacksonAllocKb)) * 100)
+
+        then: "Both clients and deserializers retrieve the full cohort matching all IDs"
         verifyAll {
             cbTickets.size() == count
             z4jTickets.size() == count
+            jacksonTickets.size() == count
+            serdeResponse.tickets().size() == count
             cbTickets*.id.sort() == ticketIds.sort()
             z4jTickets*.id.sort() == ticketIds.sort()
         }
 
         String results = """
 ======================================================
-            BENCHMARK: ${count} TICKETS
+         MEMORY BENCHMARK: ${count} TICKETS
 ======================================================
-CloudBees Duration : ${durationCbMs} ms/call | Delta Heap: ${String.format('%.2f', Math.max(0.0, (memAfterCb - memBeforeCb) / 1024.0))} KB
-z4j Duration       : ${durationZ4jMs} ms/call | Delta Heap: ${String.format('%.2f', Math.max(0.0, (memAfterZ4j - memBeforeZ4j) / 1024.0))} KB
+1. Pure Deserialization (Payload: ${Math.round(payloadBytes.length / 1024.0)} KB JSON):
+   CloudBees (Jackson reflection AST) : ${jacksonAllocKb} KB
+   z4j (Compile-time Serde records)   : ${serdeAllocKb} KB  (${serdeSavingsPercent}% less memory)
+
+2. HTTP Transport Pipeline (Socket to Object):
+   CloudBees (AsyncHttpClient + Jackson) : ${cbAllocKb} KB
+   z4j (Netty Reactive + Serde records)  : ${z4jAllocKb} KB
+   *Note: Netty pre-allocates pooled byte buffer arenas on I/O threads.
 ======================================================
 """
         println results
