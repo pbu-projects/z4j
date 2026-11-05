@@ -31,10 +31,10 @@ class TranslationResponseSpec extends Z4jSpec {
     def "should create TranslationResponse with canonical constructor and builder"() {
         given:
         Translation expected = new Translation()
-                .setId(101L)
-                .setTitle("Welcome")
-                .setBody("Hello and welcome")
-                .setLocale(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                .withId(101L)
+                .withTitle("Welcome")
+                .withBody("Hello and welcome")
+                .withLocale(LocaleAbbreviation.ENGLISH_UNITED_STATES)
 
         when:
         TranslationResponse direct = new TranslationResponse(expected)
@@ -59,8 +59,8 @@ class TranslationResponseSpec extends Z4jSpec {
 
     def "should update translation using record wither"() {
         given:
-        Translation original = new Translation().setId(1L).setTitle("Draft Title")
-        Translation updatedTranslation = new Translation().setId(2L).setTitle("Final Title")
+        Translation original = new Translation().withId(1L).withTitle("Draft Title")
+        Translation updatedTranslation = new Translation().withId(2L).withTitle("Final Title")
         TranslationResponse response = new TranslationResponse(original)
 
         when:
@@ -80,10 +80,10 @@ class TranslationResponseSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize TranslationResponse"() {
         given:
         Translation expected = new Translation()
-                .setId(555L)
-                .setTitle("Overview")
-                .setBody("Product overview")
-                .setLocale(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                .withId(555L)
+                .withTitle("Overview")
+                .withBody("Product overview")
+                .withLocale(LocaleAbbreviation.ENGLISH_UNITED_STATES)
         TranslationResponse response = new TranslationResponse(expected)
 
         when:
@@ -111,7 +111,7 @@ class TranslationResponseSpec extends Z4jSpec {
     def "should handle null translation component in constructor and wither"() {
         when:
         TranslationResponse response = new TranslationResponse(null)
-        Translation replacement = new Translation().setId(99L).setTitle("Published")
+        Translation replacement = new Translation().withId(99L).withTitle("Published")
         TranslationResponse updated = response.withTranslation(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

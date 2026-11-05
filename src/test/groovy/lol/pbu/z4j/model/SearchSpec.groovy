@@ -25,11 +25,11 @@ class SearchSpec extends Z4jSpec {
         given:
         // SearchResultsInner is an interface, so we use a concrete implementation.
         // Assuming 'Article' is one such implementation.
-        def article1 = new Article().setLocaleAbbreviation(LocaleAbbreviation.BULGARIAN)
-                .setPermissionGroupId(faker.number().randomNumber()).setTitle(faker.book().author())
+        def article1 = new Article().withLocaleAbbreviation(LocaleAbbreviation.BULGARIAN)
+                .withPermissionGroupId(faker.number().randomNumber()).withTitle(faker.book().author())
 
-        def article2 = new Article().setLocaleAbbreviation(LocaleAbbreviation.GERMAN)
-                .setPermissionGroupId(faker.number().randomNumber()).setTitle(faker.book().author())
+        def article2 = new Article().withLocaleAbbreviation(LocaleAbbreviation.GERMAN)
+                .withPermissionGroupId(faker.number().randomNumber()).withTitle(faker.book().author())
 
         List<SearchResultsInner> searchResults = [article1, article2]
 
@@ -45,17 +45,17 @@ class SearchSpec extends Z4jSpec {
     def "should add item to results"() {
         given:
         def initialArticle = new Article()
-                .setLocaleAbbreviation(LocaleAbbreviation.JAPANESE)
-                .setId(faker.number().randomNumber())
-                .setTitle(faker.book().title())
+                .withLocaleAbbreviation(LocaleAbbreviation.JAPANESE)
+                .withId(faker.number().randomNumber())
+                .withTitle(faker.book().title())
 
         List<SearchResultsInner> initialResults = [initialArticle]
         def search = new Search(initialResults)
 
         Article newResult = new Article()
-                .setLocaleAbbreviation(LocaleAbbreviation.JAPANESE)
-                .setId(faker.number().randomNumber())
-                .setTitle(faker.book().title())
+                .withLocaleAbbreviation(LocaleAbbreviation.JAPANESE)
+                .withId(faker.number().randomNumber())
+                .withTitle(faker.book().title())
 
         when:
         def returnedSearch = search.addResultsItem(newResult)

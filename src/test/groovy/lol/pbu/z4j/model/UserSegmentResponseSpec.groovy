@@ -30,7 +30,7 @@ class UserSegmentResponseSpec extends Z4jSpec {
 
     def "should create UserSegmentResponse with canonical constructor and builder"() {
         given:
-        UserSegment expected = new UserSegment("Staff Only", "staff").setId(101L)
+        UserSegment expected = new UserSegment("Staff Only", "staff").withId(101L)
 
         when:
         UserSegmentResponse direct = new UserSegmentResponse(expected)
@@ -53,8 +53,8 @@ class UserSegmentResponseSpec extends Z4jSpec {
 
     def "should update user segment using record wither"() {
         given:
-        UserSegment original = new UserSegment("Original", "staff").setId(1L)
-        UserSegment updatedSegment = new UserSegment("Updated", "signed_in_users").setId(2L)
+        UserSegment original = new UserSegment("Original", "staff").withId(1L)
+        UserSegment updatedSegment = new UserSegment("Updated", "signed_in_users").withId(2L)
         UserSegmentResponse response = new UserSegmentResponse(original)
 
         when:
@@ -73,7 +73,7 @@ class UserSegmentResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize UserSegmentResponse"() {
         given:
-        UserSegment expected = new UserSegment("VIP Customers", "signed_in_users").setId(555L)
+        UserSegment expected = new UserSegment("VIP Customers", "signed_in_users").withId(555L)
         UserSegmentResponse response = new UserSegmentResponse(expected)
 
         when:
@@ -99,7 +99,7 @@ class UserSegmentResponseSpec extends Z4jSpec {
     def "should handle null user segment component in constructor and wither"() {
         when:
         UserSegmentResponse response = new UserSegmentResponse(null)
-        UserSegment replacement = new UserSegment("Community", "signed_in_users").setId(99L)
+        UserSegment replacement = new UserSegment("Community", "signed_in_users").withId(99L)
         UserSegmentResponse updated = response.withUserSegment(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

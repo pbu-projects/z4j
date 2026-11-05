@@ -30,7 +30,7 @@ class SectionsResponseSpec extends Z4jSpec {
 
     def "should create SectionsResponse with canonical constructor and builder"() {
         given:
-        Section item = new Section().setName("FAQ").setId(101L)
+        Section item = new Section().withName("FAQ").withId(101L)
         List<Section> list = [item]
 
         when:
@@ -56,8 +56,8 @@ class SectionsResponseSpec extends Z4jSpec {
 
     def "should update sections using record wither and addSectionsItem method"() {
         given:
-        Section first = new Section().setName("Draft Section").setId(1L)
-        Section second = new Section().setName("Active Section").setId(2L)
+        Section first = new Section().withName("Draft Section").withId(1L)
+        Section second = new Section().withName("Active Section").withId(2L)
         SectionsResponse response = new SectionsResponse([first])
 
         when:
@@ -87,7 +87,7 @@ class SectionsResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize SectionsResponse"() {
         given:
-        Section item = new Section().setName("Tutorials").setId(555L)
+        Section item = new Section().withName("Tutorials").withId(555L)
         SectionsResponse response = new SectionsResponse([item])
 
         when:
@@ -113,7 +113,7 @@ class SectionsResponseSpec extends Z4jSpec {
     def "should handle null sections component in constructor, wither, and serde"() {
         when:
         SectionsResponse response = new SectionsResponse(null)
-        Section item = new Section().setName("Quickstarts").setId(99L)
+        Section item = new Section().withName("Quickstarts").withId(99L)
         SectionsResponse updated = response.withSections([item])
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

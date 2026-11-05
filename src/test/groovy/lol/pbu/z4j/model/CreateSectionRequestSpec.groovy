@@ -30,7 +30,7 @@ class CreateSectionRequestSpec extends Z4jSpec {
 
     def "should create CreateSectionRequest with canonical constructor and builder"() {
         given:
-        Section expected = new Section().setName("Getting Started").setId(101L)
+        Section expected = new Section().withName("Getting Started").withId(101L)
 
         when:
         CreateSectionRequest direct = new CreateSectionRequest(expected)
@@ -52,8 +52,8 @@ class CreateSectionRequestSpec extends Z4jSpec {
 
     def "should update section using record wither"() {
         given:
-        Section originalSection = new Section().setName("Draft Section").setId(1L)
-        Section newSection = new Section().setName("Published Section").setId(2L)
+        Section originalSection = new Section().withName("Draft Section").withId(1L)
+        Section newSection = new Section().withName("Published Section").withId(2L)
         CreateSectionRequest request = new CreateSectionRequest(originalSection)
 
         when:
@@ -72,7 +72,7 @@ class CreateSectionRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize CreateSectionRequest"() {
         given:
-        Section expected = new Section().setName("Billing").setId(555L)
+        Section expected = new Section().withName("Billing").withId(555L)
         CreateSectionRequest request = new CreateSectionRequest(expected)
 
         when:
@@ -98,7 +98,7 @@ class CreateSectionRequestSpec extends Z4jSpec {
     def "should handle null section component in constructor and wither"() {
         when:
         CreateSectionRequest request = new CreateSectionRequest(null)
-        Section replacement = new Section().setName("Created").setId(99L)
+        Section replacement = new Section().withName("Created").withId(99L)
         CreateSectionRequest updated = request.withSection(replacement)
         String json = objectMapper.writeValueAsString(request)
         Map map = objectMapper.readValue(json, Map.class)

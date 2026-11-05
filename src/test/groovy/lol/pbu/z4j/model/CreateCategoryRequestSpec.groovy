@@ -30,7 +30,7 @@ class CreateCategoryRequestSpec extends Z4jSpec {
 
     def "should create CreateCategoryRequest with canonical constructor and builder"() {
         given:
-        Category expected = new Category("General").setId(101L)
+        Category expected = new Category("General").withId(101L)
 
         when:
         CreateCategoryRequest direct = new CreateCategoryRequest(expected)
@@ -52,8 +52,8 @@ class CreateCategoryRequestSpec extends Z4jSpec {
 
     def "should update category using record wither"() {
         given:
-        Category originalCategory = new Category("Draft").setId(1L)
-        Category newCategory = new Category("Published").setId(2L)
+        Category originalCategory = new Category("Draft").withId(1L)
+        Category newCategory = new Category("Published").withId(2L)
         CreateCategoryRequest request = new CreateCategoryRequest(originalCategory)
 
         when:
@@ -72,7 +72,7 @@ class CreateCategoryRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize CreateCategoryRequest"() {
         given:
-        Category expected = new Category("FAQ").setId(555L)
+        Category expected = new Category("FAQ").withId(555L)
         CreateCategoryRequest request = new CreateCategoryRequest(expected)
 
         when:
@@ -98,7 +98,7 @@ class CreateCategoryRequestSpec extends Z4jSpec {
     def "should handle null category component in constructor and wither"() {
         when:
         CreateCategoryRequest request = new CreateCategoryRequest(null)
-        Category replacement = new Category("Created").setId(99L)
+        Category replacement = new Category("Created").withId(99L)
         CreateCategoryRequest updated = request.withCategory(replacement)
         String json = objectMapper.writeValueAsString(request)
         Map map = objectMapper.readValue(json, Map.class)

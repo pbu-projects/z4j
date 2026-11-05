@@ -20,28 +20,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
 /**
- * Article
+ * Article in Zendesk Guide Help Center.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@EqualsAndHashCode
-@ToString
-@Getter
-@Setter
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         Article.JSON_PROPERTY_LOCALE,
         Article.JSON_PROPERTY_PERMISSION_GROUP_ID,
@@ -67,11 +58,35 @@ import lol.pbu.z4j.Generated;
         Article.JSON_PROPERTY_USER_SEGMENT_ID,
         Article.JSON_PROPERTY_USER_SEGMENT_IDS,
         Article.JSON_PROPERTY_VOTE_COUNT,
-        Article.JSON_PROPERTY_VOTE_SUM,
+        Article.JSON_PROPERTY_VOTE_SUM
 })
-@Serdeable
-@Generated
-public class Article implements SearchResultsInner {
+public record Article(
+        @NotNull @JsonProperty(JSON_PROPERTY_LOCALE) LocaleAbbreviation localeAbbreviation,
+        @NotNull @JsonProperty(JSON_PROPERTY_PERMISSION_GROUP_ID) Long permissionGroupId,
+        @NotNull @JsonProperty(JSON_PROPERTY_TITLE) String title,
+        @Nullable @JsonProperty(JSON_PROPERTY_AUTHOR_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long authorId,
+        @Nullable @JsonProperty(JSON_PROPERTY_BODY) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String body,
+        @Nullable @JsonProperty(JSON_PROPERTY_COMMENTS_DISABLED) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean commentsDisabled,
+        @Nullable @JsonProperty(JSON_PROPERTY_CONTENT_TAG_IDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@NotNull String> contentTagIds,
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String createdAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_DRAFT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean draft,
+        @Nullable @JsonProperty(JSON_PROPERTY_EDITED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String editedAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_HTML_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String htmlUrl,
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_LABEL_NAMES) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@NotNull String> labelNames,
+        @Nullable @JsonProperty(JSON_PROPERTY_OUTDATED) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean outdated,
+        @Nullable @JsonProperty(JSON_PROPERTY_OUTDATED_LOCALES) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@NotNull String> outdatedLocales,
+        @Nullable @JsonProperty(JSON_PROPERTY_POSITION) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long position,
+        @Nullable @JsonProperty(JSON_PROPERTY_PROMOTED) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean promoted,
+        @Nullable @JsonProperty(JSON_PROPERTY_SECTION_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long sectionId,
+        @Nullable @JsonProperty(JSON_PROPERTY_SOURCE_LOCALE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String sourceLocale,
+        @Nullable @JsonProperty(JSON_PROPERTY_UPDATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String updatedAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String url,
+        @Nullable @JsonProperty(JSON_PROPERTY_USER_SEGMENT_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long userSegmentId,
+        @Nullable @JsonProperty(JSON_PROPERTY_USER_SEGMENT_IDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@NotNull String> userSegmentIds,
+        @Nullable @JsonProperty(JSON_PROPERTY_VOTE_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long voteCount,
+        @Nullable @JsonProperty(JSON_PROPERTY_VOTE_SUM) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long voteSum
+) implements SearchResultsInner, ArticleBuilder.With {
 
     public static final String JSON_PROPERTY_LOCALE = "locale";
     public static final String JSON_PROPERTY_PERMISSION_GROUP_ID = "permission_group_id";
@@ -99,241 +114,25 @@ public class Article implements SearchResultsInner {
     public static final String JSON_PROPERTY_VOTE_COUNT = "vote_count";
     public static final String JSON_PROPERTY_VOTE_SUM = "vote_sum";
 
-    /**
-     * The locale that the article is being displayed in
-     */
-    @NotNull
-    @JsonProperty(JSON_PROPERTY_LOCALE)
-    private LocaleAbbreviation localeAbbreviation;
+    public Article() {
+        this(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    }
 
-    /**
-     * The id of the permission group which defines who can edit and publish this article
-     */
-    @NotNull
-    @JsonProperty(JSON_PROPERTY_PERMISSION_GROUP_ID)
-    private Long permissionGroupId;
-
-    /**
-     * The title of the article
-     */
-    @NotNull
-    @JsonProperty(JSON_PROPERTY_TITLE)
-    private String title;
-
-    /**
-     * The id of the user who wrote the article (set to the user who made the request on create by default)
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_AUTHOR_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long authorId;
-
-    /**
-     * <p>HTML body of the article. Unsafe tags and attributes may be removed before display. For a list of safe tags and attributes,  see <a href=\"https://support.zendesk.com/hc/en-us/articles/115015895948\">Allowing unsafe HTML in Help Center articles</a> in Zendesk help</p>
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_BODY)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String body;
-
-    /**
-     * True if comments are disabled; false otherwise
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_COMMENTS_DISABLED)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean commentsDisabled;
-
-    /**
-     * The list of content tags attached to the article
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CONTENT_TAG_IDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull String> contentTagIds;
-
-    /**
-     * The time the article was created
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String createdAt;
-
-    /**
-     * True if the translation for the current locale is a draft; false otherwise. false by default. Can be set when creating but not when updating. For updating, see Translations
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DRAFT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean draft;
-
-    /**
-     * The time the article was last edited in its displayed locale
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_EDITED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String editedAt;
-
-    /**
-     * The url of the article in Help Center
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_HTML_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String htmlUrl;
-
-    /**
-     * Automatically assigned when the article is created
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    /**
-     * An array of label names associated with this article. By default, no label names are used. Only available on certain plans
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_LABEL_NAMES)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull String> labelNames;
-
-    /**
-     * Deprecated. Always false because the source translation is always the most up-to-date translation
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_OUTDATED)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean outdated;
-
-    /**
-     * Locales in which the article was marked as outdated
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_OUTDATED_LOCALES)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull String> outdatedLocales;
-
-    /**
-     * The position of this article in the article list. 0 by default
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_POSITION)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long position;
-
-    /**
-     * True if this article is promoted; false otherwise. false by default
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_PROMOTED)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean promoted;
-
-    /**
-     * The id of the section to which this article belongs
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SECTION_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long sectionId;
-
-    /**
-     * The source (default) locale of the article
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_SOURCE_LOCALE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String sourceLocale;
-
-    /**
-     * The time the article was last updated
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_UPDATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String updatedAt;
-
-    /**
-     * The API url of the article
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String url;
-
-    /**
-     * The id of the user segment which defines who can see this article. Set to null to make it accessible to everyone. Either user_segment_id or user_segment_ids must be specified
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_USER_SEGMENT_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long userSegmentId;
-
-    /**
-     * List of user segment ids which define who can view this article. Set to an empty list to make it accessible to everyone. For Enterprise plans only this may contain more than one user_segment_id. Either user_segment_id or user_segment_ids must be specified
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_USER_SEGMENT_IDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@NotNull String> userSegmentIds;
-
-    /**
-     * The total number of upvotes and downvotes
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_VOTE_COUNT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long voteCount;
-
-    /**
-     * The sum of upvotes (+1) and downvotes (-1), which may be positive or negative
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_VOTE_SUM)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long voteSum;
-
-
-    /**
-     * Add an item to the contentTagIds property in a chainable fashion.
-     *
-     * @return The same instance of Article for chaining.
-     */
     public Article addContentTagIdsItem(String contentTagIdsItem) {
-        if (contentTagIds == null) {
-            contentTagIds = new ArrayList<>();
-        }
-        contentTagIds.add(contentTagIdsItem);
-        return this;
+        List<String> list = contentTagIds != null ? new ArrayList<>(contentTagIds) : new ArrayList<>();
+        list.add(contentTagIdsItem);
+        return withContentTagIds(list);
     }
 
-    /**
-     * Add an item to the labelNames property in a chainable fashion.
-     *
-     * @return The same instance of Article for chaining.
-     */
     public Article addLabelNamesItem(String labelNamesItem) {
-        if (labelNames == null) {
-            labelNames = new ArrayList<>();
-        }
-        labelNames.add(labelNamesItem);
-        return this;
+        List<String> list = labelNames != null ? new ArrayList<>(labelNames) : new ArrayList<>();
+        list.add(labelNamesItem);
+        return withLabelNames(list);
     }
 
-    /**
-     * Add an item to the userSegmentIds property in a chainable fashion.
-     *
-     * @return The same instance of Article for chaining.
-     */
     public Article addUserSegmentIdsItem(String userSegmentIdsItem) {
-        if (userSegmentIds == null) {
-            userSegmentIds = new ArrayList<>();
-        }
-        userSegmentIds.add(userSegmentIdsItem);
-        return this;
+        List<String> list = userSegmentIds != null ? new ArrayList<>(userSegmentIds) : new ArrayList<>();
+        list.add(userSegmentIdsItem);
+        return withUserSegmentIds(list);
     }
-
 }

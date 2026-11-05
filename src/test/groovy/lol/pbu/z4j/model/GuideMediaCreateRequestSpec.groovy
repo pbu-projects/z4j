@@ -30,7 +30,7 @@ class GuideMediaCreateRequestSpec extends Z4jSpec {
 
     def "should create GuideMediaCreateRequest with convenience constructors, canonical constructor, and builder"() {
         given:
-        GuideMedia expectedMedia = new GuideMedia("diagram.png").setId("01ARZ3NDEK")
+        GuideMedia expectedMedia = new GuideMedia("diagram.png").withId("01ARZ3NDEK")
 
         when:
         GuideMediaCreateRequest fromMedia = new GuideMediaCreateRequest(expectedMedia)
@@ -105,7 +105,7 @@ class GuideMediaCreateRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize GuideMediaCreateRequest"() {
         given:
-        GuideMedia media = new GuideMedia("screenshot.png").setId("01ARZ3NDEK555")
+        GuideMedia media = new GuideMedia("screenshot.png").withId("01ARZ3NDEK555")
         GuideMediaCreateRequest request = new GuideMediaCreateRequest(media, "asset-555", "screenshot.png")
 
         when:

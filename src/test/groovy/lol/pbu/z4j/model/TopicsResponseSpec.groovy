@@ -30,7 +30,7 @@ class TopicsResponseSpec extends Z4jSpec {
 
     def "should create TopicsResponse with canonical constructor and builder"() {
         given:
-        Topic item = new Topic("Announcements").setDescription("Important news").setId(101L)
+        Topic item = new Topic("Announcements").withDescription("Important news").withId(101L)
         List<Topic> list = [item]
 
         when:
@@ -56,8 +56,8 @@ class TopicsResponseSpec extends Z4jSpec {
 
     def "should update topics using record wither and addTopicsItem method"() {
         given:
-        Topic first = new Topic("Old News").setId(1L)
-        Topic second = new Topic("New News").setId(2L)
+        Topic first = new Topic("Old News").withId(1L)
+        Topic second = new Topic("New News").withId(2L)
         TopicsResponse response = new TopicsResponse([first])
 
         when:
@@ -87,7 +87,7 @@ class TopicsResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize TopicsResponse"() {
         given:
-        Topic item = new Topic("Community Q&A").setDescription("Ask anything").setId(555L)
+        Topic item = new Topic("Community Q&A").withDescription("Ask anything").withId(555L)
         TopicsResponse response = new TopicsResponse([item])
 
         when:
@@ -113,7 +113,7 @@ class TopicsResponseSpec extends Z4jSpec {
     def "should handle null topics component in constructor, wither, and serde"() {
         when:
         TopicsResponse response = new TopicsResponse(null)
-        Topic item = new Topic("Feedback").setId(99L)
+        Topic item = new Topic("Feedback").withId(99L)
         TopicsResponse updated = response.withTopics([item])
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

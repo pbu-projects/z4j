@@ -38,15 +38,15 @@ public record GuideMediaCreateRequest(
         this(
                 guideMedia,
                 null,
-                guideMedia != null ? guideMedia.getName() : null
+                guideMedia != null ? guideMedia.name() : null
         );
     }
 
     public GuideMediaCreateRequest(String filename) {
-        this(new GuideMedia().setName(filename), null, filename);
+        this(new GuideMedia(filename), null, filename);
     }
 
     public GuideMediaCreateRequest(String assetUploadId, String filename) {
-        this(new GuideMedia().setName(filename), assetUploadId, filename);
+        this(new GuideMedia(filename), assetUploadId, filename);
     }
 }

@@ -55,7 +55,7 @@ class PermissionGroupClientSpec extends Z4jSpec {
 
         def segments = userSegmentClient.listUserSegments(null).block().userSegments()
         if (segments != null) {
-            staffUserSegmentIds = segments.findAll { it.getUserType() == "staff" }.collect { it.getId() }
+            staffUserSegmentIds = segments.findAll { it.userType() == "staff" }.collect { it.id() }
         }
     }
 

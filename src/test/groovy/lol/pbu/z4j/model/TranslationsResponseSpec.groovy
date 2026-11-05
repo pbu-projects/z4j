@@ -30,7 +30,7 @@ class TranslationsResponseSpec extends Z4jSpec {
 
     def "should create TranslationsResponse with canonical constructor and builder"() {
         given:
-        Translation item = new Translation().setId(101L).setTitle("Guide translation")
+        Translation item = new Translation().withId(101L).withTitle("Guide translation")
         List<Translation> list = [item]
 
         when:
@@ -56,8 +56,8 @@ class TranslationsResponseSpec extends Z4jSpec {
 
     def "should update translations using record wither and addTranslationsItem method"() {
         given:
-        Translation first = new Translation().setId(1L).setTitle("Draft Title")
-        Translation second = new Translation().setId(2L).setTitle("Final Title")
+        Translation first = new Translation().withId(1L).withTitle("Draft Title")
+        Translation second = new Translation().withId(2L).withTitle("Final Title")
         TranslationsResponse response = new TranslationsResponse([first])
 
         when:
@@ -87,7 +87,7 @@ class TranslationsResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize TranslationsResponse"() {
         given:
-        Translation item = new Translation().setId(555L).setTitle("Published Title")
+        Translation item = new Translation().withId(555L).withTitle("Published Title")
         TranslationsResponse response = new TranslationsResponse([item])
 
         when:
@@ -113,7 +113,7 @@ class TranslationsResponseSpec extends Z4jSpec {
     def "should handle null translations component in constructor, wither, and serde"() {
         when:
         TranslationsResponse response = new TranslationsResponse(null)
-        Translation item = new Translation().setId(99L).setTitle("Updated Title")
+        Translation item = new Translation().withId(99L).withTitle("Updated Title")
         TranslationsResponse updated = response.withTranslations([item])
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

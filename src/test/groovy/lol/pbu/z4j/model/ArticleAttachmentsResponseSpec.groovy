@@ -30,7 +30,7 @@ class ArticleAttachmentsResponseSpec extends Z4jSpec {
 
     def "should create ArticleAttachmentsResponse with canonical constructor and builder"() {
         given:
-        ArticleAttachment item = new ArticleAttachment().setId(101L).setFileName("guide.pdf")
+        ArticleAttachment item = new ArticleAttachment().withId(101L).withFileName("guide.pdf")
         List<ArticleAttachment> list = [item]
 
         when:
@@ -56,8 +56,8 @@ class ArticleAttachmentsResponseSpec extends Z4jSpec {
 
     def "should update article attachments using record wither and addArticleAttachmentsItem method"() {
         given:
-        ArticleAttachment first = new ArticleAttachment().setId(1L).setFileName("draft.pdf")
-        ArticleAttachment second = new ArticleAttachment().setId(2L).setFileName("final.pdf")
+        ArticleAttachment first = new ArticleAttachment().withId(1L).withFileName("draft.pdf")
+        ArticleAttachment second = new ArticleAttachment().withId(2L).withFileName("final.pdf")
         ArticleAttachmentsResponse response = new ArticleAttachmentsResponse([first])
 
         when:
@@ -87,7 +87,7 @@ class ArticleAttachmentsResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize ArticleAttachmentsResponse"() {
         given:
-        ArticleAttachment item = new ArticleAttachment().setId(555L).setFileName("manual.pdf")
+        ArticleAttachment item = new ArticleAttachment().withId(555L).withFileName("manual.pdf")
         ArticleAttachmentsResponse response = new ArticleAttachmentsResponse([item])
 
         when:
@@ -113,7 +113,7 @@ class ArticleAttachmentsResponseSpec extends Z4jSpec {
     def "should handle null article attachments component in constructor, wither, and serde"() {
         when:
         ArticleAttachmentsResponse response = new ArticleAttachmentsResponse(null)
-        ArticleAttachment item = new ArticleAttachment().setId(99L).setFileName("spec.pdf")
+        ArticleAttachment item = new ArticleAttachment().withId(99L).withFileName("spec.pdf")
         ArticleAttachmentsResponse updated = response.withArticleAttachments([item])
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

@@ -30,7 +30,7 @@ class VotesResponseSpec extends Z4jSpec {
 
     def "should create VotesResponse with canonical constructor and builder"() {
         given:
-        Vote item = new Vote().setId(101L).setValue(1).setUserId(202L)
+        Vote item = new Vote().withId(101L).withValue(1).withUserId(202L)
         List<Vote> list = [item]
 
         when:
@@ -58,8 +58,8 @@ class VotesResponseSpec extends Z4jSpec {
 
     def "should update votes using record wither and addVotesItem method"() {
         given:
-        Vote first = new Vote().setId(1L).setValue(1)
-        Vote second = new Vote().setId(2L).setValue(-1)
+        Vote first = new Vote().withId(1L).withValue(1)
+        Vote second = new Vote().withId(2L).withValue(-1)
         VotesResponse response = new VotesResponse([first])
 
         when:
@@ -89,7 +89,7 @@ class VotesResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize VotesResponse"() {
         given:
-        Vote item = new Vote().setId(555L).setValue(1).setUserId(999L)
+        Vote item = new Vote().withId(555L).withValue(1).withUserId(999L)
         VotesResponse response = new VotesResponse([item])
 
         when:
@@ -116,7 +116,7 @@ class VotesResponseSpec extends Z4jSpec {
     def "should handle null votes component in constructor, wither, and serde"() {
         when:
         VotesResponse response = new VotesResponse(null)
-        Vote item = new Vote().setId(99L).setValue(-1)
+        Vote item = new Vote().withId(99L).withValue(-1)
         VotesResponse updated = response.withVotes([item])
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

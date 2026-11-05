@@ -30,7 +30,7 @@ class GuideMediaResponseSpec extends Z4jSpec {
 
     def "should create GuideMediaResponse with canonical constructor and builder"() {
         given:
-        GuideMedia expected = new GuideMedia().setId("gm-101").setName("header.png")
+        GuideMedia expected = new GuideMedia().withId("gm-101").withName("header.png")
 
         when:
         GuideMediaResponse direct = new GuideMediaResponse(expected)
@@ -51,8 +51,8 @@ class GuideMediaResponseSpec extends Z4jSpec {
 
     def "should update media using record wither"() {
         given:
-        GuideMedia original = new GuideMedia().setId("gm-1").setName("banner.png")
-        GuideMedia updatedMedia = new GuideMedia().setId("gm-2").setName("footer.png")
+        GuideMedia original = new GuideMedia().withId("gm-1").withName("banner.png")
+        GuideMedia updatedMedia = new GuideMedia().withId("gm-2").withName("footer.png")
         GuideMediaResponse response = new GuideMediaResponse(original)
 
         when:
@@ -71,7 +71,7 @@ class GuideMediaResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize GuideMediaResponse"() {
         given:
-        GuideMedia expected = new GuideMedia().setId("gm-555").setName("diagram.svg")
+        GuideMedia expected = new GuideMedia().withId("gm-555").withName("diagram.svg")
         GuideMediaResponse response = new GuideMediaResponse(expected)
 
         when:
@@ -112,7 +112,7 @@ class GuideMediaResponseSpec extends Z4jSpec {
     def "should handle null media component in constructor and wither"() {
         when:
         GuideMediaResponse response = new GuideMediaResponse(null)
-        GuideMedia replacement = new GuideMedia().setId("gm-99").setName("icon.png")
+        GuideMedia replacement = new GuideMedia().withId("gm-99").withName("icon.png")
         GuideMediaResponse updated = response.withMedia(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

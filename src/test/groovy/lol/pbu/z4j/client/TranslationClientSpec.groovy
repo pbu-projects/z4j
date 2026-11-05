@@ -115,24 +115,24 @@ class TranslationClientSpec extends Z4jSpec {
 
         CreateCategoryRequest catReq = new CreateCategoryRequest(
                 new Category("Translation Spec Category " + UUID.randomUUID())
-                        .setDescription("Category for TranslationClientSpec")
-                        .setLocaleAbbreviation(defaultLocale)
+                        .withDescription("Category for TranslationClientSpec")
+                        .withLocaleAbbreviation(defaultLocale)
         )
         testCategory = adminCategoryClient.createCategory(defaultLocale, catReq).block().category
 
         CreateSectionRequest secReq = new CreateSectionRequest(
                 new Section("Translation Spec Section " + UUID.randomUUID())
-                        .setDescription("Section for TranslationClientSpec")
-                        .setLocaleAbbreviation(defaultLocale)
+                        .withDescription("Section for TranslationClientSpec")
+                        .withLocaleAbbreviation(defaultLocale)
         )
         testSection = adminSectionClient.createSection(defaultLocale, testCategory.id, secReq).block().section
 
         ArticleCreateRequest artReq = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Translation Spec Article " + UUID.randomUUID())
-                        .setBody("Body for TranslationClientSpec")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(defaultLocale)
+                        .withTitle("Translation Spec Article " + UUID.randomUUID())
+                        .withBody("Body for TranslationClientSpec")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(defaultLocale)
         )
         testArticle = adminArticleClient.createArticle(defaultLocale, testSection.id, artReq).block().article
     }
@@ -162,10 +162,10 @@ class TranslationClientSpec extends Z4jSpec {
         given: "an isolated test article created by admin"
         ArticleCreateRequest artReq = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Base Article for Translation")
-                        .setBody("Base Body")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(defaultLocale)
+                        .withTitle("Base Article for Translation")
+                        .withBody("Base Body")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(defaultLocale)
         )
         def createResponse = adminArticleClient.createArticle(defaultLocale, validSectionId, artReq).block()
         def createdArticleId = createResponse.article.id
@@ -173,9 +173,9 @@ class TranslationClientSpec extends Z4jSpec {
         and: "a new translation request"
         def req = new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(localeAbbreviation)
-                        .setTitle(title)
-                        .setBody(body)
+                        .withLocale(localeAbbreviation)
+                        .withTitle(title)
+                        .withBody(body)
         )
 
         when: "creating the translation"
@@ -206,10 +206,10 @@ class TranslationClientSpec extends Z4jSpec {
         given: "an isolated test article created by admin"
         ArticleCreateRequest artReq = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Base Article for Translation")
-                        .setBody("Base Body")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(defaultLocale)
+                        .withTitle("Base Article for Translation")
+                        .withBody("Base Body")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(defaultLocale)
         )
         def createResponse = adminArticleClient.createArticle(defaultLocale, validSectionId, artReq).block()
         def createdArticleId = createResponse.article.id
@@ -217,9 +217,9 @@ class TranslationClientSpec extends Z4jSpec {
         and: "a new translation request"
         def req = new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(localeAbbreviation)
-                        .setTitle(title)
-                        .setBody(body)
+                        .withLocale(localeAbbreviation)
+                        .withTitle(title)
+                        .withBody(body)
         )
 
         when: "creating the translation"
@@ -247,10 +247,10 @@ class TranslationClientSpec extends Z4jSpec {
         given: "an isolated test article created by admin"
         ArticleCreateRequest artReq = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Base Article for Translation")
-                        .setBody("Base Body")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(defaultLocale)
+                        .withTitle("Base Article for Translation")
+                        .withBody("Base Body")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(defaultLocale)
         )
         def createResponse = adminArticleClient.createArticle(defaultLocale, validSectionId, artReq).block()
         def createdArticleId = createResponse.article.id
@@ -258,9 +258,9 @@ class TranslationClientSpec extends Z4jSpec {
         and: "a new translation request"
         def req = new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(localeAbbreviation)
-                        .setTitle(title)
-                        .setBody(body)
+                        .withLocale(localeAbbreviation)
+                        .withTitle(title)
+                        .withBody(body)
         )
         def transResponse = adminTranslationClient.createTranslation("articles", createdArticleId, req).block()
 
@@ -296,10 +296,10 @@ class TranslationClientSpec extends Z4jSpec {
         given: "an isolated test article created by admin"
         ArticleCreateRequest artReq = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Base Article for Translation")
-                        .setBody("Base Body")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(defaultLocale)
+                        .withTitle("Base Article for Translation")
+                        .withBody("Base Body")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(defaultLocale)
         )
         def createResponse = adminArticleClient.createArticle(defaultLocale, validSectionId, artReq).block()
         def createdArticleId = createResponse.article.id
@@ -307,16 +307,16 @@ class TranslationClientSpec extends Z4jSpec {
         and: "a new translation"
         def req = new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(localeAbbreviation)
-                        .setTitle(title)
-                        .setBody(body)
+                        .withLocale(localeAbbreviation)
+                        .withTitle(title)
+                        .withBody(body)
         )
         adminTranslationClient.createTranslation("articles", createdArticleId, req).block()
 
         when: "updating the translation"
         def updateReq = new TranslationUpdateRequest(
                 new Translation()
-                        .setTitle(title + " Updated")
+                        .withTitle(title + " Updated")
         )
         def updateResponse = translationClient.updateTranslation("articles", createdArticleId, localeAbbreviation, updateReq).block()
 
@@ -342,10 +342,10 @@ class TranslationClientSpec extends Z4jSpec {
         given: "an isolated test article created by admin"
         ArticleCreateRequest artReq = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Base Article for Translation")
-                        .setBody("Base Body")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(defaultLocale)
+                        .withTitle("Base Article for Translation")
+                        .withBody("Base Body")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(defaultLocale)
         )
         def createResponse = adminArticleClient.createArticle(defaultLocale, validSectionId, artReq).block()
         def createdArticleId = createResponse.article.id
@@ -353,16 +353,16 @@ class TranslationClientSpec extends Z4jSpec {
         and: "a new translation"
         def req = new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(localeAbbreviation)
-                        .setTitle(title)
-                        .setBody(body)
+                        .withLocale(localeAbbreviation)
+                        .withTitle(title)
+                        .withBody(body)
         )
         adminTranslationClient.createTranslation("articles", createdArticleId, req).block()
 
         when: "updating the translation"
         def updateReq = new TranslationUpdateRequest(
                 new Translation()
-                        .setTitle(title + " Updated")
+                        .withTitle(title + " Updated")
         )
         translationClient.updateTranslation("articles", createdArticleId, localeAbbreviation, updateReq).block()
 
@@ -388,10 +388,10 @@ class TranslationClientSpec extends Z4jSpec {
         given: "an isolated test article created by admin"
         ArticleCreateRequest artReq = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Base Article for Translation")
-                        .setBody("Base Body")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(defaultLocale)
+                        .withTitle("Base Article for Translation")
+                        .withBody("Base Body")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(defaultLocale)
         )
         def createResponse = adminArticleClient.createArticle(defaultLocale, validSectionId, artReq).block()
         def createdArticleId = createResponse.article.id
@@ -399,9 +399,9 @@ class TranslationClientSpec extends Z4jSpec {
         and: "a new translation"
         def req = new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(localeAbbreviation)
-                        .setTitle(title)
-                        .setBody(body)
+                        .withLocale(localeAbbreviation)
+                        .withTitle(title)
+                        .withBody(body)
         )
         def transResponse = adminTranslationClient.createTranslation("articles", createdArticleId, req).block()
         def createdTranslationId = transResponse.translation().id
@@ -430,10 +430,10 @@ class TranslationClientSpec extends Z4jSpec {
         given: "an isolated test article created by admin"
         ArticleCreateRequest artReq = new ArticleCreateRequest(
                 new Article()
-                        .setTitle("Base Article for Translation")
-                        .setBody("Base Body")
-                        .setPermissionGroupId(validPermissionGroupId)
-                        .setLocaleAbbreviation(defaultLocale)
+                        .withTitle("Base Article for Translation")
+                        .withBody("Base Body")
+                        .withPermissionGroupId(validPermissionGroupId)
+                        .withLocaleAbbreviation(defaultLocale)
         )
         def createResponse = adminArticleClient.createArticle(defaultLocale, validSectionId, artReq).block()
         def createdArticleId = createResponse.article.id
@@ -441,9 +441,9 @@ class TranslationClientSpec extends Z4jSpec {
         and: "a new translation"
         def req = new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(localeAbbreviation)
-                        .setTitle(title)
-                        .setBody(body)
+                        .withLocale(localeAbbreviation)
+                        .withTitle(title)
+                        .withBody(body)
         )
         def transResponse = adminTranslationClient.createTranslation("articles", createdArticleId, req).block()
         def createdTranslationId = transResponse.translation().id
@@ -655,9 +655,9 @@ class TranslationClientSpec extends Z4jSpec {
         String updatedTitle = "Updated Article Translation " + UUID.randomUUID()
         TranslationCreateRequest createReq = new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(localeAbbreviation)
-                        .setTitle(initialTitle)
-                        .setBody("Article translation body")
+                        .withLocale(localeAbbreviation)
+                        .withTitle(initialTitle)
+                        .withBody("Article translation body")
         )
         Long translationId = null
 
@@ -667,7 +667,7 @@ class TranslationClientSpec extends Z4jSpec {
 
         and: "updating article translation"
         TranslationUpdateRequest updateReq = new TranslationUpdateRequest(
-                new Translation().setTitle(updatedTitle)
+                new Translation().withTitle(updatedTitle)
         )
         TranslationResponse updated = translationClient.updateArticleTranslation(testArticle.id, localeAbbreviation, updateReq).block()
 
@@ -700,9 +700,9 @@ class TranslationClientSpec extends Z4jSpec {
         given: "a translation request"
         TranslationCreateRequest createReq = new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(localeAbbreviation)
-                        .setTitle("Unauthorized Article Translation")
-                        .setBody("Unauthorized body")
+                        .withLocale(localeAbbreviation)
+                        .withTitle("Unauthorized Article Translation")
+                        .withBody("Unauthorized body")
         )
 
         when: "creating article translation"
@@ -722,7 +722,7 @@ class TranslationClientSpec extends Z4jSpec {
     def "cannot update article translation as #userType"(TranslationClient translationClient, String userType) {
         given: "an update request"
         TranslationUpdateRequest updateReq = new TranslationUpdateRequest(
-                new Translation().setTitle("Unauthorized Article Update")
+                new Translation().withTitle("Unauthorized Article Update")
         )
 
         when: "updating article translation"
@@ -771,9 +771,9 @@ class TranslationClientSpec extends Z4jSpec {
         String updatedTitle = "Updated Section Translation " + UUID.randomUUID()
         TranslationCreateRequest createReq = new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(localeAbbreviation)
-                        .setTitle(initialTitle)
-                        .setBody("Section translation body")
+                        .withLocale(localeAbbreviation)
+                        .withTitle(initialTitle)
+                        .withBody("Section translation body")
         )
         Long translationId = null
 
@@ -783,7 +783,7 @@ class TranslationClientSpec extends Z4jSpec {
 
         and: "updating section translation"
         TranslationUpdateRequest updateReq = new TranslationUpdateRequest(
-                new Translation().setTitle(updatedTitle)
+                new Translation().withTitle(updatedTitle)
         )
         TranslationResponse updated = translationClient.updateSectionTranslation(testSection.id, localeAbbreviation, updateReq).block()
 
@@ -816,9 +816,9 @@ class TranslationClientSpec extends Z4jSpec {
         given: "a translation request"
         TranslationCreateRequest createReq = new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(localeAbbreviation)
-                        .setTitle("Unauthorized Section Translation")
-                        .setBody("Unauthorized body")
+                        .withLocale(localeAbbreviation)
+                        .withTitle("Unauthorized Section Translation")
+                        .withBody("Unauthorized body")
         )
 
         when: "creating section translation"
@@ -838,7 +838,7 @@ class TranslationClientSpec extends Z4jSpec {
     def "cannot update section translation as #userType"(TranslationClient translationClient, String userType) {
         given: "an update request"
         TranslationUpdateRequest updateReq = new TranslationUpdateRequest(
-                new Translation().setTitle("Unauthorized Section Update")
+                new Translation().withTitle("Unauthorized Section Update")
         )
 
         when: "updating section translation"
@@ -887,9 +887,9 @@ class TranslationClientSpec extends Z4jSpec {
         String updatedTitle = "Updated Category Translation " + UUID.randomUUID()
         TranslationCreateRequest createReq = new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(localeAbbreviation)
-                        .setTitle(initialTitle)
-                        .setBody("Category translation body")
+                        .withLocale(localeAbbreviation)
+                        .withTitle(initialTitle)
+                        .withBody("Category translation body")
         )
         Long translationId = null
 
@@ -899,7 +899,7 @@ class TranslationClientSpec extends Z4jSpec {
 
         and: "updating category translation"
         TranslationUpdateRequest updateReq = new TranslationUpdateRequest(
-                new Translation().setTitle(updatedTitle)
+                new Translation().withTitle(updatedTitle)
         )
         TranslationResponse updated = translationClient.updateCategoryTranslation(testCategory.id, localeAbbreviation, updateReq).block()
 
@@ -932,9 +932,9 @@ class TranslationClientSpec extends Z4jSpec {
         given: "a translation request"
         TranslationCreateRequest createReq = new TranslationCreateRequest(
                 new Translation()
-                        .setLocale(localeAbbreviation)
-                        .setTitle("Unauthorized Category Translation")
-                        .setBody("Unauthorized body")
+                        .withLocale(localeAbbreviation)
+                        .withTitle("Unauthorized Category Translation")
+                        .withBody("Unauthorized body")
         )
 
         when: "creating category translation"
@@ -954,7 +954,7 @@ class TranslationClientSpec extends Z4jSpec {
     def "cannot update category translation as #userType"(TranslationClient translationClient, String userType) {
         given: "an update request"
         TranslationUpdateRequest updateReq = new TranslationUpdateRequest(
-                new Translation().setTitle("Unauthorized Category Update")
+                new Translation().withTitle("Unauthorized Category Update")
         )
 
         when: "updating category translation"

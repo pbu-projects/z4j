@@ -44,8 +44,8 @@ class TopicClientSpec extends Z4jSpec {
         topicFixtures = FixtureLoader.loadFixture("/fixtures/topic_fixtures.yaml", TopicFixtures.class)
         // Create a shared topic for read tests
         def fixture = topicFixtures.getTopics().first()
-        def createReq = new TopicCreateRequest(new Topic(fixture.getName()).setDescription(fixture.getDescription()))
-        sharedTopicId = adminTopicClient.createTopic(createReq).block().topic().getId()
+        def createReq = new TopicCreateRequest(new Topic(fixture.getName()).withDescription(fixture.getDescription()))
+        sharedTopicId = adminTopicClient.createTopic(createReq).block().topic().id()
     }
 
     def cleanupSpec() {
@@ -80,7 +80,7 @@ class TopicClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         and:
-        response.topic().getId() == sharedTopicId
+        response.topic().id() == sharedTopicId
 
         where:
         [topicClient, userType] << [
@@ -92,7 +92,7 @@ class TopicClientSpec extends Z4jSpec {
 
     def "can create a topic as an admin"(String name, String description) {
         given:
-        def createReq = new TopicCreateRequest(new Topic(name).setDescription(description))
+        def createReq = new TopicCreateRequest(new Topic(name).withDescription(description))
 
         when:
         def response = adminTopicClient.createTopic(createReq).block()
@@ -101,11 +101,11 @@ class TopicClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         and:
-        response.topic().getName() == name
+        response.topic().name() == name
 
         cleanup:
         try {
-            adminTopicClient.deleteTopic(response.topic().getId()).block()
+            adminTopicClient.deleteTopic(response.topic().id()).block()
         } catch (Exception ignored) {}
 
         where:
@@ -114,7 +114,7 @@ class TopicClientSpec extends Z4jSpec {
 
     def "cannot create a topic as a #userType user"(TopicClient topicClient, String userType) {
         given:
-        def createReq = new TopicCreateRequest(new Topic("Unauthorized Topic").setDescription("Should not be created"))
+        def createReq = new TopicCreateRequest(new Topic("Unauthorized Topic").withDescription("Should not be created"))
 
         when:
         topicClient.createTopic(createReq).block()
@@ -134,22 +134,22 @@ class TopicClientSpec extends Z4jSpec {
 
     def "can update a topic as an admin"(String name, String description, String updatedName) {
         given:
-        def createReq = new TopicCreateRequest(new Topic(name).setDescription(description))
+        def createReq = new TopicCreateRequest(new Topic(name).withDescription(description))
         def created = adminTopicClient.createTopic(createReq).block().topic()
 
         when:
         def updateReq = new TopicUpdateRequest(new Topic(updatedName))
-        def response = adminTopicClient.updateTopic(created.getId(), updateReq).block()
+        def response = adminTopicClient.updateTopic(created.id(), updateReq).block()
 
         then:
         noExceptionThrown()
 
         and:
-        response.topic().getName() == updatedName
+        response.topic().name() == updatedName
 
         cleanup:
         try {
-            adminTopicClient.deleteTopic(created.getId()).block()
+            adminTopicClient.deleteTopic(created.id()).block()
         } catch (Exception ignored) {}
 
         where:
@@ -178,11 +178,11 @@ class TopicClientSpec extends Z4jSpec {
 
     def "can delete a topic as an admin"(String name, String description) {
         given:
-        def createReq = new TopicCreateRequest(new Topic(name).setDescription(description))
+        def createReq = new TopicCreateRequest(new Topic(name).withDescription(description))
         def created = adminTopicClient.createTopic(createReq).block().topic()
 
         when:
-        adminTopicClient.deleteTopic(created.getId()).block()
+        adminTopicClient.deleteTopic(created.id()).block()
 
         then:
         noExceptionThrown()

@@ -29,7 +29,7 @@ class UserSegmentsResponseSpec extends Z4jSpec {
 
     def "should create UserSegmentsResponse with canonical constructor and builder"() {
         given:
-        UserSegment item = new UserSegment("Staff Only", "staff").setId(101L)
+        UserSegment item = new UserSegment("Staff Only", "staff").withId(101L)
         List<UserSegment> list = [item]
 
         when:
@@ -57,8 +57,8 @@ class UserSegmentsResponseSpec extends Z4jSpec {
 
     def "should update user segments using record wither and addUserSegmentsItem method"() {
         given:
-        UserSegment first = new UserSegment("Original", "staff").setId(1L)
-        UserSegment second = new UserSegment("Updated", "signed_in_users").setId(2L)
+        UserSegment first = new UserSegment("Original", "staff").withId(1L)
+        UserSegment second = new UserSegment("Updated", "signed_in_users").withId(2L)
         UserSegmentsResponse response = new UserSegmentsResponse([first])
 
         when:
@@ -88,7 +88,7 @@ class UserSegmentsResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize UserSegmentsResponse"() {
         given:
-        UserSegment item = new UserSegment("VIP Customers", "signed_in_users").setId(555L)
+        UserSegment item = new UserSegment("VIP Customers", "signed_in_users").withId(555L)
         UserSegmentsResponse response = new UserSegmentsResponse([item])
 
         when:
@@ -114,7 +114,7 @@ class UserSegmentsResponseSpec extends Z4jSpec {
     def "should handle null user segments component in constructor, wither, and serde"() {
         when:
         UserSegmentsResponse response = new UserSegmentsResponse(null)
-        UserSegment item = new UserSegment("Community", "signed_in_users").setId(99L)
+        UserSegment item = new UserSegment("Community", "signed_in_users").withId(99L)
         UserSegmentsResponse updated = response.withUserSegments([item])
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

@@ -20,25 +20,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.constraints.NotNull;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
 /**
- * <p>The <code>manageable_by</code> attribute takes one of the following values:</p> <table> <thead> <tr> <th>Value</th> <th>Users</th> </tr> </thead> <tbody> <tr> <td>staff</td> <td>agents and managers</td> </tr> <tr> <td>managers</td> <td>only Help Center managers</td> </tr> </tbody> </table> <p>Note that <code>manageable_by</code> is only displayed to users who can manage the topic.</p>
+ * Community topic in Zendesk Help Center.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@EqualsAndHashCode
-@ToString
-@Getter
-@Setter
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         Topic.JSON_PROPERTY_NAME,
         Topic.JSON_PROPERTY_CREATED_AT,
@@ -50,11 +42,21 @@ import lol.pbu.z4j.Generated;
         Topic.JSON_PROPERTY_POSITION,
         Topic.JSON_PROPERTY_UPDATED_AT,
         Topic.JSON_PROPERTY_URL,
-        Topic.JSON_PROPERTY_USER_SEGMENT_ID,
+        Topic.JSON_PROPERTY_USER_SEGMENT_ID
 })
-@Serdeable
-@Generated
-public class Topic {
+public record Topic(
+        @NotNull @JsonProperty(JSON_PROPERTY_NAME) String name,
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String createdAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_DESCRIPTION) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String description,
+        @Nullable @JsonProperty(JSON_PROPERTY_FOLLOWER_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long followerCount,
+        @Nullable @JsonProperty(JSON_PROPERTY_HTML_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String htmlUrl,
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_MANAGEABLE_BY) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) TopicManageableBy manageableBy,
+        @Nullable @JsonProperty(JSON_PROPERTY_POSITION) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long position,
+        @Nullable @JsonProperty(JSON_PROPERTY_UPDATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String updatedAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String url,
+        @Nullable @JsonProperty(JSON_PROPERTY_USER_SEGMENT_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long userSegmentId
+) implements TopicBuilder.With {
 
     public static final String JSON_PROPERTY_NAME = "name";
     public static final String JSON_PROPERTY_CREATED_AT = "created_at";
@@ -68,92 +70,11 @@ public class Topic {
     public static final String JSON_PROPERTY_URL = "url";
     public static final String JSON_PROPERTY_USER_SEGMENT_ID = "user_segment_id";
 
-    /**
-     * The name of the topic
-     */
-    @NotNull
-    @JsonProperty(JSON_PROPERTY_NAME)
-    private String name;
-
-    /**
-     * When the topic was created
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String createdAt;
-
-    /**
-     * The description of the topic. By default an empty string
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_DESCRIPTION)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String description;
-
-    /**
-     * The number of users following the topic
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_FOLLOWER_COUNT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long followerCount;
-
-    /**
-     * The community url of the topic
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_HTML_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String htmlUrl;
-
-    /**
-     * Automatically assigned when the topic is created
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_MANAGEABLE_BY)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private TopicManageableBy manageableBy;
-
-    /**
-     * The position of the topic relative to other topics in the community
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_POSITION)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long position;
-
-    /**
-     * When the topic was last updated
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_UPDATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String updatedAt;
-
-    /**
-     * The API url of the topic
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String url;
-
-    /**
-     * The id of the user segment to which this topic belongs
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_USER_SEGMENT_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long userSegmentId;
-
     public Topic(String name) {
-        this.name = name;
+        this(name, null, null, null, null, null, null, null, null, null, null);
     }
 
+    public Topic() {
+        this(null, null, null, null, null, null, null, null, null, null, null);
+    }
 }
