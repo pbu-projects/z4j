@@ -20,55 +20,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
- * EmailCC
+ * Email CC recipient update entry for a ticket.
  *
+ * @param action whether to add or remove the email CC recipient
+ * @param userEmail email address of the user to CC
+ * @param userId unique ID of the user to CC
+ * @param userName display name of the user to CC
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         EmailCC.JSON_PROPERTY_ACTION,
         EmailCC.JSON_PROPERTY_USER_EMAIL,
         EmailCC.JSON_PROPERTY_USER_ID,
         EmailCC.JSON_PROPERTY_USER_NAME,
 })
-@Serdeable
-@Generated
-public class EmailCC {
+public record EmailCC(
+        @Nullable @JsonProperty(JSON_PROPERTY_ACTION) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) EmailCCAllOfAction action,
+        @Nullable @JsonProperty(JSON_PROPERTY_USER_EMAIL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String userEmail,
+        @Nullable @JsonProperty(JSON_PROPERTY_USER_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long userId,
+        @Nullable @JsonProperty(JSON_PROPERTY_USER_NAME) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String userName
+) implements EmailCCBuilder.With {
 
     public static final String JSON_PROPERTY_ACTION = "action";
     public static final String JSON_PROPERTY_USER_EMAIL = "user_email";
     public static final String JSON_PROPERTY_USER_ID = "user_id";
     public static final String JSON_PROPERTY_USER_NAME = "user_name";
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ACTION)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private EmailCCAllOfAction action;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_USER_EMAIL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String userEmail;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_USER_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long userId;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_USER_NAME)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String userName;
-
 }

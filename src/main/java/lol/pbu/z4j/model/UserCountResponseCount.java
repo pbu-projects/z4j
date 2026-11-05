@@ -20,43 +20,28 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.time.ZonedDateTime;
 
 /**
- * UserCountResponseCount
+ * Count value and refresh timestamp for user count responses.
  *
+ * @param refreshedAt timestamp when the user count was last updated
+ * @param value total number of users
  * @author Jonathan-Zollinger
  * @since 0.3.0
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         UserCountResponseCount.JSON_PROPERTY_REFRESHED_AT,
         UserCountResponseCount.JSON_PROPERTY_VALUE
 })
-@Serdeable
-@Generated
-public class UserCountResponseCount {
+public record UserCountResponseCount(
+        @Nullable @JsonProperty(JSON_PROPERTY_REFRESHED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ZonedDateTime refreshedAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_VALUE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long value
+) implements UserCountResponseCountBuilder.With {
 
     public static final String JSON_PROPERTY_REFRESHED_AT = "refreshed_at";
     public static final String JSON_PROPERTY_VALUE = "value";
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_REFRESHED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ZonedDateTime refreshedAt;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_VALUE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long value;
-
 }

@@ -15,7 +15,7 @@
  */
 package lol.pbu.z4j
 
-import lol.pbu.z4j.model.Follower
+import lol.pbu.z4j.model.Ticket
 import lol.pbu.z4j.model.TicketCustomField
 import spock.lang.Specification
 
@@ -55,7 +55,7 @@ class GeneratedSpec extends Specification {
 
     def "models are annotated with Generated"() {
         expect:
-        Follower.isAnnotationPresent(Generated)
+        Ticket.isAnnotationPresent(Generated)
         TicketCustomField.isAnnotationPresent(Generated)
         TicketCustomField.Text.isAnnotationPresent(Generated)
     }

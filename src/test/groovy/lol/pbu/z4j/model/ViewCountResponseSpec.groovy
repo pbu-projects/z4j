@@ -30,7 +30,7 @@ class ViewCountResponseSpec extends Z4jSpec {
 
     def "should create ViewCountResponse with canonical constructor and builder"() {
         given:
-        ViewCount expected = new ViewCount().setViewId(101L).setValue(42L).setPretty("42").setFresh(true)
+        ViewCount expected = ViewCountBuilder.builder().viewId(101L).value(42L).pretty("42").fresh(true).build()
 
         when:
         ViewCountResponse direct = new ViewCountResponse(expected)
@@ -55,8 +55,8 @@ class ViewCountResponseSpec extends Z4jSpec {
 
     def "should update viewCount using record wither"() {
         given:
-        ViewCount original = new ViewCount().setViewId(1L).setValue(10L)
-        ViewCount updatedCount = new ViewCount().setViewId(2L).setValue(20L)
+        ViewCount original = ViewCountBuilder.builder().viewId(1L).value(10L).build()
+        ViewCount updatedCount = ViewCountBuilder.builder().viewId(2L).value(20L).build()
         ViewCountResponse response = new ViewCountResponse(original)
 
         when:
@@ -75,7 +75,7 @@ class ViewCountResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize ViewCountResponse"() {
         given:
-        ViewCount expected = new ViewCount().setViewId(555L).setValue(88L).setPretty("88").setFresh(false)
+        ViewCount expected = ViewCountBuilder.builder().viewId(555L).value(88L).pretty("88").fresh(false).build()
         ViewCountResponse response = new ViewCountResponse(expected)
 
         when:
@@ -103,7 +103,7 @@ class ViewCountResponseSpec extends Z4jSpec {
     def "should handle null viewCount component in constructor and wither"() {
         when:
         ViewCountResponse response = new ViewCountResponse(null)
-        ViewCount replacement = new ViewCount().setViewId(99L).setValue(0L)
+        ViewCount replacement = ViewCountBuilder.builder().viewId(99L).value(0L).build()
         ViewCountResponse updated = response.withViewCount(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

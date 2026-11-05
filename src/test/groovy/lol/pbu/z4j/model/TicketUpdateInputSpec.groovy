@@ -34,14 +34,14 @@ class TicketUpdateInputSpec extends Z4jSpec {
     ObjectMapper objectMapper
 
     void setupSpec() {
-        collaborator1 = new Collaborator(name: faker.name().fullName(), email: faker.internet().emailAddress())
-        collaborator2 = new Collaborator(name: faker.name().fullName(), email: faker.internet().emailAddress())
+        collaborator1 = new Collaborator(faker.internet().emailAddress(), faker.name().fullName())
+        collaborator2 = new Collaborator(faker.internet().emailAddress(), faker.name().fullName())
         customField1 = new TicketCustomField.Text(faker.number().randomNumber(), faker.lorem().word())
         customField2 = new TicketCustomField.Text(faker.number().randomNumber(), faker.lorem().word())
-        emailCc1 = new EmailCC(userId: faker.number().randomNumber())
-        emailCc2 = new EmailCC(userId: faker.number().randomNumber())
-        follower1 = new Follower(userId: faker.number().randomNumber())
-        follower2 = new Follower(userId: faker.number().randomNumber())
+        emailCc1 = EmailCCBuilder.builder().userId(faker.number().randomNumber()).build()
+        emailCc2 = EmailCCBuilder.builder().userId(faker.number().randomNumber()).build()
+        follower1 = FollowerBuilder.builder().userId(String.valueOf(faker.number().randomNumber())).build()
+        follower2 = FollowerBuilder.builder().userId(String.valueOf(faker.number().randomNumber())).build()
         objectMapper = adminCtx.getBean(ObjectMapper.class)
     }
 

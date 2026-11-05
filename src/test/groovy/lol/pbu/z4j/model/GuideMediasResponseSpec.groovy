@@ -32,7 +32,7 @@ class GuideMediasResponseSpec extends Z4jSpec {
         given:
         GuideMedia media = new GuideMedia().setId("01MEDIA1").setName("banner.png")
         List<GuideMedia> list = [media]
-        Meta expectedMeta = new Meta().setHasMore(true).setAfterCursor("cursor_1")
+        Meta expectedMeta = MetaBuilder.builder().hasMore(true).afterCursor("cursor_1").build()
 
         when:
         GuideMediasResponse direct = new GuideMediasResponse(list, expectedMeta)
@@ -60,8 +60,8 @@ class GuideMediasResponseSpec extends Z4jSpec {
         given:
         GuideMedia first = new GuideMedia().setId("01M1").setName("one.png")
         GuideMedia second = new GuideMedia().setId("01M2").setName("two.png")
-        Meta meta1 = new Meta().setHasMore(false)
-        Meta meta2 = new Meta().setHasMore(true).setAfterCursor("after_2")
+        Meta meta1 = MetaBuilder.builder().hasMore(false).build()
+        Meta meta2 = MetaBuilder.builder().hasMore(true).afterCursor("after_2").build()
         GuideMediasResponse response = new GuideMediasResponse([first], meta1)
 
         when:
@@ -94,7 +94,7 @@ class GuideMediasResponseSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize GuideMediasResponse"() {
         given:
         GuideMedia media = new GuideMedia().setId("01M555").setName("logo.svg")
-        Meta expectedMeta = new Meta().setHasMore(false)
+        Meta expectedMeta = MetaBuilder.builder().hasMore(false).build()
         GuideMediasResponse response = new GuideMediasResponse([media], expectedMeta)
 
         when:

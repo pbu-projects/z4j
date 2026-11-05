@@ -34,8 +34,8 @@ class ExportResponseSpec extends Z4jSpec {
         given:
         Ticket ticket = new Ticket().setId(101L).setSubject("Exported Ticket")
         List<Ticket> expectedResults = [ticket]
-        Meta expectedMeta = new Meta().setHasMore(true).setAfterCursor("cursor_1")
-        Links expectedLinks = new Links().setNext(URI.create("https://example.zendesk.com/api/v2/search/export?page[after]=cursor_1").toURL())
+        Meta expectedMeta = MetaBuilder.builder().hasMore(true).afterCursor("cursor_1").build()
+        Links expectedLinks = LinksBuilder.builder().next(URI.create("https://example.zendesk.com/api/v2/search/export?page[after]=cursor_1").toURL()).build()
 
         when:
         ExportResponse<Ticket> direct = new ExportResponse<>(expectedResults, "type:ticket", expectedMeta, expectedLinks)
@@ -66,10 +66,10 @@ class ExportResponseSpec extends Z4jSpec {
         given:
         Ticket ticket1 = new Ticket().setId(1L)
         Ticket ticket2 = new Ticket().setId(2L)
-        Meta meta1 = new Meta().setHasMore(false)
-        Meta meta2 = new Meta().setHasMore(true).setAfterCursor("after_2")
-        Links links1 = new Links().setPrev(URI.create("https://example.zendesk.com/prev").toURL())
-        Links links2 = new Links().setNext(URI.create("https://example.zendesk.com/next").toURL())
+        Meta meta1 = MetaBuilder.builder().hasMore(false).build()
+        Meta meta2 = MetaBuilder.builder().hasMore(true).afterCursor("after_2").build()
+        Links links1 = LinksBuilder.builder().prev(URI.create("https://example.zendesk.com/prev").toURL()).build()
+        Links links2 = LinksBuilder.builder().next(URI.create("https://example.zendesk.com/next").toURL()).build()
         ExportResponse<Ticket> response = new ExportResponse<>([ticket1], "facets_1", meta1, links1)
 
         when:
@@ -97,8 +97,8 @@ class ExportResponseSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize ExportResponse"() {
         given:
         Ticket ticket = new Ticket().setId(555L).setSubject("Search Export")
-        Meta expectedMeta = new Meta().setHasMore(false).setAfterCursor("cursor_555")
-        Links expectedLinks = new Links().setNext(URI.create("https://example.zendesk.com/next").toURL())
+        Meta expectedMeta = MetaBuilder.builder().hasMore(false).afterCursor("cursor_555").build()
+        Links expectedLinks = LinksBuilder.builder().next(URI.create("https://example.zendesk.com/next").toURL()).build()
         ExportResponse<Ticket> response = new ExportResponse<>([ticket], "ticket_facets", expectedMeta, expectedLinks)
 
         when:

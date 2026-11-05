@@ -33,7 +33,7 @@ class TicketCountResponseSpec extends Z4jSpec {
     def "should create TicketCountResponse with canonical constructor and builder"() {
         given:
         ZonedDateTime now = ZonedDateTime.parse("2026-11-03T10:15:30Z")
-        TicketCountResponseCount expected = new TicketCountResponseCount().setValue(350L).setRefreshedAt(now)
+        TicketCountResponseCount expected = TicketCountResponseCountBuilder.builder().value(350L).refreshedAt(now).build()
 
         when:
         TicketCountResponse direct = new TicketCountResponse(expected)
@@ -54,8 +54,8 @@ class TicketCountResponseSpec extends Z4jSpec {
 
     def "should update count using record wither"() {
         given:
-        TicketCountResponseCount original = new TicketCountResponseCount().setValue(10L)
-        TicketCountResponseCount replacement = new TicketCountResponseCount().setValue(20L)
+        TicketCountResponseCount original = TicketCountResponseCountBuilder.builder().value(10L).build()
+        TicketCountResponseCount replacement = TicketCountResponseCountBuilder.builder().value(20L).build()
         TicketCountResponse response = new TicketCountResponse(original)
 
         when:
@@ -75,7 +75,7 @@ class TicketCountResponseSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize TicketCountResponse"() {
         given:
         ZonedDateTime timestamp = ZonedDateTime.parse("2026-11-03T08:00:00Z")
-        TicketCountResponseCount expected = new TicketCountResponseCount().setValue(777L).setRefreshedAt(timestamp)
+        TicketCountResponseCount expected = TicketCountResponseCountBuilder.builder().value(777L).refreshedAt(timestamp).build()
         TicketCountResponse response = new TicketCountResponse(expected)
 
         when:
@@ -100,7 +100,7 @@ class TicketCountResponseSpec extends Z4jSpec {
     def "should handle null count component in constructor and wither"() {
         when:
         TicketCountResponse response = new TicketCountResponse(null)
-        TicketCountResponseCount replacement = new TicketCountResponseCount().setValue(99L)
+        TicketCountResponseCount replacement = TicketCountResponseCountBuilder.builder().value(99L).build()
         TicketCountResponse updated = response.withCount(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

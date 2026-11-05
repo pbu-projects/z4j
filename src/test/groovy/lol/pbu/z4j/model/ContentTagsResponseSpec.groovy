@@ -32,7 +32,7 @@ class ContentTagsResponseSpec extends Z4jSpec {
         given:
         ContentTag tag = new ContentTag().setId("01TAG1").setName("billing")
         List<ContentTag> list = [tag]
-        Meta expectedMeta = new Meta().setHasMore(true).setAfterCursor("after_1")
+        Meta expectedMeta = MetaBuilder.builder().hasMore(true).afterCursor("after_1").build()
 
         when:
         ContentTagsResponse direct = new ContentTagsResponse(list, expectedMeta)
@@ -60,8 +60,8 @@ class ContentTagsResponseSpec extends Z4jSpec {
         given:
         ContentTag first = new ContentTag().setId("01TAG1").setName("billing")
         ContentTag second = new ContentTag().setId("01TAG2").setName("account")
-        Meta meta1 = new Meta().setHasMore(false)
-        Meta meta2 = new Meta().setHasMore(true).setAfterCursor("next_cursor")
+        Meta meta1 = MetaBuilder.builder().hasMore(false).build()
+        Meta meta2 = MetaBuilder.builder().hasMore(true).afterCursor("next_cursor").build()
         ContentTagsResponse response = new ContentTagsResponse([first], meta1)
 
         when:
@@ -95,7 +95,7 @@ class ContentTagsResponseSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize ContentTagsResponse"() {
         given:
         ContentTag tag = new ContentTag().setId("01TAG555").setName("onboarding")
-        Meta expectedMeta = new Meta().setHasMore(false).setAfterCursor("cursor_end")
+        Meta expectedMeta = MetaBuilder.builder().hasMore(false).afterCursor("cursor_end").build()
         ContentTagsResponse response = new ContentTagsResponse([tag], expectedMeta)
 
         when:

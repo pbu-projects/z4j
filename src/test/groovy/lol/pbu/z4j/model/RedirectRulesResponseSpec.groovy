@@ -32,7 +32,7 @@ class RedirectRulesResponseSpec extends Z4jSpec {
         given:
         RedirectRule rule1 = new RedirectRule().setId("01R1").setRedirectFrom("/old").setRedirectTo("/new").setRedirectStatus(301)
         RedirectRule rule2 = new RedirectRule().setId("01R2").setRedirectFrom("/legacy").setRedirectTo("/modern").setRedirectStatus(302)
-        Meta expectedMeta = new Meta().setHasMore(false)
+        Meta expectedMeta = MetaBuilder.builder().hasMore(false).build()
 
         when:
         RedirectRulesResponse onlyRecords = new RedirectRulesResponse([rule1], null, expectedMeta)
@@ -78,8 +78,8 @@ class RedirectRulesResponseSpec extends Z4jSpec {
         given:
         RedirectRule first = new RedirectRule().setId("01R1").setRedirectFrom("/a").setRedirectTo("/b").setRedirectStatus(301)
         RedirectRule second = new RedirectRule().setId("01R2").setRedirectFrom("/c").setRedirectTo("/d").setRedirectStatus(302)
-        Meta meta1 = new Meta().setHasMore(false)
-        Meta meta2 = new Meta().setHasMore(true).setAfterCursor("cursor_next")
+        Meta meta1 = MetaBuilder.builder().hasMore(false).build()
+        Meta meta2 = MetaBuilder.builder().hasMore(true).afterCursor("cursor_next").build()
         RedirectRulesResponse response = new RedirectRulesResponse([first], [first], meta1)
 
         when:
@@ -116,7 +116,7 @@ class RedirectRulesResponseSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize RedirectRulesResponse"() {
         given:
         RedirectRule rule = new RedirectRule().setId("01R99").setRedirectFrom("/from").setRedirectTo("/to").setRedirectStatus(301)
-        Meta expectedMeta = new Meta().setHasMore(false)
+        Meta expectedMeta = MetaBuilder.builder().hasMore(false).build()
         RedirectRulesResponse response = new RedirectRulesResponse([rule], null, expectedMeta)
 
         when:
