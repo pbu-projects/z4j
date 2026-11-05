@@ -30,8 +30,8 @@ class CreateManyTicketsRequestSpec extends Z4jSpec {
 
     def "should create CreateManyTicketsRequest with canonical constructor and builder"() {
         given:
-        TicketCreateInput ticket1 = new TicketCreateInput(new TicketComment().setBody("First ticket")).setSubject("Ticket 1")
-        TicketCreateInput ticket2 = new TicketCreateInput(new TicketComment().setBody("Second ticket")).setSubject("Ticket 2")
+        TicketCreateInput ticket1 = new TicketCreateInput(new TicketComment("First ticket")).withSubject("Ticket 1")
+        TicketCreateInput ticket2 = new TicketCreateInput(new TicketComment("Second ticket")).withSubject("Ticket 2")
         List<TicketCreateInput> items = [ticket1, ticket2]
 
         when:
@@ -58,8 +58,8 @@ class CreateManyTicketsRequestSpec extends Z4jSpec {
 
     def "should update tickets using record wither and addTicketsItem method"() {
         given:
-        TicketCreateInput ticket1 = new TicketCreateInput(new TicketComment().setBody("First ticket")).setSubject("Ticket 1")
-        TicketCreateInput ticket2 = new TicketCreateInput(new TicketComment().setBody("Second ticket")).setSubject("Ticket 2")
+        TicketCreateInput ticket1 = new TicketCreateInput(new TicketComment("First ticket")).withSubject("Ticket 1")
+        TicketCreateInput ticket2 = new TicketCreateInput(new TicketComment("Second ticket")).withSubject("Ticket 2")
         CreateManyTicketsRequest request = new CreateManyTicketsRequest([ticket1])
 
         when:
@@ -89,8 +89,8 @@ class CreateManyTicketsRequestSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize CreateManyTicketsRequest"() {
         given:
-        TicketCreateInput ticket1 = new TicketCreateInput(new TicketComment().setBody("Batch ticket 1")).setSubject("Batch 1")
-        TicketCreateInput ticket2 = new TicketCreateInput(new TicketComment().setBody("Batch ticket 2")).setSubject("Batch 2")
+        TicketCreateInput ticket1 = new TicketCreateInput(new TicketComment("Batch ticket 1")).withSubject("Batch 1")
+        TicketCreateInput ticket2 = new TicketCreateInput(new TicketComment("Batch ticket 2")).withSubject("Batch 2")
         CreateManyTicketsRequest request = new CreateManyTicketsRequest([ticket1, ticket2])
 
         when:
@@ -115,7 +115,7 @@ class CreateManyTicketsRequestSpec extends Z4jSpec {
 
     def "should handle null tickets component in constructor, wither, and serde"() {
         given:
-        TicketCreateInput replacement = new TicketCreateInput(new TicketComment().setBody("Replacement")).setSubject("Subject")
+        TicketCreateInput replacement = new TicketCreateInput(new TicketComment("Replacement")).withSubject("Subject")
 
         when:
         CreateManyTicketsRequest request = new CreateManyTicketsRequest(null)

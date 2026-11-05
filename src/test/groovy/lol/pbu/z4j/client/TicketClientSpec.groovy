@@ -145,9 +145,9 @@ class TicketClientSpec extends Z4jSpec {
     def "Trying to create a ticket succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         given:
         TicketItem sampleData = ticketFixtures.getTicketData().first()
-        TicketComment ticketComment = new TicketComment().setBody(sampleData.getComment())
+        TicketComment ticketComment = new TicketComment(sampleData.getComment())
         TicketCreateInput createTicketInput = new TicketCreateInput(ticketComment)
-        createTicketInput.setRawSubject(sampleData.getSubject())
+                .withRawSubject(sampleData.getSubject())
         TicketCreateRequest createTicketRequest = new TicketCreateRequest(createTicketInput)
 
         when:
@@ -163,9 +163,9 @@ class TicketClientSpec extends Z4jSpec {
     def "Trying to create a ticket fails when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         given:
         TicketItem sampleData = ticketFixtures.getTicketData().first()
-        TicketComment ticketComment = new TicketComment().setBody(sampleData.getComment())
+        TicketComment ticketComment = new TicketComment(sampleData.getComment())
         TicketCreateInput createTicketInput = new TicketCreateInput(ticketComment)
-        createTicketInput.setRawSubject(sampleData.getSubject())
+                .withRawSubject(sampleData.getSubject())
         TicketCreateRequest createTicketRequest = new TicketCreateRequest(createTicketInput)
 
         when:
@@ -182,7 +182,7 @@ class TicketClientSpec extends Z4jSpec {
         given:
         TicketItem sampleData = ticketFixtures.getTicketData().first()
         TicketUpdateInput ticketUpdateInput = new TicketUpdateInput()
-                .setComment(new TicketComment().setBody(sampleData.getUpdateComment()))
+                .withComment(new TicketComment(sampleData.getUpdateComment()))
         TicketUpdateRequest ticketUpdateRequest = new TicketUpdateRequest(ticketUpdateInput)
 
 
@@ -200,7 +200,7 @@ class TicketClientSpec extends Z4jSpec {
         given:
         TicketItem sampleData = ticketFixtures.getTicketData().first()
         TicketUpdateInput ticketUpdateInput = new TicketUpdateInput()
-                .setComment(new TicketComment().setBody(sampleData.getUpdateComment()))
+                .withComment(new TicketComment(sampleData.getUpdateComment()))
         TicketUpdateRequest ticketUpdateRequest = new TicketUpdateRequest(ticketUpdateInput)
 
 
@@ -347,10 +347,10 @@ class TicketClientSpec extends Z4jSpec {
         Long fieldId = createdField.ticketField().getId()
 
         and: "a ticket created with this custom field populated"
-        TicketComment comment = new TicketComment().setBody("Testing custom fields ${entropy}")
+        TicketComment comment = new TicketComment("Testing custom fields ${entropy}")
         TicketCreateInput ticketInput = new TicketCreateInput(comment)
-                .setRawSubject("Ticket with custom field ${entropy}")
-        ticketInput.addCustomFieldsItem(new TicketCustomField.Text(fieldId, customVal))
+                .withRawSubject("Ticket with custom field ${entropy}")
+                .addCustomFieldsItem(new TicketCustomField.Text(fieldId, customVal))
         TicketResponse createdTicket = ticketsAdminClient.createTicket(new TicketCreateRequest(ticketInput)).block()
         Long ticketId = createdTicket.ticket().getId()
 
@@ -398,7 +398,7 @@ class TicketClientSpec extends Z4jSpec {
         Long ticketId = tickets.first().getId()
         String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
         TicketUpdateInput updateInput = new TicketUpdateInput()
-                .setComment(new TicketComment().setBody("Bulk update test ${entropy}").setIsPublic(false))
+                .withComment(new TicketComment("Bulk update test ${entropy}", false))
         TicketUpdateRequest updateRequest = new TicketUpdateRequest(updateInput)
 
         when: "calling updateManyTickets"
@@ -589,10 +589,10 @@ class TicketClientSpec extends Z4jSpec {
         given: "two ticket create inputs with unique entropy"
         String entropy1 = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
         String entropy2 = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
-        TicketCreateInput input1 = new TicketCreateInput(new TicketComment().setBody("Body 1 ${entropy1}"))
-                .setRawSubject("CreateMany 1 ${entropy1}")
-        TicketCreateInput input2 = new TicketCreateInput(new TicketComment().setBody("Body 2 ${entropy2}"))
-                .setRawSubject("CreateMany 2 ${entropy2}")
+        TicketCreateInput input1 = new TicketCreateInput(new TicketComment("Body 1 ${entropy1}"))
+                .withRawSubject("CreateMany 1 ${entropy1}")
+        TicketCreateInput input2 = new TicketCreateInput(new TicketComment("Body 2 ${entropy2}"))
+                .withRawSubject("CreateMany 2 ${entropy2}")
         String jobId = null
 
         when: "calling createManyTickets"
@@ -614,11 +614,11 @@ class TicketClientSpec extends Z4jSpec {
                 for (int i = 0; i < 10; i++) {
                     sleep(1000)
                     status = jobStatusClient.showJobStatus(jobId).block()?.jobStatus()
-                    if (status?.getStatus() == "completed" || status?.getStatus() == "failed") {
+                    if (status?.status() == "completed" || status?.status() == "failed") {
                         break
                     }
                 }
-                List<Long> createdIds = status?.getResults()?.collect { (it.id as Number)?.longValue() }?.findAll { it != null }
+                List<Long> createdIds = status?.results()?.collect { (it.id as Number)?.longValue() }?.findAll { it != null }
                 if (createdIds) {
                     ticketsAdminClient.bulkDeleteTickets(createdIds).block()
                     sleep(2000)
@@ -743,14 +743,14 @@ class TicketClientSpec extends Z4jSpec {
         given: "two tickets created with disposable end user requesters"
         Long user1Id = createDisposableEndUser()
         Long user2Id = createDisposableEndUser()
-        TicketComment comment1 = new TicketComment().setBody("Spam ticket body 1")
+        TicketComment comment1 = new TicketComment("Spam ticket body 1")
         TicketCreateInput input1 = new TicketCreateInput(comment1)
-                .setRawSubject("Spam ticket 1 " + UUID.randomUUID().toString())
-                .setRequesterId(user1Id)
-        TicketComment comment2 = new TicketComment().setBody("Spam ticket body 2")
+                .withRawSubject("Spam ticket 1 " + UUID.randomUUID().toString())
+                .withRequesterId(user1Id)
+        TicketComment comment2 = new TicketComment("Spam ticket body 2")
         TicketCreateInput input2 = new TicketCreateInput(comment2)
-                .setRawSubject("Spam ticket 2 " + UUID.randomUUID().toString())
-                .setRequesterId(user2Id)
+                .withRawSubject("Spam ticket 2 " + UUID.randomUUID().toString())
+                .withRequesterId(user2Id)
         TicketResponse t1 = ticketsAdminClient.createTicket(new TicketCreateRequest(input1)).block()
         TicketResponse t2 = ticketsAdminClient.createTicket(new TicketCreateRequest(input2)).block()
         Long id1 = t1.ticket().getId()
@@ -819,10 +819,10 @@ class TicketClientSpec extends Z4jSpec {
         String requesterName = "Requester User ${entropy}"
         String requesterEmail = "requester-${entropy}@example.com"
         TicketRequester requester = new TicketRequester(requesterName, requesterEmail)
-        TicketComment comment = new TicketComment().setBody("Ticket created with inline requester ${entropy}")
+        TicketComment comment = new TicketComment("Ticket created with inline requester ${entropy}")
         TicketCreateInput input = new TicketCreateInput(comment)
-                .setRawSubject("Inline requester test ${entropy}")
-                .setRequester(requester)
+                .withRawSubject("Inline requester test ${entropy}")
+                .withRequester(requester)
         Long createdTicketId = null
         Long createdRequesterId = null
 
@@ -878,10 +878,10 @@ class TicketClientSpec extends Z4jSpec {
                 .userName(ccName)
                 .build()
 
-        TicketComment comment = new TicketComment().setBody("Ticket created with email CCs ${entropy}")
+        TicketComment comment = new TicketComment("Ticket created with email CCs ${entropy}")
         TicketCreateInput input = new TicketCreateInput(comment)
-                .setRawSubject("Email CCs test ${entropy}")
-                .setEmailCcs([ccWithId, ccWithEmail])
+                .withRawSubject("Email CCs test ${entropy}")
+                .withEmailCcs([ccWithId, ccWithEmail])
         Long createdTicketId = null
 
         when: "creating the ticket with email CCs"
@@ -939,7 +939,7 @@ class TicketClientSpec extends Z4jSpec {
         for (int i = 0; i < 20; i++) {
             sleep(1000)
             JobStatus status = jobStatusClient.showJobStatus(jobId).block()?.jobStatus()
-            if (status?.getStatus() == "completed" || status?.getStatus() == "failed") {
+            if (status?.status() == "completed" || status?.status() == "failed") {
                 break
             }
         }

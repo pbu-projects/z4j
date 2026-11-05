@@ -156,28 +156,20 @@ class CustomStatusClientSpec extends Z4jSpec {
     def "can update ticket customStatusId and ticketFormId using TicketUpdateInput"() {
         given: "a test ticket created in the sandbox"
         assert sampleCustomStatusId != null
-        def comment = new TicketComment().tap {
-            body = "Z4J Custom Status & Form Integration Test"
-            isPublic = true
-        }
-        def createInput = new TicketCreateInput(comment).tap {
-            subject = "Test Custom Status & Form " + UUID.randomUUID().toString().substring(0, 8)
-        }
+        def comment = new TicketComment("Z4J Custom Status & Form Integration Test", true)
+        def createInput = new TicketCreateInput(comment)
+                .withSubject("Test Custom Status & Form " + UUID.randomUUID().toString().substring(0, 8))
         def createdTicket = adminTicketClient.createTicket(new TicketCreateRequest(createInput)).block()?.ticket()
         assert createdTicket?.id != null
         Long createdTicketId = createdTicket.id
 
         when: "updating the ticket with a 64-bit custom_status_id and ticket_form_id via TicketUpdateInput"
-        def updateComment = new TicketComment().tap {
-            body = "Updating ticket form and custom status"
-            isPublic = true
-        }
-        def updateInput = new TicketUpdateInput().tap {
-            setComment(updateComment)
-            setCustomStatusId(sampleCustomStatusId)
-            if (sampleFormId != null) {
-                setTicketFormId(sampleFormId)
-            }
+        def updateComment = new TicketComment("Updating ticket form and custom status", true)
+        def updateInput = new TicketUpdateInput()
+                .withComment(updateComment)
+                .withCustomStatusId(sampleCustomStatusId)
+        if (sampleFormId != null) {
+            updateInput = updateInput.withTicketFormId(sampleFormId)
         }
         def updateResponse = adminTicketClient.updateTicket(createdTicketId, new TicketUpdateRequest(updateInput)).block()
 
@@ -212,23 +204,27 @@ class CustomStatusClientSpec extends Z4jSpec {
     def "supports backward-compatible Integer setter and Long setter on TicketUpdateInput and TicketCreateInput"() {
         given: "a TicketUpdateInput and TicketCreateInput"
         def updateInput = new TicketUpdateInput()
-        def createInput = new TicketCreateInput(new TicketComment().tap { body = "test" })
+        def createInput = new TicketCreateInput(new TicketComment("test"))
 
         when: "setting customStatusId with Integer and Long values"
-        updateInput.setCustomStatusId(123)
-        createInput.setCustomStatusId(456)
+        updateInput = updateInput.withCustomStatusId(123)
+        createInput = createInput.withCustomStatusId(456)
 
         then: "values are converted and stored as Long"
-        updateInput.getCustomStatusId() == 123L
-        createInput.getCustomStatusId() == 456L
+        verifyAll {
+            updateInput.customStatusId() == 123L
+            createInput.customStatusId() == 456L
+        }
 
         when: "setting with 64-bit Long"
-        updateInput.setCustomStatusId(40971521901587L)
-        createInput.setCustomStatusId(40971521901587L)
+        updateInput = updateInput.withCustomStatusId(40971521901587L)
+        createInput = createInput.withCustomStatusId(40971521901587L)
 
         then: "values retain full 64-bit precision"
-        updateInput.getCustomStatusId() == 40971521901587L
-        createInput.getCustomStatusId() == 40971521901587L
+        verifyAll {
+            updateInput.customStatusId() == 40971521901587L
+            createInput.customStatusId() == 40971521901587L
+        }
     }
 
     def "response models provide both JavaBean getters and record-style accessors"() {

@@ -20,26 +20,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
 /**
- * Audit
+ * Ticket audit record showing changes made to a ticket.
  *
  * @author Jonathan-Zollinger
  * @since 0.1.1
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         Audit.JSON_PROPERTY_AUTHOR_ID,
         Audit.JSON_PROPERTY_CREATED_AT,
@@ -47,11 +41,17 @@ import lol.pbu.z4j.Generated;
         Audit.JSON_PROPERTY_ID,
         Audit.JSON_PROPERTY_METADATA,
         Audit.JSON_PROPERTY_TICKET_ID,
-        Audit.JSON_PROPERTY_VIA,
+        Audit.JSON_PROPERTY_VIA
 })
-@Serdeable
-@Generated
-public class Audit {
+public record Audit(
+        @Nullable @JsonProperty(JSON_PROPERTY_AUTHOR_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long authorId,
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ZonedDateTime createdAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_EVENTS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid AuditEventsInner> events,
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(JSON_PROPERTY_METADATA) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Object metadata,
+        @Nullable @JsonProperty(JSON_PROPERTY_TICKET_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long ticketId,
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_VIA) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Via via
+) implements AuditBuilder.With {
 
     public static final String JSON_PROPERTY_AUTHOR_ID = "author_id";
     public static final String JSON_PROPERTY_CREATED_AT = "created_at";
@@ -61,40 +61,13 @@ public class Audit {
     public static final String JSON_PROPERTY_TICKET_ID = "ticket_id";
     public static final String JSON_PROPERTY_VIA = "via";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_AUTHOR_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long authorId;
+    public Audit() {
+        this(null, null, null, null, null, null, null);
+    }
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private ZonedDateTime createdAt;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_EVENTS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<@Valid AuditEventsInner> events;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_METADATA)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Object metadata;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TICKET_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long ticketId;
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_VIA)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Via via;
-
+    public Audit addEventsItem(AuditEventsInner eventsItem) {
+        List<AuditEventsInner> newEvents = events == null ? new ArrayList<>() : new ArrayList<>(events);
+        newEvents.add(eventsItem);
+        return withEvents(newEvents);
+    }
 }

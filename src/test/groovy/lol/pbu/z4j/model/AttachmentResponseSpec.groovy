@@ -30,7 +30,7 @@ class AttachmentResponseSpec extends Z4jSpec {
 
     def "should create AttachmentResponse with canonical constructor and builder"() {
         given:
-        AttachmentObject expected = new AttachmentObject().setId(101L).setFileName("guide.pdf").setSize(2048L)
+        AttachmentObject expected = new AttachmentObject().withId(101L).withFileName("guide.pdf").withSize(2048)
 
         when:
         AttachmentResponse direct = new AttachmentResponse(expected)
@@ -41,20 +41,20 @@ class AttachmentResponseSpec extends Z4jSpec {
             attachment == expected
             attachment.id == 101L
             attachment.fileName == "guide.pdf"
-            attachment.size == 2048L
+            attachment.size == 2048
         }
         verifyAll(built) {
             attachment == expected
             attachment.id == 101L
             attachment.fileName == "guide.pdf"
-            attachment.size == 2048L
+            attachment.size == 2048
         }
     }
 
     def "should update attachment using record wither"() {
         given:
-        AttachmentObject original = new AttachmentObject().setId(1L).setFileName("old.pdf")
-        AttachmentObject updatedAttachment = new AttachmentObject().setId(2L).setFileName("new.pdf")
+        AttachmentObject original = new AttachmentObject().withId(1L).withFileName("old.pdf")
+        AttachmentObject updatedAttachment = new AttachmentObject().withId(2L).withFileName("new.pdf")
         AttachmentResponse response = new AttachmentResponse(original)
 
         when:
@@ -73,7 +73,7 @@ class AttachmentResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize AttachmentResponse"() {
         given:
-        AttachmentObject expected = new AttachmentObject().setId(555L).setFileName("manual.pdf").setSize(4096L)
+        AttachmentObject expected = new AttachmentObject().withId(555L).withFileName("manual.pdf").withSize(4096)
         AttachmentResponse response = new AttachmentResponse(expected)
 
         when:
@@ -93,14 +93,14 @@ class AttachmentResponseSpec extends Z4jSpec {
             attachment != null
             attachment.id == 555L
             attachment.fileName == "manual.pdf"
-            attachment.size == 4096L
+            attachment.size == 4096
         }
     }
 
     def "should handle null attachment component in constructor and wither"() {
         when:
         AttachmentResponse response = new AttachmentResponse(null)
-        AttachmentObject replacement = new AttachmentObject().setId(99L).setFileName("notes.txt")
+        AttachmentObject replacement = new AttachmentObject().withId(99L).withFileName("notes.txt")
         AttachmentResponse updated = response.withAttachment(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

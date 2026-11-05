@@ -26,7 +26,7 @@ class IncrementalTicketEventTimeResponseSpec extends Specification {
 
     def "should create IncrementalTicketEventTimeResponse with canonical constructor, convenience constructor, and builder"() {
         given:
-        TicketEvent event = new TicketEvent().setId(999L).setTicketId(10L).setEventType("Audit")
+        TicketEvent event = new TicketEvent().withId(999L).withTicketId(10L).withEventType("Audit")
         List<TicketEvent> events = [event]
 
         when:
@@ -76,8 +76,8 @@ class IncrementalTicketEventTimeResponseSpec extends Specification {
 
     def "should update IncrementalTicketEventTimeResponse using record withers"() {
         given:
-        TicketEvent first = new TicketEvent().setId(1L)
-        TicketEvent second = new TicketEvent().setId(2L)
+        TicketEvent first = new TicketEvent().withId(1L)
+        TicketEvent second = new TicketEvent().withId(2L)
         IncrementalTicketEventTimeResponse response = new IncrementalTicketEventTimeResponse(
                 [first], 1000L, "next1", false, 1
         )
@@ -111,7 +111,7 @@ class IncrementalTicketEventTimeResponseSpec extends Specification {
 
     def "should round-trip serialize and deserialize IncrementalTicketEventTimeResponse"() {
         given:
-        TicketEvent event = new TicketEvent().setId(999L).setTicketId(50L).setEventType("Audit")
+        TicketEvent event = new TicketEvent().withId(999L).withTicketId(50L).withEventType("Audit")
         IncrementalTicketEventTimeResponse response = new IncrementalTicketEventTimeResponse(
                 [event], 1727330400L, "https://example.com/next", true, 1
         )

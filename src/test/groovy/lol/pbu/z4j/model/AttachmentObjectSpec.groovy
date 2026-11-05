@@ -15,74 +15,191 @@
  */
 package lol.pbu.z4j.model
 
-import lol.pbu.z4j.Z4jSpec
+import io.micronaut.serde.ObjectMapper
+import spock.lang.Shared
+import spock.lang.Specification
 
-class AttachmentObjectSpec extends Z4jSpec {
+class AttachmentObjectSpec extends Specification {
 
-    def "should instantiate and set properties on AttachmentObject"() {
+    @Shared
+    ObjectMapper objectMapper = ObjectMapper.getDefault()
+
+    def "should create AttachmentObject with constructors and builder"() {
         given:
-        def attachment = new AttachmentObject()
+        AttachmentObject child = new AttachmentObject()
+                .withId(102L)
+                .withFileName("thumb.png")
+                .withSize(512)
 
         when:
-        attachment.setId(101L)
-                  .setFileName("photo.png")
-                  .setContentUrl("https://example.com/photo.png")
-                  .setContentType("image/png")
-                  .setSize(1024L)
-                  .setWidth(640L)
-                  .setHeight(480L)
-                  .setInline(true)
-                  .setDeleted(false)
-                  .setUrl("https://example.zendesk.com/api/v2/attachments/101.json")
-                  .setMalwareScanResult("malware_not_found")
-                  .setThumbnails([])
+        AttachmentObject direct = new AttachmentObject(
+                101L,
+                "photo.png",
+                "https://example.com/photo.png",
+                "image/png",
+                1024,
+                [child],
+                true,
+                false,
+                "https://example.zendesk.com/api/v2/attachments/101.json",
+                "640",
+                "480",
+                AttachmentBaseMalwareScanResult.MALWARE_NOT_FOUND,
+                false,
+                "https://mapped.example.com/photo.png"
+        )
+        AttachmentObject noArg = new AttachmentObject()
+        AttachmentObject built = AttachmentObjectBuilder.builder()
+                .id(101L)
+                .fileName("photo.png")
+                .contentUrl("https://example.com/photo.png")
+                .contentType("image/png")
+                .size(1024)
+                .thumbnails([child])
+                .inline(true)
+                .deleted(false)
+                .url("https://example.zendesk.com/api/v2/attachments/101.json")
+                .width("640")
+                .height("480")
+                .malwareScanResult(AttachmentBaseMalwareScanResult.MALWARE_NOT_FOUND)
+                .malwareAccessOverride(false)
+                .mappedContentUrl("https://mapped.example.com/photo.png")
+                .build()
 
         then:
-        attachment.id == 101L
-        attachment.fileName == "photo.png"
-        attachment.contentUrl == "https://example.com/photo.png"
-        attachment.contentType == "image/png"
-        attachment.size == 1024L
-        attachment.width == 640L
-        attachment.height == 480L
-        attachment.inline == true
-        attachment.deleted == false
-        attachment.url == "https://example.zendesk.com/api/v2/attachments/101.json"
-        attachment.malwareScanResult == "malware_not_found"
-        attachment.thumbnails == []
-    }
-
-    def "should instantiate AttachmentUploadResponse and inner upload"() {
-        given:
-        def att = new AttachmentObject().setId(202L).setFileName("doc.pdf")
-        def expectedUpload = new AttachmentUploadResponseUpload()
-                .withToken("tok_123")
-                .withAttachment(att)
-                .addAttachmentsItem(att)
-
-        when:
-        def response = new AttachmentUploadResponse(expectedUpload)
-
-        then:
-        verifyAll(response) {
-            upload() != null
-            upload().token == "tok_123"
-            upload().attachment.fileName == "doc.pdf"
-            upload().attachments.size() == 1
+        verifyAll(direct) {
+            id() == 101L
+            fileName() == "photo.png"
+            contentUrl() == "https://example.com/photo.png"
+            contentType() == "image/png"
+            size() == 1024
+            thumbnails() == [child]
+            inline() == true
+            deleted() == false
+            url() == "https://example.zendesk.com/api/v2/attachments/101.json"
+            width() == "640"
+            height() == "480"
+            malwareScanResult() == AttachmentBaseMalwareScanResult.MALWARE_NOT_FOUND
+            malwareAccessOverride() == false
+            mappedContentUrl() == "https://mapped.example.com/photo.png"
+        }
+        verifyAll(noArg) {
+            id() == null
+            fileName() == null
+            thumbnails() == null
+        }
+        verifyAll(built) {
+            it == direct
+            id() == 101L
+            fileName() == "photo.png"
         }
     }
 
-    def "should instantiate AttachmentResponse"() {
+    def "should update AttachmentObject using withers and addThumbnailsItem"() {
         given:
-        def att = new AttachmentObject().setId(303L)
+        AttachmentObject child1 = new AttachmentObject().withId(1L).withFileName("t1.png")
+        AttachmentObject child2 = new AttachmentObject().withId(2L).withFileName("t2.png")
+        AttachmentObject initial = new AttachmentObject()
 
         when:
-        def response = new AttachmentResponse(att)
+        AttachmentObject updated = initial
+                .withId(200L)
+                .withFileName("report.pdf")
+                .withContentUrl("https://example.com/report.pdf")
+                .withContentType("application/pdf")
+                .withSize(2048L)
+                .withWidth(800L)
+                .withHeight(600L)
+                .withInline(false)
+                .withDeleted(true)
+                .withUrl("https://example.com/api/v2/attachments/200.json")
+                .withMalwareScanResult("malware_not_found")
+                .withMalwareAccessOverride(true)
+                .withMappedContentUrl("https://mapped.example.com/report.pdf")
+                .withThumbnails([child1])
+        AttachmentObject added = updated.addThumbnailsItem(child2)
+        AttachmentObject fromNull = new AttachmentObject().addThumbnailsItem(child1)
 
         then:
-        verifyAll(response) {
-            attachment() != null
-            attachment().id == 303L
+        verifyAll(updated) {
+            id() == 200L
+            fileName() == "report.pdf"
+            contentUrl() == "https://example.com/report.pdf"
+            contentType() == "application/pdf"
+            size() == 2048
+            width() == "800"
+            height() == "600"
+            inline() == false
+            deleted() == true
+            url() == "https://example.com/api/v2/attachments/200.json"
+            malwareScanResult() == AttachmentBaseMalwareScanResult.MALWARE_NOT_FOUND
+            malwareAccessOverride() == true
+            mappedContentUrl() == "https://mapped.example.com/report.pdf"
+            thumbnails().size() == 1
+        }
+        verifyAll(added) {
+            thumbnails().size() == 2
+            thumbnails().first() == child1
+            thumbnails().last() == child2
+        }
+        verifyAll(fromNull) {
+            thumbnails().size() == 1
+            thumbnails().first() == child1
+        }
+    }
+
+    def "should round-trip serialize and deserialize AttachmentObject"() {
+        given:
+        AttachmentObject obj = new AttachmentObject()
+                .withId(300L)
+                .withFileName("scan.pdf")
+                .withContentType("application/pdf")
+                .withSize(1024)
+                .withInline(true)
+                .withDeleted(false)
+                .withMalwareScanResult(AttachmentBaseMalwareScanResult.MALWARE_NOT_FOUND)
+
+        when:
+        String json = objectMapper.writeValueAsString(obj)
+        Map map = objectMapper.readValue(json, Map.class)
+        AttachmentObject deserialized = objectMapper.readValue(json, AttachmentObject.class)
+
+        then:
+        verifyAll(map) {
+            get("id") == 300
+            get("file_name") == "scan.pdf"
+            get("content_type") == "application/pdf"
+            get("size") == 1024
+            get("inline") == true
+            get("deleted") == false
+            get("malware_scan_result") == "malware_not_found"
+        }
+        verifyAll(deserialized) {
+            it == obj
+            id() == 300L
+            fileName() == "scan.pdf"
+            contentType() == "application/pdf"
+            size() == 1024
+            inline() == true
+            deleted() == false
+            malwareScanResult() == AttachmentBaseMalwareScanResult.MALWARE_NOT_FOUND
+        }
+    }
+
+    def "should handle null overloaded withers on AttachmentObject"() {
+        when:
+        AttachmentObject obj = new AttachmentObject()
+                .withSize((Long) null)
+                .withWidth((Long) null)
+                .withHeight((Long) null)
+                .withMalwareScanResult((String) null)
+
+        then:
+        verifyAll(obj) {
+            size() == null
+            width() == null
+            height() == null
+            malwareScanResult() == null
         }
     }
 }

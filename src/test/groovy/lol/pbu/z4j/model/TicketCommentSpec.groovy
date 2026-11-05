@@ -15,39 +15,184 @@
  */
 package lol.pbu.z4j.model
 
-import lol.pbu.z4j.Z4jSpec
-import spock.lang.Unroll
+import io.micronaut.serde.ObjectMapper
+import spock.lang.Shared
+import spock.lang.Specification
 
-class TicketCommentSpec extends Z4jSpec {
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 
-    @Unroll
-    def "should add uploads item"() {
+class TicketCommentSpec extends Specification {
+
+    @Shared
+    ObjectMapper objectMapper = ObjectMapper.getDefault()
+
+    def "should create TicketComment with constructors and builder"() {
         given:
-        def ticketComment = new TicketComment()
-        ticketComment.uploads == null
-        def upload = faker.lorem().word()
+        ZonedDateTime now = ZonedDateTime.now(ZoneOffset.UTC)
+        Attachment attachment = new Attachment().withId(10L).withFileName("file.png")
+        TicketAuditVia expectedVia = new TicketAuditVia()
 
         when:
-        ticketComment.addUploadsItem(upload)
+        TicketComment direct = new TicketComment(
+                [attachment],
+                100L,
+                200L,
+                "Comment body",
+                now,
+                "<p>Comment body</p>",
+                300L,
+                [key: "val"],
+                "Comment body",
+                true,
+                "Comment",
+                ["token_123"],
+                expectedVia
+        )
+        TicketComment noArg = new TicketComment()
+        TicketComment bodyOnly = new TicketComment("Just body")
+        TicketComment bodyAndPublic = new TicketComment("Private note", false)
+        TicketComment built = TicketCommentBuilder.builder()
+                .attachments([attachment])
+                .auditId(100L)
+                .authorId(200L)
+                .body("Comment body")
+                .createdAt(now)
+                .htmlBody("<p>Comment body</p>")
+                .id(300L)
+                .metadata([key: "val"])
+                .plainBody("Comment body")
+                .isPublic(true)
+                .type("Comment")
+                .uploads(["token_123"])
+                .via(expectedVia)
+                .build()
 
         then:
-        ticketComment.uploads.size() == 1
-        ticketComment.uploads.getAt(0) == upload
+        verifyAll(direct) {
+            attachments() == [attachment]
+            auditId() == 100L
+            authorId() == 200L
+            body() == "Comment body"
+            createdAt() == now
+            htmlBody() == "<p>Comment body</p>"
+            id() == 300L
+            metadata() == [key: "val"]
+            plainBody() == "Comment body"
+            isPublic() == true
+            type() == "Comment"
+            uploads() == ["token_123"]
+            via == expectedVia
+        }
+        verifyAll(noArg) {
+            body() == null
+            id() == null
+            isPublic() == null
+        }
+        verifyAll(bodyOnly) {
+            body() == "Just body"
+            isPublic() == null
+        }
+        verifyAll(bodyAndPublic) {
+            body() == "Private note"
+            isPublic() == false
+        }
+        verifyAll(built) {
+            it == direct
+            id() == 300L
+            body() == "Comment body"
+        }
     }
 
-    @Unroll
-    def "add uploads item to existing list"() {
+    def "should update TicketComment using withers, addUploadsItem, and addAttachmentsItem"() {
         given:
-        def existingUpload = faker.lorem().word()
-        def ticketComment = new TicketComment(uploads: [existingUpload])
-        def newUpload = faker.lorem().word()
+        Attachment att1 = new Attachment().withId(1L)
+        Attachment att2 = new Attachment().withId(2L)
+        TicketComment initial = new TicketComment()
 
         when:
-        ticketComment.addUploadsItem(newUpload)
+        TicketComment updated = initial
+                .withBody("Updated comment")
+                .withIsPublic(false)
+                .withUploads(["tok_1"])
+                .withAttachments([att1])
+        TicketComment addedUpload = updated.addUploadsItem("tok_2")
+        TicketComment addedAttachment = updated.addAttachmentsItem(att2)
+        TicketComment fromNullUpload = new TicketComment().addUploadsItem("tok_first")
+        TicketComment fromNullAttachment = new TicketComment().addAttachmentsItem(att1)
 
         then:
-        ticketComment.uploads.size() == 2
-        ticketComment.uploads.containsAll([existingUpload, newUpload])
+        verifyAll(updated) {
+            body() == "Updated comment"
+            isPublic() == false
+            uploads().size() == 1
+            attachments().size() == 1
+        }
+        verifyAll(addedUpload) {
+            uploads().size() == 2
+            uploads().first() == "tok_1"
+            uploads().last() == "tok_2"
+        }
+        verifyAll(addedAttachment) {
+            attachments().size() == 2
+            attachments().first() == att1
+            attachments().last() == att2
+        }
+        verifyAll(fromNullUpload) {
+            uploads().size() == 1
+            uploads().first() == "tok_first"
+        }
+        verifyAll(fromNullAttachment) {
+            attachments().size() == 1
+            attachments().first() == att1
+        }
+    }
+
+    def "should round-trip serialize and deserialize TicketComment"() {
+        given:
+        TicketComment comment = new TicketComment()
+                .withId(999L)
+                .withBody("Roundtrip comment")
+                .withIsPublic(true)
+                .withType("Comment")
+
+        when:
+        String json = objectMapper.writeValueAsString(comment)
+        Map map = objectMapper.readValue(json, Map.class)
+        TicketComment deserialized = objectMapper.readValue(json, TicketComment.class)
+
+        then:
+        verifyAll(map) {
+            get("id") == 999
+            get("body") == "Roundtrip comment"
+            get("public") == true
+            get("type") == "Comment"
+        }
+        verifyAll(deserialized) {
+            it == comment
+            id() == 999L
+            body() == "Roundtrip comment"
+            isPublic() == true
+            type() == "Comment"
+        }
+    }
+
+    def "should verify TicketComment constants"() {
+        expect:
+        verifyAll {
+            TicketComment.JSON_PROPERTY_ATTACHMENTS == "attachments"
+            TicketComment.JSON_PROPERTY_AUDIT_ID == "audit_id"
+            TicketComment.JSON_PROPERTY_AUTHOR_ID == "author_id"
+            TicketComment.JSON_PROPERTY_BODY == "body"
+            TicketComment.JSON_PROPERTY_CREATED_AT == "created_at"
+            TicketComment.JSON_PROPERTY_HTML_BODY == "html_body"
+            TicketComment.JSON_PROPERTY_ID == "id"
+            TicketComment.JSON_PROPERTY_METADATA == "metadata"
+            TicketComment.JSON_PROPERTY_PLAIN_BODY == "plain_body"
+            TicketComment.JSON_PROPERTY_PUBLIC == "public"
+            TicketComment.JSON_PROPERTY_TYPE == "type"
+            TicketComment.JSON_PROPERTY_UPLOADS == "uploads"
+            TicketComment.JSON_PROPERTY_VIA == "via"
+        }
     }
 }
-

@@ -20,98 +20,75 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
+import io.soabase.recordbuilder.core.RecordBuilder;
+import jakarta.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
 
 /**
- * A file represented as an Attachment object.
+ * File attachment representation for upload and response payloads.
  *
+ * @author Jonathan-Zollinger
  * @since 0.2.3
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder({
-        "id",
-        "file_name",
-        "content_url",
-        "content_type",
-        "size",
-        "thumbnails",
-        "inline",
-        "deleted",
-        "url",
-        "width",
-        "height",
-        "malware_scan_result"
-})
 @Serdeable
-@Generated
-public class AttachmentObject {
+@RecordBuilder
+@JsonPropertyOrder({
+        AttachmentBase.JSON_PROPERTY_ID,
+        AttachmentBase.JSON_PROPERTY_FILE_NAME,
+        AttachmentBase.JSON_PROPERTY_CONTENT_URL,
+        AttachmentBase.JSON_PROPERTY_CONTENT_TYPE,
+        AttachmentBase.JSON_PROPERTY_SIZE,
+        Attachment.JSON_PROPERTY_THUMBNAILS,
+        AttachmentBase.JSON_PROPERTY_INLINE,
+        AttachmentBase.JSON_PROPERTY_DELETED,
+        AttachmentBase.JSON_PROPERTY_URL,
+        AttachmentBase.JSON_PROPERTY_WIDTH,
+        AttachmentBase.JSON_PROPERTY_HEIGHT,
+        AttachmentBase.JSON_PROPERTY_MALWARE_SCAN_RESULT,
+        AttachmentBase.JSON_PROPERTY_MALWARE_ACCESS_OVERRIDE,
+        AttachmentBase.JSON_PROPERTY_MAPPED_CONTENT_URL
+})
+public record AttachmentObject(
+        @Nullable @JsonProperty(AttachmentBase.JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @Nullable @JsonProperty(AttachmentBase.JSON_PROPERTY_FILE_NAME) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String fileName,
+        @Nullable @JsonProperty(AttachmentBase.JSON_PROPERTY_CONTENT_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String contentUrl,
+        @Nullable @JsonProperty(AttachmentBase.JSON_PROPERTY_CONTENT_TYPE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String contentType,
+        @Nullable @JsonProperty(AttachmentBase.JSON_PROPERTY_SIZE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer size,
+        @Nullable @Valid @JsonProperty(Attachment.JSON_PROPERTY_THUMBNAILS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid AttachmentObject> thumbnails,
+        @Nullable @JsonProperty(AttachmentBase.JSON_PROPERTY_INLINE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean inline,
+        @Nullable @JsonProperty(AttachmentBase.JSON_PROPERTY_DELETED) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean deleted,
+        @Nullable @JsonProperty(AttachmentBase.JSON_PROPERTY_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String url,
+        @Nullable @JsonProperty(AttachmentBase.JSON_PROPERTY_WIDTH) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String width,
+        @Nullable @JsonProperty(AttachmentBase.JSON_PROPERTY_HEIGHT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String height,
+        @Nullable @JsonProperty(AttachmentBase.JSON_PROPERTY_MALWARE_SCAN_RESULT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) AttachmentBaseMalwareScanResult malwareScanResult,
+        @Nullable @JsonProperty(AttachmentBase.JSON_PROPERTY_MALWARE_ACCESS_OVERRIDE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean malwareAccessOverride,
+        @Nullable @JsonProperty(AttachmentBase.JSON_PROPERTY_MAPPED_CONTENT_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String mappedContentUrl
+) implements AttachmentBase, AttachmentObjectBuilder.With {
 
-    @Nullable
-    @JsonProperty("id")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
+    public AttachmentObject() {
+        this(null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+    }
 
-    @Nullable
-    @JsonProperty("file_name")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String fileName;
+    public AttachmentObject addThumbnailsItem(AttachmentObject thumbnailsItem) {
+        List<AttachmentObject> newThumbnails = thumbnails == null ? new ArrayList<>() : new ArrayList<>(thumbnails);
+        newThumbnails.add(thumbnailsItem);
+        return withThumbnails(newThumbnails);
+    }
 
-    @Nullable
-    @JsonProperty("content_url")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String contentUrl;
+    public AttachmentObject withSize(Long size) {
+        return withSize(size != null ? size.intValue() : null);
+    }
 
-    @Nullable
-    @JsonProperty("content_type")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String contentType;
+    public AttachmentObject withWidth(Long width) {
+        return withWidth(width != null ? String.valueOf(width) : null);
+    }
 
-    @Nullable
-    @JsonProperty("size")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long size;
+    public AttachmentObject withHeight(Long height) {
+        return withHeight(height != null ? String.valueOf(height) : null);
+    }
 
-    @Nullable
-    @JsonProperty("thumbnails")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<AttachmentObject> thumbnails;
-
-    @Nullable
-    @JsonProperty("inline")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean inline;
-
-    @Nullable
-    @JsonProperty("deleted")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean deleted;
-
-    @Nullable
-    @JsonProperty("url")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String url;
-
-    @Nullable
-    @JsonProperty("width")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long width;
-
-    @Nullable
-    @JsonProperty("height")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long height;
-
-    @Nullable
-    @JsonProperty("malware_scan_result")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String malwareScanResult;
+    public AttachmentObject withMalwareScanResult(String malwareScanResult) {
+        return withMalwareScanResult(malwareScanResult != null ? AttachmentBaseMalwareScanResult.fromValue(malwareScanResult) : null);
+    }
 }

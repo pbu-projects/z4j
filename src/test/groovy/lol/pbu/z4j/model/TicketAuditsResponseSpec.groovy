@@ -30,7 +30,7 @@ class TicketAuditsResponseSpec extends Z4jSpec {
 
     def "should create TicketAuditsResponse with canonical constructor and builder"() {
         given:
-        Audit audit = new Audit().setId(1001L).setTicketId(500L)
+        Audit audit = new Audit().withId(1001L).withTicketId(500L)
         List<Audit> list = [audit]
         Integer expectedCount = 1
         String expectedNext = "https://example.zendesk.com/api/v2/tickets/500/audits.json?page=2"
@@ -66,8 +66,8 @@ class TicketAuditsResponseSpec extends Z4jSpec {
 
     def "should update TicketAuditsResponse using record withers"() {
         given:
-        Audit first = new Audit().setId(1L).setTicketId(10L)
-        Audit second = new Audit().setId(2L).setTicketId(20L)
+        Audit first = new Audit().withId(1L).withTicketId(10L)
+        Audit second = new Audit().withId(2L).withTicketId(20L)
         TicketAuditsResponse response = new TicketAuditsResponse([first], 1, "next_1", "prev_1")
 
         when:
@@ -94,7 +94,7 @@ class TicketAuditsResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize TicketAuditsResponse"() {
         given:
-        Audit audit = new Audit().setId(777L).setTicketId(888L)
+        Audit audit = new Audit().withId(777L).withTicketId(888L)
         TicketAuditsResponse response = new TicketAuditsResponse(
                 [audit],
                 1,

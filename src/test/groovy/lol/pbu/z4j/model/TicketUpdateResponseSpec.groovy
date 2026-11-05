@@ -30,7 +30,7 @@ class TicketUpdateResponseSpec extends Z4jSpec {
 
     def "should create TicketUpdateResponse with canonical constructor and builder"() {
         given:
-        Audit expectedAudit = new Audit().setId(201L).setTicketId(101L)
+        Audit expectedAudit = new Audit().withId(201L).withTicketId(101L)
         Ticket expectedTicket = new Ticket().setId(101L).setSubject("Updated Issue")
 
         when:
@@ -61,11 +61,11 @@ class TicketUpdateResponseSpec extends Z4jSpec {
 
     def "should update audit and ticket using record withers"() {
         given:
-        Audit originalAudit = new Audit().setId(1L)
+        Audit originalAudit = new Audit().withId(1L)
         Ticket originalTicket = new Ticket().setId(10L).setSubject("Initial")
         TicketUpdateResponse response = new TicketUpdateResponse(originalAudit, originalTicket)
 
-        Audit updatedAudit = new Audit().setId(2L)
+        Audit updatedAudit = new Audit().withId(2L)
         Ticket updatedTicket = new Ticket().setId(20L).setSubject("Modified")
 
         when:
@@ -89,7 +89,7 @@ class TicketUpdateResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize TicketUpdateResponse"() {
         given:
-        Audit expectedAudit = new Audit().setId(777L).setTicketId(333L)
+        Audit expectedAudit = new Audit().withId(777L).withTicketId(333L)
         Ticket expectedTicket = new Ticket().setId(333L).setSubject("Server Restored")
         TicketUpdateResponse response = new TicketUpdateResponse(expectedAudit, expectedTicket)
 
@@ -121,7 +121,7 @@ class TicketUpdateResponseSpec extends Z4jSpec {
     def "should handle null components in constructor and wither"() {
         when:
         TicketUpdateResponse response = new TicketUpdateResponse(null, null)
-        Audit replacementAudit = new Audit().setId(50L)
+        Audit replacementAudit = new Audit().withId(50L)
         Ticket replacementTicket = new Ticket().setId(60L)
         TicketUpdateResponse updated = response.withAudit(replacementAudit).withTicket(replacementTicket)
         String json = objectMapper.writeValueAsString(response)

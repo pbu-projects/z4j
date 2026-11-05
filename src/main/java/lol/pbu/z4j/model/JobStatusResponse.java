@@ -33,10 +33,7 @@ public record JobStatusResponse(
 
     public JobStatusResponse {
         if (jobStatus == null) {
-            jobStatus = new JobStatus().setStatus("completed");
-            if (message != null) {
-                jobStatus.setMessage(message);
-            }
+            jobStatus = new JobStatus("completed", message);
         }
     }
 
