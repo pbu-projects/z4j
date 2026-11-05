@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="1234.176"
-   height="1224.559"
-   viewBox="0 0 1234.176 1224.559"
+   width="757.94995"
+   height="748.33276"
+   viewBox="0 0 757.94994 748.33279"
    version="1.1"
    id="svg1"
    xml:space="preserve"
@@ -24,8 +24,8 @@
      inkscape:deskcolor="#505050"
      inkscape:document-units="px"
      inkscape:zoom="0.49510249"
-     inkscape:cx="421.12493"
-     inkscape:cy="501.91628"
+     inkscape:cx="182.79044"
+     inkscape:cy="263.58179"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="-8"
@@ -98,17 +98,17 @@
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
        id="filter5"
-       x="-0.64993659"
-       y="-0.66179698"
-       width="2.2998732"
-       height="2.323594"><feGaussianBlur
+       x="-0.20621556"
+       y="-0.20997869"
+       width="1.4124311"
+       height="1.4199574"><feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="50.557346"
+         stdDeviation="16.041121"
          id="feGaussianBlur5" /></filter></defs><g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-18.01174,301.2611)"
+     transform="translate(-256.12483,63.14801)"
      style="display:inline"><rect
        style="display:none;fill:#ffffff;fill-opacity:1;stroke-width:14.6384;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:2;paint-order:markers stroke fill"
        id="rect10"
