@@ -44,7 +44,7 @@ class TopicClientSpec extends Z4jSpec {
         topicFixtures = FixtureLoader.loadFixture("/fixtures/topic_fixtures.yaml", TopicFixtures.class)
         // Create a shared topic for read tests
         def fixture = topicFixtures.getTopics().first()
-        def createReq = new TopicCreateRequest().setTopic(new Topic(fixture.getName()).setDescription(fixture.getDescription()))
+        def createReq = new TopicCreateRequest(new Topic(fixture.getName()).setDescription(fixture.getDescription()))
         sharedTopicId = adminTopicClient.createTopic(createReq).block().topic().getId()
     }
 
@@ -92,7 +92,7 @@ class TopicClientSpec extends Z4jSpec {
 
     def "can create a topic as an admin"(String name, String description) {
         given:
-        def createReq = new TopicCreateRequest().setTopic(new Topic(name).setDescription(description))
+        def createReq = new TopicCreateRequest(new Topic(name).setDescription(description))
 
         when:
         def response = adminTopicClient.createTopic(createReq).block()
@@ -114,7 +114,7 @@ class TopicClientSpec extends Z4jSpec {
 
     def "cannot create a topic as a #userType user"(TopicClient topicClient, String userType) {
         given:
-        def createReq = new TopicCreateRequest().setTopic(new Topic("Unauthorized Topic").setDescription("Should not be created"))
+        def createReq = new TopicCreateRequest(new Topic("Unauthorized Topic").setDescription("Should not be created"))
 
         when:
         topicClient.createTopic(createReq).block()
@@ -134,11 +134,11 @@ class TopicClientSpec extends Z4jSpec {
 
     def "can update a topic as an admin"(String name, String description, String updatedName) {
         given:
-        def createReq = new TopicCreateRequest().setTopic(new Topic(name).setDescription(description))
+        def createReq = new TopicCreateRequest(new Topic(name).setDescription(description))
         def created = adminTopicClient.createTopic(createReq).block().topic()
 
         when:
-        def updateReq = new TopicUpdateRequest().setTopic(new Topic(updatedName))
+        def updateReq = new TopicUpdateRequest(new Topic(updatedName))
         def response = adminTopicClient.updateTopic(created.getId(), updateReq).block()
 
         then:
@@ -158,7 +158,7 @@ class TopicClientSpec extends Z4jSpec {
 
     def "cannot update a topic as a #userType user"(TopicClient topicClient, String userType) {
         given:
-        def updateReq = new TopicUpdateRequest().setTopic(new Topic("Unauthorized Update"))
+        def updateReq = new TopicUpdateRequest(new Topic("Unauthorized Update"))
 
         when:
         topicClient.updateTopic(sharedTopicId, updateReq).block()
@@ -178,7 +178,7 @@ class TopicClientSpec extends Z4jSpec {
 
     def "can delete a topic as an admin"(String name, String description) {
         given:
-        def createReq = new TopicCreateRequest().setTopic(new Topic(name).setDescription(description))
+        def createReq = new TopicCreateRequest(new Topic(name).setDescription(description))
         def created = adminTopicClient.createTopic(createReq).block().topic()
 
         when:

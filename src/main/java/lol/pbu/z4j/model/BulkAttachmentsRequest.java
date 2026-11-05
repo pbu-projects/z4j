@@ -16,47 +16,23 @@
 package lol.pbu.z4j.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import java.util.ArrayList;
 import java.util.List;
-import lol.pbu.z4j.Generated;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
-/**
- * BulkAttachmentsRequest
- *
- * @author Jonathan-Zollinger
- * @since 0.3.0
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(BulkAttachmentsRequest.JSON_PROPERTY_ATTACHMENT_IDS)
 @Serdeable
-@Generated
-public class BulkAttachmentsRequest {
+@RecordBuilder
+public record BulkAttachmentsRequest(
+        @Nullable @JsonProperty(JSON_PROPERTY_ATTACHMENT_IDS) List<Long> attachmentIds
+) implements BulkAttachmentsRequestBuilder.With {
 
     public static final String JSON_PROPERTY_ATTACHMENT_IDS = "attachment_ids";
 
-    @JsonProperty(JSON_PROPERTY_ATTACHMENT_IDS)
-    private List<Long> attachmentIds;
-
-    /**
-     * Add an item to the attachmentIds property in a chainable fashion.
-     *
-     * @param attachmentIdsItem the attachment ID to add
-     * @return The same instance of BulkAttachmentsRequest for chaining.
-     */
     public BulkAttachmentsRequest addAttachmentIdsItem(Long attachmentIdsItem) {
-        if (attachmentIds == null) {
-            attachmentIds = new ArrayList<>();
-        }
-        attachmentIds.add(attachmentIdsItem);
-        return this;
+        List<Long> list = new ArrayList<>(attachmentIds != null ? attachmentIds : List.of());
+        list.add(attachmentIdsItem);
+        return new BulkAttachmentsRequest(list);
     }
 }
