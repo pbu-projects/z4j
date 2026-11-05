@@ -210,6 +210,7 @@ val benchmark = tasks.register<Test>("benchmark") {
         includeTags("benchmark")
     }
     systemProperty("benchmark", "true")
+    systemProperty("logger.levels.io.micronaut.http.client", "INFO")
     testLogging {
         showStandardStreams = true
         events = setOf(PASSED, FAILED, SKIPPED)

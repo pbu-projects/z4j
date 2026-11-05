@@ -141,11 +141,7 @@ z4j Duration       : ${durationZ4jMs} ms | Delta Heap: ${String.format('%.2f', (
 ======================================================
 """
         println results
-        System.err.println results
-
-        File reportDir = new File("build/reports")
-        reportDir.mkdirs()
-        new File(reportDir, "benchmark-results.txt").write(results)
+        saveReport(results)
 
         cleanup: "Tear down seeded tickets in 1 call to keep sandbox clean"
         if (!seededTicketIds.isEmpty()) {
@@ -200,5 +196,11 @@ z4j Duration       : ${durationZ4jMs} ms | Delta Heap: ${String.format('%.2f', (
         }
 
         return ids
+    }
+
+    void saveReport(String results) {
+        File reportDir = new File("build/reports")
+        reportDir.mkdirs()
+        new File(reportDir, "benchmark-results.txt").write(results)
     }
 }
