@@ -20,16 +20,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,13 +31,8 @@ import java.util.List;
  * @author Jonathan-Zollinger
  * @since 0.3.0
  */
-@Accessors(chain = true)
-@EqualsAndHashCode
-@ToString
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         PermissionGroup.JSON_PROPERTY_BUILT_IN,
         PermissionGroup.JSON_PROPERTY_CREATED_AT,
@@ -55,9 +42,15 @@ import java.util.List;
         PermissionGroup.JSON_PROPERTY_PUBLISH,
         PermissionGroup.JSON_PROPERTY_UPDATED_AT
 })
-@Serdeable
-@Generated
-public class PermissionGroup {
+public record PermissionGroup(
+        @Nullable @JsonProperty(JSON_PROPERTY_BUILT_IN) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean builtIn,
+        @Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String createdAt,
+        @Nullable @JsonProperty(JSON_PROPERTY_EDIT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<Long> edit,
+        @Nullable @JsonProperty(JSON_PROPERTY_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long id,
+        @NotNull @JsonProperty(JSON_PROPERTY_NAME) String name,
+        @Nullable @JsonProperty(JSON_PROPERTY_PUBLISH) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<Long> publish,
+        @Nullable @JsonProperty(JSON_PROPERTY_UPDATED_AT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String updatedAt
+) implements PermissionGroupBuilder.With {
 
     public static final String JSON_PROPERTY_BUILT_IN = "built_in";
     public static final String JSON_PROPERTY_CREATED_AT = "created_at";
@@ -67,95 +60,27 @@ public class PermissionGroup {
     public static final String JSON_PROPERTY_PUBLISH = "publish";
     public static final String JSON_PROPERTY_UPDATED_AT = "updated_at";
 
-    /**
-     * Whether the permission group is built-in. Built-in permission groups cannot be modified or deleted.
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_BUILT_IN)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean builtIn;
-
-    /**
-     * When the permission group was created
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String createdAt;
-
-    /**
-     * The ids of the user segments that have edit privileges
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_EDIT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<Long> edit;
-
-    /**
-     * Automatically assigned when the permission group is created
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long id;
-
-    /**
-     * The name of the permission group
-     */
-    @NotNull
-    @JsonProperty(JSON_PROPERTY_NAME)
-    private String name;
-
-    /**
-     * The ids of the user segments that have publish privileges
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_PUBLISH)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<Long> publish;
-
-    /**
-     * When the permission group was last updated
-     */
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_UPDATED_AT)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String updatedAt;
+    public PermissionGroup() {
+        this(null, null, null, null, null, null, null);
+    }
 
     public PermissionGroup(String name) {
-        this.name = name;
+        this(null, null, null, null, name, null, null);
     }
 
     public PermissionGroup(String name, List<Long> edit, List<Long> publish) {
-        this.name = name;
-        this.edit = edit;
-        this.publish = publish;
+        this(null, null, edit, null, name, publish, null);
     }
 
-    /**
-     * Add an item to the edit property in a chainable fashion.
-     *
-     * @return The same instance of PermissionGroup for chaining.
-     */
     public PermissionGroup addEditItem(Long editItem) {
-        if (edit == null) {
-            edit = new ArrayList<>();
-        }
-        edit.add(editItem);
-        return this;
+        List<Long> newEdit = edit == null ? new ArrayList<>() : new ArrayList<>(edit);
+        newEdit.add(editItem);
+        return withEdit(newEdit);
     }
 
-    /**
-     * Add an item to the publish property in a chainable fashion.
-     *
-     * @return The same instance of PermissionGroup for chaining.
-     */
     public PermissionGroup addPublishItem(Long publishItem) {
-        if (publish == null) {
-            publish = new ArrayList<>();
-        }
-        publish.add(publishItem);
-        return this;
+        List<Long> newPublish = publish == null ? new ArrayList<>() : new ArrayList<>(publish);
+        newPublish.add(publishItem);
+        return withPublish(newPublish);
     }
-
 }

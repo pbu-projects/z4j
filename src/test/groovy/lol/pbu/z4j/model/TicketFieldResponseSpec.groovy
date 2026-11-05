@@ -30,7 +30,7 @@ class TicketFieldResponseSpec extends Z4jSpec {
 
     def "should create TicketFieldResponse with canonical constructor and builder"() {
         given:
-        TicketField expected = new TicketField("Priority Level", "dropdown").setId(101L)
+        TicketField expected = new TicketField("Priority Level", "dropdown").withId(101L)
 
         when:
         TicketFieldResponse direct = new TicketFieldResponse(expected)
@@ -53,8 +53,8 @@ class TicketFieldResponseSpec extends Z4jSpec {
 
     def "should update ticketField using record wither"() {
         given:
-        TicketField original = new TicketField("Old Field", "text").setId(1L)
-        TicketField updatedField = new TicketField("New Field", "text").setId(2L)
+        TicketField original = new TicketField("Old Field", "text").withId(1L)
+        TicketField updatedField = new TicketField("New Field", "text").withId(2L)
         TicketFieldResponse response = new TicketFieldResponse(original)
 
         when:
@@ -73,7 +73,7 @@ class TicketFieldResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize TicketFieldResponse"() {
         given:
-        TicketField expected = new TicketField("Department", "text").setId(555L)
+        TicketField expected = new TicketField("Department", "text").withId(555L)
         TicketFieldResponse response = new TicketFieldResponse(expected)
 
         when:
@@ -99,7 +99,7 @@ class TicketFieldResponseSpec extends Z4jSpec {
     def "should handle null ticketField component in constructor and wither"() {
         when:
         TicketFieldResponse response = new TicketFieldResponse(null)
-        TicketField replacement = new TicketField("Replacement", "text").setId(99L)
+        TicketField replacement = new TicketField("Replacement", "text").withId(99L)
         TicketFieldResponse updated = response.withTicketField(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

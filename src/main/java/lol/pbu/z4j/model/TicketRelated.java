@@ -20,24 +20,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
-
+import io.soabase.recordbuilder.core.RecordBuilder;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TicketRelated
+ * Related metadata and cross-reference identifiers for a ticket.
  *
  * @author Jonathan-Zollinger
  * @since 0.3.0
  */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
+@Serdeable
+@RecordBuilder
 @JsonPropertyOrder({
         TicketRelated.JSON_PROPERTY_URL,
         TicketRelated.JSON_PROPERTY_TOPIC_ID,
@@ -46,9 +40,14 @@ import java.util.List;
         TicketRelated.JSON_PROPERTY_FROM_ARCHIVE,
         TicketRelated.JSON_PROPERTY_INCIDENTS
 })
-@Serdeable
-@Generated
-public class TicketRelated {
+public record TicketRelated(
+        @Nullable @JsonProperty(JSON_PROPERTY_URL) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String url,
+        @Nullable @JsonProperty(JSON_PROPERTY_TOPIC_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long topicId,
+        @Nullable @JsonProperty(JSON_PROPERTY_JIRA_ISSUE_IDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<String> jiraIssueIds,
+        @Nullable @JsonProperty(JSON_PROPERTY_FOLLOWUP_SOURCE_IDS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<Long> followupSourceIds,
+        @Nullable @JsonProperty(JSON_PROPERTY_FROM_ARCHIVE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean fromArchive,
+        @Nullable @JsonProperty(JSON_PROPERTY_INCIDENTS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer incidents
+) implements TicketRelatedBuilder.With {
 
     public static final String JSON_PROPERTY_URL = "url";
     public static final String JSON_PROPERTY_TOPIC_ID = "topic_id";
@@ -57,33 +56,19 @@ public class TicketRelated {
     public static final String JSON_PROPERTY_FROM_ARCHIVE = "from_archive";
     public static final String JSON_PROPERTY_INCIDENTS = "incidents";
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_URL)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private String url;
+    public TicketRelated() {
+        this(null, null, null, null, null, null);
+    }
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_TOPIC_ID)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Long topicId;
+    public TicketRelated addJiraIssueIdsItem(String jiraIssueIdsItem) {
+        List<String> newItems = jiraIssueIds == null ? new ArrayList<>() : new ArrayList<>(jiraIssueIds);
+        newItems.add(jiraIssueIdsItem);
+        return withJiraIssueIds(newItems);
+    }
 
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_JIRA_ISSUE_IDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<String> jiraIssueIds;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_FOLLOWUP_SOURCE_IDS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private List<Long> followupSourceIds;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_FROM_ARCHIVE)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Boolean fromArchive;
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_INCIDENTS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private Integer incidents;
+    public TicketRelated addFollowupSourceIdsItem(Long followupSourceIdsItem) {
+        List<Long> newItems = followupSourceIds == null ? new ArrayList<>() : new ArrayList<>(followupSourceIds);
+        newItems.add(followupSourceIdsItem);
+        return withFollowupSourceIds(newItems);
+    }
 }

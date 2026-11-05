@@ -30,7 +30,7 @@ class TicketFormResponseSpec extends Z4jSpec {
 
     def "should create TicketFormResponse with canonical constructor and builder"() {
         given:
-        TicketForm expected = new TicketForm("Support Request Form").setId(101L).setEndUserVisible(true)
+        TicketForm expected = new TicketForm("Support Request Form").withId(101L).withEndUserVisible(true)
 
         when:
         TicketFormResponse direct = new TicketFormResponse(expected)
@@ -53,8 +53,8 @@ class TicketFormResponseSpec extends Z4jSpec {
 
     def "should update ticketForm using record wither"() {
         given:
-        TicketForm original = new TicketForm("Old Form").setId(1L)
-        TicketForm updatedForm = new TicketForm("New Form").setId(2L)
+        TicketForm original = new TicketForm("Old Form").withId(1L)
+        TicketForm updatedForm = new TicketForm("New Form").withId(2L)
         TicketFormResponse response = new TicketFormResponse(original)
 
         when:
@@ -73,7 +73,7 @@ class TicketFormResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize TicketFormResponse"() {
         given:
-        TicketForm expected = new TicketForm("Billing Inquiry").setId(555L).setEndUserVisible(false)
+        TicketForm expected = new TicketForm("Billing Inquiry").withId(555L).withEndUserVisible(false)
         TicketFormResponse response = new TicketFormResponse(expected)
 
         when:
@@ -100,7 +100,7 @@ class TicketFormResponseSpec extends Z4jSpec {
     def "should handle null ticketForm component in constructor and wither"() {
         when:
         TicketFormResponse response = new TicketFormResponse(null)
-        TicketForm replacement = new TicketForm("Replacement Form").setId(99L)
+        TicketForm replacement = new TicketForm("Replacement Form").withId(99L)
         TicketFormResponse updated = response.withTicketForm(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

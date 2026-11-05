@@ -31,8 +31,8 @@ class TicketRelatedResponseSpec extends Z4jSpec {
     def "should create TicketRelatedResponse with canonical constructor and builder"() {
         given:
         TicketRelated expected = new TicketRelated()
-                .setUrl("https://example.zendesk.com/api/v2/tickets/101/related.json")
-                .setTopicId(42L)
+                .withUrl("https://example.zendesk.com/api/v2/tickets/101/related.json")
+                .withTopicId(42L)
 
         when:
         TicketRelatedResponse direct = new TicketRelatedResponse(expected)
@@ -53,8 +53,8 @@ class TicketRelatedResponseSpec extends Z4jSpec {
 
     def "should update ticketRelated using record wither"() {
         given:
-        TicketRelated original = new TicketRelated().setUrl("https://example.zendesk.com/1").setTopicId(1L)
-        TicketRelated replacement = new TicketRelated().setUrl("https://example.zendesk.com/2").setTopicId(2L)
+        TicketRelated original = new TicketRelated().withUrl("https://example.zendesk.com/1").withTopicId(1L)
+        TicketRelated replacement = new TicketRelated().withUrl("https://example.zendesk.com/2").withTopicId(2L)
         TicketRelatedResponse response = new TicketRelatedResponse(original)
 
         when:
@@ -74,8 +74,8 @@ class TicketRelatedResponseSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize TicketRelatedResponse"() {
         given:
         TicketRelated expected = new TicketRelated()
-                .setUrl("https://example.zendesk.com/api/v2/tickets/555/related.json")
-                .setTopicId(999L)
+                .withUrl("https://example.zendesk.com/api/v2/tickets/555/related.json")
+                .withTopicId(999L)
         TicketRelatedResponse response = new TicketRelatedResponse(expected)
 
         when:
@@ -100,7 +100,7 @@ class TicketRelatedResponseSpec extends Z4jSpec {
     def "should handle null ticketRelated component in constructor and wither"() {
         when:
         TicketRelatedResponse response = new TicketRelatedResponse(null)
-        TicketRelated replacement = new TicketRelated().setTopicId(77L)
+        TicketRelated replacement = new TicketRelated().withTopicId(77L)
         TicketRelatedResponse updated = response.withTicketRelated(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

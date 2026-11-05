@@ -30,7 +30,7 @@ class TicketFormsResponseSpec extends Z4jSpec {
 
     def "should create TicketFormsResponse with canonical constructor and builder"() {
         given:
-        TicketForm form = new TicketForm("Support Form").setId(501L)
+        TicketForm form = new TicketForm("Support Form").withId(501L)
         List<TicketForm> list = [form]
 
         when:
@@ -54,8 +54,8 @@ class TicketFormsResponseSpec extends Z4jSpec {
 
     def "should update TicketFormsResponse using record withers and addTicketFormsItem method"() {
         given:
-        TicketForm form1 = new TicketForm("Form 1").setId(1L)
-        TicketForm form2 = new TicketForm("Form 2").setId(2L)
+        TicketForm form1 = new TicketForm("Form 1").withId(1L)
+        TicketForm form2 = new TicketForm("Form 2").withId(2L)
         TicketFormsResponse response = new TicketFormsResponse([form1])
 
         when:
@@ -83,7 +83,7 @@ class TicketFormsResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize TicketFormsResponse"() {
         given:
-        TicketForm form = new TicketForm("Billing Form").setId(701L)
+        TicketForm form = new TicketForm("Billing Form").withId(701L)
         TicketFormsResponse response = new TicketFormsResponse([form])
 
         when:

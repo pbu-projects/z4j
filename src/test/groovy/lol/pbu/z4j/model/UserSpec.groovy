@@ -15,7 +15,7 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.json.JsonMapper
+import io.micronaut.serde.ObjectMapper
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -25,168 +25,295 @@ import java.time.ZonedDateTime
 class UserSpec extends Specification {
 
     @Shared
-    JsonMapper jsonMapper
+    ObjectMapper objectMapper = ObjectMapper.getDefault()
 
-    void setupSpec() {
-        jsonMapper = JsonMapper.createDefault()
-    }
-
-    def "can create user with getters setters and fluent chaining"() {
+    def "should create User with constructors and builder"() {
         given:
-        def now = ZonedDateTime.of(2026, 1, 15, 10, 30, 0, 0, ZoneOffset.UTC)
-        def photoAttachment = new Attachment().withId(555L).withFileName("avatar.png")
+        ZonedDateTime now = ZonedDateTime.of(2026, 1, 15, 10, 30, 0, 0, ZoneOffset.UTC)
+        Attachment photoAttachment = new Attachment().withId(555L).withFileName("avatar.png")
 
         when:
-        def user = new User()
-                .setId(101L)
-                .setAgentBrandIds([1L, 2L])
-                .setEmail("test.user@example.com")
-                .setName("Test User")
-                .setRole("agent")
-                .setActive(true)
-                .setAlias("Agent T")
-                .setChatOnly(false)
-                .setCustomRoleId(42L)
-                .setDefaultGroupId(77L)
-                .setDetails("Support specialist")
-                .setExternalId("ext-101")
-                .setIanaTimeZone("America/New_York")
-                .setLastLoginAt(now)
-                .setLocale("en-US")
-                .setLocaleId(1L)
-                .setModerator(true)
-                .setNotes("Top performer")
-                .setOnlyPrivateComments(false)
-                .setOrganizationId(888L)
-                .setPhone("+15555551234")
-                .setPhoto(photoAttachment)
-                .setRemotePhotoUrl("https://example.com/photo.png")
-                .setReportCsv(false)
-                .setRestrictedAgent(false)
-                .setRoleType(1)
-                .setShared(false)
-                .setSharedAgent(false)
-                .setSharedPhoneNumber(false)
-                .setSignature("Thanks, Agent T")
-                .setSuspended(false)
-                .setTags(["support", "tier1"])
-                .setTicketRestriction("assigned")
-                .setTimeZone("Eastern Time (US & Canada)")
-                .setTwoFactorAuthEnabled(true)
-                .setUrl("https://example.zendesk.com/api/v2/users/101.json")
-                .setUserFields(["department": "Support"])
-                .setVerified(true)
-                .setAuthenticityToken("token123")
-                .setCreatedAt(now)
-                .setUpdatedAt(now)
+        User direct = new User(
+                101L,
+                [1L, 2L],
+                "test.user@example.com",
+                "Test User",
+                "agent",
+                true,
+                "Agent T",
+                false,
+                42L,
+                77L,
+                "Support specialist",
+                "ext-101",
+                "America/New_York",
+                now,
+                "en-US",
+                1L,
+                true,
+                "Top performer",
+                false,
+                888L,
+                "+15555551234",
+                photoAttachment,
+                "https://example.com/photo.png",
+                false,
+                false,
+                1,
+                false,
+                false,
+                false,
+                "Thanks, Agent T",
+                false,
+                ["support", "tier1"],
+                "assigned",
+                "Eastern Time (US & Canada)",
+                true,
+                "https://example.zendesk.com/api/v2/users/101.json",
+                ["department": "Support"],
+                true,
+                "token123",
+                now,
+                now
+        )
+        User noArg = new User()
+        User built = UserBuilder.builder()
+                .id(101L)
+                .agentBrandIds([1L, 2L])
+                .email("test.user@example.com")
+                .name("Test User")
+                .role("agent")
+                .active(true)
+                .alias("Agent T")
+                .chatOnly(false)
+                .customRoleId(42L)
+                .defaultGroupId(77L)
+                .details("Support specialist")
+                .externalId("ext-101")
+                .ianaTimeZone("America/New_York")
+                .lastLoginAt(now)
+                .locale("en-US")
+                .localeId(1L)
+                .moderator(true)
+                .notes("Top performer")
+                .onlyPrivateComments(false)
+                .organizationId(888L)
+                .phone("+15555551234")
+                .photo(photoAttachment)
+                .remotePhotoUrl("https://example.com/photo.png")
+                .reportCsv(false)
+                .restrictedAgent(false)
+                .roleType(1)
+                .shared(false)
+                .sharedAgent(false)
+                .sharedPhoneNumber(false)
+                .signature("Thanks, Agent T")
+                .suspended(false)
+                .tags(["support", "tier1"])
+                .ticketRestriction("assigned")
+                .timeZone("Eastern Time (US & Canada)")
+                .twoFactorAuthEnabled(true)
+                .url("https://example.zendesk.com/api/v2/users/101.json")
+                .userFields(["department": "Support"])
+                .verified(true)
+                .authenticityToken("token123")
+                .createdAt(now)
+                .updatedAt(now)
+                .build()
 
         then:
-        verifyAll(user) {
-            id == 101L
-            agentBrandIds == [1L, 2L]
-            email == "test.user@example.com"
-            name == "Test User"
-            role == "agent"
-            active == true
-            alias == "Agent T"
-            chatOnly == false
-            customRoleId == 42L
-            defaultGroupId == 77L
-            details == "Support specialist"
-            externalId == "ext-101"
-            ianaTimeZone == "America/New_York"
-            lastLoginAt == now
-            locale == "en-US"
-            localeId == 1L
-            moderator == true
-            notes == "Top performer"
-            onlyPrivateComments == false
-            organizationId == 888L
-            phone == "+15555551234"
-            photo == photoAttachment
-            remotePhotoUrl == "https://example.com/photo.png"
-            reportCsv == false
-            restrictedAgent == false
-            roleType == 1
-            shared == false
-            sharedAgent == false
-            sharedPhoneNumber == false
-            signature == "Thanks, Agent T"
-            suspended == false
-            tags == ["support", "tier1"]
-            ticketRestriction == "assigned"
-            timeZone == "Eastern Time (US & Canada)"
-            twoFactorAuthEnabled == true
-            url == "https://example.zendesk.com/api/v2/users/101.json"
-            userFields == ["department": "Support"]
-            verified == true
-            authenticityToken == "token123"
-            createdAt == now
-            updatedAt == now
+        verifyAll(direct) {
+            id() == 101L
+            agentBrandIds() == [1L, 2L]
+            email() == "test.user@example.com"
+            name() == "Test User"
+            role() == "agent"
+            active() == true
+            alias() == "Agent T"
+            chatOnly() == false
+            customRoleId() == 42L
+            defaultGroupId() == 77L
+            details() == "Support specialist"
+            externalId() == "ext-101"
+            ianaTimeZone() == "America/New_York"
+            lastLoginAt() == now
+            locale() == "en-US"
+            localeId() == 1L
+            moderator() == true
+            notes() == "Top performer"
+            onlyPrivateComments() == false
+            organizationId() == 888L
+            phone() == "+15555551234"
+            photo() == photoAttachment
+            remotePhotoUrl() == "https://example.com/photo.png"
+            reportCsv() == false
+            restrictedAgent() == false
+            roleType() == 1
+            shared() == false
+            sharedAgent() == false
+            sharedPhoneNumber() == false
+            signature() == "Thanks, Agent T"
+            suspended() == false
+            tags() == ["support", "tier1"]
+            ticketRestriction() == "assigned"
+            timeZone() == "Eastern Time (US & Canada)"
+            twoFactorAuthEnabled() == true
+            url() == "https://example.zendesk.com/api/v2/users/101.json"
+            userFields() == ["department": "Support"]
+            verified() == true
+            authenticityToken() == "token123"
+            createdAt() == now
+            updatedAt() == now
+        }
+        verifyAll(noArg) {
+            id() == null
+            name() == null
+            email() == null
+            role() == null
+        }
+        verifyAll(built) {
+            it == direct
+            id() == 101L
+            name() == "Test User"
         }
     }
 
-    def "can add tags to user with null tags"() {
+    def "should update User using withers"() {
         given:
-        def user = new User()
+        ZonedDateTime now = ZonedDateTime.of(2026, 2, 20, 8, 0, 0, 0, ZoneOffset.UTC)
+        User initial = new User()
 
         when:
-        user.addTagsItem("first_tag")
+        User updated = initial
+                .withId(202L)
+                .withAgentBrandIds([5L])
+                .withEmail("jane@example.com")
+                .withName("Jane Smith")
+                .withRole("admin")
+                .withActive(true)
+                .withAlias("JaneAdmin")
+                .withChatOnly(true)
+                .withCustomRoleId(10L)
+                .withDefaultGroupId(20L)
+                .withDetails("Lead Admin")
+                .withExternalId("ext-202")
+                .withIanaTimeZone("UTC")
+                .withLastLoginAt(now)
+                .withLocale("en-GB")
+                .withLocaleId(2L)
+                .withModerator(false)
+                .withNotes("Key contact")
+                .withOnlyPrivateComments(true)
+                .withOrganizationId(999L)
+                .withPhone("+15559876543")
+                .withRemotePhotoUrl("https://example.com/jane.png")
+                .withReportCsv(true)
+                .withRestrictedAgent(true)
+                .withRoleType(2)
+                .withShared(true)
+                .withSharedAgent(true)
+                .withSharedPhoneNumber(true)
+                .withSignature("Best, Jane")
+                .withSuspended(true)
+                .withTags(["admin"])
+                .withTicketRestriction("groups")
+                .withTimeZone("UTC")
+                .withTwoFactorAuthEnabled(false)
+                .withUrl("https://example.zendesk.com/users/202")
+                .withUserFields([tier: "gold"])
+                .withVerified(false)
+                .withAuthenticityToken("auth456")
+                .withCreatedAt(now)
+                .withUpdatedAt(now)
 
         then:
-        verifyAll(user) {
-            tags != null
-            tags.size() == 1
-            tags[0] == "first_tag"
+        verifyAll(updated) {
+            id() == 202L
+            email() == "jane@example.com"
+            name() == "Jane Smith"
+            role() == "admin"
+            active() == true
+            tags() == ["admin"]
+            suspended() == true
+            verified() == false
         }
     }
 
-    def "can add tags to user with existing tags"() {
+    def "should add items to null and populated lists"() {
         given:
-        def user = new User().setTags(["first_tag"])
+        User user = new User()
 
-        when:
-        user.addTagsItem("second_tag")
+        when: "adding to null lists"
+        User withTag = user.addTagsItem("first_tag")
+        User withBrand = user.addAgentBrandIdsItem(10L)
 
         then:
-        verifyAll(user) {
-            tags != null
-            tags.size() == 2
-            tags.contains("first_tag")
-            tags.contains("second_tag")
+        verifyAll(withTag) {
+            tags() != null
+            tags().size() == 1
+            tags().first() == "first_tag"
+        }
+        verifyAll(withBrand) {
+            agentBrandIds() != null
+            agentBrandIds().size() == 1
+            agentBrandIds().first() == 10L
+        }
+
+        when: "adding to populated lists"
+        User withSecondTag = withTag.addTagsItem("second_tag")
+        User withSecondBrand = withBrand.addAgentBrandIdsItem(20L)
+
+        then:
+        verifyAll(withSecondTag) {
+            tags().size() == 2
+            tags() == ["first_tag", "second_tag"]
+        }
+        verifyAll(withSecondBrand) {
+            agentBrandIds().size() == 2
+            agentBrandIds() == [10L, 20L]
         }
     }
 
-    def "can serialize and deserialize user with JsonMapper"() {
+    def "should round-trip serialize and deserialize User"() {
         given:
-        def user = new User()
-                .setId(101L)
-                .setName("Jane Doe")
-                .setEmail("jane@example.com")
-                .setRole("admin")
-                .setActive(true)
-                .setTags(["vip", "beta"])
-                .setUserFields(["department": "Support"])
+        User user = new User()
+                .withId(101L)
+                .withName("Jane Doe")
+                .withEmail("jane@example.com")
+                .withRole("admin")
+                .withActive(true)
+                .withTags(["vip", "beta"])
+                .withUserFields(["department": "Support"])
 
         when:
-        def json = jsonMapper.writeValueAsString(user)
-        def deserialized = jsonMapper.readValue(json, User)
+        String json = objectMapper.writeValueAsString(user)
+        Map map = objectMapper.readValue(json, Map.class)
+        User deserialized = objectMapper.readValue(json, User.class)
 
         then:
+        verifyAll(map) {
+            get("id") == 101
+            get("name") == "Jane Doe"
+            get("email") == "jane@example.com"
+            get("role") == "admin"
+            get("active") == true
+            get("tags") == ["vip", "beta"]
+        }
         verifyAll(deserialized) {
-            id == 101L
-            name == "Jane Doe"
-            email == "jane@example.com"
-            role == "admin"
-            active == true
-            tags == ["vip", "beta"]
-            userFields == ["department": "Support"]
+            it == user
+            id() == 101L
+            name() == "Jane Doe"
+            email() == "jane@example.com"
+            role() == "admin"
+            active() == true
+            tags() == ["vip", "beta"]
+            userFields() == ["department": "Support"]
         }
     }
 
     def "can deserialize user from raw JSON with snake case fields"() {
         given:
-        def json = '''
+        String json = '''
         {
             "id": 202,
             "name": "John Doe",
@@ -200,60 +327,60 @@ class UserSpec extends Specification {
         '''
 
         when:
-        def deserialized = jsonMapper.readValue(json, User)
+        User deserialized = objectMapper.readValue(json, User.class)
 
         then:
         verifyAll(deserialized) {
-            id == 202L
-            name == "John Doe"
-            email == "john@example.com"
-            role == "agent"
-            customRoleId == 999L
-            agentBrandIds == [1L, 2L]
-            ianaTimeZone == "America/New_York"
-            twoFactorAuthEnabled == true
+            id() == 202L
+            name() == "John Doe"
+            email() == "john@example.com"
+            role() == "agent"
+            customRoleId() == 999L
+            agentBrandIds() == [1L, 2L]
+            ianaTimeZone() == "America/New_York"
+            twoFactorAuthEnabled() == true
         }
     }
 
     def "can serialize and deserialize UserResponse"() {
         given:
-        def expectedUser = new User().setId(301L).setName("Test User")
-        def response = new UserResponse(expectedUser)
+        User expectedUser = new User().withId(301L).withName("Test User")
+        UserResponse response = new UserResponse(expectedUser)
 
         when:
-        def json = jsonMapper.writeValueAsString(response)
-        def deserialized = jsonMapper.readValue(json, UserResponse)
+        String json = objectMapper.writeValueAsString(response)
+        UserResponse deserialized = objectMapper.readValue(json, UserResponse.class)
 
         then:
         verifyAll(deserialized) {
             user() != null
-            user().id == 301L
-            user().name == "Test User"
+            user().id() == 301L
+            user().name() == "Test User"
         }
     }
 
     def "can serialize and deserialize UserRequest"() {
         given:
-        def expectedUser = new User().setName("New User").setEmail("new@example.com")
-        def request = new UserRequest(expectedUser)
+        User expectedUser = new User().withName("New User").withEmail("new@example.com")
+        UserRequest request = new UserRequest(expectedUser)
 
         when:
-        def json = jsonMapper.writeValueAsString(request)
-        def deserialized = jsonMapper.readValue(json, UserRequest)
+        String json = objectMapper.writeValueAsString(request)
+        UserRequest deserialized = objectMapper.readValue(json, UserRequest.class)
 
         then:
         verifyAll(deserialized) {
             user() != null
-            user().name == "New User"
-            user().email == "new@example.com"
+            user().name() == "New User"
+            user().email() == "new@example.com"
         }
     }
 
     def "can create UsersRequest and add users"() {
         given:
-        def user1 = new User().setId(1L).setName("User One")
-        def user2 = new User().setId(2L).setName("User Two")
-        def request = new UsersRequest(null)
+        User user1 = new User().withId(1L).withName("User One")
+        User user2 = new User().withId(2L).withName("User Two")
+        UsersRequest request = new UsersRequest(null)
 
         when:
         request = request.addUsersItem(user1).addUsersItem(user2)
@@ -262,60 +389,60 @@ class UserSpec extends Specification {
         verifyAll(request) {
             users() != null
             users().size() == 2
-            users()[0].name == "User One"
-            users()[1].name == "User Two"
+            users()[0].name() == "User One"
+            users()[1].name() == "User Two"
         }
 
         when:
-        def json = jsonMapper.writeValueAsString(request)
-        def deserialized = jsonMapper.readValue(json, UsersRequest)
+        String json = objectMapper.writeValueAsString(request)
+        UsersRequest deserialized = objectMapper.readValue(json, UsersRequest.class)
 
         then:
         verifyAll(deserialized) {
             users() != null
             users().size() == 2
-            users()[0].id == 1L
-            users()[1].id == 2L
+            users()[0].id() == 1L
+            users()[1].id() == 2L
         }
     }
 
     def "can serialize and deserialize UserCountResponse and UserCountResponseCount"() {
         given:
-        def expectedCount = UserCountResponseCountBuilder.builder().value(42L).build()
-        def response = new UserCountResponse(expectedCount)
+        UserCountResponseCount expectedCount = UserCountResponseCountBuilder.builder().value(42L).build()
+        UserCountResponse response = new UserCountResponse(expectedCount)
 
         when:
-        def json = jsonMapper.writeValueAsString(response)
-        def deserialized = jsonMapper.readValue(json, UserCountResponse)
+        String json = objectMapper.writeValueAsString(response)
+        UserCountResponse deserialized = objectMapper.readValue(json, UserCountResponse.class)
 
         then:
         verifyAll(deserialized) {
             count() != null
-            count().value == 42L
+            count().value() == 42L
         }
     }
 
     def "can serialize and deserialize DeletedUserResponse"() {
         given:
-        def user = new User().setId(501L).setName("Deleted User")
-        def response = new DeletedUserResponse(user)
+        User user = new User().withId(501L).withName("Deleted User")
+        DeletedUserResponse response = new DeletedUserResponse(user)
 
         when:
-        def json = jsonMapper.writeValueAsString(response)
-        def deserialized = jsonMapper.readValue(json, DeletedUserResponse)
+        String json = objectMapper.writeValueAsString(response)
+        DeletedUserResponse deserialized = objectMapper.readValue(json, DeletedUserResponse.class)
 
         then:
         verifyAll(deserialized) {
             deletedUser() != null
-            deletedUser().id == 501L
-            deletedUser().name == "Deleted User"
+            deletedUser().id() == 501L
+            deletedUser().name() == "Deleted User"
         }
     }
 
     def "can create DeletedUsersResponse and add deleted users"() {
         given:
-        def user1 = new User().setId(601L).setName("Deleted One")
-        def response = new DeletedUsersResponse(
+        User user1 = new User().withId(601L).withName("Deleted One")
+        DeletedUsersResponse response = new DeletedUsersResponse(
                 null,
                 1L,
                 "https://example.zendesk.com/api/v2/deleted_users?page=2",
@@ -335,38 +462,85 @@ class UserSpec extends Specification {
         }
 
         when:
-        def json = jsonMapper.writeValueAsString(response)
-        def deserialized = jsonMapper.readValue(json, DeletedUsersResponse)
+        String json = objectMapper.writeValueAsString(response)
+        DeletedUsersResponse deserialized = objectMapper.readValue(json, DeletedUsersResponse.class)
 
         then:
         verifyAll(deserialized) {
             deletedUsers() != null
             deletedUsers().size() == 1
-            deletedUsers()[0].id == 601L
+            deletedUsers()[0].id() == 601L
             count() == 1L
         }
     }
 
     def "can serialize and deserialize UserRelated and UserRelatedResponse"() {
         given:
-        def related = new UserRelated()
-                .setAssignedTickets(5)
-                .setCcdTickets(2)
-                .setOrganizationSubscriptions(1)
-                .setRequestedTickets(10)
-        def response = new UserRelatedResponse(related)
+        UserRelated related = new UserRelated()
+                .withAssignedTickets(5)
+                .withCcdTickets(2)
+                .withOrganizationSubscriptions(1)
+                .withRequestedTickets(10)
+        UserRelatedResponse response = new UserRelatedResponse(related)
 
         when:
-        def json = jsonMapper.writeValueAsString(response)
-        def deserialized = jsonMapper.readValue(json, UserRelatedResponse)
+        String json = objectMapper.writeValueAsString(response)
+        UserRelatedResponse deserialized = objectMapper.readValue(json, UserRelatedResponse.class)
 
         then:
         verifyAll(deserialized) {
             userRelated() != null
-            userRelated().assignedTickets == 5
-            userRelated().ccdTickets == 2
-            userRelated().organizationSubscriptions == 1
-            userRelated().requestedTickets == 10
+            userRelated().assignedTickets() == 5
+            userRelated().ccdTickets() == 2
+            userRelated().organizationSubscriptions() == 1
+            userRelated().requestedTickets() == 10
+        }
+    }
+
+    def "should verify User constants"() {
+        expect:
+        verifyAll {
+            User.JSON_PROPERTY_ID == "id"
+            User.JSON_PROPERTY_AGENT_BRAND_IDS == "agent_brand_ids"
+            User.JSON_PROPERTY_EMAIL == "email"
+            User.JSON_PROPERTY_NAME == "name"
+            User.JSON_PROPERTY_ROLE == "role"
+            User.JSON_PROPERTY_ACTIVE == "active"
+            User.JSON_PROPERTY_ALIAS == "alias"
+            User.JSON_PROPERTY_CHAT_ONLY == "chat_only"
+            User.JSON_PROPERTY_CUSTOM_ROLE_ID == "custom_role_id"
+            User.JSON_PROPERTY_DEFAULT_GROUP_ID == "default_group_id"
+            User.JSON_PROPERTY_DETAILS == "details"
+            User.JSON_PROPERTY_EXTERNAL_ID == "external_id"
+            User.JSON_PROPERTY_IANA_TIME_ZONE == "iana_time_zone"
+            User.JSON_PROPERTY_LAST_LOGIN_AT == "last_login_at"
+            User.JSON_PROPERTY_LOCALE == "locale"
+            User.JSON_PROPERTY_LOCALE_ID == "locale_id"
+            User.JSON_PROPERTY_MODERATOR == "moderator"
+            User.JSON_PROPERTY_NOTES == "notes"
+            User.JSON_PROPERTY_ONLY_PRIVATE_COMMENTS == "only_private_comments"
+            User.JSON_PROPERTY_ORGANIZATION_ID == "organization_id"
+            User.JSON_PROPERTY_PHONE == "phone"
+            User.JSON_PROPERTY_PHOTO == "photo"
+            User.JSON_PROPERTY_REMOTE_PHOTO_URL == "remote_photo_url"
+            User.JSON_PROPERTY_REPORT_CSV == "report_csv"
+            User.JSON_PROPERTY_RESTRICTED_AGENT == "restricted_agent"
+            User.JSON_PROPERTY_ROLE_TYPE == "role_type"
+            User.JSON_PROPERTY_SHARED == "shared"
+            User.JSON_PROPERTY_SHARED_AGENT == "shared_agent"
+            User.JSON_PROPERTY_SHARED_PHONE_NUMBER == "shared_phone_number"
+            User.JSON_PROPERTY_SIGNATURE == "signature"
+            User.JSON_PROPERTY_SUSPENDED == "suspended"
+            User.JSON_PROPERTY_TAGS == "tags"
+            User.JSON_PROPERTY_TICKET_RESTRICTION == "ticket_restriction"
+            User.JSON_PROPERTY_TIME_ZONE == "time_zone"
+            User.JSON_PROPERTY_TWO_FACTOR_AUTH_ENABLED == "two_factor_auth_enabled"
+            User.JSON_PROPERTY_URL == "url"
+            User.JSON_PROPERTY_USER_FIELDS == "user_fields"
+            User.JSON_PROPERTY_VERIFIED == "verified"
+            User.JSON_PROPERTY_AUTHENTICITY_TOKEN == "authenticity_token"
+            User.JSON_PROPERTY_CREATED_AT == "created_at"
+            User.JSON_PROPERTY_UPDATED_AT == "updated_at"
         }
     }
 }

@@ -53,7 +53,7 @@ class UserClientSpec extends Z4jSpec {
         def meResponse = adminUserClient.showCurrentUser().block()
         if (meResponse != null && meResponse.user() != null) {
             adminUser = meResponse.user()
-            adminUserId = adminUser.getId()
+            adminUserId = adminUser.id()
         }
     }
 
@@ -159,7 +159,7 @@ class UserClientSpec extends Z4jSpec {
 
     def "can autocomplete users by name"() {
         given:
-        def prefix = adminUser?.getName() ? adminUser.getName().take(3) : "adm"
+        def prefix = adminUser?.name() ? adminUser.name().take(3) : "adm"
 
         when:
         def response = adminUserClient.autocompleteUsers(prefix).block()
@@ -194,13 +194,13 @@ class UserClientSpec extends Z4jSpec {
         def uniqueEmail = faker.internet().emailAddress()
         def initialName = faker.name().fullName()
         def userToCreate = new User()
-                .setName(initialName)
-                .setEmail(uniqueEmail)
-                .setRole("end-user")
+                .withName(initialName)
+                .withEmail(uniqueEmail)
+                .withRole("end-user")
 
         when: "creating user"
         def createdResponse = adminUserClient.createUser(new UserRequest(userToCreate)).block()
-        createdUserId = createdResponse?.user()?.getId()
+        createdUserId = createdResponse?.user()?.id()
 
         then:
         noExceptionThrown()
@@ -213,7 +213,7 @@ class UserClientSpec extends Z4jSpec {
 
         when: "updating user"
         def updatedName = faker.name().fullName()
-        def userToUpdate = new User().setName(updatedName)
+        def userToUpdate = new User().withName(updatedName)
         def updatedResponse = adminUserClient.updateUser(createdUserId, new UserRequest(userToUpdate)).block()
 
         then:
@@ -276,9 +276,9 @@ class UserClientSpec extends Z4jSpec {
 
         when: "creating user via create or update"
         def createResponse = adminUserClient.createOrUpdateUser(
-                new UserRequest(new User().setName(firstName).setEmail(email).setRole("end-user"))
+                new UserRequest(new User().withName(firstName).withEmail(email).withRole("end-user"))
         ).block()
-        userId = createResponse?.user()?.getId()
+        userId = createResponse?.user()?.id()
 
         then:
         noExceptionThrown()
@@ -291,7 +291,7 @@ class UserClientSpec extends Z4jSpec {
 
         when: "updating existing user via create or update"
         def updateResponse = adminUserClient.createOrUpdateUser(
-                new UserRequest(new User().setName(secondName).setEmail(email))
+                new UserRequest(new User().withName(secondName).withEmail(email))
         ).block()
 
         then:
@@ -322,18 +322,18 @@ class UserClientSpec extends Z4jSpec {
         def email1 = faker.internet().emailAddress()
         def email2 = faker.internet().emailAddress()
         def user1Response = adminUserClient.createUser(
-                new UserRequest(new User().setName(faker.name().fullName()).setEmail(email1).setRole("end-user"))
+                new UserRequest(new User().withName(faker.name().fullName()).withEmail(email1).withRole("end-user"))
         ).block()
         def user2Response = adminUserClient.createUser(
-                new UserRequest(new User().setName(faker.name().fullName()).setEmail(email2).setRole("end-user"))
+                new UserRequest(new User().withName(faker.name().fullName()).withEmail(email2).withRole("end-user"))
         ).block()
-        user1Id = user1Response?.user()?.getId()
-        user2Id = user2Response?.user()?.getId()
+        user1Id = user1Response?.user()?.id()
+        user2Id = user2Response?.user()?.id()
 
         when: "updating many users with uniform attributes"
         def uniformResponse = adminUserClient.updateManyUsers(
                 [user1Id, user2Id],
-                new UserRequest(new User().setNotes("Bulk updated notes"))
+                new UserRequest(new User().withNotes("Bulk updated notes"))
         ).block()
 
         then:
@@ -346,8 +346,8 @@ class UserClientSpec extends Z4jSpec {
 
         when: "updating many users with distinct attributes"
         def distinctResponse = adminUserClient.updateManyUsers([
-                new User().setId(user1Id).setDetails("First user detail"),
-                new User().setId(user2Id).setDetails("Second user detail")
+                new User().withId(user1Id).withDetails("First user detail"),
+                new User().withId(user2Id).withDetails("Second user detail")
         ]).block()
 
         then:
@@ -416,8 +416,8 @@ class UserClientSpec extends Z4jSpec {
         given:
         def testEmail1 = "test-bulk-" + UUID.randomUUID().toString().substring(0, 8) + "@example.com"
         def testEmail2 = "test-bulk-" + UUID.randomUUID().toString().substring(0, 8) + "@example.com"
-        def user1 = new User().setName("Bulk User One").setEmail(testEmail1)
-        def user2 = new User().setName("Bulk User Two").setEmail(testEmail2)
+        def user1 = new User().withName("Bulk User One").withEmail(testEmail1)
+        def user2 = new User().withName("Bulk User Two").withEmail(testEmail2)
         List<Long> createdUserIds = []
 
         when:

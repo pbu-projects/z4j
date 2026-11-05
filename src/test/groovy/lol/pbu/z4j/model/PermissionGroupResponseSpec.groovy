@@ -30,7 +30,7 @@ class PermissionGroupResponseSpec extends Z4jSpec {
 
     def "should create PermissionGroupResponse with canonical constructor and builder"() {
         given:
-        PermissionGroup expected = new PermissionGroup("Managers").setId(404L)
+        PermissionGroup expected = new PermissionGroup("Managers").withId(404L)
 
         when:
         PermissionGroupResponse direct = new PermissionGroupResponse(expected)
@@ -51,8 +51,8 @@ class PermissionGroupResponseSpec extends Z4jSpec {
 
     def "should update permission group using record wither"() {
         given:
-        PermissionGroup originalGroup = new PermissionGroup("Tier 1").setId(1L)
-        PermissionGroup newGroup = new PermissionGroup("Tier 2").setId(2L)
+        PermissionGroup originalGroup = new PermissionGroup("Tier 1").withId(1L)
+        PermissionGroup newGroup = new PermissionGroup("Tier 2").withId(2L)
         PermissionGroupResponse response = new PermissionGroupResponse(originalGroup)
 
         when:
@@ -71,7 +71,7 @@ class PermissionGroupResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize PermissionGroupResponse"() {
         given:
-        PermissionGroup expected = new PermissionGroup("Admins").setId(999L)
+        PermissionGroup expected = new PermissionGroup("Admins").withId(999L)
         PermissionGroupResponse response = new PermissionGroupResponse(expected)
 
         when:
@@ -97,7 +97,7 @@ class PermissionGroupResponseSpec extends Z4jSpec {
     def "should handle null permission group component in constructor and wither"() {
         when:
         PermissionGroupResponse response = new PermissionGroupResponse(null)
-        PermissionGroup replacement = new PermissionGroup("Staff").setId(66L)
+        PermissionGroup replacement = new PermissionGroup("Staff").withId(66L)
         PermissionGroupResponse updated = response.withPermissionGroup(replacement)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

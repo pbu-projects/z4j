@@ -30,7 +30,7 @@ class PermissionGroupsResponseSpec extends Z4jSpec {
 
     def "should create PermissionGroupsResponse with canonical constructor and builder"() {
         given:
-        PermissionGroup item = new PermissionGroup("Managers").setId(101L)
+        PermissionGroup item = new PermissionGroup("Managers").withId(101L)
         List<PermissionGroup> list = [item]
 
         when:
@@ -56,8 +56,8 @@ class PermissionGroupsResponseSpec extends Z4jSpec {
 
     def "should update permissionGroups using record wither and addPermissionGroupsItem method"() {
         given:
-        PermissionGroup first = new PermissionGroup("Tier 1").setId(1L)
-        PermissionGroup second = new PermissionGroup("Tier 2").setId(2L)
+        PermissionGroup first = new PermissionGroup("Tier 1").withId(1L)
+        PermissionGroup second = new PermissionGroup("Tier 2").withId(2L)
         PermissionGroupsResponse response = new PermissionGroupsResponse([first])
 
         when:
@@ -87,7 +87,7 @@ class PermissionGroupsResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize PermissionGroupsResponse"() {
         given:
-        PermissionGroup item = new PermissionGroup("Admins").setId(555L)
+        PermissionGroup item = new PermissionGroup("Admins").withId(555L)
         PermissionGroupsResponse response = new PermissionGroupsResponse([item])
 
         when:
@@ -113,7 +113,7 @@ class PermissionGroupsResponseSpec extends Z4jSpec {
     def "should handle null permissionGroups component in constructor, wither, and serde"() {
         when:
         PermissionGroupsResponse response = new PermissionGroupsResponse(null)
-        PermissionGroup item = new PermissionGroup("Staff").setId(99L)
+        PermissionGroup item = new PermissionGroup("Staff").withId(99L)
         PermissionGroupsResponse updated = response.withPermissionGroups([item])
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

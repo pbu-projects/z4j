@@ -31,7 +31,7 @@ class TicketUpdateResponseSpec extends Z4jSpec {
     def "should create TicketUpdateResponse with canonical constructor and builder"() {
         given:
         Audit expectedAudit = new Audit().withId(201L).withTicketId(101L)
-        Ticket expectedTicket = new Ticket().setId(101L).setSubject("Updated Issue")
+        Ticket expectedTicket = new Ticket().withId(101L).withSubject("Updated Issue")
 
         when:
         TicketUpdateResponse direct = new TicketUpdateResponse(expectedAudit, expectedTicket)
@@ -62,11 +62,11 @@ class TicketUpdateResponseSpec extends Z4jSpec {
     def "should update audit and ticket using record withers"() {
         given:
         Audit originalAudit = new Audit().withId(1L)
-        Ticket originalTicket = new Ticket().setId(10L).setSubject("Initial")
+        Ticket originalTicket = new Ticket().withId(10L).withSubject("Initial")
         TicketUpdateResponse response = new TicketUpdateResponse(originalAudit, originalTicket)
 
         Audit updatedAudit = new Audit().withId(2L)
-        Ticket updatedTicket = new Ticket().setId(20L).setSubject("Modified")
+        Ticket updatedTicket = new Ticket().withId(20L).withSubject("Modified")
 
         when:
         TicketUpdateResponse withNewAudit = response.withAudit(updatedAudit)
@@ -90,7 +90,7 @@ class TicketUpdateResponseSpec extends Z4jSpec {
     def "should round-trip serialize and deserialize TicketUpdateResponse"() {
         given:
         Audit expectedAudit = new Audit().withId(777L).withTicketId(333L)
-        Ticket expectedTicket = new Ticket().setId(333L).setSubject("Server Restored")
+        Ticket expectedTicket = new Ticket().withId(333L).withSubject("Server Restored")
         TicketUpdateResponse response = new TicketUpdateResponse(expectedAudit, expectedTicket)
 
         when:
@@ -122,7 +122,7 @@ class TicketUpdateResponseSpec extends Z4jSpec {
         when:
         TicketUpdateResponse response = new TicketUpdateResponse(null, null)
         Audit replacementAudit = new Audit().withId(50L)
-        Ticket replacementTicket = new Ticket().setId(60L)
+        Ticket replacementTicket = new Ticket().withId(60L)
         TicketUpdateResponse updated = response.withAudit(replacementAudit).withTicket(replacementTicket)
         String json = objectMapper.writeValueAsString(response)
         Map map = objectMapper.readValue(json, Map.class)

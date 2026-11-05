@@ -26,7 +26,7 @@ class IncrementalTicketCursorResponseSpec extends Specification {
 
     def "should create IncrementalTicketCursorResponse with canonical constructor, convenience constructor, and builder"() {
         given:
-        Ticket ticket = new Ticket().setId(123L).setSubject("Sample Ticket")
+        Ticket ticket = new Ticket().withId(123L).withSubject("Sample Ticket")
         List<Ticket> expectedTickets = [ticket]
 
         when:
@@ -76,8 +76,8 @@ class IncrementalTicketCursorResponseSpec extends Specification {
 
     def "should update IncrementalTicketCursorResponse using record withers"() {
         given:
-        Ticket first = new Ticket().setId(1L)
-        Ticket second = new Ticket().setId(2L)
+        Ticket first = new Ticket().withId(1L)
+        Ticket second = new Ticket().withId(2L)
         IncrementalTicketCursorResponse response = new IncrementalTicketCursorResponse(
                 [first], "c1", "a1", "b1", false, 1
         )
@@ -114,7 +114,7 @@ class IncrementalTicketCursorResponseSpec extends Specification {
 
     def "should round-trip serialize and deserialize IncrementalTicketCursorResponse"() {
         given:
-        Ticket ticket = new Ticket().setId(123L).setSubject("Exported Ticket")
+        Ticket ticket = new Ticket().withId(123L).withSubject("Exported Ticket")
         IncrementalTicketCursorResponse response = new IncrementalTicketCursorResponse(
                 [ticket], "cur_123", "after_123", "before_123", true, 1
         )

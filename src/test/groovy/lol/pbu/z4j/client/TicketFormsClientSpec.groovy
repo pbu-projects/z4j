@@ -40,7 +40,7 @@ class TicketFormsClientSpec extends Z4jSpec {
         def fixtures = new Yaml().load(new File("src/test/resources/fixtures/ticket_form_fixtures.yaml").text) as Map
         def formData = fixtures.ticketForms[0] as Map
         def form = new TicketForm(formData.name as String + " " + UUID.randomUUID().toString().substring(0, 8))
-        form.setEndUserVisible(true)
+                .withEndUserVisible(true)
         def request = new TicketFormCreateRequest(form)
 
         def response = adminTicketFormsClient.createTicketForm(request).block()

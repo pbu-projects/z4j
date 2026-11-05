@@ -31,7 +31,7 @@ class TicketFieldsResponseSpec extends Z4jSpec {
 
     def "should create TicketFieldsResponse with canonical constructor and builder"() {
         given:
-        TicketField field = new TicketField().setId(301L).setTitle("Priority Field")
+        TicketField field = new TicketField().withId(301L).withTitle("Priority Field")
         List<TicketField> list = [field]
         Meta expectedMeta = MetaBuilder.builder().hasMore(true).afterCursor("cursor_1").build()
         Links expectedLinks = LinksBuilder.builder().next(URI.create("https://example.zendesk.com/api/v2/ticket_fields.json?page[after]=cursor_1").toURL()).build()
@@ -63,8 +63,8 @@ class TicketFieldsResponseSpec extends Z4jSpec {
 
     def "should update TicketFieldsResponse using record withers and addTicketFieldsItem method"() {
         given:
-        TicketField first = new TicketField().setId(1L).setTitle("First Field")
-        TicketField second = new TicketField().setId(2L).setTitle("Second Field")
+        TicketField first = new TicketField().withId(1L).withTitle("First Field")
+        TicketField second = new TicketField().withId(2L).withTitle("Second Field")
         Meta meta1 = MetaBuilder.builder().hasMore(false).build()
         Meta meta2 = MetaBuilder.builder().hasMore(true).afterCursor("after_2").build()
         Links links1 = LinksBuilder.builder().prev(URI.create("https://example.zendesk.com/prev").toURL()).build()
@@ -108,7 +108,7 @@ class TicketFieldsResponseSpec extends Z4jSpec {
 
     def "should round-trip serialize and deserialize TicketFieldsResponse"() {
         given:
-        TicketField field = new TicketField().setId(444L).setTitle("Custom Text")
+        TicketField field = new TicketField().withId(444L).withTitle("Custom Text")
         Meta expectedMeta = MetaBuilder.builder().hasMore(false).afterCursor("cursor_444").build()
         Links expectedLinks = LinksBuilder.builder().next(URI.create("https://example.zendesk.com/api/v2/ticket_fields.json?page[after]=cursor_444").toURL()).build()
         TicketFieldsResponse response = new TicketFieldsResponse([field], expectedMeta, expectedLinks)

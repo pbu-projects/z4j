@@ -37,7 +37,7 @@ class JobStatusClientSpec extends Z4jSpec {
         // Trigger a batch update to get a real JobStatus ID
         def tickets = ticketClient.listTickets(null).block().tickets()
         if (tickets != null && !tickets.isEmpty()) {
-            Long ticketId = tickets.first().getId()
+            Long ticketId = tickets.first().id()
             TicketUpdateInput updateInput = new TicketUpdateInput()
                     .withComment(new TicketComment("Job status setup test", false))
             TicketUpdateRequest updateRequest = new TicketUpdateRequest(updateInput)

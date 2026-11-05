@@ -62,7 +62,7 @@ class TicketClientSpec extends Z4jSpec {
         try {
             DeletedTicketsResponse stale = ticketsAdminClient.listDeletedTickets().block()
             if (stale?.deletedTickets()) {
-                List<Long> staleIds = stale.deletedTickets().collect { it.getId() }.findAll { it != null }
+                List<Long> staleIds = stale.deletedTickets().collect { it.id() }.findAll { it != null }
                 if (!staleIds.isEmpty()) {
                     ticketsAdminClient.deleteMultipleTicketsPermanently(staleIds).block()
                 }
@@ -95,7 +95,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "calling showTicket() succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         when:
-        client.showTicket(tickets.get(0).getId()).block()
+        client.showTicket(tickets.get(0).id()).block()
 
         then:
         noExceptionThrown()
@@ -106,7 +106,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "calling showTicket() fails when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         when:
-        client.showTicket(tickets.get(0).getId()).block()
+        client.showTicket(tickets.get(0).id()).block()
 
         then:
         thrown(HttpClientException)
@@ -117,14 +117,14 @@ class TicketClientSpec extends Z4jSpec {
 
     def "calling listAuditsForTicket() succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         when:
-        TicketAuditsResponse response = client.listAuditsForTicket(tickets.get(0).getId()).block()
+        TicketAuditsResponse response = client.listAuditsForTicket(tickets.get(0).id()).block()
 
         then:
         noExceptionThrown()
         response != null
         response.audits() != null
         !response.audits().isEmpty()
-        response.audits().first().ticketId == tickets.get(0).getId()
+        response.audits().first().ticketId == tickets.get(0).id()
         response.audits().first().events != null
 
         where:
@@ -133,7 +133,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "calling listAuditsForTicket() fails when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
         when:
-        client.listAuditsForTicket(tickets.get(0).getId()).block()
+        client.listAuditsForTicket(tickets.get(0).id()).block()
 
         then:
         thrown(HttpClientException)
@@ -187,7 +187,7 @@ class TicketClientSpec extends Z4jSpec {
 
 
         when:
-        client.updateTicket(tickets.first.getId(), ticketUpdateRequest).block()
+        client.updateTicket(tickets.first.id(), ticketUpdateRequest).block()
 
         then:
         noExceptionThrown()
@@ -205,7 +205,7 @@ class TicketClientSpec extends Z4jSpec {
 
 
         when:
-        client.updateTicket(tickets.first.getId(), ticketUpdateRequest).block()
+        client.updateTicket(tickets.first.id(), ticketUpdateRequest).block()
 
 
         then:
@@ -297,8 +297,8 @@ class TicketClientSpec extends Z4jSpec {
         (1..needed).each {
             String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
             TicketField field = new TicketField()
-                    .setTitle("z4j-cursor-fixture-${entropy}")
-                    .setType(TicketFieldTypeEnum.TEXT.getValue())
+                    .withTitle("z4j-cursor-fixture-${entropy}")
+                    .withType(TicketFieldTypeEnum.TEXT.getValue())
             ticketsAdminClient.createTicketField(new TicketFieldCreateRequest(field)).block()
         }
 
@@ -318,7 +318,7 @@ class TicketClientSpec extends Z4jSpec {
         String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
         TicketField field = new TicketField("z4j-field-${entropy}", TicketFieldTypeEnum.TEXT.getValue())
         TicketFieldResponse created = ticketsAdminClient.createTicketField(new TicketFieldCreateRequest(field)).block()
-        Long fieldId = created.ticketField().getId()
+        Long fieldId = created.ticketField().id()
 
         when: "fetching the ticket field by id"
         TicketFieldResponse shown = ticketsAdminClient.showTicketField(fieldId).block()
@@ -328,7 +328,7 @@ class TicketClientSpec extends Z4jSpec {
         verifyAll(shown) {
             it != null
             ticketField() != null
-            ticketField().getId() == fieldId
+            ticketField().id() == fieldId
         }
 
         when: "deleting the ticket field"
@@ -344,7 +344,7 @@ class TicketClientSpec extends Z4jSpec {
         String customVal = "z4j-val-${entropy}"
         TicketField field = new TicketField("z4j-cf-${entropy}", TicketFieldTypeEnum.TEXT.getValue())
         TicketFieldResponse createdField = ticketsAdminClient.createTicketField(new TicketFieldCreateRequest(field)).block()
-        Long fieldId = createdField.ticketField().getId()
+        Long fieldId = createdField.ticketField().id()
 
         and: "a ticket created with this custom field populated"
         TicketComment comment = new TicketComment("Testing custom fields ${entropy}")
@@ -352,7 +352,7 @@ class TicketClientSpec extends Z4jSpec {
                 .withRawSubject("Ticket with custom field ${entropy}")
                 .addCustomFieldsItem(new TicketCustomField.Text(fieldId, customVal))
         TicketResponse createdTicket = ticketsAdminClient.createTicket(new TicketCreateRequest(ticketInput)).block()
-        Long ticketId = createdTicket.ticket().getId()
+        Long ticketId = createdTicket.ticket().id()
 
         when: "fetching the ticket via showTicket"
         TicketResponse fetched = ticketsAgentClient.showTicket(ticketId).block()
@@ -363,7 +363,7 @@ class TicketClientSpec extends Z4jSpec {
             it != null
             ticket() != null
         }
-        List<TicketCustomField> customFields = fetched.ticket().getCustomFields()
+        List<TicketCustomField> customFields = fetched.ticket().customFields()
         customFields != null
         !customFields.isEmpty()
 
@@ -395,7 +395,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "can update many tickets by ids as agent"() {
         given: "an existing ticket in the sandbox"
-        Long ticketId = tickets.first().getId()
+        Long ticketId = tickets.first().id()
         String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
         TicketUpdateInput updateInput = new TicketUpdateInput()
                 .withComment(new TicketComment("Bulk update test ${entropy}", false))
@@ -426,7 +426,7 @@ class TicketClientSpec extends Z4jSpec {
         response != null
         response.tickets() != null
         !response.tickets().isEmpty()
-        response.tickets()*.id.contains(tickets.first().getId())
+        response.tickets()*.id.contains(tickets.first().id())
 
         where:
         [client, clientType] << [[ticketsAgentClient, "Agent"], [ticketsAdminClient, "Admin"]]
@@ -444,7 +444,7 @@ class TicketClientSpec extends Z4jSpec {
         response != null
         response.tickets() != null
         !response.tickets().isEmpty()
-        response.tickets()*.id.contains(tickets.first().getId())
+        response.tickets()*.id.contains(tickets.first().id())
     }
 
     def "calling showMultipleTickets fails when used with a(n) #clientType client"(TicketClient client, String clientType) {
@@ -460,7 +460,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "can get ticket related information as agent"() {
         given: "an existing ticket ID"
-        Long ticketId = tickets.first().getId()
+        Long ticketId = tickets.first().id()
 
         when: "fetching ticket related information"
         TicketRelatedResponse response = ticketsAgentClient.getTicketRelatedInformation(ticketId).block()
@@ -477,7 +477,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "calling getTicketRelatedInformation fails when used with bad credentials"() {
         when: "calling with bad credentials"
-        ticketBadEmailClient.getTicketRelatedInformation(tickets.first().getId()).block()
+        ticketBadEmailClient.getTicketRelatedInformation(tickets.first().id()).block()
 
         then: "an HttpClientException is thrown"
         thrown(HttpClientException)
@@ -485,7 +485,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "can list collaborators for a ticket as agent"() {
         given: "an existing ticket ID"
-        Long ticketId = tickets.first().getId()
+        Long ticketId = tickets.first().id()
 
         when: "listing collaborators"
         UsersResponse response = ticketsAgentClient.listCollaboratorsForTicket(ticketId).block()
@@ -498,7 +498,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "calling listCollaboratorsForTicket fails when used with bad credentials"() {
         when: "calling with bad credentials"
-        ticketBadEmailClient.listCollaboratorsForTicket(tickets.first().getId()).block()
+        ticketBadEmailClient.listCollaboratorsForTicket(tickets.first().id()).block()
 
         then: "an HttpClientException is thrown"
         thrown(HttpClientException)
@@ -506,7 +506,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "can list followers for a ticket as agent"() {
         given: "an existing ticket ID"
-        Long ticketId = tickets.first().getId()
+        Long ticketId = tickets.first().id()
 
         when: "listing followers"
         UsersResponse response = ticketsAgentClient.listFollowersForTicket(ticketId).block()
@@ -519,7 +519,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "calling listFollowersForTicket fails when used with bad credentials"() {
         when: "calling with bad credentials"
-        ticketBadEmailClient.listFollowersForTicket(tickets.first().getId()).block()
+        ticketBadEmailClient.listFollowersForTicket(tickets.first().id()).block()
 
         then: "an HttpClientException is thrown"
         thrown(HttpClientException)
@@ -527,7 +527,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "can list email CCs for a ticket as agent"() {
         given: "an existing ticket ID"
-        Long ticketId = tickets.first().getId()
+        Long ticketId = tickets.first().id()
 
         when: "listing email CCs"
         UsersResponse response = ticketsAgentClient.listEmailCcsForTicket(ticketId).block()
@@ -540,7 +540,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "calling listEmailCcsForTicket fails when used with bad credentials"() {
         when: "calling with bad credentials"
-        ticketBadEmailClient.listEmailCcsForTicket(tickets.first().getId()).block()
+        ticketBadEmailClient.listEmailCcsForTicket(tickets.first().id()).block()
 
         then: "an HttpClientException is thrown"
         thrown(HttpClientException)
@@ -548,7 +548,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "can list ticket incidents as agent"() {
         given: "an existing ticket ID"
-        Long ticketId = tickets.first().getId()
+        Long ticketId = tickets.first().id()
 
         when: "listing ticket incidents"
         TicketsResponse response = ticketsAgentClient.listTicketIncidents(ticketId).block()
@@ -561,7 +561,7 @@ class TicketClientSpec extends Z4jSpec {
 
     def "calling listTicketIncidents fails when used with bad credentials"() {
         when: "calling with bad credentials"
-        ticketBadEmailClient.listTicketIncidents(tickets.first().getId()).block()
+        ticketBadEmailClient.listTicketIncidents(tickets.first().id()).block()
 
         then: "an HttpClientException is thrown"
         thrown(HttpClientException)
@@ -632,7 +632,7 @@ class TicketClientSpec extends Z4jSpec {
     def "can delete and restore a ticket as admin"() {
         given: "a newly created ticket in the sandbox"
         TicketResponse created = createTicketForTest()
-        Long ticketId = created.ticket().getId()
+        Long ticketId = created.ticket().id()
 
         when: "deleting the ticket"
         ticketsAdminClient.deleteTicket(ticketId).block()
@@ -657,7 +657,7 @@ class TicketClientSpec extends Z4jSpec {
         verifyAll(restored) {
             it != null
             ticket() != null
-            ticket().getId() == ticketId
+            ticket().id() == ticketId
         }
 
         cleanup: "defensively delete and permanently remove the test ticket"
@@ -674,8 +674,8 @@ class TicketClientSpec extends Z4jSpec {
         given: "two newly created tickets"
         TicketResponse t1 = createTicketForTest()
         TicketResponse t2 = createTicketForTest()
-        Long id1 = t1.ticket().getId()
-        Long id2 = t2.ticket().getId()
+        Long id1 = t1.ticket().id()
+        Long id2 = t2.ticket().id()
         List<Long> ids = [id1, id2]
 
         when: "bulk deleting tickets using List<Long>"
@@ -724,7 +724,7 @@ class TicketClientSpec extends Z4jSpec {
     def "can permanently delete a single soft-deleted ticket as admin"() {
         given: "a soft-deleted ticket"
         TicketResponse created = createTicketForTest()
-        Long ticketId = created.ticket().getId()
+        Long ticketId = created.ticket().id()
         ticketsAdminClient.deleteTicket(ticketId).block()
 
         when: "permanently deleting the ticket"
@@ -753,8 +753,8 @@ class TicketClientSpec extends Z4jSpec {
                 .withRequesterId(user2Id)
         TicketResponse t1 = ticketsAdminClient.createTicket(new TicketCreateRequest(input1)).block()
         TicketResponse t2 = ticketsAdminClient.createTicket(new TicketCreateRequest(input2)).block()
-        Long id1 = t1.ticket().getId()
-        Long id2 = t2.ticket().getId()
+        Long id1 = t1.ticket().id()
+        Long id2 = t2.ticket().id()
 
         when: "marking a single ticket as spam"
         ticketsAdminClient.markTicketAsSpam(id1).block()
@@ -786,8 +786,8 @@ class TicketClientSpec extends Z4jSpec {
         given: "target and source tickets created for merge"
         TicketResponse target = createTicketForTest()
         TicketResponse source = createTicketForTest()
-        Long targetId = target.ticket().getId()
-        Long sourceId = source.ticket().getId()
+        Long targetId = target.ticket().id()
+        Long sourceId = source.ticket().id()
         String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
         MergeTicketsRequest mergeRequest = new MergeTicketsRequest([sourceId])
                 .withTargetComment("Target merge comment ${entropy}")
@@ -828,8 +828,8 @@ class TicketClientSpec extends Z4jSpec {
 
         when: "creating the ticket with inline requester"
         TicketResponse response = ticketsAdminClient.createTicket(new TicketCreateRequest(input)).block()
-        createdTicketId = response?.ticket()?.getId()
-        createdRequesterId = response?.ticket()?.getRequesterId()
+        createdTicketId = response?.ticket()?.id()
+        createdRequesterId = response?.ticket()?.requesterId()
 
         then: "ticket is created successfully and requester details are populated"
         noExceptionThrown()
@@ -886,7 +886,7 @@ class TicketClientSpec extends Z4jSpec {
 
         when: "creating the ticket with email CCs"
         TicketResponse response = ticketsAdminClient.createTicket(new TicketCreateRequest(input)).block()
-        createdTicketId = response?.ticket()?.getId()
+        createdTicketId = response?.ticket()?.id()
 
         then: "ticket is created successfully"
         noExceptionThrown()
@@ -920,9 +920,9 @@ class TicketClientSpec extends Z4jSpec {
         String entropy = UUID.randomUUID().toString().replace("-", "").substring(0, 8)
         String email = "disposable-${entropy}@example.com"
         UserClient userClient = adminCtx.getBean(UserClient.class)
-        User user = new User().setName("Disposable ${entropy}").setEmail(email).setRole("end-user")
+        User user = new User().withName("Disposable ${entropy}").withEmail(email).withRole("end-user")
         UserResponse response = userClient.createUser(new UserRequest(user)).block()
-        return response?.user()?.getId()
+        return response?.user()?.id()
     }
 
     private void deleteUserSafely(Long userId) {
