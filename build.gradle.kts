@@ -43,6 +43,7 @@ version = project.properties["z4jVersion"]!!
 
 val dataFakerVersion = project.properties["dataFakerVersion"]!!
 val recordBuilderVersion = project.properties["recordBuilderVersion"]!!
+val cloudbeesClientVersion = project.properties["cloudbeesClientVersion"]!!
 
 repositories {
     mavenCentral()
@@ -62,7 +63,7 @@ dependencies {
     testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.22.4")
     testImplementation("ch.qos.logback:logback-classic")
     testImplementation("io.projectreactor:reactor-test")
-    testImplementation("com.cloudbees.thirdparty:zendesk-java-client:1.2.0")
+    testImplementation("com.cloudbees.thirdparty:zendesk-java-client:${cloudbeesClientVersion}")
 }
 
 java {

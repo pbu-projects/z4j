@@ -33,11 +33,15 @@ class BenchmarkPayloads {
         StringBuilder sb = new StringBuilder(count * 800)
         sb.append('{"tickets":[')
         (1..count).each { i ->
-            if (i > 1) sb.append(',')
+            if (i > 1) {
+                sb.append(',')
+            }
             long id = 1000 + i
             sb.append("""{"id":${id},"url":"https://example.zendesk.com/api/v2/tickets/${id}.json","subject":"Benchmark Ticket ${i}","description":"Benchmark comment ${i} for performance testing.","priority":"normal","status":"open","requester_id":123456,"submitter_id":123456,"organization_id":78910,"group_id":111213,"collaborator_ids":[],"has_incidents":false,"tags":["benchmark","performance","test"],"created_at":"2026-11-05T00:00:00Z","updated_at":"2026-11-05T00:00:00Z","via":{"channel":"api","source":{"from":{},"to":{},"rel":null}},"custom_fields":[""")
             (1..30).each { f ->
-                if (f > 1) sb.append(',')
+                if (f > 1) {
+                    sb.append(',')
+                }
                 sb.append("""{"id":${40971535000000L + f},"value":${f % 2 == 0 ? "\"field-val-${f}\"" : "null"}}""")
             }
             sb.append("""],"satisfaction_rating":{"score":"unoffered"}}""")
