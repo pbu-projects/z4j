@@ -83,12 +83,13 @@ class RedirectRuleClientSpec extends Z4jSpec {
 
         then: "rule matches created rule"
         noExceptionThrown()
-        assert shown?.redirectRule != null
-        verifyAll(shown.redirectRule) {
-            id == ruleId
-            redirectFrom == expectedFrom
-            redirectTo == expectedTo
-            redirectStatus == expectedStatus
+        verifyAll(shown) {
+            it != null
+            redirectRule() != null
+            redirectRule().id == ruleId
+            redirectRule().redirectFrom == expectedFrom
+            redirectRule().redirectTo == expectedTo
+            redirectRule().redirectStatus == expectedStatus
         }
 
         when: "deleting redirect rule"

@@ -36,7 +36,7 @@ class CustomObjectRecordsClientPaginationSpec extends Z4jSpec {
                 new CustomObjectRecord().setName((objData.recordName as String) + " " + UUID.randomUUID().toString().substring(0, 8))
             )
             def createResponse = adminObjectRecordsClient.createCustomObjectRecord(customObjectKey, createPayload).block()
-            createdRecordIds.add(createResponse.customObjectRecord.id)
+            createdRecordIds.add(createResponse?.customObjectRecord()?.id)
             sleep(1000)
         }
     }

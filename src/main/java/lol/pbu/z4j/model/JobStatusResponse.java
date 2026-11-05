@@ -15,70 +15,32 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.micronaut.core.annotation.Creator;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
+import jakarta.validation.Valid;
 
-/**
- * <h1>Zendesk Background Job Status Response.</h1>
- * <p>Wraps a {@link JobStatus} instance returned by asynchronous batch and bulk operations.</p>
- * <p>Inspect {@link #getJobStatus()} to determine execution state and extract child operation results.</p>
- *
- * @author Jonathan-Zollinger
- * @since 0.2.3
- */
-@Getter
-@Setter
-@Accessors(chain = true)
 @Serdeable
-@Generated
-public class JobStatusResponse {
+@RecordBuilder
+public record JobStatusResponse(
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_JOB_STATUS) JobStatus jobStatus,
+        @Nullable @JsonProperty(JSON_PROPERTY_MESSAGE) String message
+) implements JobStatusResponseBuilder.With {
 
-    @Nullable
-    @JsonProperty("job_status")
-    private JobStatus jobStatus;
+    public static final String JSON_PROPERTY_JOB_STATUS = "job_status";
+    public static final String JSON_PROPERTY_MESSAGE = "message";
 
-    @Nullable
-    @JsonProperty("message")
-    private String message;
-
-    public JobStatusResponse() {
-    }
-
-    @Creator
-    @JsonCreator
-    public JobStatusResponse(
-            @JsonProperty("job_status") @Nullable JobStatus jobStatus,
-            @JsonProperty("message") @Nullable String message
-    ) {
-        if (jobStatus != null) {
-            this.jobStatus = jobStatus;
-        } else {
-            this.jobStatus = new JobStatus().setStatus("completed");
-            if (message != null) {
-                this.jobStatus.setMessage(message);
-            }
-        }
-        this.message = message;
-    }
-
-    public JobStatusResponse(JobStatus jobStatus) {
-        this(jobStatus, null);
-    }
-
-    public JobStatus getJobStatus() {
+    public JobStatusResponse {
         if (jobStatus == null) {
             jobStatus = new JobStatus().setStatus("completed");
             if (message != null) {
                 jobStatus.setMessage(message);
             }
         }
-        return jobStatus;
+    }
+
+    public JobStatusResponse(JobStatus jobStatus) {
+        this(jobStatus, null);
     }
 }

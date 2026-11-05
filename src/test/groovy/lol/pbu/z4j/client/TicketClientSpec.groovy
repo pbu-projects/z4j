@@ -402,10 +402,12 @@ class TicketClientSpec extends Z4jSpec {
 
         then: "job status response is returned"
         noExceptionThrown()
-        response != null
-        response.getJobStatus() != null
-        response.getJobStatus().getId() != null
-        response.getJobStatus().getStatus() != null
+        verifyAll(response) {
+            it != null
+            jobStatus() != null
+            jobStatus().id != null
+            jobStatus().status != null
+        }
     }
 
     def "can show multiple tickets by comma-separated string IDs as #clientType"(TicketClient client, String clientType) {
@@ -589,13 +591,15 @@ class TicketClientSpec extends Z4jSpec {
 
         when: "calling createManyTickets"
         JobStatusResponse response = ticketsAgentClient.createManyTickets([input1, input2]).block()
-        jobId = response?.getJobStatus()?.getId()
+        jobId = response?.jobStatus()?.id
 
         then: "job status is returned"
         noExceptionThrown()
-        response != null
-        response.getJobStatus() != null
-        response.getJobStatus().getId() != null
+        verifyAll(response) {
+            it != null
+            jobStatus() != null
+            jobStatus().id != null
+        }
 
         cleanup: "wait for job completion and delete created tickets"
         try {
@@ -603,7 +607,7 @@ class TicketClientSpec extends Z4jSpec {
                 JobStatus status = null
                 for (int i = 0; i < 10; i++) {
                     sleep(1000)
-                    status = jobStatusClient.showJobStatus(jobId).block()?.getJobStatus()
+                    status = jobStatusClient.showJobStatus(jobId).block()?.jobStatus()
                     if (status?.getStatus() == "completed" || status?.getStatus() == "failed") {
                         break
                     }
@@ -671,30 +675,36 @@ class TicketClientSpec extends Z4jSpec {
 
         then: "bulk delete job status is returned"
         noExceptionThrown()
-        deleteJob != null
-        deleteJob.getJobStatus() != null
-        deleteJob.getJobStatus().getId() != null
+        verifyAll(deleteJob) {
+            it != null
+            jobStatus() != null
+            jobStatus().id != null
+        }
 
         when: "restoring deleted tickets in bulk using comma-separated string"
-        waitForJobCompletion(deleteJob.getJobStatus().getId())
+        waitForJobCompletion(deleteJob.jobStatus().id)
         JobStatusResponse restoreJob = ticketsAdminClient.restoreDeletedTicketsInBulk(ids.join(",")).block()
 
         then: "bulk restore succeeds without error"
         noExceptionThrown()
-        restoreJob != null
-        restoreJob.getJobStatus() != null
+        verifyAll(restoreJob) {
+            it != null
+            jobStatus() != null
+        }
 
         when: "soft deleting tickets again then permanently deleting them in bulk"
-        waitForJobCompletion(restoreJob.getJobStatus().getId())
+        waitForJobCompletion(restoreJob.jobStatus()?.id)
         JobStatusResponse secondDeleteJob = ticketsAdminClient.bulkDeleteTickets(ids).block()
-        waitForJobCompletion(secondDeleteJob.getJobStatus().getId())
+        waitForJobCompletion(secondDeleteJob.jobStatus()?.id)
         JobStatusResponse permDeleteJob = ticketsAdminClient.deleteMultipleTicketsPermanently(ids).block()
 
         then: "permanent delete job status is returned"
         noExceptionThrown()
-        permDeleteJob != null
-        permDeleteJob.getJobStatus() != null
-        permDeleteJob.getJobStatus().getId() != null
+        verifyAll(permDeleteJob) {
+            it != null
+            jobStatus() != null
+            jobStatus().id != null
+        }
 
         cleanup: "defensive permanent deletion if needed"
         try {
@@ -714,9 +724,11 @@ class TicketClientSpec extends Z4jSpec {
 
         then: "job status response is returned"
         noExceptionThrown()
-        response != null
-        response.getJobStatus() != null
-        response.getJobStatus().getId() != null
+        verifyAll(response) {
+            it != null
+            jobStatus() != null
+            jobStatus().id != null
+        }
     }
 
     def "can mark ticket as spam and bulk mark tickets as spam as admin"() {
@@ -747,9 +759,11 @@ class TicketClientSpec extends Z4jSpec {
 
         then: "bulk mark spam job status is returned"
         noExceptionThrown()
-        bulkSpamJob != null
-        bulkSpamJob.getJobStatus() != null
-        bulkSpamJob.getJobStatus().getId() != null
+        verifyAll(bulkSpamJob) {
+            it != null
+            jobStatus() != null
+            jobStatus().id != null
+        }
 
         cleanup: "permanently delete tickets and disposable users"
         try {
@@ -776,9 +790,11 @@ class TicketClientSpec extends Z4jSpec {
 
         then: "job status response is returned"
         noExceptionThrown()
-        job != null
-        job.getJobStatus() != null
-        job.getJobStatus().getId() != null
+        verifyAll(job) {
+            it != null
+            jobStatus() != null
+            jobStatus().id != null
+        }
 
         cleanup: "delete the merged tickets"
         try {
@@ -912,7 +928,7 @@ class TicketClientSpec extends Z4jSpec {
         if (jobId == null) return
         for (int i = 0; i < 20; i++) {
             sleep(1000)
-            JobStatus status = jobStatusClient.showJobStatus(jobId).block()?.getJobStatus()
+            JobStatus status = jobStatusClient.showJobStatus(jobId).block()?.jobStatus()
             if (status?.getStatus() == "completed" || status?.getStatus() == "failed") {
                 break
             }

@@ -15,38 +15,17 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
+import io.soabase.recordbuilder.core.RecordBuilder;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
 
-/**
- * CustomObjectRecordResponse
- *
- * @since 0.2.2
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder(CustomObjectRecordResponse.JSON_PROPERTY_CUSTOM_OBJECT_RECORD)
 @Serdeable
-@Generated
-public class CustomObjectRecordResponse {
+@RecordBuilder
+public record CustomObjectRecordResponse(
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_CUSTOM_OBJECT_RECORD) CustomObjectRecord customObjectRecord
+) implements CustomObjectRecordResponseBuilder.With {
 
     public static final String JSON_PROPERTY_CUSTOM_OBJECT_RECORD = "custom_object_record";
-
-    @Nullable
-    @Valid
-    @JsonProperty(JSON_PROPERTY_CUSTOM_OBJECT_RECORD)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private CustomObjectRecord customObjectRecord;
-
 }

@@ -70,7 +70,7 @@ class CustomObjectRecordsClientSpec extends Z4jSpec {
 
         when: "creating a new custom object record"
         def createResponse = adminObjectRecordsClient.createCustomObjectRecord(customObjectKey, createPayload).block()
-        createdRecordId = createResponse.customObjectRecord.id
+        createdRecordId = createResponse?.customObjectRecord()?.id
 
         then: "the record is created successfully"
         noExceptionThrown()
@@ -81,7 +81,7 @@ class CustomObjectRecordsClientSpec extends Z4jSpec {
 
         then: "record details are retrieved successfully"
         noExceptionThrown()
-        showResponse.customObjectRecord.id == createdRecordId
+        showResponse.customObjectRecord().id == createdRecordId
 
         when: "updating the record"
         def updatePayload = new CustomObjectRecordsCreateRequest(

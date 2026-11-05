@@ -96,11 +96,13 @@ class AttachmentClientSpec extends Z4jSpec {
 
         then: "attachment is added and token is preserved"
         noExceptionThrown()
-        response != null
-        response.upload != null
-        response.upload.token == uploadToken
-        response.upload.attachment != null
-        response.upload.attachment.fileName == filename
+        verifyAll(response) {
+            it != null
+            upload != null
+            upload.token == uploadToken
+            upload.attachment != null
+            upload.attachment.fileName == filename
+        }
     }
 
     def "can show attachment details by id"() {
@@ -109,9 +111,11 @@ class AttachmentClientSpec extends Z4jSpec {
 
         then: "attachment metadata is returned"
         noExceptionThrown()
-        response != null
-        response.attachment != null
-        response.attachment.id == uploadedAttachmentId
+        verifyAll(response) {
+            it != null
+            attachment() != null
+            attachment().id == uploadedAttachmentId
+        }
     }
 
     def "uploading attachment fails with bad url client"() {

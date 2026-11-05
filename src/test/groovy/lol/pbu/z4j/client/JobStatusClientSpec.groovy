@@ -42,7 +42,7 @@ class JobStatusClientSpec extends Z4jSpec {
                     .setComment(new TicketComment().setBody("Job status setup test").setIsPublic(false))
             TicketUpdateRequest updateRequest = new TicketUpdateRequest().setTicket(updateInput)
             JobStatusResponse response = ticketClient.updateManyTickets(ticketId.toString(), updateRequest).block()
-            jobId = response?.getJobStatus()?.getId()
+            jobId = response?.jobStatus()?.id
         }
     }
 
@@ -55,10 +55,12 @@ class JobStatusClientSpec extends Z4jSpec {
 
         then: "job status information is returned"
         noExceptionThrown()
-        response != null
-        response.getJobStatus() != null
-        response.getJobStatus().getId() == jobId
-        response.getJobStatus().getStatus() != null
+        verifyAll(response) {
+            it != null
+            jobStatus() != null
+            jobStatus().id == jobId
+            jobStatus().status != null
+        }
     }
 
     def "fetching job status fails with bad url client"() {

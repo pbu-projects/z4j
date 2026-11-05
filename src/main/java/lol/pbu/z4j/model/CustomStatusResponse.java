@@ -15,43 +15,17 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
+import jakarta.validation.Valid;
 
-/**
- * Response payload containing a single Zendesk custom ticket status.
- *
- * @author Jonathan-Zollinger
- * @since 0.2.6
- */
-@Accessors(chain = true)
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Serdeable
-@Generated
-public class CustomStatusResponse {
+@RecordBuilder
+public record CustomStatusResponse(
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS) TicketFieldCustomStatusObject customStatus
+) implements CustomStatusResponseBuilder.With {
 
     public static final String JSON_PROPERTY_CUSTOM_STATUS = "custom_status";
-
-    @Nullable
-    @JsonProperty(JSON_PROPERTY_CUSTOM_STATUS)
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private TicketFieldCustomStatusObject customStatus;
-
-    /**
-     * Record-style accessor for modern syntax compatibility.
-     *
-     * @return the custom status
-     */
-    public @Nullable TicketFieldCustomStatusObject customStatus() {
-        return customStatus;
-    }
 }

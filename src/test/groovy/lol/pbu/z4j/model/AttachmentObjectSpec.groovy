@@ -78,7 +78,9 @@ class AttachmentObjectSpec extends Z4jSpec {
         def response = new AttachmentResponse(att)
 
         then:
-        response.attachment != null
-        response.attachment.id == 303L
+        verifyAll(response) {
+            attachment() != null
+            attachment().id == 303L
+        }
     }
 }

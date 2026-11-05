@@ -15,33 +15,17 @@
  */
 package lol.pbu.z4j.model;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import lol.pbu.z4j.Generated;
+import io.soabase.recordbuilder.core.RecordBuilder;
+import jakarta.validation.Valid;
 
-/**
- * AttachmentResponse
- *
- * @since 0.2.3
- */
-@Accessors(chain = true)
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@JsonPropertyOrder("attachment")
 @Serdeable
-@Generated
-public class AttachmentResponse {
+@RecordBuilder
+public record AttachmentResponse(
+        @Nullable @Valid @JsonProperty(JSON_PROPERTY_ATTACHMENT) AttachmentObject attachment
+) implements AttachmentResponseBuilder.With {
 
-    @Nullable
-    @JsonProperty("attachment")
-    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
-    private AttachmentObject attachment;
+    public static final String JSON_PROPERTY_ATTACHMENT = "attachment";
 }

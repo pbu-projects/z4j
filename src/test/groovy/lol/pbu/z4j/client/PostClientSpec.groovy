@@ -55,7 +55,7 @@ class PostClientSpec extends Z4jSpec {
         // Create a shared post for read tests
         def postFixture = postFixtures.getPosts().first()
         def postReq = new PostCreateRequest().setPost(new Post(postFixture.getTitle()).setTopicId(sharedTopicId).setDetails(postFixture.getDetails()))
-        sharedPostId = adminPostClient.createPost(postReq).block().getPost().getId()
+        sharedPostId = adminPostClient.createPost(postReq).block().post().id
     }
 
     def cleanupSpec() {
@@ -110,7 +110,7 @@ class PostClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         and:
-        response.getPost().getId() == sharedPostId
+        response.post().id == sharedPostId
 
         where:
         [postClient, userType] << [
@@ -146,11 +146,13 @@ class PostClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         and:
-        response.getPost().getTitle() == title
+        response.post().title == title
 
         cleanup:
         try {
-            adminPostClient.deletePost(response.getPost().getId()).block()
+            if (response?.post()?.id != null) {
+                adminPostClient.deletePost(response.post().id).block()
+            }
         } catch (Exception ignored) {}
 
         where:
@@ -163,21 +165,23 @@ class PostClientSpec extends Z4jSpec {
     def "can update a post as an #userType user"(PostClient postClient, String userType, String title, String details, String updatedTitle) {
         given:
         def createReq = new PostCreateRequest().setPost(new Post(title).setTopicId(sharedTopicId).setDetails(details))
-        def created = adminPostClient.createPost(createReq).block().getPost()
+        def created = adminPostClient.createPost(createReq).block().post()
 
         when:
         def updateReq = new PostUpdateRequest().setPost(new Post(updatedTitle))
-        def response = postClient.updatePost(created.getId(), updateReq).block()
+        def response = postClient.updatePost(created.id, updateReq).block()
 
         then:
         noExceptionThrown()
 
         and:
-        response.getPost().getTitle() == updatedTitle
+        response.post().title == updatedTitle
 
         cleanup:
         try {
-            adminPostClient.deletePost(created.getId()).block()
+            if (created?.id != null) {
+                adminPostClient.deletePost(created.id).block()
+            }
         } catch (Exception ignored) {}
 
         where:
