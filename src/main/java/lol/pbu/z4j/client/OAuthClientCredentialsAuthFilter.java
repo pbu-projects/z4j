@@ -24,12 +24,12 @@ import io.micronaut.http.annotation.ClientFilter;
 import io.micronaut.http.annotation.RequestFilter;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import jakarta.inject.Inject;
+import java.time.Instant;
+import java.util.concurrent.atomic.AtomicReference;
 import lol.pbu.z4j.model.OAuthTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.time.Instant;
-import java.util.concurrent.locks.ReentrantLock;
+import reactor.core.publisher.Mono;
 
 /**
  * <h1>OAuth Client Credentials Auth Filter.</h1>
@@ -46,22 +46,26 @@ public class OAuthClientCredentialsAuthFilter {
 
     private static final Logger log = LoggerFactory.getLogger(OAuthClientCredentialsAuthFilter.class);
     private static final long REFRESH_WINDOW_SECONDS = 60L;
+    private static final String DEFAULT_URL = "https://localhost";
 
     private final String clientId;
     private final String clientSecret;
     private final String scope;
+    private final String tokenEndpointUrl;
     private final BeanProvider<OAuthTokenClient> tokenClientProvider;
     private final OAuthTokenClient directClient;
 
-    private final ReentrantLock lock = new ReentrantLock();
-    private volatile String cachedToken;
-    private volatile Instant tokenExpiration = Instant.MIN;
+    private record CachedToken(String token, Instant expiresAt) {}
+
+    private final AtomicReference<Mono<String>> inFlightRefresh = new AtomicReference<>();
+    private final AtomicReference<CachedToken> cachedToken = new AtomicReference<>();
 
     @Inject
     public OAuthClientCredentialsAuthFilter(
             @Property(name = "micronaut.http.services.zendesk.oauth.client-id") String clientId,
             @Property(name = "micronaut.http.services.zendesk.oauth.client-secret") String clientSecret,
             @Property(name = "micronaut.http.services.zendesk.oauth.scope", defaultValue = "hc:read hc:write") String scope,
+            @Property(name = "micronaut.http.services.zendesk.url", defaultValue = DEFAULT_URL) String zendeskUrl,
             BeanProvider<OAuthTokenClient> tokenClientProvider
     ) {
         if (clientSecret == null || clientSecret.trim().isEmpty()) {
@@ -70,6 +74,7 @@ public class OAuthClientCredentialsAuthFilter {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.scope = scope;
+        this.tokenEndpointUrl = formatTokenEndpointUrl(zendeskUrl);
         this.tokenClientProvider = tokenClientProvider;
         this.directClient = null;
     }
@@ -78,6 +83,25 @@ public class OAuthClientCredentialsAuthFilter {
             String clientId,
             String clientSecret,
             String scope,
+            BeanProvider<OAuthTokenClient> tokenClientProvider
+    ) {
+        this(clientId, clientSecret, scope, DEFAULT_URL, tokenClientProvider);
+    }
+
+    public OAuthClientCredentialsAuthFilter(
+            String clientId,
+            String clientSecret,
+            String scope,
+            OAuthTokenClient directClient
+    ) {
+        this(clientId, clientSecret, scope, DEFAULT_URL, directClient);
+    }
+
+    public OAuthClientCredentialsAuthFilter(
+            String clientId,
+            String clientSecret,
+            String scope,
+            String zendeskUrl,
             OAuthTokenClient directClient
     ) {
         if (clientSecret == null || clientSecret.trim().isEmpty()) {
@@ -86,53 +110,103 @@ public class OAuthClientCredentialsAuthFilter {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.scope = scope;
+        this.tokenEndpointUrl = formatTokenEndpointUrl(zendeskUrl);
         this.tokenClientProvider = null;
         this.directClient = directClient;
     }
 
     @RequestFilter
-    public void doFilter(MutableHttpRequest<?> request) {
-        String token = obtainAccessToken();
-        request.getHeaders().set("Authorization", "Bearer " + token);
+    public Mono<MutableHttpRequest<?>> doFilter(MutableHttpRequest<?> request) {
+        return obtainAccessTokenReactive()
+                .map(token -> {
+                    request.getHeaders().set("Authorization", "Bearer " + token);
+                    return request;
+                });
+    }
+
+    public Mono<String> obtainAccessTokenReactive() {
+        CachedToken current = cachedToken.get();
+        if (current != null && Instant.now().isBefore(current.expiresAt())) {
+            return Mono.just(current.token());
+        }
+        return refreshAccessToken();
     }
 
     public String obtainAccessToken() {
-        Instant now = Instant.now();
-        if (cachedToken != null && now.isBefore(tokenExpiration)) {
-            return cachedToken;
-        }
+        return obtainAccessTokenReactive().block();
+    }
 
-        lock.lock();
-        try {
-            now = Instant.now();
-            if (cachedToken != null && now.isBefore(tokenExpiration)) {
-                return cachedToken;
+    private Mono<String> refreshAccessToken() {
+        while (true) {
+            Mono<String> currentMono = inFlightRefresh.get();
+            if (currentMono != null) {
+                return currentMono;
             }
+            CachedToken current = cachedToken.get();
+            if (current != null && Instant.now().isBefore(current.expiresAt())) {
+                return Mono.just(current.token());
+            }
+            AtomicReference<Mono<String>> ref = new AtomicReference<>();
+            Mono<String> newRefresh = fetchNewToken()
+                    .doFinally(signalType -> inFlightRefresh.compareAndSet(ref.get(), null))
+                    .cache();
+            ref.set(newRefresh);
+            if (inFlightRefresh.compareAndSet(null, newRefresh)) {
+                return newRefresh;
+            }
+        }
+    }
 
+    private Mono<String> fetchNewToken() {
+        return Mono.defer(() -> {
             log.debug("Requesting new Zendesk OAuth access token for client id: {}", clientId);
             OAuthTokenRequest req = new OAuthTokenRequest(clientId, clientSecret, scope);
-            try {
-                OAuthTokenResponse resp = resolveTokenClient().requestToken(req).block();
-                if (resp == null || resp.getAccessToken() == null) {
-                    throw new IllegalStateException("Received empty OAuth token response from Zendesk for client id: " + clientId);
-                }
-                cachedToken = resp.getAccessToken();
-                long expiresIn = resp.getExpiresIn() != null ? resp.getExpiresIn() : 1800L;
-                tokenExpiration = Instant.now().plusSeconds(Math.max(0, expiresIn - REFRESH_WINDOW_SECONDS));
-                return cachedToken;
-            } catch (HttpClientResponseException e) {
-                int status = e.getStatus().getCode();
-                if (status == 400 || status == 401) {
-                    throw new IllegalStateException("Zendesk refused OAuth client credentials for client id '" + clientId + "': HTTP " + status);
-                }
-                throw e;
+            OAuthTokenClient client = resolveTokenClient();
+            Mono<OAuthTokenResponse> mono = client != null ? client.requestToken(req) : null;
+            return mono != null ? mono : Mono.empty();
+        })
+        .switchIfEmpty(Mono.error(new IllegalStateException(
+                "No token endpoint was found at " + tokenEndpointUrl + ". Check the micronaut.http.services.zendesk.url setting."
+        )))
+        .onErrorResume(HttpClientResponseException.class, e -> {
+            int status = e.getStatus().getCode();
+            if (status == 404) {
+                return Mono.error(new IllegalStateException(
+                        "No token endpoint was found at " + tokenEndpointUrl + ". Check the micronaut.http.services.zendesk.url setting.",
+                        e
+                ));
             }
-        } finally {
-            lock.unlock();
-        }
+            if (status == 400 || status == 401) {
+                return Mono.error(new IllegalStateException(
+                        "Zendesk refused OAuth client credentials for client id '" + clientId + "': HTTP " + status,
+                        e
+                ));
+            }
+            return Mono.error(e);
+        })
+        .flatMap(resp -> {
+            if (resp == null || resp.getAccessToken() == null || resp.getAccessToken().isBlank()) {
+                return Mono.error(new IllegalStateException(
+                        "Received empty OAuth token response from Zendesk for client id: " + clientId
+                ));
+            }
+            long expiresIn = resp.getExpiresIn() != null ? resp.getExpiresIn() : 1800L;
+            long buffer = Math.min(REFRESH_WINDOW_SECONDS, expiresIn / 2);
+            Instant expiresAt = Instant.now().plusSeconds(Math.max(0, expiresIn - buffer));
+            cachedToken.set(new CachedToken(resp.getAccessToken(), expiresAt));
+            return Mono.just(resp.getAccessToken());
+        });
     }
 
     private OAuthTokenClient resolveTokenClient() {
         return directClient != null ? directClient : tokenClientProvider.get();
+    }
+
+    private static String formatTokenEndpointUrl(String zendeskUrl) {
+        String base = (zendeskUrl != null && !zendeskUrl.isBlank()) ? zendeskUrl.trim() : DEFAULT_URL;
+        while (base.endsWith("/")) {
+            base = base.substring(0, base.length() - 1);
+        }
+        return base + "/oauth/tokens";
     }
 }
