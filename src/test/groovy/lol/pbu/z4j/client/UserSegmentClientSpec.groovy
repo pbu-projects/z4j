@@ -15,7 +15,11 @@
  */
 package lol.pbu.z4j.client
 
+import io.micronaut.http.HttpStatus
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import java.util.Set
+import java.util.concurrent.ConcurrentHashMap
 import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.fixture.FixtureLoader
 import lol.pbu.z4j.fixture.UserSegmentFixtures
@@ -35,9 +39,25 @@ class UserSegmentClientSpec extends Z4jSpec {
     @Shared
     UserSegmentFixtures userSegmentFixtures
 
+    @Shared
+    Set<Long> createdSegmentIds = ConcurrentHashMap.newKeySet()
+
+    @Shared
+    Set<String> testSegmentNames = ConcurrentHashMap.newKeySet()
+
     def setupSpec() {
         userSegmentClient = adminCtx.getBean(UserSegmentClient.class)
         userSegmentFixtures = FixtureLoader.loadFixture("/fixtures/user_segment_fixtures.yaml", UserSegmentFixtures.class)
+        testSegmentNames.addAll(userSegmentFixtures.getUserSegments().collect { it.getSegmentName() })
+        testSegmentNames.addAll(userSegmentFixtures.getUserSegments().collect { it.getUpdatedName() })
+        pruneTestSegments()
+    }
+
+    def cleanupSpec() {
+        createdSegmentIds.each { id ->
+            safeDelete(id)
+        }
+        pruneTestSegments()
     }
 
     def "can list user segments"() {
@@ -59,14 +79,19 @@ class UserSegmentClientSpec extends Z4jSpec {
 
     def "can create user segment named '#segmentName' with '#userType' user type"(String userType, String segmentName) {
         when:
-        UserSegment userSegment = userSegmentClient.createUserSegment(
-                new CreateUserSegmentRequest(new UserSegment(segmentName, userType))).block().userSegment()
+        UserSegment userSegment = createUserSegment(userType, segmentName)
 
         then:
         noExceptionThrown()
+        userSegment != null
+        verifyAll(userSegment) {
+            it.id() != null
+            it.name() == segmentName
+            it.userType() == userType
+        }
 
         cleanup:
-        userSegmentClient.deleteUserSegment(userSegment.id()).block()
+        safeDelete(userSegment?.id())
 
         where:
         [userType, segmentName] << userSegmentFixtures.getUserSegments().collect { [it.getUserType(), it.getSegmentName()] }
@@ -83,7 +108,7 @@ class UserSegmentClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         cleanup:
-        userSegmentClient.deleteUserSegment(userSegment.id()).block()
+        safeDelete(userSegment?.id())
 
         where:
         [userType, segmentName] << userSegmentFixtures.getUserSegments().collect { [it.getUserType(), it.getSegmentName()] }
@@ -98,6 +123,9 @@ class UserSegmentClientSpec extends Z4jSpec {
 
         then:
         noExceptionThrown()
+
+        cleanup:
+        safeDelete(userSegment?.id())
 
         where:
         [userType, segmentName] << userSegmentFixtures.getUserSegments().collect { [it.getUserType(), it.getSegmentName()] }
@@ -114,7 +142,7 @@ class UserSegmentClientSpec extends Z4jSpec {
         noExceptionThrown()
 
         cleanup:
-        userSegmentClient.deleteUserSegment(userSegment.id()).block()
+        safeDelete(userSegment?.id())
 
         where:
         [userType, segmentName] << userSegmentFixtures.getUserSegments().collect { [it.getUserType(), it.getSegmentName()] }
@@ -122,19 +150,20 @@ class UserSegmentClientSpec extends Z4jSpec {
 
     def "can show user segments allowed for '#userType' user type"(String userType, String segmentName) {
         given: "create user segment on server with #userType and #segmentName"
-        def userSegment = createUserSegment(userType, segmentName)
+        UserSegment userSegment = createUserSegment(userType, segmentName)
 
         when: "show user segment with user segment ID from previous step"
         UserSegmentResponse response = userSegmentClient.showUserSegment(userSegment.id()).block()
 
-        and: "query resultant userSegments"
-        response.userSegment()
-
         then:
         noExceptionThrown()
+        response != null
+        verifyAll(response) {
+            it.userSegment() != null
+        }
 
         cleanup:
-        userSegmentClient.deleteUserSegment(userSegment.id()).block()
+        safeDelete(userSegment?.id())
 
         where:
         [userType, segmentName] << userSegmentFixtures.getUserSegments().collect { [it.getUserType(), it.getSegmentName()] }
@@ -142,33 +171,62 @@ class UserSegmentClientSpec extends Z4jSpec {
 
     def "can update user segment"(String userType, String segmentName, String updatedName) {
         given: "create user segment on server with #userType and #segmentName"
-        def userSegment = createUserSegment(userType, segmentName)
+        UserSegment userSegment = createUserSegment(userType, segmentName)
 
         when: "create an update to the user segment object with updated name and opposite user type"
-        userSegment = userSegment.withName(updatedName)
+        UserSegment updated = userSegment.withName(updatedName)
         if (userType.equalsIgnoreCase("staff")) {
-            userSegment = userSegment.withUserType("signed_in_users")
+            updated = updated.withUserType("signed_in_users")
         } else {
-            userSegment = userSegment.withUserType("staff")
+            updated = updated.withUserType("staff")
         }
 
         and: "send the update to zendesk"
         userSegmentClient.updateUserSegment(userSegment.id(),
-                new CreateUserSegmentRequest(userSegment)).block()
+                new CreateUserSegmentRequest(updated)).block()
 
         then:
         noExceptionThrown()
 
         cleanup:
-        userSegmentClient.deleteUserSegment(userSegment.id()).block()
+        safeDelete(userSegment?.id())
 
         where:
         [userType, segmentName, updatedName] << userSegmentFixtures.getUserSegments().collect { [it.getUserType(), it.getSegmentName(), it.getUpdatedName()] }
     }
 
     UserSegment createUserSegment(String userType, String name) {
-        return userSegmentClient.createUserSegment(new CreateUserSegmentRequest(new UserSegment(name, userType))).block().userSegment()
+        UserSegment segment = userSegmentClient.createUserSegment(
+                new CreateUserSegmentRequest(new UserSegment(name, userType))).block()?.userSegment()
+        if (segment?.id() != null) {
+            createdSegmentIds.add(segment.id())
+        }
+        return segment
+    }
+
+    void safeDelete(Long id) {
+        if (id == null) {
+            return
+        }
+        try {
+            userSegmentClient.deleteUserSegment(id).block()
+            createdSegmentIds.remove(id)
+        } catch (HttpClientResponseException e) {
+            if (e.status == HttpStatus.NOT_FOUND) {
+                createdSegmentIds.remove(id)
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    void pruneTestSegments() {
+        try {
+            userSegmentClient.listUserSegments(false).block()?.userSegments()?.each { segment ->
+                if (segment.name() in testSegmentNames) {
+                    safeDelete(segment.id())
+                }
+            }
+        } catch (Exception ignored) {
+        }
     }
 }
-
-
