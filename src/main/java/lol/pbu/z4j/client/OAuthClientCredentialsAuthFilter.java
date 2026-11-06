@@ -46,6 +46,7 @@ public class OAuthClientCredentialsAuthFilter {
 
     private static final Logger log = LoggerFactory.getLogger(OAuthClientCredentialsAuthFilter.class);
     private static final long REFRESH_WINDOW_SECONDS = 60L;
+    private static final String DEFAULT_URL = "https://localhost";
 
     private final String clientId;
     private final String clientSecret;
@@ -57,14 +58,14 @@ public class OAuthClientCredentialsAuthFilter {
     private record CachedToken(String token, Instant expiresAt) {}
 
     private final AtomicReference<Mono<String>> inFlightRefresh = new AtomicReference<>();
-    private volatile CachedToken cachedToken;
+    private final AtomicReference<CachedToken> cachedToken = new AtomicReference<>();
 
     @Inject
     public OAuthClientCredentialsAuthFilter(
             @Property(name = "micronaut.http.services.zendesk.oauth.client-id") String clientId,
             @Property(name = "micronaut.http.services.zendesk.oauth.client-secret") String clientSecret,
             @Property(name = "micronaut.http.services.zendesk.oauth.scope", defaultValue = "hc:read hc:write") String scope,
-            @Property(name = "micronaut.http.services.zendesk.url", defaultValue = "https://localhost") String zendeskUrl,
+            @Property(name = "micronaut.http.services.zendesk.url", defaultValue = DEFAULT_URL) String zendeskUrl,
             BeanProvider<OAuthTokenClient> tokenClientProvider
     ) {
         if (clientSecret == null || clientSecret.trim().isEmpty()) {
@@ -84,7 +85,7 @@ public class OAuthClientCredentialsAuthFilter {
             String scope,
             BeanProvider<OAuthTokenClient> tokenClientProvider
     ) {
-        this(clientId, clientSecret, scope, "https://localhost", tokenClientProvider);
+        this(clientId, clientSecret, scope, DEFAULT_URL, tokenClientProvider);
     }
 
     public OAuthClientCredentialsAuthFilter(
@@ -93,7 +94,7 @@ public class OAuthClientCredentialsAuthFilter {
             String scope,
             OAuthTokenClient directClient
     ) {
-        this(clientId, clientSecret, scope, "https://localhost", directClient);
+        this(clientId, clientSecret, scope, DEFAULT_URL, directClient);
     }
 
     public OAuthClientCredentialsAuthFilter(
@@ -124,7 +125,7 @@ public class OAuthClientCredentialsAuthFilter {
     }
 
     public Mono<String> obtainAccessTokenReactive() {
-        CachedToken current = cachedToken;
+        CachedToken current = cachedToken.get();
         if (current != null && Instant.now().isBefore(current.expiresAt())) {
             return Mono.just(current.token());
         }
@@ -141,7 +142,7 @@ public class OAuthClientCredentialsAuthFilter {
             if (currentMono != null) {
                 return currentMono;
             }
-            CachedToken current = cachedToken;
+            CachedToken current = cachedToken.get();
             if (current != null && Instant.now().isBefore(current.expiresAt())) {
                 return Mono.just(current.token());
             }
@@ -192,7 +193,7 @@ public class OAuthClientCredentialsAuthFilter {
             long expiresIn = resp.expiresIn() != null ? resp.expiresIn() : 1800L;
             long buffer = Math.min(REFRESH_WINDOW_SECONDS, expiresIn / 2);
             Instant expiresAt = Instant.now().plusSeconds(Math.max(0, expiresIn - buffer));
-            cachedToken = new CachedToken(resp.accessToken(), expiresAt);
+            cachedToken.set(new CachedToken(resp.accessToken(), expiresAt));
             return Mono.just(resp.accessToken());
         });
     }
@@ -202,7 +203,7 @@ public class OAuthClientCredentialsAuthFilter {
     }
 
     private static String formatTokenEndpointUrl(String zendeskUrl) {
-        String base = (zendeskUrl != null && !zendeskUrl.isBlank()) ? zendeskUrl.trim() : "https://localhost";
+        String base = (zendeskUrl != null && !zendeskUrl.isBlank()) ? zendeskUrl.trim() : DEFAULT_URL;
         while (base.endsWith("/")) {
             base = base.substring(0, base.length() - 1);
         }
