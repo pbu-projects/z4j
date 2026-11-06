@@ -43,6 +43,7 @@ version = project.properties["z4jVersion"]!!
 
 val dataFakerVersion = project.properties["dataFakerVersion"]!!
 val recordBuilderVersion = project.properties["recordBuilderVersion"]!!
+val cloudbeesClientVersion = project.properties["cloudbeesClientVersion"]!!
 
 repositories {
     mavenCentral()
@@ -62,6 +63,7 @@ dependencies {
     testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.22.4")
     testImplementation("ch.qos.logback:logback-classic")
     testImplementation("io.projectreactor:reactor-test")
+    testImplementation("com.cloudbees.thirdparty:zendesk-java-client:${cloudbeesClientVersion}")
 }
 
 java {
@@ -191,6 +193,34 @@ tasks.withType<Test> {
         override fun beforeTest(testDescriptor: TestDescriptor) {}
         override fun afterTest(testDescriptor: TestDescriptor, result: TestResult) {}
     })
+}
+
+tasks.named<Test>("test") {
+    useJUnitPlatform {
+        excludeTags("benchmark")
+    }
+}
+
+val benchmark = tasks.register<Test>("benchmark") {
+    description = "Runs live benchmark performance comparison tests."
+    group = "verification"
+    testClassesDirs = sourceSets["test"].output.classesDirs
+    classpath = sourceSets["test"].runtimeClasspath
+    outputs.upToDateWhen { false }
+    useJUnitPlatform {
+        includeTags("benchmark")
+    }
+    systemProperty("benchmark", "true")
+    systemProperty("logger.levels.io.micronaut.http.client", "INFO")
+    testLogging {
+        showStandardStreams = true
+        events = setOf(PASSED, FAILED, SKIPPED)
+    }
+    addTestOutputListener { _, event ->
+        if (event.message.contains("BENCHMARK") || event.message.contains("CloudBees") || event.message.contains("z4j") || event.message.contains("=====") || event.message.contains("Payload Size")) {
+            logger.lifecycle(event.message.trimEnd())
+        }
+    }
 }
 
 
