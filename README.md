@@ -1,6 +1,4 @@
-<img src="src/main/docs/z4j.svg" width="200" alt="z4j logo"> 
-
-The cloud-native Java client for Zendesk.
+<img src="src/main/docs/header.svg" width="100%" alt="z4j: The Cloud-Native Java Client for Zendesk">
 
 ## About The Project
 Built with Micronaut, z4j focuses on low memory use, fast startup, and native GraalVM support.
@@ -10,7 +8,7 @@ Built with Micronaut, z4j focuses on low memory use, fast startup, and native Gr
 Compared to traditional reflection-based clients like CloudBees:
 
 * **Zero reflection:** Serialization is handled at compile time without runtime reflection caches.
-* **Low memory overhead:** Designed for lean execution in CLI tools and containerized services.
+* **Low memory overhead:** Lean execution across cloud containers, serverless workloads, and CLI tools.
 
 ### Memory Benchmark (CloudBees vs z4j)
 
@@ -48,7 +46,8 @@ Run the benchmark locally:
 
 ## Example Projects
 
-- [zcmi] is a cli project built with z4j.
+- [zcmi]: Cross-platform CLI to manage Zendesk tickets and articles with automatic rate-limit backoff.
+- [zenith]: MCP server bringing rate-safe Zendesk tools to AI agents on any platform.
 
 ## Contributing
 
@@ -63,4 +62,6 @@ development process, style guides, and testing strategy.
 
 [testing]:CONTRIBUTING.md#testing
 
-[zcmi]:https://github.com/PeanutButter-Unicorn/zcmi
+[zcmi]:https://github.com/pbu-projects/zcmi
+
+[zenith]:https://github.com/pbu-projects/zenith
