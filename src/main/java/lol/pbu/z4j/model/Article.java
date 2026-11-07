@@ -21,15 +21,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+import lol.pbu.z4j.Generated;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-
-import java.util.ArrayList;
-import java.util.List;
-import lol.pbu.z4j.Generated;
 
 /**
  * Article
@@ -102,8 +101,9 @@ public class Article implements SearchResultsInner {
     /**
      * The locale that the article is being displayed in
      */
-    @NotNull
+    @Nullable
     @JsonProperty(JSON_PROPERTY_LOCALE)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private LocaleAbbreviation localeAbbreviation;
 
     /**
@@ -116,8 +116,9 @@ public class Article implements SearchResultsInner {
     /**
      * The title of the article
      */
-    @NotNull
+    @Nullable
     @JsonProperty(JSON_PROPERTY_TITLE)
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
     private String title;
 
     /**
