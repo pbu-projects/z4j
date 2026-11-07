@@ -18,6 +18,7 @@ package lol.pbu.z4j.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import java.util.Arrays;
 import java.util.Map;
@@ -172,7 +173,11 @@ public enum LocaleAbbreviation {
      * @return The enum
      */
     @JsonCreator
-    public static LocaleAbbreviation fromValue(String value) {
+    @Nullable
+    public static LocaleAbbreviation fromValue(@Nullable String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
         if (!VALUE_MAPPING.containsKey(value.toLowerCase())) {
             throw new IllegalArgumentException("Unexpected value '" + value + "'");
         }
