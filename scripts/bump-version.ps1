@@ -28,7 +28,7 @@ if ($tags.Count -lt 2) {
 $prevTag = $tags[-2]
 $nextTag = $tags[-1]
 
-@( "$repoRoot/README.md", "$repoRoot/gradle.properties" ) | ForEach-Object {
+@( "$repoRoot/README.md", "$repoRoot/gradle.properties", "$repoRoot/src/main/docs/header.svg" ) | ForEach-Object {
     if (Test-Path $_) {
         $content = Get-Content -Raw $_
         $updated = $content.Replace($prevTag, $nextTag)

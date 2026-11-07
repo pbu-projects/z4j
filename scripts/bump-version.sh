@@ -70,7 +70,7 @@ else
     echo "Bumping version from $prev_tag to $next_tag"
 fi
 
-for file in "$repo_root/README.md" "$repo_root/gradle.properties"; do
+for file in "$repo_root/README.md" "$repo_root/gradle.properties" "$repo_root/src/main/docs/header.svg"; do
     if [ ! -f "$file" ]; then
         log_warn "$file not found, skipping."
         continue
