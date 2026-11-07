@@ -32,7 +32,7 @@ Run the benchmark locally:
 
 | Gradle Kotlin                                  | Gradle                                        |
 |:-----------------------------------------------|:----------------------------------------------|
-| <pre>implementation("lol.pbu:z4j:0.4.0")</pre> | <pre>implementation 'lol.pbu:z4j:0.4.0'</pre> |
+| <pre>implementation("lol.pbu:z4j:0.4.2")</pre> | <pre>implementation 'lol.pbu:z4j:0.4.2'</pre> |
 
 **Maven**
 
@@ -40,7 +40,7 @@ Run the benchmark locally:
 <dependency>
 	<groupId>lol.pbu</groupId>
 	<artifactId>z4j</artifactId>
-	<version>0.4.0</version>
+	<version>0.4.2</version>
 </dependency>
 ```
 
