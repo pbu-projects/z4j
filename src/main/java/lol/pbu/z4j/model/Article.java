@@ -61,9 +61,9 @@ import java.util.List;
         Article.JSON_PROPERTY_VOTE_SUM
 })
 public record Article(
-        @NotNull @JsonProperty(JSON_PROPERTY_LOCALE) LocaleAbbreviation localeAbbreviation,
+        @Nullable @JsonProperty(JSON_PROPERTY_LOCALE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) LocaleAbbreviation localeAbbreviation,
         @NotNull @JsonProperty(JSON_PROPERTY_PERMISSION_GROUP_ID) Long permissionGroupId,
-        @NotNull @JsonProperty(JSON_PROPERTY_TITLE) String title,
+        @Nullable @JsonProperty(JSON_PROPERTY_TITLE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String title,
         @Nullable @JsonProperty(JSON_PROPERTY_AUTHOR_ID) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Long authorId,
         @Nullable @JsonProperty(JSON_PROPERTY_BODY) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String body,
         @Nullable @JsonProperty(JSON_PROPERTY_COMMENTS_DISABLED) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Boolean commentsDisabled,
