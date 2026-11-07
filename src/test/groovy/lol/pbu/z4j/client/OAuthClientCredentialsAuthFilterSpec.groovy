@@ -16,11 +16,15 @@
 package lol.pbu.z4j.client
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.BeanProvider
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import lol.pbu.z4j.model.OAuthTokenResponse
 import reactor.core.publisher.Mono
+import reactor.core.publisher.Sinks
+import reactor.core.scheduler.Schedulers
 import spock.lang.Specification
 
 /**
@@ -35,6 +39,18 @@ class OAuthClientCredentialsAuthFilterSpec extends Specification {
     def "fails at construction if client-secret is blank"() {
         when:
         new OAuthClientCredentialsAuthFilter("test-client", "  ", "hc:read", Mock(OAuthTokenClient))
+
+        then:
+        def e = thrown(IllegalArgumentException)
+        verifyAll {
+            e != null
+            e.message.contains("client-secret")
+        }
+    }
+
+    def "fails at construction with custom url if client-secret is blank"() {
+        when:
+        new OAuthClientCredentialsAuthFilter("test-client", null, "hc:read", "https://custom.zendesk.com", Mock(OAuthTokenClient))
 
         then:
         def e = thrown(IllegalArgumentException)
@@ -67,7 +83,7 @@ class OAuthClientCredentialsAuthFilterSpec extends Specification {
         def request = HttpRequest.GET("/api/v2/tickets").header("Authorization", "OldToken")
 
         when:
-        filter.doFilter(request)
+        filter.doFilter(request).block()
 
         then:
         verifyAll {
@@ -84,14 +100,38 @@ class OAuthClientCredentialsAuthFilterSpec extends Specification {
         def request2 = HttpRequest.GET("/api/v2/tickets")
 
         when: "two consecutive requests are made within the token lifetime"
-        filter.doFilter(request1)
-        filter.doFilter(request2)
+        filter.doFilter(request1).block()
+        filter.doFilter(request2).block()
 
         then: "token is only fetched once from the token client"
         1 * clientMock.requestToken(_) >> Mono.just(new OAuthTokenResponse("cached-token", "Bearer", 1800L, "hc:read"))
         verifyAll {
             request1.headers.get("Authorization") == "Bearer cached-token"
             request2.headers.get("Authorization") == "Bearer cached-token"
+        }
+    }
+
+    def "concurrent requests share single in-flight token refresh"() {
+        given:
+        def sink = Sinks.one()
+        def clientMock = Mock(OAuthTokenClient) {
+            1 * requestToken(_) >> sink.asMono()
+        }
+        def filter = new OAuthClientCredentialsAuthFilter("test-client", "test-secret", "hc:read", clientMock)
+        def request1 = HttpRequest.GET("/api/v2/tickets")
+        def request2 = HttpRequest.GET("/api/v2/tickets")
+
+        when:
+        def mono1 = filter.doFilter(request1)
+        def mono2 = filter.doFilter(request2)
+        sink.tryEmitValue(new OAuthTokenResponse("shared-token", "Bearer", 1800L, "hc:read"))
+        mono1.block()
+        mono2.block()
+
+        then:
+        verifyAll {
+            request1.headers.get("Authorization") == "Bearer shared-token"
+            request2.headers.get("Authorization") == "Bearer shared-token"
         }
     }
 
@@ -105,7 +145,7 @@ class OAuthClientCredentialsAuthFilterSpec extends Specification {
         def request = HttpRequest.GET("/api/v2/tickets")
 
         when:
-        filter.doFilter(request)
+        filter.doFilter(request).block()
 
         then:
         def e = thrown(IllegalStateException)
@@ -126,7 +166,7 @@ class OAuthClientCredentialsAuthFilterSpec extends Specification {
         def request = HttpRequest.GET("/api/v2/tickets")
 
         when:
-        filter.doFilter(request)
+        filter.doFilter(request).block()
 
         then:
         def e = thrown(IllegalStateException)
@@ -146,7 +186,7 @@ class OAuthClientCredentialsAuthFilterSpec extends Specification {
         def request = HttpRequest.GET("/api/v2/tickets")
 
         when:
-        filter.doFilter(request)
+        filter.doFilter(request).block()
 
         then:
         def e = thrown(IllegalStateException)
@@ -154,6 +194,190 @@ class OAuthClientCredentialsAuthFilterSpec extends Specification {
             e != null
             e.message.contains("client-empty")
             e.message.contains("empty OAuth token response")
+        }
+    }
+
+    def "throws descriptive exception when token response access token is blank"() {
+        given:
+        def clientMock = Mock(OAuthTokenClient) {
+            1 * requestToken(_) >> Mono.just(new OAuthTokenResponse("   ", "Bearer", 1800L, "hc:read"))
+        }
+        def filter = new OAuthClientCredentialsAuthFilter("client-blank", "test-secret", "hc:read", clientMock)
+        def request = HttpRequest.GET("/api/v2/tickets")
+
+        when:
+        filter.doFilter(request).block()
+
+        then:
+        def e = thrown(IllegalStateException)
+        verifyAll {
+            e != null
+            e.message.contains("client-blank")
+            e.message.contains("empty OAuth token response")
+        }
+    }
+
+    def "fails with clear message pointing to token url and setting when token endpoint returns 404"() {
+        given:
+        def clientMock = Mock(OAuthTokenClient) {
+            1 * requestToken(_) >> Mono.empty()
+        }
+        def filter = new OAuthClientCredentialsAuthFilter("client-not-found", "test-secret", "hc:read", clientMock)
+        def request = HttpRequest.GET("/api/v2/tickets")
+
+        when:
+        filter.doFilter(request).block()
+
+        then:
+        def e = thrown(IllegalStateException)
+        verifyAll {
+            e != null
+            e.message.contains("/oauth/tokens")
+            e.message.contains("micronaut.http.services.zendesk.url")
+        }
+    }
+
+    def "fails with clear message pointing to token url when client returns null mono"() {
+        given:
+        def clientMock = Mock(OAuthTokenClient) {
+            1 * requestToken(_) >> null
+        }
+        def filter = new OAuthClientCredentialsAuthFilter(
+                "client-null-mono",
+                "test-secret",
+                "hc:read",
+                "",
+                clientMock
+        )
+        def request = HttpRequest.GET("/api/v2/tickets")
+
+        when:
+        filter.doFilter(request).block()
+
+        then:
+        def e = thrown(IllegalStateException)
+        verifyAll {
+            e != null
+            e.message == "No token endpoint was found at https://localhost/oauth/tokens. Check the micronaut.http.services.zendesk.url setting."
+        }
+    }
+
+    def "fails with clear message pointing to token url when client throws 404 HttpClientResponseException"() {
+        given:
+        def resp = HttpResponse.notFound()
+        def clientMock = Mock(OAuthTokenClient) {
+            1 * requestToken(_) >> Mono.error(new HttpClientResponseException("Not Found", resp))
+        }
+        def filter = new OAuthClientCredentialsAuthFilter(
+                "client-404-ex",
+                "test-secret",
+                "hc:read",
+                "https://custom-subdomain.zendesk.com/",
+                clientMock
+        )
+        def request = HttpRequest.GET("/api/v2/tickets")
+
+        when:
+        filter.doFilter(request).block()
+
+        then:
+        def e = thrown(IllegalStateException)
+        verifyAll {
+            e != null
+            e.message == "No token endpoint was found at https://custom-subdomain.zendesk.com/oauth/tokens. Check the micronaut.http.services.zendesk.url setting."
+        }
+    }
+
+    def "propagates other unexpected HttpClientResponseException"() {
+        given:
+        def resp = HttpResponse.serverError()
+        def clientMock = Mock(OAuthTokenClient) {
+            1 * requestToken(_) >> Mono.error(new HttpClientResponseException("Internal Server Error", resp))
+        }
+        def filter = new OAuthClientCredentialsAuthFilter("client-500", "test-secret", "hc:read", clientMock)
+        def request = HttpRequest.GET("/api/v2/tickets")
+
+        when:
+        filter.doFilter(request).block()
+
+        then:
+        def e = thrown(HttpClientResponseException)
+        verifyAll {
+            e != null
+            e.status == HttpStatus.INTERNAL_SERVER_ERROR
+        }
+    }
+
+    def "oauth filter completes without blocking error on non-blocking reactive thread"() {
+        given:
+        def clientMock = Mock(OAuthTokenClient) {
+            1 * requestToken(_) >> Mono.just(new OAuthTokenResponse("token-xyz", "Bearer", 1800L, "hc:read")).hide()
+        }
+        def filter = new OAuthClientCredentialsAuthFilter("test-client", "test-secret", "hc:read", clientMock)
+        def request = HttpRequest.GET("/api/v2/tickets")
+
+        when:
+        filter.doFilter(request)
+                .subscribeOn(Schedulers.parallel())
+                .block()
+
+        then:
+        noExceptionThrown()
+        verifyAll {
+            request.headers.get("Authorization") == "Bearer token-xyz"
+        }
+    }
+
+    def "obtainAccessToken provides backward compatibility by blocking for token"() {
+        given:
+        def clientMock = Mock(OAuthTokenClient) {
+            1 * requestToken(_) >> Mono.just(new OAuthTokenResponse("legacy-token", "Bearer", 1800L, "hc:read"))
+        }
+        def filter = new OAuthClientCredentialsAuthFilter("test-client", "test-secret", "hc:read", clientMock)
+
+        when:
+        def token = filter.obtainAccessToken()
+
+        then:
+        verifyAll {
+            token == "legacy-token"
+        }
+    }
+
+    def "handles token response with null expiresIn and short expiresIn"() {
+        given:
+        def clientMock = Mock(OAuthTokenClient) {
+            1 * requestToken(_) >> Mono.just(new OAuthTokenResponse("token-null-exp", "Bearer", null, "hc:read"))
+        }
+        def filter = new OAuthClientCredentialsAuthFilter("test-client", "test-secret", "hc:read", (String) null, clientMock)
+        def request = HttpRequest.GET("/api/v2/tickets")
+
+        when:
+        filter.doFilter(request).block()
+
+        then:
+        verifyAll {
+            request.headers.get("Authorization") == "Bearer token-null-exp"
+        }
+    }
+
+    def "handles provider based constructor resolution"() {
+        given:
+        def clientMock = Mock(OAuthTokenClient) {
+            1 * requestToken(_) >> Mono.just(new OAuthTokenResponse("provider-token", "Bearer", 30L, "hc:read"))
+        }
+        def provider = Mock(BeanProvider) {
+            1 * get() >> clientMock
+        }
+        def filter = new OAuthClientCredentialsAuthFilter("test-client", "test-secret", "hc:read", provider)
+        def request = HttpRequest.GET("/api/v2/tickets")
+
+        when:
+        filter.doFilter(request).block()
+
+        then:
+        verifyAll {
+            request.headers.get("Authorization") == "Bearer provider-token"
         }
     }
 }

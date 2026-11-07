@@ -226,6 +226,82 @@ class ZendeskFilterSpec extends Specification {
         server?.stop(0)
     }
 
+    def "chained HTTP calls on Netty event-loop threads succeed with OAuth client credentials filter"() {
+        given:
+        String lastZendeskAuth = null
+
+        HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0)
+        server.createContext("/oauth/tokens") { exchange ->
+            byte[] response = '{"access_token":"eventloop-token-123","token_type":"Bearer","expires_in":3600,"scope":"hc:read"}'.getBytes(StandardCharsets.UTF_8)
+            exchange.responseHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+            exchange.sendResponseHeaders(200, response.length)
+            exchange.responseBody.write(response)
+            exchange.close()
+        }
+        server.createContext("/test/zendesk/void-delete") { exchange ->
+            lastZendeskAuth = exchange.requestHeaders.getFirst(HttpHeaders.AUTHORIZATION)
+            exchange.sendResponseHeaders(204, -1)
+            exchange.close()
+        }
+        server.start()
+        String baseUrl = "http://127.0.0.1:${server.address.port}"
+
+        ApplicationContext clientCtx = ApplicationContext.run([
+                "micronaut.http.services.zendesk.url"                : baseUrl,
+                "micronaut.http.services.zendesk.oauth.client-id"    : "integration-client-id",
+                "micronaut.http.services.zendesk.oauth.client-secret": "integration-client-secret"
+        ])
+        TestZendeskVoidClient zendeskClient = clientCtx.getBean(TestZendeskVoidClient)
+
+        when: "calling declarative client method whose filter triggers chained oauth token fetch on netty event loop"
+        zendeskClient.deleteSomething().block()
+
+        then: "token is fetched reactively and injected into the target request without IllegalStateException"
+        noExceptionThrown()
+        verifyAll {
+            lastZendeskAuth == "Bearer eventloop-token-123"
+        }
+
+        cleanup:
+        clientCtx?.close()
+        server?.stop(0)
+    }
+
+    def "wrong Zendesk URL returns descriptive 404 message pointing to oauth tokens endpoint"() {
+        given:
+        HttpServer server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0)
+        server.createContext("/test/zendesk/void-delete") { exchange ->
+            exchange.sendResponseHeaders(204, -1)
+            exchange.close()
+        }
+        server.start()
+        String baseUrl = "http://127.0.0.1:${server.address.port}/missing"
+
+        ApplicationContext clientCtx = ApplicationContext.run([
+                "micronaut.http.services.zendesk.url"                : baseUrl,
+                "micronaut.http.services.zendesk.oauth.client-id"    : "integration-client-id",
+                "micronaut.http.services.zendesk.oauth.client-secret": "integration-client-secret"
+        ])
+        TestZendeskVoidClient zendeskClient = clientCtx.getBean(TestZendeskVoidClient)
+
+        when: "calling client method pointing to a wrong zendesk url"
+        zendeskClient.deleteSomething().block()
+
+        then: "descriptive error message points to the oauth tokens url and configuration setting"
+        def e = thrown(Throwable)
+        verifyAll {
+            e != null
+            def msg = e.message ?: ""
+            def causeMsg = e.cause?.message ?: ""
+            msg.contains("${baseUrl}/oauth/tokens") || causeMsg.contains("${baseUrl}/oauth/tokens")
+            msg.contains("micronaut.http.services.zendesk.url") || causeMsg.contains("micronaut.http.services.zendesk.url")
+        }
+
+        cleanup:
+        clientCtx?.close()
+        server?.stop(0)
+    }
+
     @Client("zendesk")
     static interface TestZendeskVoidClient {
         @Delete("/test/zendesk/void-delete")
