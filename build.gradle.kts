@@ -60,7 +60,7 @@ dependencies {
     implementation("io.micronaut:micronaut-retry")
     runtimeOnly("org.yaml:snakeyaml")
     testImplementation("net.datafaker:datafaker:$dataFakerVersion")
-    testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.22.4")
+    testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.23.0")
     testImplementation("ch.qos.logback:logback-classic")
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("com.cloudbees.thirdparty:zendesk-java-client:${cloudbeesClientVersion}")
