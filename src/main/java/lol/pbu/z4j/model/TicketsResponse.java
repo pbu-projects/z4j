@@ -29,25 +29,48 @@ import java.util.List;
 @RecordBuilder
 @JsonPropertyOrder({
         TicketsResponse.JSON_PROPERTY_TICKETS,
+        TicketsResponse.JSON_PROPERTY_USERS,
+        TicketsResponse.JSON_PROPERTY_GROUPS,
+        TicketsResponse.JSON_PROPERTY_ORGANIZATIONS,
+        TicketsResponse.JSON_PROPERTY_METRIC_SETS,
+        TicketsResponse.JSON_PROPERTY_AUDITS,
         TicketsResponse.JSON_PROPERTY_META,
         TicketsResponse.JSON_PROPERTY_LINKS,
         TicketsResponse.JSON_PROPERTY_COUNT
 })
 public record TicketsResponse(
         @Nullable @JsonProperty(JSON_PROPERTY_TICKETS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Ticket> tickets,
+        @Nullable @JsonProperty(JSON_PROPERTY_USERS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid User> users,
+        @Nullable @JsonProperty(JSON_PROPERTY_GROUPS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Group> groups,
+        @Nullable @JsonProperty(JSON_PROPERTY_ORGANIZATIONS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Organization> organizations,
+        @Nullable @JsonProperty(JSON_PROPERTY_METRIC_SETS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid TicketMetric> metricSets,
+        @Nullable @JsonProperty(JSON_PROPERTY_AUDITS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Audit> audits,
         @Nullable @JsonProperty(JSON_PROPERTY_META) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Meta meta,
         @Nullable @JsonProperty(JSON_PROPERTY_LINKS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Links links,
         @Nullable @JsonProperty(JSON_PROPERTY_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer count
-) implements TicketsResponseBuilder.With {
+) implements SideloadableResponse, TicketsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_TICKETS = "tickets";
+    public static final String JSON_PROPERTY_USERS = "users";
+    public static final String JSON_PROPERTY_GROUPS = "groups";
+    public static final String JSON_PROPERTY_ORGANIZATIONS = "organizations";
+    public static final String JSON_PROPERTY_METRIC_SETS = "metric_sets";
+    public static final String JSON_PROPERTY_AUDITS = "audits";
     public static final String JSON_PROPERTY_META = "meta";
     public static final String JSON_PROPERTY_LINKS = "links";
     public static final String JSON_PROPERTY_COUNT = "count";
 
+    public TicketsResponse(List<Ticket> tickets, Meta meta, Links links, Integer count) {
+        this(tickets, null, null, null, null, null, meta, links, count);
+    }
+
+    public TicketsResponse() {
+        this(null, null, null, null);
+    }
+
     public TicketsResponse addTicketsItem(Ticket ticketsItem) {
         List<Ticket> list = new ArrayList<>(tickets != null ? tickets : List.of());
         list.add(ticketsItem);
-        return new TicketsResponse(list, meta, links, count);
+        return new TicketsResponse(list, users, groups, organizations, metricSets, audits, meta, links, count);
     }
 }
