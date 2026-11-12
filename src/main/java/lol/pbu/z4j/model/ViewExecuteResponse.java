@@ -21,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import io.soabase.recordbuilder.core.RecordBuilder;
+import jakarta.validation.Valid;
 import java.util.List;
 
 /**
@@ -43,7 +44,7 @@ import java.util.List;
 })
 public record ViewExecuteResponse(
         @Nullable @JsonProperty(JSON_PROPERTY_ROWS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<ViewRow> rows,
-        @Nullable @JsonProperty(JSON_PROPERTY_COLUMNS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<Object> columns,
+        @Nullable @JsonProperty(JSON_PROPERTY_COLUMNS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid ViewColumn> columns,
         @Nullable @JsonProperty(JSON_PROPERTY_USERS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<User> users,
         @Nullable @JsonProperty(JSON_PROPERTY_GROUPS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<Group> groups,
         @Nullable @JsonProperty(JSON_PROPERTY_ORGANIZATIONS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<Organization> organizations,

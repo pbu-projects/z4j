@@ -30,9 +30,14 @@ class ViewSpec extends Specification {
     def "should create View with constructors and builder"() {
         given:
         OffsetDateTime now = OffsetDateTime.of(2026, 11, 4, 12, 0, 0, 0, ZoneOffset.UTC)
+        ViewExecution exec = new ViewExecution().withGroupBy("status")
+        ViewCondition cond = new ViewCondition("status", "is", "open")
+        ViewConditions conds = new ViewConditions([cond], [])
+        ViewRestriction rest = new ViewRestriction("Group", 10L)
+        ViewOutput expectedOutput = new ViewOutput(["status", "requester"])
 
         when:
-        View direct = new View(
+        View direct12 = new View(
                 101L,
                 "Open Tickets",
                 true,
@@ -41,11 +46,30 @@ class ViewSpec extends Specification {
                 false,
                 1L,
                 "All open tickets in the group",
-                [group: "agents"],
-                [all: []],
-                [type: "Group"],
+                exec,
+                conds,
+                rest,
                 "Open Tickets Raw"
         )
+        View direct15 = new View(
+                101L,
+                "Open Tickets",
+                true,
+                now,
+                now,
+                false,
+                1L,
+                "All open tickets in the group",
+                exec,
+                conds,
+                rest,
+                "Open Tickets Raw",
+                expectedOutput,
+                [cond],
+                []
+        )
+        View titleOnly = new View("Simple View")
+        View titleAndConds = new View("Filtered View", conds)
         View noArg = new View()
         View built = ViewBuilder.builder()
                 .id(101L)
@@ -56,51 +80,77 @@ class ViewSpec extends Specification {
                 .isDefault(false)
                 .position(1L)
                 .description("All open tickets in the group")
-                .execution([group: "agents"])
-                .conditions([all: []])
-                .restriction([type: "Group"])
+                .execution(exec)
+                .conditions(conds)
+                .restriction(rest)
                 .rawTitle("Open Tickets Raw")
                 .build()
 
         then:
-        verifyAll(direct) {
-            id() == 101L
-            title() == "Open Tickets"
-            active() == true
-            updatedAt() == now
-            createdAt() == now
-            isDefault() == false
-            position() == 1L
-            description() == "All open tickets in the group"
-            execution() == [group: "agents"]
-            conditions() == [all: []]
-            restriction() == [type: "Group"]
-            rawTitle() == "Open Tickets Raw"
+        verifyAll(direct12) {
+            it.id() == 101L
+            it.title() == "Open Tickets"
+            it.active() == true
+            it.updatedAt() == now
+            it.createdAt() == now
+            it.isDefault() == false
+            it.position() == 1L
+            it.description() == "All open tickets in the group"
+            it.execution() == exec
+            it.conditions() == conds
+            it.restriction() == rest
+            it.rawTitle() == "Open Tickets Raw"
+            it.output() == null
+            it.all() == null
+            it.any() == null
+        }
+        verifyAll(direct15) {
+            it.id() == 101L
+            it.output() == expectedOutput
+            it.all() == [cond]
+            it.any() == []
+        }
+        verifyAll(titleOnly) {
+            it.title() == "Simple View"
+            it.conditions() == null
+        }
+        verifyAll(titleAndConds) {
+            it.title() == "Filtered View"
+            it.conditions() == conds
         }
         verifyAll(noArg) {
-            id() == null
-            title() == null
-            active() == null
-            updatedAt() == null
-            createdAt() == null
-            isDefault() == null
-            position() == null
-            description() == null
-            execution() == null
-            conditions() == null
-            restriction() == null
-            rawTitle() == null
+            it.id() == null
+            it.title() == null
+            it.active() == null
+            it.updatedAt() == null
+            it.createdAt() == null
+            it.isDefault() == null
+            it.position() == null
+            it.description() == null
+            it.execution() == null
+            it.conditions() == null
+            it.restriction() == null
+            it.rawTitle() == null
+            it.output() == null
+            it.all() == null
+            it.any() == null
         }
         verifyAll(built) {
-            it == direct
-            id() == 101L
-            title() == "Open Tickets"
+            it == direct12
+            it.id() == 101L
+            it.title() == "Open Tickets"
         }
     }
 
-    def "should update View using withers"() {
+    def "should update View using withers and list helpers"() {
         given:
         OffsetDateTime now = OffsetDateTime.of(2026, 10, 1, 8, 0, 0, 0, ZoneOffset.UTC)
+        ViewExecution exec = new ViewExecution().withSortBy("updated")
+        ViewCondition c1 = new ViewCondition("status", "is", "pending")
+        ViewCondition c2 = new ViewCondition("priority", "is", "high")
+        ViewConditions conds = new ViewConditions([c1])
+        ViewRestriction rest = new ViewRestriction("User", 55L)
+        ViewOutput out = new ViewOutput(["status"])
         View initial = new View()
 
         when:
@@ -113,42 +163,56 @@ class ViewSpec extends Specification {
                 .withIsDefault(true)
                 .withPosition(2L)
                 .withDescription("Pending customer reply")
-                .withExecution("exec")
-                .withConditions("cond")
-                .withRestriction("rest")
+                .withExecution(exec)
+                .withConditions(conds)
+                .withRestriction(rest)
                 .withRawTitle("Raw Pending")
-        View withConvenienceDefault = updated.withDefault(false)
+                .withOutput(out)
+                .addAllItem(c1)
+                .addAnyItem(c2)
+        View withMoreItems = updated.addAllItem(c2).addAnyItem(c1)
+        View withConvenienceDefault = withMoreItems.withDefault(false)
 
         then:
         verifyAll(updated) {
-            id() == 202L
-            title() == "Pending Tickets"
-            active() == true
-            updatedAt() == now
-            createdAt() == now
-            isDefault() == true
-            position() == 2L
-            description() == "Pending customer reply"
-            execution() == "exec"
-            conditions() == "cond"
-            restriction() == "rest"
-            rawTitle() == "Raw Pending"
+            it.id() == 202L
+            it.title() == "Pending Tickets"
+            it.active() == true
+            it.updatedAt() == now
+            it.createdAt() == now
+            it.isDefault() == true
+            it.position() == 2L
+            it.description() == "Pending customer reply"
+            it.execution() == exec
+            it.conditions() == conds
+            it.restriction() == rest
+            it.rawTitle() == "Raw Pending"
+            it.output() == out
+            it.all() == [c1]
+            it.any() == [c2]
+        }
+        verifyAll(withMoreItems) {
+            it.all() == [c1, c2]
+            it.any() == [c2, c1]
         }
         verifyAll(withConvenienceDefault) {
-            isDefault() == false
+            it.isDefault() == false
         }
     }
 
     def "should round-trip serialize and deserialize View"() {
         given:
-        View view = new View()
+        View expectedView = new View()
                 .withId(303L)
                 .withTitle("Unassigned")
                 .withActive(true)
                 .withIsDefault(false)
+                .withConditions(new ViewConditions([new ViewCondition("status", "less_than", "solved")]))
+                .withExecution(new ViewExecution().addColumnsItem(new ViewColumn("status", "Status")))
+                .withRestriction(new ViewRestriction("User", 99L))
 
         when:
-        String json = objectMapper.writeValueAsString(view)
+        String json = objectMapper.writeValueAsString(expectedView)
         Map map = objectMapper.readValue(json, Map.class)
         View deserialized = objectMapper.readValue(json, View.class)
 
@@ -158,13 +222,19 @@ class ViewSpec extends Specification {
             get("title") == "Unassigned"
             get("active") == true
             get("default") == false
+            containsKey("conditions")
+            containsKey("execution")
+            containsKey("restriction")
         }
         verifyAll(deserialized) {
-            it == view
-            id() == 303L
-            title() == "Unassigned"
-            active() == true
-            isDefault() == false
+            it == expectedView
+            it.id() == 303L
+            it.title() == "Unassigned"
+            it.active() == true
+            it.isDefault() == false
+            it.conditions().all().first().field() == "status"
+            it.execution().columns().first().id() == "status"
+            it.restriction().id() == 99L
         }
     }
 
@@ -183,6 +253,9 @@ class ViewSpec extends Specification {
             View.JSON_PROPERTY_CONDITIONS == "conditions"
             View.JSON_PROPERTY_RESTRICTION == "restriction"
             View.JSON_PROPERTY_RAW_TITLE == "raw_title"
+            View.JSON_PROPERTY_OUTPUT == "output"
+            View.JSON_PROPERTY_ALL == "all"
+            View.JSON_PROPERTY_ANY == "any"
         }
     }
 }
