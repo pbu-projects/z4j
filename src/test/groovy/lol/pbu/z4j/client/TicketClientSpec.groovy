@@ -402,7 +402,7 @@ class TicketClientSpec extends Z4jSpec {
         TicketUpdateRequest updateRequest = new TicketUpdateRequest(updateInput)
 
         when: "calling updateManyTickets"
-        JobStatusResponse response = ticketsAgentClient.updateManyTickets(ticketId.toString(), updateRequest).block()
+        JobStatusResponse response = ticketsAgentClient.updateManyTickets([ticketId], updateRequest).block()
 
         then: "job status response is returned"
         noExceptionThrown()
@@ -456,6 +456,61 @@ class TicketClientSpec extends Z4jSpec {
 
         where:
         [client, clientType] << [[ticketsUserClient, "simple user"], [ticketBadEmailClient, "bad email"], [ticketBadUrlClient, "bad url"]]
+    }
+
+    def "can show ticket with sideloaded resources as agent"() {
+        given: "an existing ticket ID"
+        Long targetTicketId = tickets.first().id()
+
+        when: "calling showTicket with sideloaded resources"
+        TicketResponse response = ticketsAgentClient.showTicket(targetTicketId, "metric_sets,users,groups,organizations,last_audits").block()
+
+        then: "response contains ticket and populated sideloaded collections"
+        noExceptionThrown()
+        verifyAll(response) {
+            it != null
+            ticket() != null
+            metricSets() != null && !metricSets().isEmpty()
+            users() != null && !users().isEmpty()
+            audits() != null && !audits().isEmpty()
+        }
+        verifyAll(response.metricSets().first()) {
+            id != null
+            ticketId == targetTicketId
+            url != null && url.contains("/ticket_metrics/")
+            createdAt != null
+        }
+    }
+
+    def "can list tickets with sideloaded resources as agent"() {
+        when: "calling listTickets with sideloaded resources"
+        TicketsResponse response = ticketsAgentClient.listTickets(null, "metric_sets,users").block()
+
+        then: "response contains tickets and populated sideloaded collections"
+        noExceptionThrown()
+        verifyAll(response) {
+            it != null
+            tickets() != null && !tickets().isEmpty()
+            metricSets() != null && !metricSets().isEmpty()
+            users() != null && !users().isEmpty()
+        }
+    }
+
+    def "can show multiple tickets by list of IDs with sideloaded resources as agent"() {
+        given: "an existing ticket ID in a list"
+        Long targetTicketId = tickets.first().id()
+
+        when: "calling showMultipleTickets with sideloaded resources"
+        TicketsResponse response = ticketsAgentClient.showMultipleTickets([targetTicketId], "metric_sets,users").block()
+
+        then: "response contains tickets and populated sideloaded collections"
+        noExceptionThrown()
+        verifyAll(response) {
+            it != null
+            tickets() != null && !tickets().isEmpty()
+            metricSets() != null && !metricSets().isEmpty()
+            users() != null && !users().isEmpty()
+        }
     }
 
     def "can get ticket related information as agent"() {
@@ -689,9 +744,9 @@ class TicketClientSpec extends Z4jSpec {
             jobStatus().id != null
         }
 
-        when: "restoring deleted tickets in bulk using comma-separated string"
+        when: "restoring deleted tickets in bulk using list of ids"
         waitForJobCompletion(deleteJob.jobStatus().id)
-        JobStatusResponse restoreJob = ticketsAdminClient.restoreDeletedTicketsInBulk(ids.join(",")).block()
+        JobStatusResponse restoreJob = ticketsAdminClient.restoreDeletedTicketsInBulk(ids).block()
 
         then: "bulk restore succeeds without error"
         noExceptionThrown()
@@ -806,8 +861,35 @@ class TicketClientSpec extends Z4jSpec {
 
         cleanup: "delete the merged tickets"
         try {
-            ticketsAdminClient.bulkDeleteTickets([targetId, sourceId]).block()
-            sleep(2000)
+            JobStatusResponse deleteJob = ticketsAdminClient.bulkDeleteTickets([targetId, sourceId]).block()
+            waitForJobCompletion(deleteJob?.jobStatus()?.id)
+            ticketsAdminClient.deleteMultipleTicketsPermanently([targetId, sourceId]).block()
+        } catch (Exception ignored) {
+        }
+    }
+
+    def "can merge tickets using list of source IDs as admin"() {
+        given: "target and source tickets created for merge"
+        TicketResponse target = createTicketForTest()
+        TicketResponse source = createTicketForTest()
+        Long targetId = target.ticket().id()
+        Long sourceId = source.ticket().id()
+
+        when: "merging tickets using list overload"
+        JobStatusResponse job = ticketsAdminClient.mergeTickets(targetId, [sourceId]).block()
+
+        then: "job status response is returned"
+        noExceptionThrown()
+        verifyAll(job) {
+            it != null
+            jobStatus() != null
+            jobStatus().id != null
+        }
+
+        cleanup: "delete the merged tickets"
+        try {
+            JobStatusResponse deleteJob = ticketsAdminClient.bulkDeleteTickets([targetId, sourceId]).block()
+            waitForJobCompletion(deleteJob?.jobStatus()?.id)
             ticketsAdminClient.deleteMultipleTicketsPermanently([targetId, sourceId]).block()
         } catch (Exception ignored) {
         }
