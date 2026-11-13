@@ -489,4 +489,30 @@ class TicketsResponseSpec extends Z4jSpec {
             count() == null
         }
     }
+
+    def "should deserialize last_audits json alias into audits"() {
+        given:
+        String json = '''{
+  "tickets": [ { "id": 100 } ],
+  "last_audits": [
+    {
+      "id": 999,
+      "ticket_id": 100
+    }
+  ]
+}'''
+
+        when:
+        TicketsResponse response = objectMapper.readValue(json, TicketsResponse.class)
+
+        then:
+        verifyAll(response) {
+            tickets() != null
+            tickets().size() == 1
+            audits() != null
+            audits().size() == 1
+            audits().first().id() == 999L
+            audits().first().ticketId() == 100L
+        }
+    }
 }

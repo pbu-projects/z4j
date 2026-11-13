@@ -27,6 +27,8 @@ import io.micronaut.http.client.annotation.Client;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
+import java.util.stream.Collectors;
 import lol.pbu.z4j.model.CreateManyTicketsRequest;
 import lol.pbu.z4j.model.DeletedTicketsResponse;
 import lol.pbu.z4j.model.JobStatus;
@@ -47,9 +49,6 @@ import lol.pbu.z4j.model.TicketUpdateResponse;
 import lol.pbu.z4j.model.TicketsResponse;
 import lol.pbu.z4j.model.UsersResponse;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <h1>Work with Tickets in Zendesk.</h1>
@@ -154,20 +153,62 @@ public interface TicketClient {
      * <h1>{@summary List Tickets}</h1>
      *
      * @param externalId Lists tickets by external id. External ids don't have to be unique for each ticket. As a result, the request may return multiple tickets with the same external id. (optional)
+     * @param include Sideloaded resources to include in the response (optional)
      * @return List tickets (status code 200)
      */
     @Get("/api/v2/tickets")
-    Mono<@Valid TicketsResponse> listTickets(@QueryValue("external_id") @Nullable String externalId);
+    Mono<@Valid TicketsResponse> listTickets(
+            @QueryValue("external_id") @Nullable String externalId,
+            @QueryValue("include") @Nullable String include
+    );
+
+    /**
+     * <h1>{@summary List Tickets}</h1>
+     *
+     * @param externalId Lists tickets by external id. External ids don't have to be unique for each ticket. As a result, the request may return multiple tickets with the same external id. (optional)
+     * @return List tickets (status code 200)
+     */
+    default Mono<@Valid TicketsResponse> listTickets(@Nullable String externalId) {
+        return listTickets(externalId, null);
+    }
 
     /**
      * <h1>{@summary Show Ticket}</h1>
-     * <p>Returns a number of ticket properties though not the ticket comments. To get the comments, use <a href='developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/#list-comments'>List Comments</a></p> <h4 id=\"allowed-for'>Allowed For</h4> <ul>     <li>Agents</li> </ul>
+     * <p>Returns a number of ticket properties though not the ticket comments. To get the comments, use <a href='https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/#list-comments'>List Comments</a></p> <h4>Allowed For</h4> <ul> <li>Agents</li> </ul>
+     *
+     * @param ticketId The ID of the ticket (required)
+     * @param include Sideloaded resources to include in the response (optional)
+     * @return Ticket (status code 200)
+     */
+    @Get("/api/v2/tickets/{ticket_id}")
+    Mono<@Valid TicketResponse> showTicket(
+            @PathVariable("ticket_id") @NotNull Long ticketId,
+            @QueryValue("include") @Nullable String include
+    );
+
+    /**
+     * <h1>{@summary Show Ticket}</h1>
+     * <p>Returns a number of ticket properties though not the ticket comments. To get the comments, use <a href='https://developer.zendesk.com/api-reference/ticketing/tickets/ticket_comments/#list-comments'>List Comments</a></p> <h4>Allowed For</h4> <ul> <li>Agents</li> </ul>
      *
      * @param ticketId The ID of the ticket (required)
      * @return Ticket (status code 200)
      */
-    @Get("/api/v2/tickets/{ticket_id}")
-    Mono<@Valid TicketResponse> showTicket(@PathVariable("ticket_id") @NotNull Long ticketId);
+    default Mono<@Valid TicketResponse> showTicket(@NotNull Long ticketId) {
+        return showTicket(ticketId, null);
+    }
+
+    /**
+     * <h1>{@summary Show Multiple Tickets}</h1>
+     *
+     * @param ids Comma-separated list of ticket IDs (required)
+     * @param include Sideloaded resources to include in the response (optional)
+     * @return Tickets response (status code 200)
+     */
+    @Get("/api/v2/tickets/show_many")
+    Mono<@Valid TicketsResponse> showMultipleTickets(
+            @QueryValue("ids") @NotNull String ids,
+            @QueryValue("include") @Nullable String include
+    );
 
     /**
      * <h1>{@summary Show Multiple Tickets}</h1>
@@ -175,8 +216,20 @@ public interface TicketClient {
      * @param ids Comma-separated list of ticket IDs (required)
      * @return Tickets response (status code 200)
      */
-    @Get("/api/v2/tickets/show_many")
-    Mono<@Valid TicketsResponse> showMultipleTickets(@QueryValue("ids") @NotNull String ids);
+    default Mono<@Valid TicketsResponse> showMultipleTickets(@NotNull String ids) {
+        return showMultipleTickets(ids, null);
+    }
+
+    /**
+     * <h1>{@summary Show Multiple Tickets}</h1>
+     *
+     * @param ids List of ticket IDs (required)
+     * @param include Sideloaded resources to include in the response (optional)
+     * @return Tickets response (status code 200)
+     */
+    default Mono<@Valid TicketsResponse> showMultipleTickets(@NotNull List<Long> ids, @Nullable String include) {
+        return showMultipleTickets(ids.stream().map(String::valueOf).collect(Collectors.joining(",")), include);
+    }
 
     /**
      * <h1>{@summary Show Multiple Tickets}</h1>
@@ -185,7 +238,7 @@ public interface TicketClient {
      * @return Tickets response (status code 200)
      */
     default Mono<@Valid TicketsResponse> showMultipleTickets(@NotNull List<Long> ids) {
-        return showMultipleTickets(ids.stream().map(String::valueOf).collect(Collectors.joining(",")));
+        return showMultipleTickets(ids, null);
     }
 
     /**

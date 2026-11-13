@@ -15,6 +15,7 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -44,7 +45,7 @@ public record TicketsResponse(
         @Nullable @JsonProperty(JSON_PROPERTY_GROUPS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Group> groups,
         @Nullable @JsonProperty(JSON_PROPERTY_ORGANIZATIONS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Organization> organizations,
         @Nullable @JsonProperty(JSON_PROPERTY_METRIC_SETS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid TicketMetric> metricSets,
-        @Nullable @JsonProperty(JSON_PROPERTY_AUDITS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Audit> audits,
+        @Nullable @JsonProperty(JSON_PROPERTY_AUDITS) @JsonAlias("last_audits") @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Audit> audits,
         @Nullable @JsonProperty(JSON_PROPERTY_META) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Meta meta,
         @Nullable @JsonProperty(JSON_PROPERTY_LINKS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Links links,
         @Nullable @JsonProperty(JSON_PROPERTY_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer count

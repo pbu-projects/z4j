@@ -32,6 +32,7 @@ class TicketMetricSpec extends Z4jSpec {
 
     def "should create TicketMetric with constructors and builder"() {
         given:
+        String testUrl = faker.internet().url()
         TicketMetricTime waitTime = new TicketMetricTime(10L, 20L)
         TicketMetricTime resTime1 = new TicketMetricTime(30L, 40L)
         TicketMetricTime resTime2 = new TicketMetricTime(50L, 60L)
@@ -66,7 +67,7 @@ class TicketMetricSpec extends Z4jSpec {
                 timestamp,
                 200L,
                 timestamp,
-                "https://example.zendesk.com/api/v2/ticket_metrics/100.json"
+                testUrl
         )
         TicketMetric defaultConstructor = new TicketMetric()
         TicketMetric built = TicketMetricBuilder.builder()
@@ -93,7 +94,7 @@ class TicketMetricSpec extends Z4jSpec {
                 .statusUpdatedAt(timestamp)
                 .ticketId(200L)
                 .updatedAt(timestamp)
-                .url("https://example.zendesk.com/api/v2/ticket_metrics/100.json")
+                .url(testUrl)
                 .build()
 
         then:
@@ -121,7 +122,7 @@ class TicketMetricSpec extends Z4jSpec {
             statusUpdatedAt() == timestamp
             ticketId() == 200L
             updatedAt() == timestamp
-            url() == "https://example.zendesk.com/api/v2/ticket_metrics/100.json"
+            url() == testUrl
         }
         verifyAll(defaultConstructor) {
             agentWaitTimeInMinutes() == null
@@ -154,7 +155,7 @@ class TicketMetricSpec extends Z4jSpec {
             agentWaitTimeInMinutes() == waitTime
             id() == 100L
             ticketId() == 200L
-            url() == "https://example.zendesk.com/api/v2/ticket_metrics/100.json"
+            url() == testUrl
         }
     }
 
@@ -163,6 +164,7 @@ class TicketMetricSpec extends Z4jSpec {
         TicketMetric initial = new TicketMetric()
         TicketMetricTime timeVal = new TicketMetricTime(10L, 20L)
         ZonedDateTime timestamp = ZonedDateTime.of(2026, 11, 12, 12, 0, 0, 0, ZoneOffset.UTC)
+        String testUrl = faker.internet().url()
 
         when:
         TicketMetric updated = initial
@@ -189,7 +191,7 @@ class TicketMetricSpec extends Z4jSpec {
                 .withStatusUpdatedAt(timestamp)
                 .withTicketId(600L)
                 .withUpdatedAt(timestamp)
-                .withUrl("https://example.zendesk.com/api/v2/ticket_metrics/500.json")
+                .withUrl(testUrl)
 
         then:
         verifyAll(initial) {
@@ -220,7 +222,7 @@ class TicketMetricSpec extends Z4jSpec {
             statusUpdatedAt() == timestamp
             ticketId() == 600L
             updatedAt() == timestamp
-            url() == "https://example.zendesk.com/api/v2/ticket_metrics/500.json"
+            url() == testUrl
         }
     }
 
@@ -228,6 +230,7 @@ class TicketMetricSpec extends Z4jSpec {
         given:
         TicketMetricTime waitTime = new TicketMetricTime(10L, 20L)
         ZonedDateTime timestamp = ZonedDateTime.of(2026, 11, 12, 10, 0, 0, 0, ZoneOffset.UTC)
+        String testUrl = faker.internet().url()
         TicketMetric metric = new TicketMetric()
                 .withId(100L)
                 .withTicketId(200L)
@@ -235,7 +238,7 @@ class TicketMetricSpec extends Z4jSpec {
                 .withCreatedAt(timestamp)
                 .withUpdatedAt(timestamp)
                 .withReplies(5L)
-                .withUrl("https://example.zendesk.com/metric/100")
+                .withUrl(testUrl)
 
         when:
         String json = objectMapper.writeValueAsString(metric)
@@ -247,7 +250,7 @@ class TicketMetricSpec extends Z4jSpec {
             get("id") == 100
             get("ticket_id") == 200
             get("replies") == 5
-            get("url") == "https://example.zendesk.com/metric/100"
+            get("url") == testUrl
             get("agent_wait_time_in_minutes") instanceof Map
             ((Map) get("agent_wait_time_in_minutes")).get("business") == 10
             ((Map) get("agent_wait_time_in_minutes")).get("calendar") == 20
@@ -256,7 +259,7 @@ class TicketMetricSpec extends Z4jSpec {
             id() == 100L
             ticketId() == 200L
             replies() == 5L
-            url() == "https://example.zendesk.com/metric/100"
+            url() == testUrl
             agentWaitTimeInMinutes() == waitTime
             createdAt() == timestamp
             updatedAt() == timestamp
