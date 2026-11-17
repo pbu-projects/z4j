@@ -15,14 +15,20 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.context.ApplicationContext
 import io.micronaut.serde.ObjectMapper
+import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
 class ViewUpdateRequestSpec extends Specification {
 
     @Shared
-    ObjectMapper objectMapper = ObjectMapper.getDefault()
+    @AutoCleanup
+    ApplicationContext context = ApplicationContext.run()
+
+    @Shared
+    ObjectMapper objectMapper = context.getBean(ObjectMapper.class)
 
     def "should create ViewUpdateRequest with constructor and builder"() {
         given:
@@ -84,7 +90,7 @@ class ViewUpdateRequestSpec extends Specification {
             it == request
             it.view().title() == "Code Red Tickets"
             it.view().restriction().type() == "Group"
-            it.view().all().first().value() == "urgent"
+            it.view().all().first().value() == ViewConditionValue.of("urgent")
         }
     }
 

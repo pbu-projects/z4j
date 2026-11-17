@@ -15,14 +15,20 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.context.ApplicationContext
 import io.micronaut.serde.ObjectMapper
+import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
 class ViewCreateRequestSpec extends Specification {
 
     @Shared
-    ObjectMapper objectMapper = ObjectMapper.getDefault()
+    @AutoCleanup
+    ApplicationContext context = ApplicationContext.run()
+
+    @Shared
+    ObjectMapper objectMapper = context.getBean(ObjectMapper.class)
 
     def "should create ViewCreateRequest with constructor and builder"() {
         given:

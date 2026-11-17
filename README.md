@@ -44,6 +44,45 @@ Run the benchmark locally:
 </dependency>
 ```
 
+## Working with View Conditions
+
+A Zendesk view condition can hold different kinds of values: a word or ID, a list of tags, a true/false flag, or a whole number. `ViewConditionValue` keeps these values strongly typed so you do not have to cast an `Object`.
+
+### Creating conditions
+
+```java
+// Plain text value (using the shortcut constructor)
+var statusOpen = new ViewCondition("status", "is", "open");
+
+// A list of tags
+var vipTags = new ViewCondition(
+        "current_tags",
+        "includes",
+        ViewConditionValue.of(List.of("vip", "enterprise")));
+
+// A true/false flag
+var isPublic = new ViewCondition("is_public", "is", ViewConditionValue.of(true));
+
+// A whole number
+var ticketId = new ViewCondition("ticket_id", "is", ViewConditionValue.of(24000932000L));
+```
+
+### Reading condition values
+
+Use a Java `switch` to handle every kind of value safely:
+
+```java
+String describeValue(ViewCondition condition) {
+    return switch (condition.value()) {
+        case ViewConditionValue.Text(var text) -> "text: " + text;
+        case ViewConditionValue.TextList(var tags) -> "tags: " + String.join(", ", tags);
+        case ViewConditionValue.Flag(var flag) -> "flag: " + flag;
+        case ViewConditionValue.Numeric(var number) -> "number: " + number;
+        case null -> "no value";
+    };
+}
+```
+
 ## Example Projects
 
 - [zcmi]: Cross-platform CLI to manage Zendesk tickets and articles with automatic rate-limit backoff.

@@ -15,30 +15,39 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.context.ApplicationContext
 import io.micronaut.serde.ObjectMapper
+import io.micronaut.serde.exceptions.SerdeException
+import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
 class ViewConditionSpec extends Specification {
 
     @Shared
-    ObjectMapper objectMapper = ObjectMapper.getDefault()
+    @AutoCleanup
+    ApplicationContext context = ApplicationContext.run()
+
+    @Shared
+    ObjectMapper objectMapper = context.getBean(ObjectMapper.class)
 
     def "should create ViewCondition with constructors and builder"() {
         when:
         ViewCondition direct = new ViewCondition("status", "less_than", "solved")
+        ViewCondition typed = new ViewCondition("status", "less_than", ViewConditionValue.of("solved"))
         ViewCondition noArg = new ViewCondition()
         ViewCondition built = ViewConditionBuilder.builder()
                 .field("status")
                 .operator("less_than")
-                .value("solved")
+                .value(ViewConditionValue.of("solved"))
                 .build()
 
         then:
         verifyAll(direct) {
             field() == "status"
             operator() == "less_than"
-            value() == "solved"
+            value() == ViewConditionValue.of("solved")
+            it == typed
         }
         verifyAll(noArg) {
             field() == null
@@ -49,7 +58,7 @@ class ViewConditionSpec extends Specification {
             it == direct
             field() == "status"
             operator() == "less_than"
-            value() == "solved"
+            value() == ViewConditionValue.of("solved")
         }
     }
 
@@ -61,19 +70,19 @@ class ViewConditionSpec extends Specification {
         ViewCondition updated = initial
                 .withField("priority")
                 .withOperator("is")
-                .withValue("urgent")
+                .withValue(ViewConditionValue.of("urgent"))
 
         then:
         verifyAll(updated) {
             field() == "priority"
             operator() == "is"
-            value() == "urgent"
+            value() == ViewConditionValue.of("urgent")
         }
     }
 
-    def "should round-trip serialize and deserialize ViewCondition"() {
+    def "should round-trip serialize and deserialize ViewCondition with typed values"() {
         given:
-        ViewCondition condition = new ViewCondition("group_id", "is", "24000932")
+        ViewCondition condition = new ViewCondition(condField, condOperator, condValue)
 
         when:
         String json = objectMapper.writeValueAsString(condition)
@@ -82,16 +91,38 @@ class ViewConditionSpec extends Specification {
 
         then:
         verifyAll(map) {
-            get("field") == "group_id"
-            get("operator") == "is"
-            get("value") == "24000932"
+            get("field") == condField
+            get("operator") == condOperator
+            get("value") == expectedJsonValue
         }
         verifyAll(deserialized) {
-            it == condition
-            field() == "group_id"
-            operator() == "is"
-            value() == "24000932"
+            field() == condField
+            operator() == condOperator
+            value() == condValue
         }
+
+        where:
+        condField      | condOperator | condValue                                      | expectedJsonValue
+        "group_id"     | "is"         | ViewConditionValue.of("24000932")              | "24000932"
+        "current_tags" | "includes"   | ViewConditionValue.of(["vip", "enterprise"])   | ["vip", "enterprise"]
+        "is_public"    | "is"         | ViewConditionValue.of(true)                    | true
+        "priority"     | "is"         | ViewConditionValue.of(42L)                     | 42
+        "ticket_id"    | "is"         | ViewConditionValue.of(24000932000L)            | 24000932000L
+        "assignee_id"  | "is"         | null                                           | null
+    }
+
+    def "should throw SerdeException on unsupported ViewConditionValue JSON types"() {
+        when:
+        objectMapper.readValue(json, ViewCondition.class)
+
+        then:
+        thrown(SerdeException)
+
+        where:
+        json << [
+                '{"field":"status","operator":"is","value":{"nested":"object"}}',
+                '{"field":"current_tags","operator":"includes","value":["vip", 123]}'
+        ]
     }
 
     def "should verify ViewCondition constants"() {

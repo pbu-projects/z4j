@@ -15,14 +15,20 @@
  */
 package lol.pbu.z4j.model
 
+import io.micronaut.context.ApplicationContext
 import io.micronaut.serde.ObjectMapper
+import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
 class ViewConditionsSpec extends Specification {
 
     @Shared
-    ObjectMapper objectMapper = ObjectMapper.getDefault()
+    @AutoCleanup
+    ApplicationContext context = ApplicationContext.run()
+
+    @Shared
+    ObjectMapper objectMapper = context.getBean(ObjectMapper.class)
 
     def "should create ViewConditions with constructors and builder"() {
         given:
@@ -105,7 +111,7 @@ class ViewConditionsSpec extends Specification {
             it.all().size() == 1
             it.all().first().field() == "status"
             it.any().size() == 1
-            it.any().first().value() == "vip"
+            it.any().first().value() == ViewConditionValue.of("vip")
         }
     }
 

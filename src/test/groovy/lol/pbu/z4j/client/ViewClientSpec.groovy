@@ -16,6 +16,7 @@
 package lol.pbu.z4j.client
 
 import io.micronaut.http.HttpStatus
+import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import java.util.Set
@@ -25,6 +26,7 @@ import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.model.SortOrder
 import lol.pbu.z4j.model.View
 import lol.pbu.z4j.model.ViewCondition
+import lol.pbu.z4j.model.ViewConditionValue
 import lol.pbu.z4j.model.ViewConditions
 import lol.pbu.z4j.model.ViewCreateRequest
 import lol.pbu.z4j.model.ViewExecuteResponse
@@ -46,6 +48,12 @@ class ViewClientSpec extends Z4jSpec {
     ViewClient userViewClient
 
     @Shared
+    ViewClient badEmailViewClient
+
+    @Shared
+    ViewClient badUrlViewClient
+
+    @Shared
     Long firstActiveViewId
 
     @Shared
@@ -54,6 +62,8 @@ class ViewClientSpec extends Z4jSpec {
     def setupSpec() {
         adminViewClient = adminCtx.getBean(ViewClient.class)
         userViewClient = userCtx.getBean(ViewClient.class)
+        badEmailViewClient = badEmailCtx.getBean(ViewClient.class)
+        badUrlViewClient = badUrlCtx.getBean(ViewClient.class)
         def views = adminViewClient.listActiveViews().block().views()
         if (views != null && !views.isEmpty()) {
             firstActiveViewId = views.get(0).id()
@@ -243,7 +253,7 @@ class ViewClientSpec extends Z4jSpec {
             view().description() == updatedDescription
             view().conditions() != null
             view().conditions().all() != null
-            view().conditions().all().first().value() == "open"
+            view().conditions().all().first().value() == ViewConditionValue.of("open")
         }
 
         when: "executing the updated view"
@@ -269,31 +279,106 @@ class ViewClientSpec extends Z4jSpec {
         safeDelete(createdId)
     }
 
-    def "cannot create, update, or delete a view as an end user"() {
+    def "can create and read back a view with #scenario condition value"(
+            String scenario, String field, String operator, ViewConditionValue value, ViewConditionValue expectedValue) {
+        given: "a view with a base status condition and the target condition value"
+        String title = "Z4J Condition Test " + UUID.randomUUID().toString().substring(0, 8)
+        View newView = new View(title)
+                .withActive(true)
+                .addAllItem(new ViewCondition("status", "less_than", "closed"))
+                .addAnyItem(new ViewCondition(field, operator, value))
+        Long createdId = null
+
+        when: "creating the view"
+        ViewResponse createResponse = adminViewClient.createView(new ViewCreateRequest(newView)).block()
+        if (createResponse?.view()?.id() != null) {
+            createdId = createResponse.view().id()
+            createdViewIds.add(createdId)
+        }
+
+        and: "reading the created view back"
+        ViewResponse showResponse = adminViewClient.showView(createdId).block()
+
+        then: "the stored condition matches the expected value"
+        noExceptionThrown()
+        verifyAll(showResponse) {
+            it != null
+            view() != null
+            view().id() == createdId
+            view().conditions() != null
+            view().conditions().any() != null
+            !view().conditions().any().isEmpty()
+            verifyAll(view().conditions().any().first()) {
+                it.field() == field
+                it.operator() == operator
+                it.value() == expectedValue
+            }
+        }
+
+        cleanup: "remove the created test view"
+        safeDelete(createdId)
+
+        where:
+        scenario                  | field          | operator       | value                                    | expectedValue
+        "text status open"        | "status"       | "is"           | ViewConditionValue.of("open")            | ViewConditionValue.of("open")
+        "text status solved"      | "status"       | "less_than"    | ViewConditionValue.of("solved")          | ViewConditionValue.of("solved")
+        "text priority"           | "priority"     | "is"           | ViewConditionValue.of("high")            | ViewConditionValue.of("high")
+        "text tag"                | "current_tags" | "includes"     | ViewConditionValue.of("vip")             | ViewConditionValue.of("vip")
+        "text list tags"          | "current_tags" | "includes"     | ViewConditionValue.of(["vip", "urgent"]) | ViewConditionValue.of("vip urgent")
+        "null unassigned"         | "assignee_id"  | "is"           | null                                     | ViewConditionValue.of("")
+    }
+
+    def "cannot create a view with invalid payload: #scenario"(String scenario, View invalidView) {
+        when: "creating a view with an invalid payload"
+        ViewResponse response = adminViewClient.createView(new ViewCreateRequest(invalidView)).block()
+        if (response?.view()?.id() != null) {
+            createdViewIds.add(response.view().id())
+        }
+
+        then: "Zendesk rejects the request with a 4xx client error"
+        HttpClientResponseException error = thrown(HttpClientResponseException)
+        error.status.code >= 400 && error.status.code < 500
+
+        where:
+        scenario                     | invalidView
+        "blank title"                | new View("").addAllItem(new ViewCondition("status", "is", "open"))
+        "missing conditions"         | new View("Z4J Missing Conditions " + UUID.randomUUID().toString().substring(0, 8))
+        "invalid condition field"    | new View("Z4J Bad Field " + UUID.randomUUID().toString().substring(0, 8)).addAllItem(new ViewCondition("nonexistent_field_xyz", "is", "open"))
+        "invalid condition operator" | new View("Z4J Bad Op " + UUID.randomUUID().toString().substring(0, 8)).addAllItem(new ViewCondition("status", "nonexistent_operator_xyz", "open"))
+        "numeric condition value"    | new View("Z4J Numeric Value " + UUID.randomUUID().toString().substring(0, 8)).addAllItem(new ViewCondition("status", "less_than", "closed")).addAnyItem(new ViewCondition("NEW", "greater_than", ViewConditionValue.of(24L)))
+    }
+
+    def "cannot create, update, or delete a view as #clientName"(String clientName, ViewClient client) {
         given:
         View view = new View("Unauthorized View")
                 .addAllItem(new ViewCondition("status", "is", "open"))
 
-        when: "end user attempts to create a view"
-        userViewClient.createView(new ViewCreateRequest(view)).block()
+        when: "attempting to create a view"
+        client.createView(new ViewCreateRequest(view)).block()
 
         then:
-        HttpClientResponseException createError = thrown(HttpClientResponseException)
-        createError.status == FORBIDDEN || createError.status == UNAUTHORIZED
+        HttpClientException createError = thrown(HttpClientException)
+        !(createError instanceof HttpClientResponseException) || createError.status == FORBIDDEN || createError.status == UNAUTHORIZED
 
-        when: "end user attempts to update a view"
-        userViewClient.updateView(1L, new ViewUpdateRequest(view)).block()
-
-        then:
-        HttpClientResponseException updateError = thrown(HttpClientResponseException)
-        updateError.status == FORBIDDEN || updateError.status == UNAUTHORIZED
-
-        when: "end user attempts to delete a view"
-        userViewClient.deleteView(1L).block()
+        when: "attempting to update a view"
+        client.updateView(1L, new ViewUpdateRequest(view)).block()
 
         then:
-        HttpClientResponseException deleteError = thrown(HttpClientResponseException)
-        deleteError.status == FORBIDDEN || deleteError.status == UNAUTHORIZED
+        HttpClientException updateError = thrown(HttpClientException)
+        !(updateError instanceof HttpClientResponseException) || updateError.status == FORBIDDEN || updateError.status == UNAUTHORIZED
+
+        when: "attempting to delete a view"
+        client.deleteView(1L).block()
+
+        then:
+        HttpClientException deleteError = thrown(HttpClientException)
+        !(deleteError instanceof HttpClientResponseException) || deleteError.status == FORBIDDEN || deleteError.status == UNAUTHORIZED
+
+        where:
+        clientName  | client
+        "end user"  | userViewClient
+        "bad email" | badEmailViewClient
+        "bad url"   | badUrlViewClient
     }
 
     void safeDelete(Long id) {

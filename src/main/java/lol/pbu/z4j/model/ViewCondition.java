@@ -25,6 +25,9 @@ import io.soabase.recordbuilder.core.RecordBuilder;
 /**
  * Single filter condition rule for a Zendesk view.
  *
+ * <p>You can pass a plain string with {@link #ViewCondition(String, String, String)} or
+ * a typed {@link ViewConditionValue} for text, lists, flags, or whole numbers.
+ *
  * @author Jonathan-Zollinger
  * @since 0.4.3
  */
@@ -38,7 +41,7 @@ import io.soabase.recordbuilder.core.RecordBuilder;
 public record ViewCondition(
         @Nullable @JsonProperty(JSON_PROPERTY_FIELD) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String field,
         @Nullable @JsonProperty(JSON_PROPERTY_OPERATOR) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String operator,
-        @Nullable @JsonProperty(JSON_PROPERTY_VALUE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String value
+        @Nullable @JsonProperty(JSON_PROPERTY_VALUE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) ViewConditionValue value
 ) implements ViewConditionBuilder.With {
 
     public static final String JSON_PROPERTY_FIELD = "field";
@@ -46,6 +49,13 @@ public record ViewCondition(
     public static final String JSON_PROPERTY_VALUE = "value";
 
     public ViewCondition() {
-        this(null, null, null);
+        this(null, null, (ViewConditionValue) null);
+    }
+
+    /**
+     * Creates a view condition with a plain text value.
+     */
+    public ViewCondition(String field, String operator, @Nullable String value) {
+        this(field, operator, value != null ? ViewConditionValue.of(value) : null);
     }
 }
