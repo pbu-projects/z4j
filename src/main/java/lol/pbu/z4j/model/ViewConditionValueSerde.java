@@ -25,7 +25,6 @@ import io.micronaut.serde.exceptions.SerdeException;
 import jakarta.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Serializes and deserializes {@link ViewConditionValue} as flat JSON values
@@ -58,7 +57,6 @@ public class ViewConditionValueSerde implements Serde<ViewConditionValue> {
     }
 
     @Override
-    @Nullable
     public ViewConditionValue deserialize(
             @NonNull Decoder decoder,
             @NonNull DecoderContext context,
@@ -123,7 +121,7 @@ public class ViewConditionValueSerde implements Serde<ViewConditionValue> {
         }
         List<String> strings = items.stream()
                 .map(String.class::cast)
-                .collect(Collectors.toList());
+                .toList();
         return new ViewConditionValue.TextList(strings);
     }
 }
