@@ -28,7 +28,7 @@ class ViewExecuteResponseSpec extends Specification {
         given:
         ViewRow row = new ViewRow(new Ticket().withId(10L))
         List<ViewRow> expectedRows = [row]
-        List<Object> expectedColumns = [["id": "subject", "title": "Subject"]]
+        List<ViewColumn> expectedColumns = [new ViewColumn("subject", "Subject")]
         List<User> expectedUsers = [new User().withId(20L).withName("Agent")]
         List<Group> expectedGroups = [new Group()]
         List<Organization> expectedOrgs = [new Organization(30L)]
@@ -83,6 +83,8 @@ class ViewExecuteResponseSpec extends Specification {
         given:
         ViewRow row1 = new ViewRow(new Ticket().withId(1L))
         ViewRow row2 = new ViewRow(new Ticket().withId(2L))
+        ViewColumn col1 = new ViewColumn("col1", "Column 1")
+        ViewColumn col2 = new ViewColumn("col2", "Column 2")
         User user1 = new User().withId(10L)
         User user2 = new User().withId(20L)
         Group group1 = new Group()
@@ -90,13 +92,13 @@ class ViewExecuteResponseSpec extends Specification {
         Organization org1 = new Organization(100L)
         Organization org2 = new Organization(200L)
         ViewExecuteResponse response = new ViewExecuteResponse(
-                [row1], ["col1"], [user1], [group1], [org1], 1, "next1", "prev1"
+                [row1], [col1], [user1], [group1], [org1], 1, "next1", "prev1"
         )
 
         when:
         ViewExecuteResponse updated = response
                 .withRows([row2])
-                .withColumns(["col2"])
+                .withColumns([col2])
                 .withUsers([user2])
                 .withGroups([group2])
                 .withOrganizations([org2])
@@ -107,7 +109,7 @@ class ViewExecuteResponseSpec extends Specification {
         then:
         verifyAll(response) {
             rows() == [row1]
-            columns() == ["col1"]
+            columns() == [col1]
             users() == [user1]
             groups() == [group1]
             organizations() == [org1]
@@ -117,7 +119,7 @@ class ViewExecuteResponseSpec extends Specification {
         }
         verifyAll(updated) {
             rows() == [row2]
-            columns() == ["col2"]
+            columns() == [col2]
             users() == [user2]
             groups() == [group2]
             organizations() == [org2]
@@ -130,11 +132,12 @@ class ViewExecuteResponseSpec extends Specification {
     def "should round-trip serialize and deserialize ViewExecuteResponse"() {
         given:
         ViewRow row = new ViewRow(new Ticket().withId(55L))
+        ViewColumn col = new ViewColumn("subject", "Subject")
         User user = new User().withId(66L).withName("Support User")
         Organization org = new Organization(77L)
         ViewExecuteResponse response = new ViewExecuteResponse(
                 [row],
-                [["id": "subject"]],
+                [col],
                 [user],
                 null,
                 [org],
@@ -161,7 +164,7 @@ class ViewExecuteResponseSpec extends Specification {
         verifyAll(deserialized) {
             rows().size() == 1
             rows().first().ticket.id == 55L
-            columns() == [["id": "subject"]]
+            columns() == [col]
             users().size() == 1
             users().first().id == 66L
             groups() == null
