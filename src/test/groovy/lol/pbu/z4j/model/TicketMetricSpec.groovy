@@ -228,17 +228,50 @@ class TicketMetricSpec extends Z4jSpec {
 
     def "should serialize and deserialize TicketMetric"() {
         given:
-        TicketMetricTime waitTime = new TicketMetricTime(10L, 20L)
-        ZonedDateTime timestamp = ZonedDateTime.of(2026, 11, 12, 10, 0, 0, 0, ZoneOffset.UTC)
+        TicketMetricTime agentWaitTime = new TicketMetricTime(10L, 20L)
+        TicketMetricTime firstResolutionTime = new TicketMetricTime(30L, 40L)
+        TicketMetricTime fullResolutionTime = new TicketMetricTime(50L, 60L)
+        TicketMetricTime onHoldTime = new TicketMetricTime(5L, 8L)
+        TicketMetricTime replyTimeMin = new TicketMetricTime(15L, 25L)
+        TicketMetricTime replyTimeSec = new TicketMetricTime(900L, 1500L)
+        TicketMetricTime requesterWaitTime = new TicketMetricTime(12L, 18L)
+        ZonedDateTime expectedAssignedAt = ZonedDateTime.of(2026, 11, 12, 1, 0, 0, 0, ZoneOffset.UTC)
+        ZonedDateTime expectedAssigneeUpdatedAt = ZonedDateTime.of(2026, 11, 12, 2, 0, 0, 0, ZoneOffset.UTC)
+        ZonedDateTime expectedCreatedAt = ZonedDateTime.of(2026, 11, 12, 3, 0, 0, 0, ZoneOffset.UTC)
+        ZonedDateTime expectedCustomStatusUpdatedAt = ZonedDateTime.of(2026, 11, 12, 4, 0, 0, 0, ZoneOffset.UTC)
+        ZonedDateTime expectedInitiallyAssignedAt = ZonedDateTime.of(2026, 11, 12, 5, 0, 0, 0, ZoneOffset.UTC)
+        ZonedDateTime expectedLatestCommentAddedAt = ZonedDateTime.of(2026, 11, 12, 6, 0, 0, 0, ZoneOffset.UTC)
+        ZonedDateTime expectedRequesterUpdatedAt = ZonedDateTime.of(2026, 11, 12, 7, 0, 0, 0, ZoneOffset.UTC)
+        ZonedDateTime expectedSolvedAt = ZonedDateTime.of(2026, 11, 12, 8, 0, 0, 0, ZoneOffset.UTC)
+        ZonedDateTime expectedStatusUpdatedAt = ZonedDateTime.of(2026, 11, 12, 9, 0, 0, 0, ZoneOffset.UTC)
+        ZonedDateTime expectedUpdatedAt = ZonedDateTime.of(2026, 11, 12, 10, 0, 0, 0, ZoneOffset.UTC)
         String testUrl = faker.internet().url()
-        TicketMetric metric = new TicketMetric()
-                .withId(100L)
-                .withTicketId(200L)
-                .withAgentWaitTimeInMinutes(waitTime)
-                .withCreatedAt(timestamp)
-                .withUpdatedAt(timestamp)
-                .withReplies(5L)
-                .withUrl(testUrl)
+        TicketMetric metric = new TicketMetric(
+                agentWaitTime,
+                expectedAssignedAt,
+                2L,
+                expectedAssigneeUpdatedAt,
+                expectedCreatedAt,
+                expectedCustomStatusUpdatedAt,
+                firstResolutionTime,
+                fullResolutionTime,
+                3L,
+                100L,
+                expectedInitiallyAssignedAt,
+                expectedLatestCommentAddedAt,
+                onHoldTime,
+                1L,
+                5L,
+                replyTimeMin,
+                replyTimeSec,
+                expectedRequesterUpdatedAt,
+                requesterWaitTime,
+                expectedSolvedAt,
+                expectedStatusUpdatedAt,
+                200L,
+                expectedUpdatedAt,
+                testUrl
+        )
 
         when:
         String json = objectMapper.writeValueAsString(metric)
@@ -247,22 +280,71 @@ class TicketMetricSpec extends Z4jSpec {
 
         then:
         verifyAll(map) {
+            size() == 24
             get("id") == 100
             get("ticket_id") == 200
+            get("assignee_stations") == 2
+            get("group_stations") == 3
+            get("reopens") == 1
             get("replies") == 5
             get("url") == testUrl
             get("agent_wait_time_in_minutes") instanceof Map
             ((Map) get("agent_wait_time_in_minutes")).get("business") == 10
             ((Map) get("agent_wait_time_in_minutes")).get("calendar") == 20
+            get("first_resolution_time_in_minutes") instanceof Map
+            ((Map) get("first_resolution_time_in_minutes")).get("business") == 30
+            ((Map) get("first_resolution_time_in_minutes")).get("calendar") == 40
+            get("full_resolution_time_in_minutes") instanceof Map
+            ((Map) get("full_resolution_time_in_minutes")).get("business") == 50
+            ((Map) get("full_resolution_time_in_minutes")).get("calendar") == 60
+            get("on_hold_time_in_minutes") instanceof Map
+            ((Map) get("on_hold_time_in_minutes")).get("business") == 5
+            ((Map) get("on_hold_time_in_minutes")).get("calendar") == 8
+            get("reply_time_in_minutes") instanceof Map
+            ((Map) get("reply_time_in_minutes")).get("business") == 15
+            ((Map) get("reply_time_in_minutes")).get("calendar") == 25
+            get("reply_time_in_seconds") instanceof Map
+            ((Map) get("reply_time_in_seconds")).get("business") == 900
+            ((Map) get("reply_time_in_seconds")).get("calendar") == 1500
+            get("requester_wait_time_in_minutes") instanceof Map
+            ((Map) get("requester_wait_time_in_minutes")).get("business") == 12
+            ((Map) get("requester_wait_time_in_minutes")).get("calendar") == 18
+            ZonedDateTime.parse((String) get("assigned_at")) == expectedAssignedAt
+            ZonedDateTime.parse((String) get("assignee_updated_at")) == expectedAssigneeUpdatedAt
+            ZonedDateTime.parse((String) get("created_at")) == expectedCreatedAt
+            ZonedDateTime.parse((String) get("custom_status_updated_at")) == expectedCustomStatusUpdatedAt
+            ZonedDateTime.parse((String) get("initially_assigned_at")) == expectedInitiallyAssignedAt
+            ZonedDateTime.parse((String) get("latest_comment_added_at")) == expectedLatestCommentAddedAt
+            ZonedDateTime.parse((String) get("requester_updated_at")) == expectedRequesterUpdatedAt
+            ZonedDateTime.parse((String) get("solved_at")) == expectedSolvedAt
+            ZonedDateTime.parse((String) get("status_updated_at")) == expectedStatusUpdatedAt
+            ZonedDateTime.parse((String) get("updated_at")) == expectedUpdatedAt
         }
         verifyAll(deserialized) {
+            agentWaitTimeInMinutes() == agentWaitTime
+            assignedAt() == expectedAssignedAt
+            assigneeStations() == 2L
+            assigneeUpdatedAt() == expectedAssigneeUpdatedAt
+            createdAt() == expectedCreatedAt
+            customStatusUpdatedAt() == expectedCustomStatusUpdatedAt
+            firstResolutionTimeInMinutes() == firstResolutionTime
+            fullResolutionTimeInMinutes() == fullResolutionTime
+            groupStations() == 3L
             id() == 100L
-            ticketId() == 200L
+            initiallyAssignedAt() == expectedInitiallyAssignedAt
+            latestCommentAddedAt() == expectedLatestCommentAddedAt
+            onHoldTimeInMinutes() == onHoldTime
+            reopens() == 1L
             replies() == 5L
+            replyTimeInMinutes() == replyTimeMin
+            replyTimeInSeconds() == replyTimeSec
+            requesterUpdatedAt() == expectedRequesterUpdatedAt
+            requesterWaitTimeInMinutes() == requesterWaitTime
+            solvedAt() == expectedSolvedAt
+            statusUpdatedAt() == expectedStatusUpdatedAt
+            ticketId() == 200L
+            updatedAt() == expectedUpdatedAt
             url() == testUrl
-            agentWaitTimeInMinutes() == waitTime
-            createdAt() == timestamp
-            updatedAt() == timestamp
         }
     }
 
