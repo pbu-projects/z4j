@@ -17,6 +17,7 @@ package lol.pbu.z4j.client
 
 import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.json.JsonMapper
+import java.time.ZonedDateTime
 import lol.pbu.z4j.Z4jSpec
 import lol.pbu.z4j.fixture.FixtureLoader
 import lol.pbu.z4j.fixture.TicketFixtures
@@ -402,7 +403,7 @@ class TicketClientSpec extends Z4jSpec {
         TicketUpdateRequest updateRequest = new TicketUpdateRequest(updateInput)
 
         when: "calling updateManyTickets"
-        JobStatusResponse response = ticketsAgentClient.updateManyTickets(ticketId.toString(), updateRequest).block()
+        JobStatusResponse response = ticketsAgentClient.updateManyTickets([ticketId], updateRequest).block()
 
         then: "job status response is returned"
         noExceptionThrown()
@@ -456,6 +457,392 @@ class TicketClientSpec extends Z4jSpec {
 
         where:
         [client, clientType] << [[ticketsUserClient, "simple user"], [ticketBadEmailClient, "bad email"], [ticketBadUrlClient, "bad url"]]
+    }
+
+    def "can show ticket with sideloaded resources as agent"() {
+        given: "a throwaway ticket walked through the full ticket lifecycle"
+        User adminUser = adminCtx.getBean(UserClient.class).showCurrentUser().block()?.user()
+        User endUser = userCtx.getBean(UserClient.class).showCurrentUser().block()?.user()
+        Long groupId = adminUser?.defaultGroupId() ?: tickets.findResult { it.groupId() }
+        Long organizationId = endUser?.organizationId() ?: adminUser?.organizationId() ?: tickets.findResult { it.organizationId() }
+
+        TicketCreateInput createInput = new TicketCreateInput(
+                new TicketComment("Initial customer question", true).withAuthorId(endUser.id()))
+                .withSubject("Metric lifecycle test ${UUID.randomUUID().toString().substring(0, 8)}")
+                .withRequesterId(endUser.id())
+                .withAssigneeId(adminUser.id())
+        if (groupId != null) {
+            createInput = createInput.withGroupId(groupId)
+        }
+        if (organizationId != null) {
+            createInput = createInput.withOrganizationId(organizationId)
+        }
+
+        TicketResponse created = ticketsAdminClient.createTicket(new TicketCreateRequest(createInput)).block()
+        Long createdId = created.ticket().id()
+
+        // 1) Public agent reply + pending status
+        ticketsAdminClient.updateTicket(createdId, new TicketUpdateRequest(new TicketUpdateInput()
+                .withComment(new TicketComment("Agent public reply", true).withAuthorId(adminUser.id()))
+                .withStatus(TicketUpdateInputStatus.PENDING))).block()
+
+        // 2) Put ticket on hold if on-hold status is enabled in the sandbox
+        try {
+            ticketsAdminClient.updateTicket(createdId, new TicketUpdateRequest(new TicketUpdateInput()
+                    .withStatus(TicketUpdateInputStatus.HOLD))).block()
+        } catch (HttpClientException ignored) {
+            // On-hold status is not enabled in all Zendesk sandboxes
+        }
+
+        // 3) Solve ticket
+        ticketsAdminClient.updateTicket(createdId, new TicketUpdateRequest(new TicketUpdateInput()
+                .withStatus(TicketUpdateInputStatus.SOLVED))).block()
+
+        // 4) Reopen with requester follow-up and solve again
+        ticketsAdminClient.updateTicket(createdId, new TicketUpdateRequest(new TicketUpdateInput()
+                .withComment(new TicketComment("Customer follow-up", true).withAuthorId(endUser.id()))
+                .withStatus(TicketUpdateInputStatus.OPEN))).block()
+        ticketsAdminClient.updateTicket(createdId, new TicketUpdateRequest(new TicketUpdateInput()
+                .withStatus(TicketUpdateInputStatus.SOLVED))).block()
+
+        when: "calling showTicket with sideloaded resources as agent"
+        // Zendesk updates ticket metric sets asynchronously; poll briefly until solvedAt is populated
+        TicketResponse response = null
+        for (int i = 0; i < 10; i++) {
+            response = ticketsAgentClient.showTicket(createdId, "metric_sets,users,groups,organizations,last_audits").block()
+            TicketMetric m = response?.metricSets()?.isEmpty() ? null : response.metricSets().first()
+            if (m != null && m.solvedAt() != null && m.reopens() != null && m.reopens() >= 1L && m.replies() != null && m.replies() >= 1L) {
+                break
+            }
+            sleep(1000)
+        }
+
+        then: "response contains ticket and populated sideloaded collections"
+        noExceptionThrown()
+        verifyAll(response) {
+            it != null
+            ticket() != null
+            ticket().id() == createdId
+            ticket().status() == TicketStatus.SOLVED
+            ticket().assigneeId() == adminUser.id()
+            metricSets() != null && !metricSets().isEmpty()
+            users() != null && !users().isEmpty()
+            audits() != null && !audits().isEmpty()
+            groupId == null || (groups() != null && !groups().isEmpty())
+            ticket().organizationId() == null || (organizations() != null && !organizations().isEmpty())
+        }
+        verifyAll(response.metricSets().first()) {
+            id() != null
+            ticketId() == createdId
+            url() != null && url().contains("/ticket_metrics/")
+            createdAt() != null
+            updatedAt() != null
+            reopens() != null && reopens() >= 1L
+            replies() != null && replies() >= 1L
+            assigneeStations() != null && assigneeStations() >= 1L
+            groupStations() != null && groupStations() >= 1L
+            assignedAt() != null
+            assigneeUpdatedAt() != null
+            // custom_status_updated_at is only populated if custom ticket statuses are active in the sandbox
+            customStatusUpdatedAt() == null || customStatusUpdatedAt() instanceof ZonedDateTime
+            initiallyAssignedAt() != null
+            latestCommentAddedAt() != null
+            requesterUpdatedAt() != null
+            solvedAt() != null
+            statusUpdatedAt() != null
+            agentWaitTimeInMinutes() != null && (agentWaitTimeInMinutes().business() == null || agentWaitTimeInMinutes().business() >= 0L) && (agentWaitTimeInMinutes().calendar() == null || agentWaitTimeInMinutes().calendar() >= 0L)
+            firstResolutionTimeInMinutes() != null && (firstResolutionTimeInMinutes().business() == null || firstResolutionTimeInMinutes().business() >= 0L) && (firstResolutionTimeInMinutes().calendar() == null || firstResolutionTimeInMinutes().calendar() >= 0L)
+            fullResolutionTimeInMinutes() != null && (fullResolutionTimeInMinutes().business() == null || fullResolutionTimeInMinutes().business() >= 0L) && (fullResolutionTimeInMinutes().calendar() == null || fullResolutionTimeInMinutes().calendar() >= 0L)
+            onHoldTimeInMinutes() != null && (onHoldTimeInMinutes().business() == null || onHoldTimeInMinutes().business() >= 0L) && (onHoldTimeInMinutes().calendar() == null || onHoldTimeInMinutes().calendar() >= 0L)
+            replyTimeInMinutes() != null && (replyTimeInMinutes().business() == null || replyTimeInMinutes().business() >= 0L) && (replyTimeInMinutes().calendar() == null || replyTimeInMinutes().calendar() >= 0L)
+            // reply_time_in_seconds is only populated on some Zendesk plans
+            replyTimeInSeconds() == null || ((replyTimeInSeconds().business() == null || replyTimeInSeconds().business() >= 0L) && (replyTimeInSeconds().calendar() == null || replyTimeInSeconds().calendar() >= 0L))
+            requesterWaitTimeInMinutes() != null && (requesterWaitTimeInMinutes().business() == null || requesterWaitTimeInMinutes().business() >= 0L) && (requesterWaitTimeInMinutes().calendar() == null || requesterWaitTimeInMinutes().calendar() >= 0L)
+        }
+
+        cleanup: "delete the throwaway lifecycle ticket"
+        try {
+            if (createdId != null) {
+                ticketsAdminClient.deleteTicket(createdId).block()
+                ticketsAdminClient.deleteTicketPermanently(createdId).block()
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    def "can list tickets with sideloaded resources as agent"() {
+        given: "at least two tickets exist in the sandbox"
+        List<Long> createdIds = []
+        if (tickets.size() < 2) {
+            for (int i = tickets.size(); i < 2; i++) {
+                createdIds << createTicketForTest().ticket().id()
+            }
+        }
+
+        when: "calling listTickets with all supported sideloaded resources"
+        TicketsResponse response = ticketsAgentClient.listTickets(
+                null, "metric_sets,users,groups,organizations,last_audits").block()
+
+        then: "response contains multiple tickets, correlated metric sets, and sideloaded collections"
+        noExceptionThrown()
+        verifyAll(response) {
+            it != null
+            tickets() != null && tickets().size() >= 2
+            metricSets() != null && metricSets().size() >= 2
+            users() != null && !users().isEmpty()
+            audits() != null && !audits().isEmpty()
+            tickets().every { ticket -> metricSets().any { it.ticketId() == ticket.id() } }
+            !tickets().any { it.groupId() != null } || (groups() != null && !groups().isEmpty())
+            !tickets().any { it.organizationId() != null } || (organizations() != null && !organizations().isEmpty())
+        }
+        response.metricSets().each { TicketMetric metric ->
+            verifyAll(metric) {
+                id() != null
+                ticketId() != null
+                url() != null && url().contains("/ticket_metrics/")
+                createdAt() != null
+                updatedAt() != null
+                assigneeStations() != null && assigneeStations() >= 0L
+                groupStations() != null && groupStations() >= 0L
+                reopens() != null && reopens() >= 0L
+                replies() != null && replies() >= 0L
+            }
+        }
+
+        cleanup: "delete any throwaway tickets created for the test"
+        createdIds.each { Long id ->
+            try {
+                ticketsAdminClient.deleteTicket(id).block()
+                ticketsAdminClient.deleteTicketPermanently(id).block()
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    def "can list tickets filtered by externalId with sideloaded resources as agent"() {
+        given: "a throwaway ticket with a unique externalId"
+        String externalId = "ext-${UUID.randomUUID().toString().replace("-", "").substring(0, 12)}"
+        TicketCreateInput createInput = new TicketCreateInput(new TicketComment("External ID sideload test"))
+                .withSubject("External ID test ${externalId}")
+                .withExternalId(externalId)
+        Long createdId = ticketsAdminClient.createTicket(new TicketCreateRequest(createInput)).block().ticket().id()
+
+        when: "calling listTickets with the non-null externalId and sideloaded resources"
+        TicketsResponse response = ticketsAgentClient.listTickets(externalId, "metric_sets,users").block()
+
+        then: "response contains the matching ticket and sideloaded metric sets and users"
+        noExceptionThrown()
+        verifyAll(response) {
+            it != null
+            tickets() != null && !tickets().isEmpty()
+            tickets().any { it.id() == createdId && it.externalId() == externalId }
+            metricSets() != null && metricSets().any { it.ticketId() == createdId }
+            users() != null && !users().isEmpty()
+        }
+
+        cleanup: "delete the throwaway ticket"
+        try {
+            if (createdId != null) {
+                ticketsAdminClient.deleteTicket(createdId).block()
+                ticketsAdminClient.deleteTicketPermanently(createdId).block()
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    def "can show multiple tickets by list of IDs with sideloaded resources as agent"() {
+        given: "at least two ticket IDs in a list"
+        List<Long> createdIds = []
+        List<Long> targetIds = new ArrayList<>(tickets.take(2)*.id())
+        while (targetIds.size() < 2) {
+            Long id = createTicketForTest().ticket().id()
+            createdIds << id
+            targetIds << id
+        }
+
+        when: "calling showMultipleTickets with a list of IDs and sideloaded resources"
+        TicketsResponse response = ticketsAgentClient.showMultipleTickets(targetIds, "metric_sets,users").block()
+
+        then: "response contains multiple tickets, correlated metric sets, and users"
+        noExceptionThrown()
+        verifyAll(response) {
+            it != null
+            tickets() != null && tickets().size() >= 2
+            metricSets() != null && metricSets().size() >= 2
+            users() != null && !users().isEmpty()
+            tickets().every { ticket -> metricSets().any { it.ticketId() == ticket.id() } }
+        }
+        response.metricSets().each { TicketMetric metric ->
+            verifyAll(metric) {
+                id() != null
+                ticketId() != null
+                url() != null && url().contains("/ticket_metrics/")
+                createdAt() != null
+                updatedAt() != null
+                assigneeStations() != null && assigneeStations() >= 0L
+                groupStations() != null && groupStations() >= 0L
+                reopens() != null && reopens() >= 0L
+                replies() != null && replies() >= 0L
+            }
+        }
+
+        cleanup: "delete any throwaway tickets created for the test"
+        createdIds.each { Long id ->
+            try {
+                ticketsAdminClient.deleteTicket(id).block()
+                ticketsAdminClient.deleteTicketPermanently(id).block()
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    def "can show multiple tickets by comma-separated string IDs with all sideloaded resources as agent"() {
+        given: "two throwaway tickets with group and optional organization set"
+        User adminUser = adminCtx.getBean(UserClient.class).showCurrentUser().block()?.user()
+        User endUser = userCtx.getBean(UserClient.class).showCurrentUser().block()?.user()
+        Long groupId = adminUser?.defaultGroupId() ?: tickets.findResult { it.groupId() }
+        Long organizationId = endUser?.organizationId() ?: adminUser?.organizationId() ?: tickets.findResult { it.organizationId() }
+
+        List<Long> createdIds = (1..2).collect { idx ->
+            TicketCreateInput input = new TicketCreateInput(new TicketComment("Multi sideload test ${idx}"))
+                    .withSubject("Multi sideload ${idx} ${UUID.randomUUID().toString().substring(0, 8)}")
+                    .withRequesterId(endUser.id())
+                    .withAssigneeId(adminUser.id())
+            if (groupId != null) {
+                input = input.withGroupId(groupId)
+            }
+            if (organizationId != null) {
+                input = input.withOrganizationId(organizationId)
+            }
+            ticketsAdminClient.createTicket(new TicketCreateRequest(input)).block().ticket().id()
+        }
+        Long orgTicketId = tickets.find { it.organizationId() != null }?.id()
+        List<Long> allIds = orgTicketId != null ? createdIds + [orgTicketId] : createdIds
+        String ids = allIds.join(",")
+
+        when: "calling showMultipleTickets with comma-separated IDs and all sideloaded resources"
+        TicketsResponse response = ticketsAgentClient.showMultipleTickets(
+                ids, "metric_sets,users,groups,organizations,last_audits").block()
+
+        then: "response contains both tickets, correlated metric sets, and all requested sideloaded collections"
+        noExceptionThrown()
+        verifyAll(response) {
+            it != null
+            tickets() != null && tickets().size() >= 2
+            metricSets() != null && metricSets().size() >= 2
+            users() != null && !users().isEmpty()
+            audits() != null && !audits().isEmpty()
+            groupId == null || (groups() != null && !groups().isEmpty())
+            !tickets().any { it.organizationId() != null } || (organizations() != null && !organizations().isEmpty())
+            tickets().every { ticket -> metricSets().any { it.ticketId() == ticket.id() } }
+        }
+        response.metricSets().each { TicketMetric metric ->
+            verifyAll(metric) {
+                id() != null
+                ticketId() != null
+                url() != null && url().contains("/ticket_metrics/")
+                createdAt() != null
+                updatedAt() != null
+                assigneeStations() != null && assigneeStations() >= 0L
+                groupStations() != null && groupStations() >= 0L
+                reopens() != null && reopens() >= 0L
+                replies() != null && replies() >= 0L
+            }
+        }
+
+        cleanup: "delete the throwaway tickets"
+        createdIds.each { Long id ->
+            try {
+                ticketsAdminClient.deleteTicket(id).block()
+                ticketsAdminClient.deleteTicketPermanently(id).block()
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    def "calling 2-arg include overloads with null include omits sideloaded collections"() {
+        given: "an existing ticket ID"
+        Long ticketId = tickets.first().id()
+
+        when: "calling showTicket, listTickets, and showMultipleTickets with include = null"
+        TicketResponse singleResponse = ticketsAgentClient.showTicket(ticketId, null).block()
+        TicketsResponse listResponse = ticketsAgentClient.listTickets(null, null).block()
+        TicketsResponse multiResponse = ticketsAgentClient.showMultipleTickets(ticketId.toString(), null).block()
+
+        then: "primary responses are populated and sideloaded metricSets are omitted"
+        noExceptionThrown()
+        verifyAll(singleResponse) {
+            it != null
+            ticket() != null
+            ticket().id() == ticketId
+            metricSets() == null
+        }
+        verifyAll(listResponse) {
+            it != null
+            tickets() != null && !tickets().isEmpty()
+            metricSets() == null
+        }
+        verifyAll(multiResponse) {
+            it != null
+            tickets() != null && !tickets().isEmpty()
+            metricSets() == null
+        }
+    }
+
+    def "calling showTicket() with sideloaded resources succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
+        when: "calling showTicket with metric_sets and users sideloaded"
+        TicketResponse response = client.showTicket(tickets.first().id(), "metric_sets,users").block()
+
+        then: "response contains ticket and sideloaded collections"
+        noExceptionThrown()
+        verifyAll(response) {
+            it != null
+            ticket() != null
+            metricSets() != null && !metricSets().isEmpty()
+            users() != null && !users().isEmpty()
+        }
+
+        where:
+        [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { it.shouldSucceed }
+    }
+
+    def "calling showTicket() with sideloaded resources fails when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
+        when: "calling showTicket with metric_sets and users sideloaded"
+        client.showTicket(tickets.first().id(), "metric_sets,users").block()
+
+        then: "an HttpClientException is thrown"
+        thrown(HttpClientException)
+
+        where:
+        [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { !it.shouldSucceed }
+    }
+
+    def "calling listTickets() with sideloaded resources succeeds when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
+        when: "calling listTickets with metric_sets and users sideloaded"
+        TicketsResponse response = client.listTickets(null, "metric_sets,users").block()
+
+        then: "response contains tickets and sideloaded collections"
+        noExceptionThrown()
+        verifyAll(response) {
+            it != null
+            tickets() != null && !tickets().isEmpty()
+            metricSets() != null && !metricSets().isEmpty()
+            users() != null && !users().isEmpty()
+        }
+
+        where:
+        [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { it.shouldSucceed }
+    }
+
+    def "calling listTickets() with sideloaded resources fails when used with a(n) #clientType client"(TicketClient client, String clientType, Boolean ignored, String alsoIgnored) {
+        when: "calling listTickets with metric_sets and users sideloaded"
+        client.listTickets(null, "metric_sets,users").block()
+
+        then: "an HttpClientException is thrown"
+        thrown(HttpClientException)
+
+        where:
+        [client, clientType, ignored, alsoIgnored] << clientTestMatrix.findAll { !it.shouldSucceed }
     }
 
     def "can get ticket related information as agent"() {
@@ -689,9 +1076,9 @@ class TicketClientSpec extends Z4jSpec {
             jobStatus().id != null
         }
 
-        when: "restoring deleted tickets in bulk using comma-separated string"
+        when: "restoring deleted tickets in bulk using list of ids"
         waitForJobCompletion(deleteJob.jobStatus().id)
-        JobStatusResponse restoreJob = ticketsAdminClient.restoreDeletedTicketsInBulk(ids.join(",")).block()
+        JobStatusResponse restoreJob = ticketsAdminClient.restoreDeletedTicketsInBulk(ids).block()
 
         then: "bulk restore succeeds without error"
         noExceptionThrown()
@@ -806,8 +1193,35 @@ class TicketClientSpec extends Z4jSpec {
 
         cleanup: "delete the merged tickets"
         try {
-            ticketsAdminClient.bulkDeleteTickets([targetId, sourceId]).block()
-            sleep(2000)
+            JobStatusResponse deleteJob = ticketsAdminClient.bulkDeleteTickets([targetId, sourceId]).block()
+            waitForJobCompletion(deleteJob?.jobStatus()?.id)
+            ticketsAdminClient.deleteMultipleTicketsPermanently([targetId, sourceId]).block()
+        } catch (Exception ignored) {
+        }
+    }
+
+    def "can merge tickets using list of source IDs as admin"() {
+        given: "target and source tickets created for merge"
+        TicketResponse target = createTicketForTest()
+        TicketResponse source = createTicketForTest()
+        Long targetId = target.ticket().id()
+        Long sourceId = source.ticket().id()
+
+        when: "merging tickets using list overload"
+        JobStatusResponse job = ticketsAdminClient.mergeTickets(targetId, [sourceId]).block()
+
+        then: "job status response is returned"
+        noExceptionThrown()
+        verifyAll(job) {
+            it != null
+            jobStatus() != null
+            jobStatus().id != null
+        }
+
+        cleanup: "delete the merged tickets"
+        try {
+            JobStatusResponse deleteJob = ticketsAdminClient.bulkDeleteTickets([targetId, sourceId]).block()
+            waitForJobCompletion(deleteJob?.jobStatus()?.id)
             ticketsAdminClient.deleteMultipleTicketsPermanently([targetId, sourceId]).block()
         } catch (Exception ignored) {
         }
