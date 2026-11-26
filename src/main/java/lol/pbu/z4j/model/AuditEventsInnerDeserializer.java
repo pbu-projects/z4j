@@ -136,8 +136,15 @@ public class AuditEventsInnerDeserializer implements Deserializer<AuditEventsInn
 
     private void populateVia(JsonNode node, DecoderContext context, AuditEventsInnerBuilder builder) throws IOException {
         JsonNode viaNode = node.get("via");
-        if (viaNode != null && !viaNode.isNull()) {
+        if (viaNode == null || viaNode.isNull()) {
+            return;
+        }
+        if (viaNode.isString()) {
+            builder.via(new Via(viaNode.getStringValue(), null));
+        } else if (viaNode.isObject()) {
             builder.via(PolymorphicSerdeSupport.deserializeTarget(viaNode, context, Via.class));
+        } else {
+            throw new SerdeException("Invalid audit event via type: expected object or string");
         }
     }
 

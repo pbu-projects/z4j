@@ -196,15 +196,35 @@ class AuditEventsInnerDeserializerSpec extends Specification {
         ]
     }
 
-    def "throws SerdeException when audit event via is invalid shape"() {
+    def "string via decodes to Via with channel"() {
         given:
-        String json = '{"id": 100, "type": "AnotherEvent", "via": "invalid-via-shape"}'
+        String json = '{"id": 100, "type": "AnotherEvent", "via": "Web service"}'
 
+        when:
+        def event = objectMapper.readValue(json, AuditEventsInner)
+
+        then:
+        verifyAll {
+            event != null
+            event.via != null
+            event.via.channel == "Web service"
+            event.via.source == null
+        }
+    }
+
+    def "throws SerdeException when audit event via is invalid shape"() {
         when:
         objectMapper.readValue(json, AuditEventsInner)
 
         then:
         thrown(SerdeException)
+
+        where:
+        json << [
+                '{"id": 100, "type": "AnotherEvent", "via": 123}',
+                '{"id": 100, "type": "AnotherEvent", "via": []}',
+                '{"id": 100, "type": "AnotherEvent", "via": true}'
+        ]
     }
 
     def "null or non-object json node returns null"() {
