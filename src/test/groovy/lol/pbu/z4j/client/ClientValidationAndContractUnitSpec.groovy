@@ -244,6 +244,29 @@ class ClientValidationAndContractUnitSpec extends Specification {
         }
     }
 
+    def "SearchService sends wildcard for empty query and forwards filter without type:ticket"() {
+        given:
+        SearchClient searchClient = Mock(SearchClient)
+        SearchService service = new SearchService()
+        service.searchClient = searchClient
+        List<String> capturedQueries = []
+
+        searchClient.exportTicket(_, 100, null) >> { String q, Integer size, String cursor ->
+            capturedQueries << q
+            Mono.just(new ExportResponse<Ticket>([], null, new Meta(false, null, null), null))
+        }
+
+        when:
+        service.getTickets("").collectList().block()
+        service.getTickets("status:open").collectList().block()
+
+        then:
+        verifyAll {
+            capturedQueries == ["*", "status:open"]
+            !capturedQueries[1].contains("type:ticket")
+        }
+    }
+
     def "IncrementalService validates perPage bounds and stops on stalled cursor"() {
         given:
         IncrementalClient incrementalClient = Mock(IncrementalClient)

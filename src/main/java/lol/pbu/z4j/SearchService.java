@@ -70,7 +70,7 @@ public class SearchService {
                 throw new IllegalArgumentException("Do not include 'type:<obj>' in your query. 'filter[type]=ticket' is sent automatically.");
             }
         }
-        final String finalQuery = sanitizedQuery;
+        final String finalQuery = sanitizedQuery.isEmpty() ? "*" : sanitizedQuery;
 
         return searchClient.exportTicket(finalQuery, pageSize, null).expand(page -> {
             if (null != page.meta() && Boolean.TRUE.equals(page.meta().hasMore()) && null != page.meta().afterCursor()) {
