@@ -48,7 +48,7 @@ jobs:
         if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed') }}
         run: ./gradlew check --no-daemon
       - name: Sonar Scan
-        if: ${{ (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')) && secrets.SONAR_TOKEN != '' }}
+        if: ${{ (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')) && env.SONAR_TOKEN != '' }}
         run: ./gradlew sonar --no-daemon -Dsonar.token="${SONAR_TOKEN}"
       - name: Upload test report
         if: failure()
