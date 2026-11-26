@@ -15,20 +15,12 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.serde.ObjectMapper
-import lol.pbu.z4j.Z4jSpec
-import spock.lang.Shared
 
 import java.time.ZonedDateTime
 
-class TicketFieldCustomStatusObjectSpec extends Z4jSpec {
+class TicketFieldCustomStatusObjectSpec extends ModelSpec {
 
-    @Shared
-    ObjectMapper objectMapper
 
-    void setupSpec() {
-        objectMapper = adminCtx.getBean(ObjectMapper.class)
-    }
 
     def "should create TicketFieldCustomStatusObject with constructors and builder"() {
         given:

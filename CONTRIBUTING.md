@@ -67,8 +67,8 @@ Any IDE specific documentation in this repo will reference IntelliJ, specificall
 ### Prerequisites
 
 > [!NOTE]
-> Testing for z4j requires a live Zendesk instance. This ensures that the generated client is compliant with the actual
-> Zendesk API behavior. We don't provide a dedicated zendesk instance, it's up to you to provide that.
+> Offline model, serialization, and filter unit tests run with `./gradlew test` without any Zendesk account.
+> Full live integration tests require a live Zendesk instance (`Z4J_*` environment variables). We don't provide a dedicated Zendesk instance, so it's up to you to provide one for live runs.
 
 To run the tests, you will need:
 
@@ -155,8 +155,8 @@ For cursor-pagination test coverage on `GET /api/v2/ticket_fields`, we also reco
 You can pre-seed this with:
 
 ```shell
-chmod +x ./setup_ticket_field_pagination_fixture.sh
-./setup_ticket_field_pagination_fixture.sh 110
+chmod +x ./src/test/resources/scripts/setup_ticket_field_pagination_fixture.sh
+./src/test/resources/scripts/setup_ticket_field_pagination_fixture.sh 110
 ```
 
 The script uses `Z4J_URL`, `Z4J_TOKEN`, and `Z4J_ADMIN_EMAIL` from your environment and creates additional text fields only when needed.
@@ -377,8 +377,8 @@ This method is a little tricky to test for negative tests because the only way t
 [gradle]:https://gradle.org/maven-and-gradle/
 [gradle wrapper]:https://docs.gradle.org/current/userguide/gradle_wrapper_basics.html
 [Git]:https://gist.github.com/Jonathan-Zollinger/8d9a231a57f3d33ff813989c34df00e0
-[graalvm]:https://www.graalvm.org/release-notes/JDK_21/
-[Graal-CE 21]:https://www.graalvm.org/jdk21/docs/
+[graalvm]:https://www.graalvm.org/release-notes/JDK_25/
+[Graal-CE 25]:https://www.graalvm.org/jdk25/docs/
 [Environment Variables]:#Required-Environment-Variables
 [source function]:https://gist.github.com/Jonathan-Zollinger/96160f971741f5f3a8749d10127e7764
 [test it]:https://www.geeksforgeeks.org/software-engineering/difference-between-positive-testing-and-negative-testing/

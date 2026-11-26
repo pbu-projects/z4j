@@ -15,23 +15,13 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.serde.ObjectMapper
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
 
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
-class ViewSpec extends Specification {
+class ViewSpec extends ModelSpec {
 
-    @Shared
-    @AutoCleanup
-    ApplicationContext context = ApplicationContext.run()
 
-    @Shared
-    ObjectMapper objectMapper = context.getBean(ObjectMapper.class)
 
     def "should create View with constructors and builder"() {
         given:

@@ -15,15 +15,10 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.serde.ObjectMapper
-import lol.pbu.z4j.Z4jSpec
-import spock.lang.Shared
 import spock.lang.Unroll
 
-class TicketViaSpec extends Z4jSpec {
+class TicketViaSpec extends ModelSpec {
 
-    @Shared
-    ObjectMapper objectMapper = ObjectMapper.getDefault()
 
     @Unroll
     def "should put source item when source is null"() {

@@ -15,19 +15,11 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.serde.ObjectMapper
-import lol.pbu.z4j.Z4jSpec
-import spock.lang.Shared
 import spock.lang.Unroll
 
-class TicketFieldCustomStatusObjectStatusCategorySpec extends Z4jSpec {
+class TicketFieldCustomStatusObjectStatusCategorySpec extends ModelSpec {
 
-    @Shared
-    ObjectMapper objectMapper
 
-    void setupSpec() {
-        objectMapper = adminCtx.getBean(ObjectMapper.class)
-    }
 
     @Unroll
     def "#category toString() and getValue() should return #expectedString"() {

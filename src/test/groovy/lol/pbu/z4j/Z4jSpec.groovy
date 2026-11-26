@@ -23,9 +23,12 @@ import lol.pbu.z4j.client.LocaleClient
 import lol.pbu.z4j.client.TicketClient
 import lol.pbu.z4j.model.*
 import net.datafaker.Faker
+import org.opentest4j.TestAbortedException
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Tag
 
+@Tag("live")
 @MicronautTest
 @SuppressWarnings("GroovyAssignabilityCheck")
 class Z4jSpec extends Specification {
@@ -43,6 +46,10 @@ class Z4jSpec extends Specification {
     Faker faker
 
     void setupSpec() {
+        String z4jUrl = System.getenv("Z4J_URL")
+        if (z4jUrl == null || z4jUrl.isBlank()) {
+            throw new TestAbortedException("Z4J_URL environment variable is not set")
+        }
         adminCtx = getCtx("Z4J_ADMIN_EMAIL")
         agentCtx = getCtx("Z4J_AGENT_EMAIL")
         userCtx = getCtx("Z4J_END_USER_EMAIL")

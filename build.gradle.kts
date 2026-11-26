@@ -21,6 +21,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
 import org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED
+import org.gradle.external.javadoc.StandardJavadocDocletOptions
 
 plugins {
 
@@ -32,7 +33,7 @@ plugins {
     id("com.gradleup.nmcp.aggregation").version("1.6.2")
     id("io.micronaut.library") version "5.0.2"
     id("jacoco")
-    id("org.sonarqube") version "latest.release"
+    id("org.sonarqube") version "7.6.0.18749"
 }
 
 
@@ -58,7 +59,7 @@ dependencies {
     implementation("io.micronaut.serde:micronaut-serde-jackson")
     implementation("io.micronaut.validation:micronaut-validation")
     implementation("io.micronaut:micronaut-retry")
-    runtimeOnly("org.yaml:snakeyaml")
+    testRuntimeOnly("org.yaml:snakeyaml")
     testImplementation("net.datafaker:datafaker:$dataFakerVersion")
     testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.23.0")
     testImplementation("ch.qos.logback:logback-classic")
@@ -76,16 +77,9 @@ java {
 
 
 
-configurations.all {
-    resolutionStrategy {
-        force("io.netty:netty-bom:4.2.21.Final")
-    }
-}
-
 tasks.withType<Javadoc>().configureEach {
-    // This will generate an empty Javadoc JAR to satisfy publishing requirements
-    // without failing the build on documentation errors from generated code.
-    source = files().asFileTree
+    isFailOnError = false
+    (options as StandardJavadocDocletOptions).addStringOption("Xdoclint:none", "-quiet")
 }
 
 tasks.processResources {
@@ -196,8 +190,21 @@ tasks.withType<Test> {
 }
 
 tasks.named<Test>("test") {
+    val liveTestsProp = findProperty("liveTests")?.toString()?.toBooleanStrictOrNull()
+    val envFile = file(".env")
+    val hasDotEnvUrl = envFile.exists() && envFile.readLines().any { line ->
+        val trimmed = line.trim().removePrefix("export ").trim()
+        trimmed.startsWith("Z4J_URL=") && trimmed.substringAfter("=", "")
+            .trim().removeSurrounding("\"").removeSurrounding("'").isNotBlank()
+    }
+    val runLiveTests = liveTestsProp ?: (!System.getenv("Z4J_URL").isNullOrBlank() || hasDotEnvUrl)
+    systemProperty("liveTests", runLiveTests.toString())
     useJUnitPlatform {
-        excludeTags("benchmark")
+        if (runLiveTests) {
+            excludeTags("benchmark")
+        } else {
+            excludeTags("benchmark", "live")
+        }
     }
 }
 

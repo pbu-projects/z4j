@@ -38,7 +38,7 @@ jobs:
           fetch-depth: 0
       - uses: gradle/actions/wrapper-validation@11d4d83c63a6ce61b32d8a9c4faddbdb04fe9917
       - name: Set up JDK
-        uses: graalvm/setup-graalvm@60c26726de13f8b90771df4bc1641a52a3159994
+        uses: graalvm/setup-graalvm@60e76998d25690099182b796e99b8804da582d90 # v1.6.10
         with:
           java-version: '25'
           distribution: 'graalvm-community'
@@ -63,7 +63,13 @@ jobs:
             TAG_VERSION="${GITHUB_REF_NAME#v}"
             VERSION_ARG="-Pz4jVersion=${TAG_VERSION}"
           fi
-          ./gradlew publishAggregationToCentralPortal --info --no-daemon $VERSION_ARG
+          if [ -n "$VERSION_ARG" ]; then
+            ./gradlew check --no-daemon "$VERSION_ARG"
+            ./gradlew publishAggregationToCentralPortal --info --no-daemon "$VERSION_ARG"
+          else
+            ./gradlew check --no-daemon
+            ./gradlew publishAggregationToCentralPortal --info --no-daemon
+          fi
 
       - name: Create GitHub Release
         if: startsWith(github.ref, 'refs/tags/')

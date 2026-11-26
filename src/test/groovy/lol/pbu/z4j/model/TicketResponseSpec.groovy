@@ -15,20 +15,12 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.serde.ObjectMapper
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
-import lol.pbu.z4j.Z4jSpec
-import spock.lang.Shared
 
-class TicketResponseSpec extends Z4jSpec {
+class TicketResponseSpec extends ModelSpec {
 
-    @Shared
-    ObjectMapper objectMapper
 
-    void setupSpec() {
-        objectMapper = adminCtx.getBean(ObjectMapper.class)
-    }
 
     def "should create TicketResponse with canonical constructor, convenience constructors, and builder"() {
         given:

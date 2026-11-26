@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+boolean liveTests = Boolean.getBoolean("liveTests") ||
+        (System.getenv("Z4J_URL") != null && !System.getenv("Z4J_URL").isBlank())
+
 runner {
     parallel {
-        enabled true
+        enabled !liveTests
     }
 }
 
 // Warm up Micronaut serde introspections to prevent lock ordering cycle under parallel test execution
 io.micronaut.serde.ObjectMapper.getDefault()
-
