@@ -124,7 +124,7 @@ public final class LocaleAbbreviation implements Serializable, Comparable<Locale
     public static final Map<String, LocaleAbbreviation> VALUE_MAPPING = KNOWN_VALUES.stream()
             .collect(Collectors.toUnmodifiableMap(LocaleAbbreviation::getValue, Function.identity()));
 
-    private static final Pattern LOCALE_PATTERN = Pattern.compile("^[a-z]{2,3}(?:-[a-z0-9]{1,8})*$");
+    private static final Pattern LOCALE_PATTERN = Pattern.compile("^[a-z]{2,3}(?:-[a-z0-9]{1,8}){0,10}$");
 
     private final String value;
 

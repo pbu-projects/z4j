@@ -175,7 +175,7 @@ public class OAuthClientCredentialsAuthFilter implements HttpClientFilter, Order
             return false;
         }
         String requestPath = request.getPath();
-        if (requestPath == null || requestPath.isBlank()) {
+        if (requestPath.isBlank()) {
             return false;
         }
         if (TOKEN_PATH.equals(requestPath)) {
@@ -239,24 +239,7 @@ public class OAuthClientCredentialsAuthFilter implements HttpClientFilter, Order
         .switchIfEmpty(Mono.error(new IllegalStateException(
                 "No token endpoint was found at " + tokenEndpointUrl + ". Check the micronaut.http.services.zendesk.url setting."
         )))
-        .onErrorResume(HttpClientException.class, e -> {
-            if (e instanceof HttpResponseProvider responseProvider) {
-                int status = responseProvider.getResponse().code();
-                if (status == 404) {
-                    return Mono.error(new IllegalStateException(
-                            "No token endpoint was found at " + tokenEndpointUrl + ". Check the micronaut.http.services.zendesk.url setting.",
-                            e
-                    ));
-                }
-                if (status == 400 || status == 401) {
-                    return Mono.error(new IllegalStateException(
-                            "Zendesk refused OAuth client credentials for client id '" + clientId + "': HTTP " + status,
-                            e
-                    ));
-                }
-            }
-            return Mono.error(e);
-        })
+        .onErrorResume(HttpClientException.class, this::mapTokenFetchError)
         .flatMap(resp -> {
             if (resp == null || resp.accessToken() == null || resp.accessToken().isBlank()) {
                 return Mono.error(new IllegalStateException(
@@ -269,6 +252,25 @@ public class OAuthClientCredentialsAuthFilter implements HttpClientFilter, Order
             cachedToken.set(new CachedToken(resp.accessToken(), expiresAt));
             return Mono.just(resp.accessToken());
         });
+    }
+
+    private Mono<OAuthTokenResponse> mapTokenFetchError(HttpClientException e) {
+        if (e instanceof HttpResponseProvider responseProvider) {
+            int status = responseProvider.getResponse().code();
+            if (status == 404) {
+                return Mono.error(new IllegalStateException(
+                        "No token endpoint was found at " + tokenEndpointUrl + ". Check the micronaut.http.services.zendesk.url setting.",
+                        e
+                ));
+            }
+            if (status == 400 || status == 401) {
+                return Mono.error(new IllegalStateException(
+                        "Zendesk refused OAuth client credentials for client id '" + clientId + "': HTTP " + status,
+                        e
+                ));
+            }
+        }
+        return Mono.error(e);
     }
 
     private OAuthTokenClient resolveTokenClient() {

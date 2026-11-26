@@ -203,7 +203,8 @@ class WriteNotFoundFilterSpec extends Specification {
 
         then:
         verifyAll(ex) {
-            response == null
+            response != null
+            response.status == HttpStatus.NOT_FOUND
             responseBody == null
             status == HttpStatus.NOT_FOUND
             code() == 404

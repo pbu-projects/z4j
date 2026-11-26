@@ -27,10 +27,12 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException;
  * Raised when a write request receives HTTP 404 from Zendesk so callers get the status and body
  * instead of an empty Mono.
  */
+// Extending HttpClientException puts this class over Sonar's inheritance limit,
+// but callers catching HttpClientException need to catch this exception too.
+@SuppressWarnings("java:S110")
 public class ZendeskWriteNotFoundException extends HttpClientException implements HttpResponseProvider {
 
-    @Nullable
-    private final HttpResponse<?> response;
+    private final transient HttpResponse<?> response;
     @Nullable
     private final String responseBody;
 
@@ -53,22 +55,21 @@ public class ZendeskWriteNotFoundException extends HttpClientException implement
             @Nullable String responseBody
     ) {
         super(buildMessage(request, response, responseBody), cause);
-        this.response = response;
+        this.response = response != null ? response : HttpResponse.notFound();
         this.responseBody = responseBody;
     }
 
     @Override
-    @Nullable
     public HttpResponse<?> getResponse() {
         return response;
     }
 
     public HttpStatus getStatus() {
-        return response != null ? response.getStatus() : HttpStatus.NOT_FOUND;
+        return response.getStatus();
     }
 
     public int code() {
-        return response != null ? response.code() : HttpStatus.NOT_FOUND.getCode();
+        return response.code();
     }
 
     @Nullable
