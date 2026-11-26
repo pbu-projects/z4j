@@ -17,6 +17,7 @@ package lol.pbu.z4j.client;
 
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.order.Ordered;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.annotation.ClientFilter;
 import io.micronaut.http.annotation.RequestFilter;
@@ -34,9 +35,10 @@ import org.slf4j.LoggerFactory;
 @Requires(property = "micronaut.http.services.zendesk.email", pattern = "\\S+.*")
 @Requires(property = "micronaut.http.services.zendesk.token", pattern = "\\S+.*")
 @Requires(missingBeans = {BearerAuthFilter.class, OAuthClientCredentialsAuthFilter.class})
-public class BasicAuthFilter {
+public class BasicAuthFilter implements Ordered {
 
     private static final Logger log = LoggerFactory.getLogger(BasicAuthFilter.class);
+    private static final int FILTER_ORDER = 50;
 
     private final String email;
     private final String token;
@@ -45,6 +47,11 @@ public class BasicAuthFilter {
                            @Property(name = "micronaut.http.services.zendesk.token") String token) {
         this.email = email;
         this.token = token;
+    }
+
+    @Override
+    public int getOrder() {
+        return FILTER_ORDER;
     }
 
     @RequestFilter

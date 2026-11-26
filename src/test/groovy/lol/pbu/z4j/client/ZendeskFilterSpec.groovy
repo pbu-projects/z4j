@@ -24,6 +24,8 @@ import io.micronaut.http.annotation.ClientFilter
 import io.micronaut.http.annotation.Delete
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.client.annotation.Client
+import lol.pbu.z4j.ratelimit.RateLimitConfiguration
+import lol.pbu.z4j.ratelimit.RateLimitTracker
 import reactor.core.publisher.Mono
 import spock.lang.Specification
 
@@ -111,6 +113,29 @@ class ZendeskFilterSpec extends Specification {
             ZendeskHeaderFilter.getAnnotation(ClientFilter).serviceId() == ["zendesk"] as String[]
             RateLimitFilter.getAnnotation(ClientFilter).serviceId() == ["zendesk"] as String[]
             WriteNotFoundFilter.getAnnotation(ClientFilter).serviceId() == ["zendesk"] as String[]
+            UnsignedAuthFilter.getAnnotation(ClientFilter).serviceId() == ["zendesk"] as String[]
+        }
+    }
+
+    def "client filters declare explicit ordering around RateLimitFilter"() {
+        given:
+        def writeNotFound = new WriteNotFoundFilter()
+        def headerFilter = new ZendeskHeaderFilter()
+        def basicAuth = new BasicAuthFilter("agent@example.com", "token")
+        def bearerAuth = new BearerAuthFilter("bearer-token")
+        def rateLimit = new RateLimitFilter(new RateLimitTracker(), new RateLimitConfiguration())
+        def oauthFilter = new OAuthClientCredentialsAuthFilter("cid", "csec", "hc:read", Mock(OAuthTokenClient))
+        def unsignedFilter = new UnsignedAuthFilter()
+
+        expect:
+        verifyAll {
+            writeNotFound.order == 100
+            headerFilter.order == 50
+            basicAuth.order == 50
+            bearerAuth.order == 50
+            rateLimit.order == 0
+            oauthFilter.order == -100
+            unsignedFilter.order == -200
         }
     }
 

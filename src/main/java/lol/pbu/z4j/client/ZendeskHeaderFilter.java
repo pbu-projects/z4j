@@ -15,6 +15,7 @@
  */
 package lol.pbu.z4j.client;
 
+import io.micronaut.core.order.Ordered;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.MutableHttpRequest;
@@ -29,7 +30,14 @@ import io.micronaut.http.annotation.RequestFilter;
  * @since 0.4.0
  */
 @ClientFilter(value = "/**", serviceId = "zendesk")
-public class ZendeskHeaderFilter {
+public class ZendeskHeaderFilter implements Ordered {
+
+    private static final int FILTER_ORDER = 50;
+
+    @Override
+    public int getOrder() {
+        return FILTER_ORDER;
+    }
 
     @RequestFilter
     public void doFilter(MutableHttpRequest<?> request) {
