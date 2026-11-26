@@ -357,8 +357,8 @@ public interface ArticleClient {
      * <pre>{@code
      * try {
      *     articleClient.updateArticleSourceLocale(LocaleAbbreviation.FRENCH, 999999L).block();
-     * } catch (HttpClientResponseException e) {
-     *     int statusCode = e.getStatus().getCode();
+     * } catch (ZendeskWriteNotFoundException e) {
+     *     int statusCode = e.code();
      * }
      * }</pre>
      *
@@ -405,8 +405,8 @@ public interface ArticleClient {
      * <pre>{@code
      * try {
      *     articleClient.updateArticleSourceLocaleNoLocale(LocaleAbbreviation.FRENCH, 999999L).block();
-     * } catch (HttpClientResponseException e) {
-     *     int statusCode = e.getStatus().getCode();
+     * } catch (ZendeskWriteNotFoundException e) {
+     *     int statusCode = e.code();
      * }
      * }</pre>
      *

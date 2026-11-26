@@ -27,12 +27,12 @@ import reactor.core.publisher.Mono;
 
 /**
  * <h1>Zendesk OAuth Token Client.</h1>
- * <p>Requests OAuth access tokens from Zendesk token endpoint without service filters.</p>
+ * <p>Requests OAuth access tokens from the Zendesk token endpoint.</p>
  *
  * @author Jonathan-Zollinger
  * @since 0.4.0
  */
-@Client("${micronaut.http.services.zendesk.url:`https://localhost`}")
+@Client("zendesk")
 public interface OAuthTokenClient {
 
     @Post("/oauth/tokens")

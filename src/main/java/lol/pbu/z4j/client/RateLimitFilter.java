@@ -15,6 +15,7 @@
  */
 package lol.pbu.z4j.client;
 
+import io.micronaut.core.order.Ordered;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpResponse;
@@ -49,9 +50,10 @@ import reactor.core.publisher.Mono;
  * @since 0.2.3
  */
 @ClientFilter(value = "/**", serviceId = "zendesk")
-public class RateLimitFilter implements HttpClientFilter {
+public class RateLimitFilter implements HttpClientFilter, Ordered {
 
     private static final Logger log = LoggerFactory.getLogger(RateLimitFilter.class);
+    private static final int FILTER_ORDER = 0;
 
     private static final String HEADER_X_RATE_LIMIT = "X-Rate-Limit";
     private static final String HEADER_RATELIMIT_LIMIT = "ratelimit-limit";
@@ -67,6 +69,11 @@ public class RateLimitFilter implements HttpClientFilter {
     public RateLimitFilter(RateLimitTracker tracker, RateLimitConfiguration config) {
         this.tracker = tracker;
         this.config = config;
+    }
+
+    @Override
+    public int getOrder() {
+        return FILTER_ORDER;
     }
 
     @Override

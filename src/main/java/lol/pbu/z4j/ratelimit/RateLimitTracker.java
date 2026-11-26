@@ -18,13 +18,15 @@ package lol.pbu.z4j.ratelimit;
 import io.micronaut.core.annotation.Nullable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Thread-safe singleton tracker for Zendesk rate limit states.
@@ -40,7 +42,6 @@ public class RateLimitTracker {
 
     private final AtomicReference<RateLimitSnapshot> latestSnapshot = new AtomicReference<>();
     private final Map<String, EndpointRateLimit> endpointLimits = new ConcurrentHashMap<>();
-    private final Map<String, RateLimitSnapshot> pathSnapshots = new ConcurrentHashMap<>();
     private final List<RateLimitListener> listeners = new CopyOnWriteArrayList<>();
 
     public RateLimitTracker() {
@@ -87,10 +88,6 @@ public class RateLimitTracker {
         }
 
         latestSnapshot.set(snapshot);
-
-        if (snapshot.getRequestPath() != null) {
-            pathSnapshots.put(snapshot.getRequestPath(), snapshot);
-        }
 
         if (snapshot.getEndpointLimits() != null) {
             endpointLimits.putAll(snapshot.getEndpointLimits());

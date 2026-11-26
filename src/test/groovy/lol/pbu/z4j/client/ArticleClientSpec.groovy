@@ -16,6 +16,7 @@
 package lol.pbu.z4j.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.micronaut.http.HttpStatus
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import lol.pbu.z4j.Z4jSpec
@@ -932,9 +933,15 @@ class ArticleClientSpec extends Z4jSpec {
                 new Article().withPromoted(true)
         )
 
-        expect: "updating nonexistent article without locale completes empty"
+        expect: "updating nonexistent article without locale fails with ZendeskWriteNotFoundException"
         StepVerifier.create(adminArticleClient.updateArticle(999999999999L, updateReq))
-                .verifyComplete()
+                .verifyErrorSatisfies { error ->
+                    verifyAll {
+                        error instanceof ZendeskWriteNotFoundException
+                        ((ZendeskWriteNotFoundException) error).status == HttpStatus.NOT_FOUND
+                        ((ZendeskWriteNotFoundException) error).code() == 404
+                    }
+                }
     }
 
     def "cannot delete article as unauthorized user"() {
@@ -967,9 +974,15 @@ class ArticleClientSpec extends Z4jSpec {
     }
 
     def "cannot delete nonexistent article"() {
-        expect: "deleting nonexistent article without locale completes empty"
+        expect: "deleting nonexistent article without locale fails with ZendeskWriteNotFoundException"
         StepVerifier.create(adminArticleClient.deleteArticle(999999999999L))
-                .verifyComplete()
+                .verifyErrorSatisfies { error ->
+                    verifyAll {
+                        error instanceof ZendeskWriteNotFoundException
+                        ((ZendeskWriteNotFoundException) error).status == HttpStatus.NOT_FOUND
+                        ((ZendeskWriteNotFoundException) error).code() == 404
+                    }
+                }
     }
 
     def "can use associateAttachmentsInBulk without locale as admin"() {

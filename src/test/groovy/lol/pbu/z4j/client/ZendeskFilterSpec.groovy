@@ -110,6 +110,7 @@ class ZendeskFilterSpec extends Specification {
             OAuthClientCredentialsAuthFilter.getAnnotation(ClientFilter).serviceId() == ["zendesk"] as String[]
             ZendeskHeaderFilter.getAnnotation(ClientFilter).serviceId() == ["zendesk"] as String[]
             RateLimitFilter.getAnnotation(ClientFilter).serviceId() == ["zendesk"] as String[]
+            WriteNotFoundFilter.getAnnotation(ClientFilter).serviceId() == ["zendesk"] as String[]
         }
     }
 
