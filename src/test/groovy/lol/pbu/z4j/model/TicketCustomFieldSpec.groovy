@@ -16,17 +16,15 @@
 package lol.pbu.z4j.model
 
 import io.micronaut.serde.ObjectMapper
-import lol.pbu.z4j.Z4jSpec
+import spock.lang.AutoCleanup
 import spock.lang.Shared
+import spock.lang.Specification
 
-class TicketCustomFieldSpec extends Z4jSpec {
+class TicketCustomFieldSpec extends Specification {
 
     @Shared
-    ObjectMapper objectMapper
-
-    void setupSpec() {
-        objectMapper = adminCtx.getBean(ObjectMapper.class)
-    }
+    @AutoCleanup
+    ObjectMapper.CloseableObjectMapper objectMapper = ObjectMapper.create(Map.of(), "lol.pbu.z4j.model")
 
     def "should deserialize null value to TicketCustomField.Raw"() {
         given:
@@ -36,9 +34,11 @@ class TicketCustomFieldSpec extends Z4jSpec {
         TicketCustomField field = objectMapper.readValue(json, TicketCustomField.class)
 
         then:
-        field instanceof TicketCustomField.Raw
-        field.id() == 12345L
-        field.value() == null
+        verifyAll(field) {
+            it instanceof TicketCustomField.Raw
+            id() == 12345L
+            value() == null
+        }
     }
 
     def "should deserialize text value to TicketCustomField.Text"() {
@@ -49,9 +49,11 @@ class TicketCustomFieldSpec extends Z4jSpec {
         TicketCustomField field = objectMapper.readValue(json, TicketCustomField.class)
 
         then:
-        field instanceof TicketCustomField.Text
-        field.id() == 12345L
-        field.value() == "some text"
+        verifyAll(field) {
+            it instanceof TicketCustomField.Text
+            id() == 12345L
+            value() == "some text"
+        }
     }
 
     def "should deserialize boolean value to TicketCustomField.Checkbox"() {
@@ -62,9 +64,11 @@ class TicketCustomFieldSpec extends Z4jSpec {
         TicketCustomField field = objectMapper.readValue(json, TicketCustomField.class)
 
         then:
-        field instanceof TicketCustomField.Checkbox
-        field.id() == 12345L
-        field.value() == true
+        verifyAll(field) {
+            it instanceof TicketCustomField.Checkbox
+            id() == 12345L
+            value() == true
+        }
     }
 
     def "should deserialize integer number to TicketCustomField.Numeric"() {
@@ -75,9 +79,11 @@ class TicketCustomFieldSpec extends Z4jSpec {
         TicketCustomField field = objectMapper.readValue(json, TicketCustomField.class)
 
         then:
-        field instanceof TicketCustomField.Numeric
-        field.id() == 12345L
-        field.value() == 42L
+        verifyAll(field) {
+            it instanceof TicketCustomField.Numeric
+            id() == 12345L
+            value() == 42L
+        }
     }
 
     def "should deserialize decimal number to TicketCustomField.Decimal"() {
@@ -88,9 +94,11 @@ class TicketCustomFieldSpec extends Z4jSpec {
         TicketCustomField field = objectMapper.readValue(json, TicketCustomField.class)
 
         then:
-        field instanceof TicketCustomField.Decimal
-        field.id() == 12345L
-        field.value() == 3.14f
+        verifyAll(field) {
+            it instanceof TicketCustomField.Decimal
+            id() == 12345L
+            value() == 3.14d
+        }
     }
 
     def "should deserialize list of strings to TicketCustomField.TagList"() {
@@ -101,9 +109,11 @@ class TicketCustomFieldSpec extends Z4jSpec {
         TicketCustomField field = objectMapper.readValue(json, TicketCustomField.class)
 
         then:
-        field instanceof TicketCustomField.TagList
-        field.id() == 12345L
-        field.value() == ["alpha", "beta"]
+        verifyAll(field) {
+            it instanceof TicketCustomField.TagList
+            id() == 12345L
+            value() == ["alpha", "beta"]
+        }
     }
 
     def "should deserialize unexpected types to TicketCustomField.Raw"() {
@@ -114,8 +124,10 @@ class TicketCustomFieldSpec extends Z4jSpec {
         TicketCustomField field = objectMapper.readValue(json, TicketCustomField.class)
 
         then:
-        field instanceof TicketCustomField.Raw
-        field.id() == 12345L
-        field.value() != null
+        verifyAll(field) {
+            it instanceof TicketCustomField.Raw
+            id() == 12345L
+            value() != null
+        }
     }
 }

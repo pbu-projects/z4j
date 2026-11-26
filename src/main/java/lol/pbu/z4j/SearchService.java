@@ -17,8 +17,8 @@ package lol.pbu.z4j;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import java.util.Collections;
 import lol.pbu.z4j.client.SearchClient;
-import lol.pbu.z4j.model.ExportResponse;
 import lol.pbu.z4j.model.Ticket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class SearchService {
     /**
      * Searches for tickets using the provided query string with a default page size of 100.
      *
-     * @param query The search query string. Note: 'type:ticket' is automatically prepended.
+     * @param query The search query string.
      * @return A {@link Flux} emitting the {@link Ticket} results found.
      * @see #getTickets(String, int)
      */
@@ -50,25 +50,27 @@ public class SearchService {
         return getTickets(query, 100);
     }
 
-
     /**
      * Searches for tickets using the provided query string and page size.
      *
-     * @param query    The search query string. Note: 'type:ticket' is automatically prepended.
+     * @param query    The search query string.
      * @param pageSize The number of results to return per page.
      * @return A {@link Flux} emitting the {@link Ticket} results found.
      */
     public Flux<Ticket> getTickets(String query, int pageSize) {
+        if (query == null) {
+            throw new IllegalArgumentException("Search query must not be null.");
+        }
         String ticketPreface = "type:ticket";
-        query = query.replace(ticketPreface + " ", "").replace(ticketPreface, "");
-        if (query.contains("type:")) {
-            if (query.contains("_type:")) {
-                log.debug("verified that the query object does not already contain 'type:ticket': {}", query);
+        String sanitizedQuery = query.replace(ticketPreface + " ", "").replace(ticketPreface, "").trim();
+        if (sanitizedQuery.contains("type:")) {
+            if (sanitizedQuery.contains("_type:")) {
+                log.debug("verified that the query object does not already contain 'type:ticket': {}", sanitizedQuery);
             } else {
-                throw new IllegalArgumentException("Do not include 'type:<obj>' in your query. 'type:ticket' will automatically be added to your query.");
+                throw new IllegalArgumentException("Do not include 'type:<obj>' in your query. 'filter[type]=ticket' is sent automatically.");
             }
         }
-        final String finalQuery = ticketPreface + " " + query;
+        final String finalQuery = sanitizedQuery;
 
         return searchClient.exportTicket(finalQuery, pageSize, null).expand(page -> {
             if (null != page.meta() && Boolean.TRUE.equals(page.meta().hasMore()) && null != page.meta().afterCursor()) {
@@ -76,6 +78,6 @@ public class SearchService {
                 return searchClient.exportTicket(finalQuery, pageSize, page.meta().afterCursor());
             }
             return Mono.empty();
-        }).flatMapIterable(ExportResponse::results).cast(Ticket.class);
+        }).flatMapIterable(page -> page.results() != null ? page.results() : Collections.emptyList()).cast(Ticket.class);
     }
 }

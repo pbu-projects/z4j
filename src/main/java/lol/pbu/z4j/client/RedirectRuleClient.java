@@ -23,6 +23,8 @@ import io.micronaut.http.annotation.Post;
 import io.micronaut.http.client.annotation.Client;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lol.pbu.z4j.model.RedirectRuleCreateRequest;
 import lol.pbu.z4j.model.RedirectRuleResponse;
 import lol.pbu.z4j.model.RedirectRulesResponse;
@@ -90,7 +92,11 @@ public interface RedirectRuleClient {
      */
     @Get("/api/v2/guide/redirect_rules/{id}")
     Mono<@Valid RedirectRuleResponse> showRedirectRule(
-            @PathVariable("id") @NotNull String id
+            @PathVariable("id")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String id
     );
 
     /**
@@ -125,6 +131,10 @@ public interface RedirectRuleClient {
      */
     @Delete("/api/v2/guide/redirect_rules/{id}")
     Mono<Void> deleteRedirectRule(
-            @PathVariable("id") @NotNull String id
+            @PathVariable("id")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String id
     );
 }

@@ -48,7 +48,7 @@ public interface CustomStatusClient {
      * @param active Filter by active state; true returns only active, false returns only inactive (optional)
      * @return Success response (status code 200)
      */
-    @Get("/api/v2/custom_statuses.json{?status_categories,active}")
+    @Get("/api/v2/custom_statuses.json")
     Mono<@Valid CustomStatusesResponse> listCustomStatuses(
             @QueryValue("status_categories") @Nullable String statusCategories,
             @QueryValue("active") @Nullable Boolean active
@@ -109,7 +109,7 @@ public interface CustomStatusClient {
      * @param ticketFormId Optional ticket form ID filter (optional)
      * @return Success response (status code 200)
      */
-    @Get("/api/v2/ticket_form_statuses.json{?ticket_form_id}")
+    @Get("/api/v2/ticket_form_statuses.json")
     Mono<@Valid TicketFormStatusesResponse> listTicketFormStatuses(
             @QueryValue("ticket_form_id") @Nullable Long ticketFormId
     );

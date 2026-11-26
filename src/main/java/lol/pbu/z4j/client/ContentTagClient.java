@@ -24,6 +24,8 @@ import io.micronaut.http.annotation.Put;
 import io.micronaut.http.client.annotation.Client;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lol.pbu.z4j.model.ContentTagCountResponse;
 import lol.pbu.z4j.model.ContentTagCreateRequest;
 import lol.pbu.z4j.model.ContentTagResponse;
@@ -93,7 +95,11 @@ public interface ContentTagClient {
      */
     @Get("/api/v2/guide/content_tags/{id}")
     Mono<@Valid ContentTagResponse> showContentTag(
-            @PathVariable("id") @NotNull String id
+            @PathVariable("id")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String id
     );
 
     /**
@@ -116,7 +122,11 @@ public interface ContentTagClient {
      */
     @Put("/api/v2/guide/content_tags/{id}")
     Mono<@Valid ContentTagResponse> updateContentTag(
-            @PathVariable("id") @NotNull String id,
+            @PathVariable("id")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String id,
             @Body @NotNull @Valid ContentTagCreateRequest body
     );
 
@@ -128,7 +138,11 @@ public interface ContentTagClient {
      */
     @Delete("/api/v2/guide/content_tags/{id}")
     Mono<Void> deleteContentTag(
-            @PathVariable("id") @NotNull String id
+            @PathVariable("id")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String id
     );
 
     /**

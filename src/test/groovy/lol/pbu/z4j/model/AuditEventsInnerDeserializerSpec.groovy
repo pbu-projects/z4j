@@ -17,6 +17,7 @@ package lol.pbu.z4j.model
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.serde.ObjectMapper
+import io.micronaut.serde.exceptions.SerdeException
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
@@ -77,15 +78,17 @@ class AuditEventsInnerDeserializerSpec extends Specification {
         def event = resp.audits()[0].events[0]
 
         then:
-        resp != null
-        resp.audits().size() == 1
-        resp.audits()[0].events.size() == 1
-        event.type == "AutomaticAnswerSend"
-        event.body != null
-        event.body.contains("Example article")
+        verifyAll {
+            resp != null
+            resp.audits().size() == 1
+            resp.audits()[0].events.size() == 1
+            event.type == "AutomaticAnswerSend"
+            event.body != null
+            event.body.contains("Example article")
+        }
     }
 
-    def "anonymized ticket audits JSON with KnowledgeRequested and OfferedToEvent reads without error"() {
+    def "anonymized ticket audits JSON keeps blank body null when unmapped fields are present"() {
         given:
         InputStream is = getClass().getResourceAsStream("/fixtures/zendesk_getTicketAudits_repro_anonymized.json")
         assert is != null : "Fixture file /fixtures/zendesk_getTicketAudits_repro_anonymized.json not found on classpath"
@@ -97,15 +100,18 @@ class AuditEventsInnerDeserializerSpec extends Specification {
         def offeredEvent = resp.audits().collectMany { it.events }.find { it.type == "OfferedToEvent" }
 
         then:
-        resp != null
-        resp.audits().size() == 11
-        krEvent != null
-        krEvent.body != null
-        krEvent.body.contains("Reference article requested")
-        offeredEvent != null
+        verifyAll {
+            resp != null
+            resp.audits().size() == 11
+            krEvent != null
+            krEvent.body != null
+            krEvent.body.contains("Reference article requested")
+            offeredEvent != null
+            offeredEvent.body == null
+        }
     }
 
-    def "audits response with unknown event type and unexpected field shapes deserializes cleanly"() {
+    def "audits response with unknown event type and valid field shapes deserializes cleanly"() {
         given:
         String json = '''{
   "audits": [
@@ -127,11 +133,11 @@ class AuditEventsInnerDeserializerSpec extends Specification {
           "created_at": "2026-03-01T12:00:00Z"
         },
         {
-          "id": "invalid-id",
+          "id": 777,
           "type": "AnotherEvent",
+          "extra_field": "ignored",
           "value": true,
-          "previous_value": false,
-          "via": "invalid-via-shape"
+          "previous_value": false
         }
       ]
     }
@@ -144,21 +150,61 @@ class AuditEventsInnerDeserializerSpec extends Specification {
         def event2 = resp.audits()[0].events[1]
 
         then:
-        resp != null
-        resp.audits().size() == 1
-        event1.type == "CustomUnknownEventType"
-        event1.id == 12345L
-        event1.body.contains("dynamic_key")
-        event1.value instanceof List
-        event1.previousValue == 100
-        event1.recipients == [101L, 102L]
-        event1.via != null
-        event1.via.channel == "rule"
+        verifyAll {
+            resp != null
+            resp.audits().size() == 1
+            event1.type == "CustomUnknownEventType"
+            event1.id == 12345L
+            event1.body.contains("dynamic_key")
+            event1.value instanceof List
+            event1.previousValue == 100
+            event1.recipients == [101L, 102L]
+            event1.via != null
+            event1.via.channel == "rule"
 
-        event2.type == "AnotherEvent"
-        event2.id == null
-        event2.value == true
-        event2.previousValue == false
+            event2.type == "AnotherEvent"
+            event2.id == 777L
+            event2.body == null
+            event2.value == true
+            event2.previousValue == false
+        }
+    }
+
+    def "throws SerdeException when audit event id is non-numeric string"() {
+        given:
+        String json = '{"id": "invalid-id", "type": "AnotherEvent"}'
+
+        when:
+        objectMapper.readValue(json, AuditEventsInner)
+
+        then:
+        thrown(SerdeException)
+    }
+
+    def "throws SerdeException when audit event id is neither number nor string"() {
+        when:
+        objectMapper.readValue(json, AuditEventsInner)
+
+        then:
+        thrown(SerdeException)
+
+        where:
+        json << [
+                '{"id": true, "type": "AnotherEvent"}',
+                '{"id": {"nested": 1}, "type": "AnotherEvent"}',
+                '{"id": [1, 2], "type": "AnotherEvent"}'
+        ]
+    }
+
+    def "throws SerdeException when audit event via is invalid shape"() {
+        given:
+        String json = '{"id": 100, "type": "AnotherEvent", "via": "invalid-via-shape"}'
+
+        when:
+        objectMapper.readValue(json, AuditEventsInner)
+
+        then:
+        thrown(SerdeException)
     }
 
     def "null or non-object json node returns null"() {

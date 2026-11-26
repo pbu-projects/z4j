@@ -15,7 +15,9 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import io.soabase.recordbuilder.core.RecordBuilder;
@@ -25,15 +27,37 @@ import java.util.List;
 
 @Serdeable
 @RecordBuilder
+@JsonPropertyOrder({
+        CategoriesResponse.JSON_PROPERTY_CATEGORIES,
+        CategoriesResponse.JSON_PROPERTY_COUNT,
+        CategoriesResponse.JSON_PROPERTY_PAGE,
+        CategoriesResponse.JSON_PROPERTY_PAGE_COUNT,
+        CategoriesResponse.JSON_PROPERTY_NEXT_PAGE,
+        CategoriesResponse.JSON_PROPERTY_PREVIOUS_PAGE
+})
 public record CategoriesResponse(
-        @Nullable @JsonProperty(JSON_PROPERTY_CATEGORIES) List<@Valid Category> categories
-) implements CategoriesResponseBuilder.With {
+        @Nullable @JsonProperty(JSON_PROPERTY_CATEGORIES) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Category> categories,
+        @Nullable @JsonProperty(JSON_PROPERTY_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer count,
+        @Nullable @JsonProperty(JSON_PROPERTY_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer page,
+        @Nullable @JsonProperty(JSON_PROPERTY_PAGE_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer pageCount,
+        @Nullable @JsonProperty(JSON_PROPERTY_NEXT_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String nextPage,
+        @Nullable @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String previousPage
+) implements OffsetPaginationResponse, CategoriesResponseBuilder.With {
 
     public static final String JSON_PROPERTY_CATEGORIES = "categories";
+    public static final String JSON_PROPERTY_COUNT = "count";
+    public static final String JSON_PROPERTY_PAGE = "page";
+    public static final String JSON_PROPERTY_PAGE_COUNT = "page_count";
+    public static final String JSON_PROPERTY_NEXT_PAGE = "next_page";
+    public static final String JSON_PROPERTY_PREVIOUS_PAGE = "previous_page";
+
+    public CategoriesResponse(@Nullable List<@Valid Category> categories) {
+        this(categories, null, null, null, null, null);
+    }
 
     public CategoriesResponse addCategoriesItem(Category item) {
         List<Category> list = new ArrayList<>(categories != null ? categories : List.of());
         list.add(item);
-        return new CategoriesResponse(list);
+        return new CategoriesResponse(list, count, page, pageCount, nextPage, previousPage);
     }
 }

@@ -15,16 +15,19 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.type.Argument;
+import io.micronaut.json.tree.JsonNode;
 import io.micronaut.serde.Decoder;
 import io.micronaut.serde.Deserializer;
+import io.micronaut.serde.annotation.Serdeable;
 import jakarta.inject.Singleton;
-import lol.pbu.z4j.Generated;
-
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import lol.pbu.z4j.Generated;
 
 /**
  * Custom deserializer for GuideMediaUploadUrlResponse supporting both nested upload_url object and flat representations.
@@ -38,42 +41,82 @@ public class GuideMediaUploadUrlResponseDeserializer implements Deserializer<Gui
 
     private static final String KEY_ASSET_UPLOAD_ID = "asset_upload_id";
     private static final String KEY_HEADERS = "headers";
+    private static final String KEY_UPLOAD_URL = "upload_url";
     private static final String KEY_URL = "url";
 
-    @Override
-    public GuideMediaUploadUrlResponse deserialize(@NonNull Decoder decoder, @NonNull DecoderContext context, @NonNull Argument<? super GuideMediaUploadUrlResponse> type) throws IOException {
-        String uploadUrl = null;
-        String assetUploadId = null;
-        String headers = null;
+    @Serdeable
+    record UploadUrlPayload(
+            @Nullable @JsonProperty(KEY_UPLOAD_URL) String uploadUrl,
+            @Nullable @JsonProperty(KEY_ASSET_UPLOAD_ID) String assetUploadId,
+            @Nullable @JsonProperty(KEY_HEADERS) String headers
+    ) {
+    }
 
-        try (Decoder objectDecoder = decoder.decodeObject()) {
-            String key;
-            while ((key = objectDecoder.decodeKey()) != null) {
-                switch (key) {
-                    case KEY_ASSET_UPLOAD_ID -> assetUploadId = objectDecoder.decodeString();
-                    case KEY_HEADERS -> headers = objectDecoder.decodeString();
-                    case KEY_URL -> uploadUrl = objectDecoder.decodeString();
-                    case "upload_url" -> {
-                        Object val = objectDecoder.decodeArbitrary();
-                        if (val instanceof String s) {
-                            uploadUrl = s;
-                        } else if (val instanceof Map<?, ?> map) {
-                            uploadUrl = getMapString(map, KEY_URL, uploadUrl);
-                            assetUploadId = getMapString(map, KEY_ASSET_UPLOAD_ID, assetUploadId);
-                            headers = getMapString(map, KEY_HEADERS, headers);
-                        }
-                    }
-                    default -> objectDecoder.skipValue();
+    @Nullable
+    @Override
+    public GuideMediaUploadUrlResponse deserialize(
+            @NonNull Decoder decoder,
+            @NonNull DecoderContext context,
+            @NonNull Argument<? super GuideMediaUploadUrlResponse> type
+    ) throws IOException {
+        JsonNode node = PolymorphicSerdeSupport.decodeObjectNode(decoder, "GuideMediaUploadUrlResponse");
+        if (node == null) {
+            return null;
+        }
+
+        Map<String, JsonNode> normalized = new LinkedHashMap<>();
+        copyIfPresent(node, KEY_URL, normalized, KEY_UPLOAD_URL);
+        copyIfPresent(node, KEY_ASSET_UPLOAD_ID, normalized, KEY_ASSET_UPLOAD_ID);
+        copyHeaders(node.get(KEY_HEADERS), normalized);
+
+        JsonNode uploadUrlNode = node.get(KEY_UPLOAD_URL);
+        if (uploadUrlNode != null) {
+            if (uploadUrlNode.isObject()) {
+                copyIfNonNull(uploadUrlNode, KEY_URL, normalized, KEY_UPLOAD_URL);
+                copyIfNonNull(uploadUrlNode, KEY_ASSET_UPLOAD_ID, normalized, KEY_ASSET_UPLOAD_ID);
+                JsonNode nestedHeaders = uploadUrlNode.get(KEY_HEADERS);
+                if (nestedHeaders != null && !nestedHeaders.isNull()) {
+                    copyHeaders(nestedHeaders, normalized);
                 }
+            } else if (!uploadUrlNode.isNull() || !normalized.containsKey(KEY_UPLOAD_URL)) {
+                normalized.put(KEY_UPLOAD_URL, uploadUrlNode);
             }
         }
 
-        return new GuideMediaUploadUrlResponse(uploadUrl, assetUploadId, headers);
+        UploadUrlPayload payload = PolymorphicSerdeSupport.deserializeTarget(
+                JsonNode.createObjectNode(normalized),
+                context,
+                UploadUrlPayload.class
+        );
+        if (payload == null) {
+            return null;
+        }
+        return new GuideMediaUploadUrlResponse(payload.uploadUrl(), payload.assetUploadId(), payload.headers());
     }
 
-    private String getMapString(Map<?, ?> map, String key, String defaultValue) {
-        Object val = map.get(key);
-        return val != null ? val.toString() : defaultValue;
+    private static void copyIfPresent(JsonNode source, String sourceKey, Map<String, JsonNode> target, String targetKey) {
+        JsonNode value = source.get(sourceKey);
+        if (value != null) {
+            target.put(targetKey, value);
+        }
+    }
+
+    private static void copyIfNonNull(JsonNode source, String sourceKey, Map<String, JsonNode> target, String targetKey) {
+        JsonNode value = source.get(sourceKey);
+        if (value != null && !value.isNull()) {
+            target.put(targetKey, value);
+        }
+    }
+
+    private static void copyHeaders(@Nullable JsonNode headersNode, Map<String, JsonNode> target) {
+        if (headersNode == null) {
+            return;
+        }
+        if (headersNode.isNull() || headersNode.isString()) {
+            target.put(KEY_HEADERS, headersNode);
+            return;
+        }
+        target.put(KEY_HEADERS, JsonNode.createStringNode(JsonNodeTreeDecoder.toJson(headersNode)));
     }
 
     @Nullable

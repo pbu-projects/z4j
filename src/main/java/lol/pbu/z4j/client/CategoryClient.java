@@ -20,6 +20,7 @@ import io.micronaut.http.annotation.*;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.client.annotation.Client;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.*;
 import reactor.core.publisher.Mono;
@@ -107,30 +108,125 @@ public interface CategoryClient {
      * <p>Translations are embedded within the category because they're not shared between resources.</p>
      * <h4>Allowed for Anonymous users</h4>
      *
-     * @param localeAbbreviation    The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case) (required)
-     * @param sortBy    {@link SortCategoryBy}  (optional)
-     * @param sortOrder {@link SortOrder}  (optional)
+     * @param localeAbbreviation The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case) (required)
+     * @return OK (status code 200)
+     */
+    default Mono<@Valid CategoriesResponse> listCategories(@NotNull LocaleAbbreviation localeAbbreviation) {
+        return listCategories(localeAbbreviation, null, null, null, null);
+    }
+
+    /**
+     * <h1>{@summary List Categories by Locale with Pagination}</h1>
+     *
+     * @param localeAbbreviation The locale the item is displayed in. (required)
+     * @param page               Page number for offset pagination (optional)
+     * @param perPage            Number of results per page. Max 100. (optional)
+     * @return OK (status code 200)
+     */
+    default Mono<@Valid CategoriesResponse> listCategoriesByPage(
+            @NotNull LocaleAbbreviation localeAbbreviation,
+            @Nullable Integer page,
+            @Nullable @Max(100) Integer perPage
+    ) {
+        return listCategories(localeAbbreviation, null, null, page, perPage);
+    }
+
+    /**
+     * <h1>{@summary List Categories by Locale}</h1>
+     * <p>The response will list only the categories that the agent, end user, or anonymous user can view in the help center.</p>
+     * <p>Translations are embedded within the category because they're not shared between resources.</p>
+     * <h4>Allowed for Anonymous users</h4>
+     *
+     * @param localeAbbreviation The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case) (required)
+     * @param sortBy             {@link SortCategoryBy} (optional)
+     * @param sortOrder          {@link SortOrder} (optional)
+     * @return OK (status code 200)
+     */
+    default Mono<@Valid CategoriesResponse> listCategories(
+            @NotNull LocaleAbbreviation localeAbbreviation,
+            @Nullable SortCategoryBy sortBy,
+            @Nullable SortOrder sortOrder
+    ) {
+        return listCategories(localeAbbreviation, sortBy, sortOrder, null, null);
+    }
+
+    /**
+     * <h1>{@summary List Categories by Locale}</h1>
+     * <p>The response will list only the categories that the agent, end user, or anonymous user can view in the help center.</p>
+     * <p>Translations are embedded within the category because they're not shared between resources.</p>
+     * <h4>Allowed for Anonymous users</h4>
+     *
+     * @param localeAbbreviation The locale the item is displayed in. (must be lowercase, even if returned from zendesk as mixed case) (required)
+     * @param sortBy             {@link SortCategoryBy} (optional)
+     * @param sortOrder          {@link SortOrder} (optional)
+     * @param page               Page number for offset pagination (optional)
+     * @param perPage            Number of results per page. Max 100. (optional)
      * @return OK (status code 200)
      */
     @Get("/api/v2/help_center/{locale}/categories")
     Mono<@Valid CategoriesResponse> listCategories(
             @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
             @QueryValue("sort_by") @Nullable SortCategoryBy sortBy,
-            @QueryValue("sort_order") @Nullable SortOrder sortOrder
+            @QueryValue("sort_order") @Nullable SortOrder sortOrder,
+            @QueryValue("page") @Nullable Integer page,
+            @QueryValue("per_page") @Nullable @Max(100) Integer perPage
     );
 
     /**
      * <h1>{@summary List Categories}</h1>
      * Allowed for Agents<p>The response will list only the categories that the agent can view in the help center.</p>
      *
-     * @param sortBy    {@link SortCategoryBy}  (optional)
-     * @param sortOrder {@link SortOrder}  (optional)
+     * @return status code 200
+     */
+    default Mono<@Valid CategoriesResponse> listCategoriesNoLocale() {
+        return listCategoriesNoLocale(null, null, null, null);
+    }
+
+    /**
+     * <h1>{@summary List Categories with Pagination}</h1>
+     *
+     * @param page    Page number for offset pagination (optional)
+     * @param perPage Number of results per page. Max 100. (optional)
+     * @return status code 200
+     */
+    default Mono<@Valid CategoriesResponse> listCategoriesNoLocaleByPage(
+            @Nullable Integer page,
+            @Nullable @Max(100) Integer perPage
+    ) {
+        return listCategoriesNoLocale(null, null, page, perPage);
+    }
+
+    /**
+     * <h1>{@summary List Categories}</h1>
+     * Allowed for Agents<p>The response will list only the categories that the agent can view in the help center.</p>
+     *
+     * @param sortBy    {@link SortCategoryBy} (optional)
+     * @param sortOrder {@link SortOrder} (optional)
+     * @return status code 200
+     */
+    default Mono<@Valid CategoriesResponse> listCategoriesNoLocale(
+            @Nullable SortCategoryBy sortBy,
+            @Nullable SortOrder sortOrder
+    ) {
+        return listCategoriesNoLocale(sortBy, sortOrder, null, null);
+    }
+
+    /**
+     * <h1>{@summary List Categories}</h1>
+     * Allowed for Agents<p>The response will list only the categories that the agent can view in the help center.</p>
+     *
+     * @param sortBy    {@link SortCategoryBy} (optional)
+     * @param sortOrder {@link SortOrder} (optional)
+     * @param page      Page number for offset pagination (optional)
+     * @param perPage   Number of results per page. Max 100. (optional)
      * @return status code 200
      */
     @Get("/api/v2/help_center/categories")
     Mono<@Valid CategoriesResponse> listCategoriesNoLocale(
             @QueryValue("sort_by") @Nullable SortCategoryBy sortBy,
-            @QueryValue("sort_order") @Nullable SortOrder sortOrder
+            @QueryValue("sort_order") @Nullable SortOrder sortOrder,
+            @QueryValue("page") @Nullable Integer page,
+            @QueryValue("per_page") @Nullable @Max(100) Integer perPage
     );
 
     /**

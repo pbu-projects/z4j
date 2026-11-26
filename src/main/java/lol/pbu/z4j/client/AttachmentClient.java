@@ -17,10 +17,18 @@ package lol.pbu.z4j.client;
 
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.MediaType;
-import io.micronaut.http.annotation.*;
+import io.micronaut.http.annotation.Body;
+import io.micronaut.http.annotation.Delete;
+import io.micronaut.http.annotation.Get;
+import io.micronaut.http.annotation.Header;
+import io.micronaut.http.annotation.PathVariable;
+import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.client.annotation.Client;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lol.pbu.z4j.model.AttachmentResponse;
 import lol.pbu.z4j.model.AttachmentUploadResponse;
 import reactor.core.publisher.Mono;
@@ -30,7 +38,7 @@ import reactor.core.publisher.Mono;
  * <ul>
  *     <li>Upload Attachment {@link #uploadAttachment}</li>
  *     <li>Show Attachment {@link #showAttachment}</li>
- *     <li>Delete Attachment {@link #deleteAttachment}</li>
+ *     <li>Delete Upload {@link #deleteUpload}</li>
  * </ul>
  *
  * @since 0.2.3
@@ -49,7 +57,7 @@ public interface AttachmentClient {
      * @param data Binary contents of the file
      * @return Upload response with token and attachment metadata (status code 201)
      */
-    @Post(value = "/api/v2/uploads", consumes = MediaType.APPLICATION_JSON)
+    @Post(value = "/api/v2/uploads", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_OCTET_STREAM)
     Mono<@Valid AttachmentUploadResponse> uploadAttachment(
             @QueryValue("filename") @NotNull String filename,
             @QueryValue("token") @Nullable String token,
@@ -77,13 +85,19 @@ public interface AttachmentClient {
     Mono<@Valid AttachmentResponse> showAttachment(@PathVariable("attachment_id") @NotNull Long attachmentId);
 
     /**
-     * <h1>{@summary Delete Attachment}</h1>
-     * <p>Redacts an attachment permanently from a ticket comment.</p>
-     * <h4>Allowed For</h4> <ul> <li>Admins</li> </ul>
+     * <h1>{@summary Delete Upload}</h1>
+     * <p>Deletes an uploaded file using its upload token before it is attached to a ticket.</p>
+     * <h4>Allowed For</h4> <ul> <li>Agents, End Users</li> </ul>
      *
-     * @param attachmentId The ID of the attachment (required)
-     * @return Void (status code 200/204)
+     * @param token The upload token returned by {@link #uploadAttachment} (required)
+     * @return Void (status code 204)
      */
-    @Delete("/api/v2/attachments/{attachment_id}")
-    Mono<Void> deleteAttachment(@PathVariable("attachment_id") @NotNull Long attachmentId);
+    @Delete("/api/v2/uploads/{token}")
+    Mono<Void> deleteUpload(
+            @PathVariable("token")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String token
+    );
 }

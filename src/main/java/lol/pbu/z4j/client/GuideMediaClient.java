@@ -27,6 +27,8 @@ import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.client.annotation.Client;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lol.pbu.z4j.model.GuideMediaCreateRequest;
 import lol.pbu.z4j.model.GuideMediaResponse;
 import lol.pbu.z4j.model.GuideMediaUploadUrlRequest;
@@ -124,7 +126,11 @@ public interface GuideMediaClient {
      */
     @Get("/api/v2/guide/medias/{id}")
     Mono<@Valid GuideMediaResponse> showGuideMedia(
-            @PathVariable("id") @NotNull String id
+            @PathVariable("id")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String id
     );
 
     /**
@@ -136,7 +142,11 @@ public interface GuideMediaClient {
      */
     @Put("/api/v2/guide/medias/{id}")
     Mono<@Valid GuideMediaResponse> replaceGuideMedia(
-            @PathVariable("id") @NotNull String id,
+            @PathVariable("id")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String id,
             @Body @NotNull @Valid GuideMediaCreateRequest body
     );
 
@@ -149,7 +159,11 @@ public interface GuideMediaClient {
      */
     @Patch("/api/v2/guide/medias/{id}")
     Mono<@Valid GuideMediaResponse> renameGuideMedia(
-            @PathVariable("id") @NotNull String id,
+            @PathVariable("id")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String id,
             @Body @NotNull @Valid GuideMediaCreateRequest body
     );
 
@@ -161,6 +175,10 @@ public interface GuideMediaClient {
      */
     @Delete("/api/v2/guide/medias/{id}")
     Mono<Void> deleteGuideMedia(
-            @PathVariable("id") @NotNull String id
+            @PathVariable("id")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String id
     );
 }

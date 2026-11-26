@@ -15,16 +15,33 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import io.soabase.recordbuilder.core.RecordBuilder;
+import jakarta.validation.Valid;
 
 @Serdeable
 @RecordBuilder
 public record ArticleUpdateRequest(
-        @Nullable @JsonProperty(JSON_PROPERTY_ARTICLE) Article article
+        @Nullable @JsonProperty(value = JSON_PROPERTY_ARTICLE, access = JsonProperty.Access.WRITE_ONLY) Article article,
+        @Nullable @Valid @JsonIgnore ArticleUpdateInput articleInput
 ) implements ArticleUpdateRequestBuilder.With {
 
     public static final String JSON_PROPERTY_ARTICLE = "article";
+
+    public ArticleUpdateRequest(@Nullable Article article) {
+        this(article, null);
+    }
+
+    public static ArticleUpdateRequest of(@Nullable ArticleUpdateInput articleInput) {
+        return new ArticleUpdateRequest(null, articleInput);
+    }
+
+    @Nullable
+    @JsonProperty(value = JSON_PROPERTY_ARTICLE, access = JsonProperty.Access.READ_ONLY)
+    public Object articlePayload() {
+        return articleInput != null ? articleInput : article;
+    }
 }

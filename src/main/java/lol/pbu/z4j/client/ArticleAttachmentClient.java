@@ -149,17 +149,18 @@ public interface ArticleAttachmentClient {
     /**
      * <h1>{@summary Create Article Attachment}</h1>
      *
-     * @param localeAbbreviation The locale in which the article is displayed (required)
+     * @param localeAbbreviation The locale for the inline attachment (optional; forwarded to {@link #createArticleAttachmentNoLocale})
      * @param articleId          The unique ID of the article (required)
      * @param body               The multipart body containing the file and inline flag (required)
      * @return Article attachment (status code 201)
      */
-    @Post(value = "/api/v2/help_center/{locale}/articles/{article_id}/attachments", consumes = MediaType.APPLICATION_JSON, produces = MediaType.MULTIPART_FORM_DATA)
-    Mono<@Valid ArticleAttachmentResponse> createArticleAttachment(
-            @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
-            @PathVariable("article_id") @NotNull Long articleId,
-            @Body MultipartBody body
-    );
+    default Mono<@Valid ArticleAttachmentResponse> createArticleAttachment(
+            LocaleAbbreviation localeAbbreviation,
+            @NotNull Long articleId,
+            MultipartBody body
+    ) {
+        return createArticleAttachmentNoLocale(articleId, body);
+    }
 
     /**
      * <h1>{@summary Create Article Attachment (Default Locale)}</h1>
@@ -223,14 +224,13 @@ public interface ArticleAttachmentClient {
             byte[] data,
             boolean inline
     ) {
-        return createArticleAttachment(
-                localeAbbreviation,
-                articleId,
-                MultipartBody.builder()
-                        .addPart("file", filename, MediaType.APPLICATION_OCTET_STREAM_TYPE, data)
-                        .addPart("inline", String.valueOf(inline))
-                        .build()
-        );
+        MultipartBody.Builder builder = MultipartBody.builder()
+                .addPart("file", filename, MediaType.APPLICATION_OCTET_STREAM_TYPE, data)
+                .addPart("inline", String.valueOf(inline));
+        if (inline && localeAbbreviation != null) {
+            builder.addPart("locale", localeAbbreviation.toString());
+        }
+        return createArticleAttachmentNoLocale(articleId, builder.build());
     }
 
     /**
