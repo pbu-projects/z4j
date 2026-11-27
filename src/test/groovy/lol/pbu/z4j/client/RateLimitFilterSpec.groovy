@@ -24,9 +24,11 @@ import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.MutableHttpRequest
+import io.micronaut.http.client.ServiceHttpClientConfiguration
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.http.client.exceptions.ReadTimeoutException
 import io.micronaut.http.filter.ClientFilterChain
+import io.micronaut.inject.qualifiers.Qualifiers
 import java.net.InetSocketAddress
 import java.nio.charset.StandardCharsets
 import java.time.Clock
@@ -43,6 +45,7 @@ import lol.pbu.z4j.ratelimit.RateLimitTracker
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import spock.lang.Specification
+import spock.lang.Unroll
 
 class RateLimitFilterSpec extends Specification {
 
@@ -1300,5 +1303,32 @@ class RateLimitFilterSpec extends Specification {
             captured[1].globalLimit == null
             captured[1].endpointLimits.isEmpty()
         }
+    }
+
+    @Unroll
+    def "ZendeskTimeoutCustomizer sets requestTimeout for service '#serviceId' with explicit timeout '#explicitTimeout'"() {
+        given:
+        Map<String, Object> props = [
+                ("micronaut.http.services.${serviceId}.url".toString()): "https://example.zendesk.com"
+        ]
+        if (explicitTimeout != null) {
+            props.put("micronaut.http.services.${serviceId}.request-timeout".toString(), explicitTimeout)
+        }
+        ApplicationContext ctx = ApplicationContext.run(props)
+
+        when:
+        ServiceHttpClientConfiguration config = ctx.getBean(ServiceHttpClientConfiguration, Qualifiers.byName(serviceId))
+
+        then:
+        config.requestTimeout == expectedTimeout
+
+        cleanup:
+        ctx?.close()
+
+        where:
+        serviceId | explicitTimeout | expectedTimeout
+        "zendesk" | null            | Duration.ofSeconds(-1)
+        "zendesk" | "15s"           | Duration.ofSeconds(15)
+        "other"   | null            | null
     }
 }
