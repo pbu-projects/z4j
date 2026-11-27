@@ -322,9 +322,6 @@ public class RateLimitFilter implements HttpClientFilter, Ordered {
 
     @Nullable
     Duration parseRetryAfterDuration(HttpHeaders headers) {
-        if (headers == null) {
-            return null;
-        }
         String raw = headers.get(HEADER_RETRY_AFTER);
         if (raw == null || raw.isBlank()) {
             return null;
@@ -471,8 +468,8 @@ public class RateLimitFilter implements HttpClientFilter, Ordered {
     }
 
     @Nullable
-    private Integer parseIntegerHeader(@Nullable HttpHeaders headers, String... candidateNames) {
-        if (headers == null || candidateNames == null || candidateNames.length == 0) {
+    private Integer parseIntegerHeader(HttpHeaders headers, String... candidateNames) {
+        if (candidateNames == null || candidateNames.length == 0) {
             return null;
         }
         return Arrays.stream(candidateNames)
@@ -496,8 +493,8 @@ public class RateLimitFilter implements HttpClientFilter, Ordered {
         }
     }
 
-    private static long formatSeconds(@Nullable Duration duration) {
-        if (duration == null || duration.isZero() || duration.isNegative()) {
+    private static long formatSeconds(Duration duration) {
+        if (duration.isZero() || duration.isNegative()) {
             return 0;
         }
         return (duration.toMillis() + 999L) / 1000L;

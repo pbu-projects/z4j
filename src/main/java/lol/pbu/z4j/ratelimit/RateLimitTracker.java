@@ -151,8 +151,8 @@ public class RateLimitTracker {
      *
      * @param delay Wait duration from the current time
      */
-    public void recordRetryAfter(@Nullable Duration delay) {
-        if (delay == null || delay.isZero() || delay.isNegative()) {
+    public void recordRetryAfter(Duration delay) {
+        if (delay.isZero() || delay.isNegative()) {
             return;
         }
         recordRetryAfterUntil(clock.instant().plus(delay));
