@@ -41,7 +41,6 @@ public class AuditEventsInnerDeserializer implements Deserializer<AuditEventsInn
 
     private static final Logger log = LoggerFactory.getLogger(AuditEventsInnerDeserializer.class);
 
-    @Nullable
     @Override
     public AuditEventsInner deserialize(
             @NonNull Decoder decoder,

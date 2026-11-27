@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import lol.pbu.z4j.client.IncrementalClient;
 import lol.pbu.z4j.model.IncrementalCursorPaginationResponse;
 import lol.pbu.z4j.model.IncrementalTimePaginationResponse;
@@ -213,30 +214,30 @@ public class IncrementalService {
             final Duration delay = this.delayBetweenPages;
 
             return Flux.defer(() -> {
-                class State {
-                    String lastCursor = initialCursor;
-                }
-                State state = new State();
-
+                AtomicReference<String> lastCursor = new AtomicReference<>(initialCursor);
                 return fetchPageForCursor(initialStartTime, initialCursor, size)
-                        .expand(page -> {
-                            String nextCursor = page.getCursor() != null ? page.getCursor() : page.getAfterCursor();
-                            if (Boolean.TRUE.equals(page.getEndOfStream()) || nextCursor == null || nextCursor.isEmpty()) {
-                                return Mono.empty();
-                            }
-                            if (nextCursor.equals(state.lastCursor)) {
-                                return Mono.error(new IllegalStateException(
-                                        "Incremental export stalled: cursor '" + nextCursor + "' did not advance."));
-                            }
-                            state.lastCursor = nextCursor;
-                            Mono<IncrementalPage<T>> nextMono = fetchPageForCursor(null, nextCursor, size);
-                            if (delay != null) {
-                                return Mono.delay(delay).flatMap(ignored -> nextMono);
-                            }
-                            return nextMono;
-                        })
+                        .expand(page -> fetchNextCursorPage(page, lastCursor, size, delay))
                         .flatMapIterable(page -> page.getResults() != null ? page.getResults() : Collections.emptyList());
             });
+        }
+
+        private Mono<IncrementalPage<T>> fetchNextCursorPage(
+                IncrementalPage<T> page,
+                AtomicReference<String> lastCursor,
+                Integer size,
+                Duration delay
+        ) {
+            String nextCursor = page.getCursor() != null ? page.getCursor() : page.getAfterCursor();
+            if (Boolean.TRUE.equals(page.getEndOfStream()) || nextCursor == null || nextCursor.isEmpty()) {
+                return Mono.empty();
+            }
+            if (nextCursor.equals(lastCursor.get())) {
+                return Mono.error(new IllegalStateException(
+                        "Incremental export stalled: cursor '" + nextCursor + "' did not advance."));
+            }
+            lastCursor.set(nextCursor);
+            Mono<IncrementalPage<T>> nextMono = fetchPageForCursor(null, nextCursor, size);
+            return delay != null ? Mono.delay(delay).flatMap(ignored -> nextMono) : nextMono;
         }
 
         @SuppressWarnings("unchecked")

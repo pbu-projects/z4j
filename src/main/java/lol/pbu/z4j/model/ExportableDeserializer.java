@@ -16,7 +16,6 @@
 package lol.pbu.z4j.model;
 
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.type.Argument;
 import io.micronaut.json.tree.JsonNode;
 import io.micronaut.serde.Decoder;
@@ -40,7 +39,6 @@ public class ExportableDeserializer implements Deserializer<Exportable> {
             "ticket_event", TicketEvent.class
     );
 
-    @Nullable
     @Override
     public Exportable deserialize(
             @NonNull Decoder decoder,

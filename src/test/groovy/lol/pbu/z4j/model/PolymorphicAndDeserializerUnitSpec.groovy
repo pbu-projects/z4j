@@ -19,8 +19,15 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.core.type.Argument
 import io.micronaut.json.tree.JsonNode
 import io.micronaut.serde.Decoder
+import io.micronaut.serde.Deserializer
+import io.micronaut.serde.Keys
+import io.micronaut.serde.KeysAwareDecoder
 import io.micronaut.serde.ObjectMapper
+import io.micronaut.serde.SerdeRegistry
+import io.micronaut.serde.exceptions.InvalidFormatException
+import io.micronaut.serde.exceptions.NullValueSerdeException
 import io.micronaut.serde.exceptions.SerdeException
+import java.nio.charset.StandardCharsets
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import spock.lang.AutoCleanup
@@ -420,5 +427,342 @@ class PolymorphicAndDeserializerUnitSpec extends Specification {
             tagList.id() == 44L
             tagList.value() == ["vip", "tier1"]
         }
+    }
+
+    def "ExportableDeserializer infers TicketEvent, Ticket, User and rejects unrecognized shapes and handles null"() {
+        when:
+        Exportable nullExportable = contextMapper.readValue("null", Exportable)
+        Exportable ticketEvent = contextMapper.readValue('{"id": 10, "ticket_id": 1, "event_type": "Audit"}', Exportable)
+        Exportable ticket = contextMapper.readValue('{"id": 11, "requester_id": 5, "subject": "Inferred"}', Exportable)
+        Exportable user = contextMapper.readValue('{"id": 12, "name": "Bob", "email": "bob@example.com"}', Exportable)
+
+        then:
+        verifyAll {
+            nullExportable == null
+            ticketEvent instanceof TicketEvent
+            (ticketEvent as TicketEvent).ticketId() == 1L
+            ticket instanceof Ticket
+            (ticket as Ticket).subject() == "Inferred"
+            user instanceof User
+            (user as User).email() == "bob@example.com"
+        }
+
+        when:
+        contextMapper.readValue('{"unrecognized_only": 123}', Exportable)
+
+        then:
+        thrown(SerdeException)
+    }
+
+    def "SearchResultsInnerDeserializer infers Article, Post, PostComment by fields and rejects unknown shapes"() {
+        when:
+        SearchResultsInner nullResult = contextMapper.readValue("null", SearchResultsInner)
+        SearchResultsInner articleBySection = contextMapper.readValue('{"id": 1, "section_id": 5}', SearchResultsInner)
+        SearchResultsInner postByTopic = contextMapper.readValue('{"id": 2, "topic_id": 9}', SearchResultsInner)
+        SearchResultsInner commentByBody = contextMapper.readValue('{"id": 3, "body": "Only body"}', SearchResultsInner)
+
+        then:
+        verifyAll {
+            nullResult == null
+            articleBySection instanceof Article
+            (articleBySection as Article).sectionId() == 5L
+            postByTopic instanceof Post
+            (postByTopic as Post).topicId() == 9L
+            commentByBody instanceof PostComment
+            (commentByBody as PostComment).body() == "Only body"
+        }
+
+        when:
+        contextMapper.readValue('{"unrecognized_only": true}', SearchResultsInner)
+
+        then:
+        thrown(SerdeException)
+    }
+
+    def "PolymorphicSerdeSupport handles null nodes and decoders"() {
+        given:
+        Deserializer.DecoderContext decoderContext = context.getBean(SerdeRegistry).newDecoderContext(null)
+
+        expect:
+        verifyAll {
+            PolymorphicSerdeSupport.decodeObjectNode(JsonNodeTreeDecoder.of(null), "Test") == null
+            PolymorphicSerdeSupport.deserialize(JsonNodeTreeDecoder.of(null), decoderContext, "Test", { Ticket.class }) == null
+            PolymorphicSerdeSupport.deserializeTarget(null, decoderContext, Ticket.class) == null
+            PolymorphicSerdeSupport.deserializeTarget(JsonNode.nullNode(), decoderContext, Ticket.class) == null
+        }
+    }
+
+    def "AuditEventsInnerDeserializer handles null id and scalar non-string fields"() {
+        when:
+        AuditEventsInner missingId = contextMapper.readValue('{"type": 123, "field_name": true, "subject": 456}', AuditEventsInner)
+        AuditEventsInner nullId = contextMapper.readValue('{"id": null, "type": "Notice"}', AuditEventsInner)
+
+        then:
+        verifyAll {
+            missingId.id() == null
+            missingId.type() == "123"
+            missingId.fieldName() == "true"
+            missingId.subject() == "456"
+            nullId.id() == null
+            nullId.type() == "Notice"
+        }
+    }
+
+    def "GuideMediaUploadUrlResponseDeserializer handles flat upload_url and null fallback"() {
+        given:
+        GuideMediaUploadUrlResponseDeserializer deserializer = context.getBean(GuideMediaUploadUrlResponseDeserializer)
+        Deserializer.DecoderContext decoderContext = context.getBean(SerdeRegistry).newDecoderContext(null)
+
+        when:
+        GuideMediaUploadUrlResponse flatOverride = contextMapper.readValue(
+                '{"url":"https://old.example.com","upload_url":"https://new.example.com"}',
+                GuideMediaUploadUrlResponse
+        )
+        GuideMediaUploadUrlResponse nullUploadUrlFallback = contextMapper.readValue(
+                '{"url":"https://keep.example.com","upload_url":null}',
+                GuideMediaUploadUrlResponse
+        )
+        GuideMediaUploadUrlResponse nullUploadUrlAlone = contextMapper.readValue(
+                '{"upload_url":null,"asset_upload_id":"id-1"}',
+                GuideMediaUploadUrlResponse
+        )
+
+        then:
+        verifyAll {
+            flatOverride.uploadUrl() == "https://new.example.com"
+            nullUploadUrlFallback.uploadUrl() == "https://keep.example.com"
+            nullUploadUrlAlone.uploadUrl() == null
+            nullUploadUrlAlone.assetUploadId() == "id-1"
+            deserializer.getDefaultValue(decoderContext, Argument.of(GuideMediaUploadUrlResponse)) == null
+        }
+    }
+
+    def "Group constructors create empty and named instances"() {
+        when:
+        Group empty = new Group()
+        Group named = new Group("Escalations")
+
+        then:
+        verifyAll {
+            empty.name() == null
+            empty.id() == null
+            named.name() == "Escalations"
+            named.id() == null
+        }
+    }
+
+    def "JsonNodeTreeDecoder decodes all scalar types, arrays, binary, buffers, and JSON escaping"() {
+        given:
+        byte[] rawBytes = "hello".getBytes(StandardCharsets.UTF_8)
+        String b64 = Base64.encoder.encodeToString(rawBytes)
+        JsonNode byteArrayNode = JsonNode.createArrayNode(rawBytes.collect { JsonNode.createNumberNode((int) it) })
+        String specialChars = "\"quote\"\\slash\b\f\n\r\t\u0001"
+        JsonNode scalarMap = JsonNode.createObjectNode([
+                b: JsonNode.createNumberNode(7),
+                s: JsonNode.createNumberNode(320),
+                c: JsonNode.createNumberNode(65),
+                i: JsonNode.createNumberNode(42),
+                l: JsonNode.createNumberNode(123456789012L),
+                f: JsonNode.createNumberNode(1.5f),
+                d: JsonNode.createNumberNode(2.25d),
+                bi: JsonNode.createNumberNode(BigInteger.valueOf(999999999999L)),
+                bd: JsonNode.createNumberNode(new BigDecimal("12.345")),
+                num: JsonNode.createNumberNode(88),
+                bool: JsonNode.createBooleanNode(true),
+                str: JsonNode.createStringNode("abc"),
+                singleArr: JsonNode.createArrayNode([JsonNode.createNumberNode(55)])
+        ])
+
+        when:
+        Decoder obj = JsonNodeTreeDecoder.of(scalarMap).decodeObject(Argument.of(Object))
+        Map decoded = [:]
+        while (true) {
+            String key = obj.decodeKey()
+            if (key == null) break
+            switch (key) {
+                case "b": decoded.b = obj.decodeByte(); break
+                case "s": decoded.s = obj.decodeShort(); break
+                case "c": decoded.c = obj.decodeChar(); break
+                case "i": decoded.i = obj.decodeInt(); break
+                case "l": decoded.l = obj.decodeLong(); break
+                case "f": decoded.f = obj.decodeFloat(); break
+                case "d": decoded.d = obj.decodeDouble(); break
+                case "bi": decoded.bi = obj.decodeBigInteger(); break
+                case "bd": decoded.bd = obj.decodeBigDecimal(); break
+                case "num": decoded.num = obj.decodeNumber(); break
+                case "bool": decoded.bool = obj.decodeBoolean(); break
+                case "str": decoded.str = obj.decodeString(); break
+                case "singleArr": decoded.singleArr = obj.decodeInt(); break
+            }
+        }
+        obj.finishStructure(false)
+        obj.close()
+
+        byte[] fromB64 = JsonNodeTreeDecoder.of(JsonNode.createStringNode(b64)).decodeBinary()
+        byte[] fromArr = JsonNodeTreeDecoder.of(byteArrayNode).decodeBinary()
+        Decoder buffered = JsonNodeTreeDecoder.of(JsonNode.createStringNode("buf")).decodeBuffer()
+        String bufferedVal = buffered.decodeString()
+        String escapedJson = JsonNodeTreeDecoder.toJson(JsonNode.createStringNode(specialChars))
+        Object nullArb = JsonNodeTreeDecoder.toArbitrary(null)
+        String nullJson = JsonNodeTreeDecoder.toJson(null)
+
+        then:
+        verifyAll(decoded) {
+            b == (byte) 7
+            s == (short) 320
+            c == (char) 65
+            i == 42
+            l == 123456789012L
+            f == 1.5f
+            d == 2.25d
+            bi == BigInteger.valueOf(999999999999L)
+            bd == new BigDecimal("12.345")
+            num == 88
+            bool == true
+            str == "abc"
+            singleArr == 55
+        }
+        verifyAll {
+            fromB64 == rawBytes
+            fromArr == rawBytes
+            bufferedVal == "buf"
+            escapedJson == '"\\"quote\\"\\\\slash\\b\\f\\n\\r\\t\\u0001"'
+            nullArb == null
+            nullJson == "null"
+        }
+    }
+
+    def "JsonNodeTreeDecoder enforces structure and error contracts on Root, Array, and Object decoders"() {
+        when: "decodeArray or decodeObject called on wrong type"
+        JsonNodeTreeDecoder.of(JsonNode.createStringNode("x")).decodeArray(Argument.listOf(String))
+        then:
+        thrown(InvalidFormatException)
+
+        when:
+        JsonNodeTreeDecoder.of(JsonNode.createStringNode("x")).decodeObject(Argument.of(Object))
+        then:
+        thrown(InvalidFormatException)
+
+        when: "scalar decoder called on null or wrong scalar type or invalid single-element array"
+        JsonNodeTreeDecoder.of(JsonNode.nullNode()).decodeInt()
+        then:
+        thrown(NullValueSerdeException)
+
+        when:
+        JsonNodeTreeDecoder.of(JsonNode.createStringNode("not-num")).decodeInt()
+        then:
+        thrown(InvalidFormatException)
+
+        when:
+        JsonNodeTreeDecoder.of(JsonNode.createArrayNode([JsonNode.createStringNode("bad")])).decodeInt()
+        then:
+        thrown(InvalidFormatException)
+
+        when: "RootDecoder invalid operations and drained state"
+        Decoder root = JsonNodeTreeDecoder.of(JsonNode.createStringNode("one"))
+        boolean rootHasNext = root.hasNextArrayValue()
+        root.skipValue()
+        then:
+        !rootHasNext
+
+        when:
+        root.decodeString()
+        then:
+        thrown(IllegalStateException)
+
+        when:
+        root.skipValue()
+        then:
+        thrown(IllegalStateException)
+
+        when:
+        JsonNodeTreeDecoder.of(JsonNode.createStringNode("x")).decodeKey()
+        then:
+        thrown(IllegalStateException)
+
+        when:
+        JsonNodeTreeDecoder.of(JsonNode.createStringNode("x")).finishStructure(false)
+        then:
+        thrown(IllegalStateException)
+
+        when: "ArrayDecoder contract checks"
+        Decoder arr = JsonNodeTreeDecoder.of(JsonNode.createArrayNode([JsonNode.createStringNode("a")])).decodeArray(Argument.listOf(String))
+        arr.decodeKey()
+        then:
+        thrown(IllegalStateException)
+
+        when:
+        arr.finishStructure(false)
+        then:
+        thrown(IllegalStateException)
+
+        when:
+        String elem = arr.decodeString()
+        arr.finishStructure(false)
+        arr.decodeString()
+        then:
+        elem == "a"
+        thrown(IllegalStateException)
+
+        when: "ObjectDecoder and KeysAwareDecoder contract checks"
+        Keys keys = Keys.create("known")
+        KeysAwareDecoder keyed = JsonNodeTreeDecoder.of(JsonNode.createObjectNode([
+                known: JsonNode.createStringNode("v1"),
+                extra: JsonNode.createStringNode("v2")
+        ])).decodeObject(Argument.of(Object)) as KeysAwareDecoder
+
+        boolean objHasNext = keyed.hasNextArrayValue()
+        int idxKnown = keyed.decodeKey(keys)
+        String val1 = keyed.decodeString()
+        int idxUnknown = keyed.decodeKey(keys)
+        int idxUnknownAgain = keyed.decodeKey(keys)
+        String extraKey = keyed.decodeKey()
+        String val2 = keyed.decodeString()
+        int idxEnd = keyed.decodeKey(keys)
+        keyed.finishStructure(true)
+        int idxAfterFinish = keyed.decodeKey(keys)
+
+        then:
+        verifyAll {
+            !objHasNext
+            idxKnown == 0
+            val1 == "v1"
+            idxUnknown == KeysAwareDecoder.MATCH_UNKNOWN_NAME
+            idxUnknownAgain == KeysAwareDecoder.MATCH_UNKNOWN_NAME
+            extraKey == "extra"
+            val2 == "v2"
+            idxEnd == KeysAwareDecoder.MATCH_END_OBJECT
+            idxAfterFinish == KeysAwareDecoder.MATCH_END_OBJECT
+        }
+
+        when: "ObjectDecoder unconsumed / out-of-order errors"
+        KeysAwareDecoder badObj = JsonNodeTreeDecoder.of(JsonNode.createObjectNode([
+                a: JsonNode.createStringNode("1"),
+                b: JsonNode.createStringNode("2")
+        ])).decodeObject(Argument.of(Object)) as KeysAwareDecoder
+        badObj.skipValue()
+        then:
+        thrown(IllegalStateException)
+
+        when:
+        badObj.decodeString()
+        then:
+        thrown(IllegalStateException)
+
+        when:
+        badObj.decodeKey()
+        badObj.decodeKey()
+        then:
+        thrown(IllegalStateException)
+
+        when:
+        badObj.decodeKey(keys)
+        then:
+        thrown(IllegalStateException)
+
+        when:
+        badObj.finishStructure(false)
+        then:
+        thrown(IllegalStateException)
     }
 }

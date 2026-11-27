@@ -17,9 +17,12 @@ package lol.pbu.z4j.model
 
 import com.sun.net.httpserver.HttpServer
 import io.micronaut.context.ApplicationContext
+import io.micronaut.core.type.Argument
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.MediaType
+import io.micronaut.serde.Encoder
 import io.micronaut.serde.ObjectMapper
+import io.micronaut.serde.Serializer
 import jakarta.validation.Validator
 import java.net.InetSocketAddress
 import java.nio.charset.StandardCharsets
@@ -365,5 +368,244 @@ class PartialUpdateSerializationUnitSpec extends Specification {
             agentBrandIds() == []
             organizationId() == null
         }
+    }
+
+    def "ArticleUpdateInput constructors, from(), all withers, adders, clearers, and Builder methods work"() {
+        given:
+        Article sourceArticle = new Article()
+                .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                .withPermissionGroupId(1L)
+                .withTitle("Source")
+                .withAuthorId(2L)
+                .withBody("<p>Body</p>")
+                .withCommentsDisabled(true)
+                .withContentTagIds(["c1"])
+                .withDraft(false)
+                .withLabelNames(["l1"])
+                .withPosition(3L)
+                .withPromoted(true)
+                .withSectionId(4L)
+                .withSourceLocale("en-us")
+                .withUserSegmentId(5L)
+                .withUserSegmentIds(["seg1"])
+
+        when:
+        ArticleUpdateInput fromNull = ArticleUpdateInput.from(null)
+        ArticleUpdateInput fromArticle = ArticleUpdateInput.from(sourceArticle)
+        ArticleUpdateInput viaCtor = new ArticleUpdateInput(
+                LocaleAbbreviation.FRENCH, 10L, "Ctor", 20L, "B", false, ["ct"], true, ["ln"], 1L, false, 30L, "fr", 40L, ["us"]
+        )
+        ArticleUpdateInput withers = new ArticleUpdateInput()
+                .withLocaleAbbreviation(LocaleAbbreviation.ENGLISH_UNITED_STATES)
+                .withPermissionGroupId(10L)
+                .withTitle("T")
+                .withAuthorId(20L)
+                .withBody("B")
+                .withCommentsDisabled(false)
+                .addContentTagIdsItem("ct1")
+                .addContentTagIdsItem("ct2")
+                .withDraft(true)
+                .addLabelNamesItem("lbl1")
+                .addLabelNamesItem("lbl2")
+                .withPosition(7L)
+                .withPromoted(false)
+                .withSectionId(8L)
+                .withSourceLocale("en-us")
+                .withUserSegmentId(9L)
+                .addUserSegmentIdsItem("us1")
+                .addUserSegmentIdsItem("us2")
+
+        ArticleUpdateInput clearedAll = withers
+                .clearLocaleAbbreviation()
+                .clearPermissionGroupId()
+                .clearTitle()
+                .clearAuthorId()
+                .clearBody()
+                .clearCommentsDisabled()
+                .clearContentTagIds()
+                .clearDraft()
+                .clearLabelNames()
+                .clearPosition()
+                .clearPromoted()
+                .clearSectionId()
+                .clearSourceLocale()
+                .clearUserSegmentId()
+                .clearUserSegmentIds()
+
+        ArticleUpdateInput builtSet = ArticleUpdateInput.builder()
+                .localeAbbreviation(LocaleAbbreviation.FRENCH)
+                .permissionGroupId(1L)
+                .title("Built")
+                .authorId(2L)
+                .body("Body")
+                .commentsDisabled(true)
+                .contentTagIds(["c"])
+                .draft(false)
+                .labelNames(["l"])
+                .position(2L)
+                .promoted(true)
+                .sectionId(3L)
+                .sourceLocale("fr")
+                .userSegmentId(4L)
+                .userSegmentIds(["u"])
+                .build()
+
+        ArticleUpdateInput builtCleared = ArticleUpdateInput.builder()
+                .clearLocaleAbbreviation()
+                .clearPermissionGroupId()
+                .clearTitle()
+                .clearAuthorId()
+                .clearBody()
+                .clearCommentsDisabled()
+                .clearContentTagIds()
+                .clearDraft()
+                .clearLabelNames()
+                .clearPosition()
+                .clearPromoted()
+                .clearSectionId()
+                .clearSourceLocale()
+                .clearUserSegmentId()
+                .clearUserSegmentIds()
+                .build()
+
+        Map clearedMap = objectMapper.readValue(objectMapper.writeValueAsString(clearedAll), Map)
+        Map builtClearedMap = objectMapper.readValue(objectMapper.writeValueAsString(builtCleared), Map)
+
+        then:
+        verifyAll {
+            fromNull == null
+            fromArticle.title() == "Source"
+            fromArticle.sectionId() == 4L
+            viaCtor.title() == "Ctor"
+            withers.contentTagIds() == ["ct1", "ct2"]
+            withers.labelNames() == ["lbl1", "lbl2"]
+            withers.userSegmentIds() == ["us1", "us2"]
+            builtSet.title() == "Built"
+            builtSet.localeAbbreviation() == LocaleAbbreviation.FRENCH
+            clearedMap.size() == 15
+            clearedMap.values().every { it == null }
+            builtClearedMap.size() == 15
+            builtClearedMap.values().every { it == null }
+        }
+    }
+
+    def "TicketUpdateInput and User cover remaining adders, withers, clearers, and map scalar types"() {
+        given:
+        TicketUpdateInput fullTicket = new TicketUpdateInput(
+                null, null, null, null, null, null, null, null, null, null,
+                null, null, null, null, null, null, null, null, null, null,
+                null, null, null, null, null, null, null
+        )
+                .addAdditionalCollaboratorsItem(new Collaborator("collab@example.com", "Collab"))
+                .addAdditionalTagsItem("t1")
+                .addAttributeValueIdsItem(1L)
+                .addCollaboratorIdsItem(2L)
+                .addCustomFieldsItem(new TicketCustomField.Text(10L, "v"))
+                .addEmailCcsItem(new EmailCC(EmailCCAllOfAction.PUT, "cc@example.com", 1L, "CC"))
+                .addFollowersItem(new Follower(EmailCCAllOfAction.PUT, "f@example.com", "2"))
+                .addSharingAgreementIdsItem(3L)
+                .addRemoveTagsItem("old")
+                .withAssigneeEmail("a@b.com")
+                .withExternalId("ext-1")
+                .withPriority(TicketUpdateInputPriority.HIGH)
+                .withTicketFormId(5L)
+                .withType(TicketUpdateInputType.INCIDENT)
+                .clearAssigneeEmail()
+                .clearCollaboratorIds()
+                .clearCustomFields()
+                .clearEmailCcs()
+                .clearExternalId()
+                .clearFollowers()
+                .clearPriority()
+                .clearTags()
+                .clearTicketFormId()
+                .clearType()
+
+        User fullUser = new User(
+                null, null, null, null, null, null, null, null, null, null, null,
+                null, null, null, null, null, null, null, null, null, null, null,
+                null, null, null, null, null, null, null, null, null, null, null,
+                null, null, null, null, null, null, null, null
+        )
+                .withAlias("Al")
+                .withCustomRoleId(1L)
+                .withDetails("D")
+                .withExternalId("E")
+                .withLocale("en-us")
+                .withLocaleId(1L)
+                .withPhoto(new Attachment().withId(9L))
+                .withRemotePhotoUrl("https://img.example.com/a.png")
+                .withSignature("Sig")
+                .withTicketRestriction("assigned")
+                .withTimeZone("UTC")
+                .withUserFields([count: 5, weight: 2.5d])
+                .clearAlias()
+                .clearCustomRoleId()
+                .clearDetails()
+                .clearExternalId()
+                .clearLocale()
+                .clearLocaleId()
+                .clearPhoto()
+                .clearRemotePhotoUrl()
+                .clearSignature()
+                .clearTicketRestriction()
+                .clearTimeZone()
+                .clearUserFields()
+
+        User mapUser = new User().withUserFields([count: 5, ratio: 1.5d])
+
+        when:
+        Map ticketMap = objectMapper.readValue(objectMapper.writeValueAsString(fullTicket), Map)
+        Map fullUserMap = objectMapper.readValue(objectMapper.writeValueAsString(fullUser), Map)
+        Map mapUserJson = objectMapper.readValue(objectMapper.writeValueAsString(mapUser), Map)
+
+        then:
+        verifyAll(ticketMap) {
+            containsKey("assignee_email") && get("assignee_email") == null
+            containsKey("collaborator_ids") && get("collaborator_ids") == null
+            containsKey("custom_fields") && get("custom_fields") == null
+            containsKey("email_ccs") && get("email_ccs") == null
+            containsKey("external_id") && get("external_id") == null
+            containsKey("followers") && get("followers") == null
+            containsKey("priority") && get("priority") == null
+            containsKey("tags") && get("tags") == null
+            containsKey("ticket_form_id") && get("ticket_form_id") == null
+            containsKey("type") && get("type") == null
+            (get("additional_tags") as List) == ["t1"]
+            (get("remove_tags") as List) == ["old"]
+        }
+        verifyAll(fullUserMap) {
+            containsKey("user_fields") && get("user_fields") == null
+            containsKey("alias") && get("alias") == null
+            containsKey("custom_role_id") && get("custom_role_id") == null
+            containsKey("details") && get("details") == null
+            containsKey("external_id") && get("external_id") == null
+            containsKey("locale") && get("locale") == null
+            containsKey("locale_id") && get("locale_id") == null
+            containsKey("photo") && get("photo") == null
+            containsKey("remote_photo_url") && get("remote_photo_url") == null
+            containsKey("signature") && get("signature") == null
+            containsKey("ticket_restriction") && get("ticket_restriction") == null
+            containsKey("time_zone") && get("time_zone") == null
+        }
+        verifyAll(mapUserJson.get("user_fields") as Map) {
+            get("count") == 5
+            get("ratio") == 1.5d
+        }
+    }
+
+    def "custom partial update serializers encode null root values cleanly"() {
+        given:
+        Encoder encoder = Mock(Encoder)
+        Serializer.EncoderContext encoderContext = Stub(Serializer.EncoderContext)
+
+        when:
+        ctx.getBean(ArticleUpdateInputSerializer).serialize(encoder, encoderContext, Argument.of(ArticleUpdateInput), null)
+        ctx.getBean(ArticleUpdateRequestSerializer).serialize(encoder, encoderContext, Argument.of(ArticleUpdateRequest), null)
+        ctx.getBean(TicketUpdateInputSerializer).serialize(encoder, encoderContext, Argument.of(TicketUpdateInput), null)
+        ctx.getBean(UserSerializer).serialize(encoder, encoderContext, Argument.of(User), null)
+
+        then:
+        4 * encoder.encodeNull()
     }
 }

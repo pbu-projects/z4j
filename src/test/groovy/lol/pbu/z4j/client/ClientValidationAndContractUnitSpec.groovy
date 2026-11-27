@@ -23,14 +23,21 @@ import io.micronaut.http.client.multipart.MultipartBody
 import jakarta.validation.ConstraintViolationException
 import java.net.InetSocketAddress
 import java.nio.charset.StandardCharsets
+import java.time.Duration
 import java.time.Instant
 import lol.pbu.z4j.IncrementalService
 import lol.pbu.z4j.SearchService
 import lol.pbu.z4j.model.ExportResponse
+import lol.pbu.z4j.model.IncrementalOrganizationTimeResponse
 import lol.pbu.z4j.model.IncrementalTicketCursorResponse
+import lol.pbu.z4j.model.IncrementalTicketEventTimeResponse
+import lol.pbu.z4j.model.IncrementalUserCursorResponse
 import lol.pbu.z4j.model.LocaleAbbreviation
 import lol.pbu.z4j.model.Meta
+import lol.pbu.z4j.model.Organization
 import lol.pbu.z4j.model.Ticket
+import lol.pbu.z4j.model.TicketEvent
+import lol.pbu.z4j.model.User
 import reactor.core.publisher.Mono
 import org.spockframework.runtime.model.parallel.ExecutionMode
 import spock.lang.AutoCleanup
@@ -267,6 +274,31 @@ class ClientValidationAndContractUnitSpec extends Specification {
         }
     }
 
+    def "SearchService rejects explicit type: filter, permits _type:, and paginates with cursor"() {
+        given:
+        SearchClient searchClient = Mock(SearchClient)
+        SearchService service = new SearchService()
+        service.searchClient = searchClient
+
+        when: "query contains disallowed type: filter"
+        service.getTickets("type:user status:open")
+
+        then:
+        thrown(IllegalArgumentException)
+
+        when: "query uses custom _type: field and spans two pages"
+        searchClient.exportTicket("custom_type:incident", 100, null) >> Mono.just(
+                new ExportResponse<Ticket>([new Ticket().withId(1L)], null, new Meta(true, "cursor-123456", null), null)
+        )
+        searchClient.exportTicket("custom_type:incident", 100, "cursor-123456") >> Mono.just(
+                new ExportResponse<Ticket>([new Ticket().withId(2L)], null, new Meta(false, null, null), null)
+        )
+        List<Ticket> tickets = service.getTickets("custom_type:incident").collectList().block()
+
+        then:
+        tickets*.id() == [1L, 2L]
+    }
+
     def "IncrementalService validates perPage bounds and stops on stalled cursor"() {
         given:
         IncrementalClient incrementalClient = Mock(IncrementalClient)
@@ -310,6 +342,133 @@ class ClientValidationAndContractUnitSpec extends Specification {
 
         then:
         completed*.id() == [1L, 2L]
+    }
+
+    def "IncrementalService covers cursor users, time builders, deduplication, and error guards"() {
+        given:
+        IncrementalClient client = Mock(IncrementalClient)
+        IncrementalService service = new IncrementalService()
+        service.incrementalClient = client
+        long pastEpoch = Instant.now().minusSeconds(200).epochSecond
+
+        when: "start time is less than 70s in the past"
+        service.tickets().since(Instant.now().minusSeconds(10))
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        service.organizations().since(Instant.now().minusSeconds(10))
+        then:
+        thrown(IllegalArgumentException)
+
+        when: "time builder fetchPage or flux called without since()"
+        service.organizations().fetchPage().block()
+        then:
+        thrown(IllegalArgumentException)
+
+        when:
+        service.organizations().flux().collectList().block()
+        then:
+        thrown(IllegalArgumentException)
+
+        when: "user cursor export fetches single page and streams multiple pages with delay"
+        client.exportUsers(pastEpoch, "start-cur", 25) >> Mono.just(
+                new IncrementalUserCursorResponse([new User().withId(10L)], "c2", "c2", "c0", false, 1)
+        )
+        client.exportUsers(null, "c2", 25) >> Mono.just(
+                new IncrementalUserCursorResponse([new User().withId(11L)], null, null, "c1", true, 1)
+        )
+        IncrementalService.IncrementalPage<User> singlePage = service.users()
+                .since(pastEpoch)
+                .after("start-cur")
+                .perPage(25)
+                .fetchPage()
+                .block()
+        List<User> streamedUsers = service.users()
+                .since(pastEpoch)
+                .after("start-cur")
+                .perPage(25)
+                .delayBetweenPages(Duration.ofMillis(1))
+                .flux()
+                .collectList()
+                .block()
+
+        then:
+        verifyAll {
+            singlePage.getResults()*.id() == [10L]
+            singlePage.getAfterCursor() == "c2"
+            singlePage.getBeforeCursor() == "c0"
+            singlePage.getEndOfStream() == false
+            singlePage.getCount() == 1
+            streamedUsers*.id() == [10L, 11L]
+        }
+
+        when: "time-based organization export advances via endTime and nextPage URL and deduplicates"
+        client.exportOrganizations(pastEpoch, 50) >> Mono.just(
+                new IncrementalOrganizationTimeResponse([new Organization().withId(100L), new Organization().withId(101L)], pastEpoch + 10, null, false, 2)
+        )
+        client.exportOrganizations(pastEpoch + 10, 50) >> Mono.just(
+                new IncrementalOrganizationTimeResponse([new Organization().withId(101L), new Organization()], pastEpoch + 10, "https://example.zendesk.com/api/v2/incremental/organizations.json?start_time=${pastEpoch + 20}", false, 2)
+        )
+        client.exportOrganizations(pastEpoch + 20, 50) >> Mono.just(
+                new IncrementalOrganizationTimeResponse([new Organization().withId(102L)], pastEpoch + 30, null, true, 1)
+        )
+        IncrementalService.IncrementalTimePage<Organization> orgPage = service.organizations()
+                .since(pastEpoch)
+                .perPage(50)
+                .fetchPage()
+                .block()
+        List<Organization> orgStream = service.organizations()
+                .since(pastEpoch)
+                .perPage(50)
+                .delayBetweenPages(Duration.ofMillis(1))
+                .flux()
+                .collectList()
+                .block()
+
+        then:
+        verifyAll {
+            orgPage.getResults()*.id() == [100L, 101L]
+            orgPage.getEndTime() == pastEpoch + 10
+            orgPage.getEndOfStream() == false
+            orgPage.getCount() == 2
+            orgStream.size() == 4
+            orgStream*.id() == [100L, 101L, null, 102L]
+        }
+
+        when: "time-based ticket events stream and stall when endTime and nextPage do not advance"
+        client.exportTicketEvents(pastEpoch) >> Mono.just(
+                new IncrementalTicketEventTimeResponse([new TicketEvent().withId(500L)], pastEpoch, null, false, 1)
+        )
+        service.ticketEvents().since(pastEpoch).flux().collectList().block()
+
+        then:
+        thrown(IllegalStateException)
+
+        when: "unsupported resource types fail cleanly"
+        new IncrementalService.CursorIncrementalBuilder<Organization>(IncrementalService.ResourceType.ORGANIZATION, client).fetchPage().block()
+        then:
+        thrown(IllegalStateException)
+
+        when:
+        new IncrementalService.TimeIncrementalBuilder<Ticket>(IncrementalService.ResourceType.TICKET, client).since(pastEpoch).fetchPage().block()
+        then:
+        thrown(IllegalStateException)
+
+        expect: "helper methods handle all record types and URL shapes"
+        verifyAll {
+            IncrementalService.getRecordId(new Organization().withId(1L)) == 1L
+            IncrementalService.getRecordId(new TicketEvent().withId(2L)) == 2L
+            IncrementalService.getRecordId(new Ticket().withId(3L)) == 3L
+            IncrementalService.getRecordId(new User().withId(4L)) == 4L
+            IncrementalService.getRecordId("other") == null
+            IncrementalService.extractStartTimeFromUrl(null) == null
+            IncrementalService.extractStartTimeFromUrl("   ") == null
+            IncrementalService.extractStartTimeFromUrl("https://example.com/path?foo=bar") == null
+            IncrementalService.extractStartTimeFromUrl("https://example.com/path?start_time=notnum") == null
+            IncrementalService.extractStartTimeFromUrl("not a valid uri ://") == null
+            IncrementalService.extractStartTimeFromUrl("https://example.com/path?start_time=999") == 999L
+        }
     }
 
     def "AttachmentClient uploads binary data with proper Content-Type and deletes upload by token"() {

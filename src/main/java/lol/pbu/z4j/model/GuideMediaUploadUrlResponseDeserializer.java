@@ -52,7 +52,6 @@ public class GuideMediaUploadUrlResponseDeserializer implements Deserializer<Gui
     ) {
     }
 
-    @Nullable
     @Override
     public GuideMediaUploadUrlResponse deserialize(
             @NonNull Decoder decoder,
@@ -78,8 +77,10 @@ public class GuideMediaUploadUrlResponseDeserializer implements Deserializer<Gui
                 if (nestedHeaders != null && !nestedHeaders.isNull()) {
                     copyHeaders(nestedHeaders, normalized);
                 }
-            } else if (!uploadUrlNode.isNull() || !normalized.containsKey(KEY_UPLOAD_URL)) {
+            } else if (!uploadUrlNode.isNull()) {
                 normalized.put(KEY_UPLOAD_URL, uploadUrlNode);
+            } else {
+                normalized.putIfAbsent(KEY_UPLOAD_URL, uploadUrlNode);
             }
         }
 

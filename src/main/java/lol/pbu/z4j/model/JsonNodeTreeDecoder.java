@@ -42,6 +42,9 @@ import java.util.stream.StreamSupport;
  */
 abstract class JsonNodeTreeDecoder implements Decoder {
 
+    private static final String TYPE_NUMBER = "NUMBER";
+    private static final String ERR_NOT_A_NUMBER = "Not a number";
+
     @FunctionalInterface
     private interface ScalarReader<T> {
         T read(Decoder decoder) throws IOException;
@@ -85,52 +88,52 @@ abstract class JsonNodeTreeDecoder implements Decoder {
 
     @Override
     public byte decodeByte() throws IOException {
-        return decodeScalar(JsonNode::isNumber, "NUMBER", "Not a number", Argument.BYTE, node -> (byte) node.getIntValue(), Decoder::decodeByte);
+        return decodeScalar(JsonNode::isNumber, TYPE_NUMBER, ERR_NOT_A_NUMBER, Argument.BYTE, node -> (byte) node.getIntValue(), Decoder::decodeByte);
     }
 
     @Override
     public short decodeShort() throws IOException {
-        return decodeScalar(JsonNode::isNumber, "NUMBER", "Not a number", Argument.SHORT, node -> (short) node.getIntValue(), Decoder::decodeShort);
+        return decodeScalar(JsonNode::isNumber, TYPE_NUMBER, ERR_NOT_A_NUMBER, Argument.SHORT, node -> (short) node.getIntValue(), Decoder::decodeShort);
     }
 
     @Override
     public char decodeChar() throws IOException {
-        return decodeScalar(JsonNode::isNumber, "NUMBER", "Not a number", Argument.CHAR, node -> (char) node.getIntValue(), Decoder::decodeChar);
+        return decodeScalar(JsonNode::isNumber, TYPE_NUMBER, ERR_NOT_A_NUMBER, Argument.CHAR, node -> (char) node.getIntValue(), Decoder::decodeChar);
     }
 
     @Override
     public int decodeInt() throws IOException {
-        return decodeScalar(JsonNode::isNumber, "NUMBER", "Not a number", Argument.INT, JsonNode::getIntValue, Decoder::decodeInt);
+        return decodeScalar(JsonNode::isNumber, TYPE_NUMBER, ERR_NOT_A_NUMBER, Argument.INT, JsonNode::getIntValue, Decoder::decodeInt);
     }
 
     @Override
     public long decodeLong() throws IOException {
-        return decodeScalar(JsonNode::isNumber, "NUMBER", "Not a number", Argument.LONG, JsonNode::getLongValue, Decoder::decodeLong);
+        return decodeScalar(JsonNode::isNumber, TYPE_NUMBER, ERR_NOT_A_NUMBER, Argument.LONG, JsonNode::getLongValue, Decoder::decodeLong);
     }
 
     @Override
     public float decodeFloat() throws IOException {
-        return decodeScalar(JsonNode::isNumber, "NUMBER", "Not a number", Argument.FLOAT, JsonNode::getFloatValue, Decoder::decodeFloat);
+        return decodeScalar(JsonNode::isNumber, TYPE_NUMBER, ERR_NOT_A_NUMBER, Argument.FLOAT, JsonNode::getFloatValue, Decoder::decodeFloat);
     }
 
     @Override
     public double decodeDouble() throws IOException {
-        return decodeScalar(JsonNode::isNumber, "NUMBER", "Not a number", Argument.DOUBLE, JsonNode::getDoubleValue, Decoder::decodeDouble);
+        return decodeScalar(JsonNode::isNumber, TYPE_NUMBER, ERR_NOT_A_NUMBER, Argument.DOUBLE, JsonNode::getDoubleValue, Decoder::decodeDouble);
     }
 
     @Override
     public BigInteger decodeBigInteger() throws IOException {
-        return decodeScalar(JsonNode::isNumber, "NUMBER", "Not a number", Argument.of(BigInteger.class), JsonNode::getBigIntegerValue, Decoder::decodeBigInteger);
+        return decodeScalar(JsonNode::isNumber, TYPE_NUMBER, ERR_NOT_A_NUMBER, Argument.of(BigInteger.class), JsonNode::getBigIntegerValue, Decoder::decodeBigInteger);
     }
 
     @Override
     public BigDecimal decodeBigDecimal() throws IOException {
-        return decodeScalar(JsonNode::isNumber, "NUMBER", "Not a number", Argument.of(BigDecimal.class), JsonNode::getBigDecimalValue, Decoder::decodeBigDecimal);
+        return decodeScalar(JsonNode::isNumber, TYPE_NUMBER, ERR_NOT_A_NUMBER, Argument.of(BigDecimal.class), JsonNode::getBigDecimalValue, Decoder::decodeBigDecimal);
     }
 
     @Override
     public Number decodeNumber() throws IOException {
-        return decodeScalar(JsonNode::isNumber, "NUMBER", "Not a number", Argument.of(Number.class), JsonNode::getNumberValue, Decoder::decodeNumber);
+        return decodeScalar(JsonNode::isNumber, TYPE_NUMBER, ERR_NOT_A_NUMBER, Argument.of(Number.class), JsonNode::getNumberValue, Decoder::decodeNumber);
     }
 
     @Override

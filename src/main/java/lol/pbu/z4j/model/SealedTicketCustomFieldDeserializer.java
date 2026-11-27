@@ -36,7 +36,6 @@ import lol.pbu.z4j.Generated;
 @Generated
 public class SealedTicketCustomFieldDeserializer implements Deserializer<TicketCustomField> {
 
-    @Nullable
     @Override
     public TicketCustomField deserialize(@NonNull Decoder decoder, @NonNull DecoderContext context, @NonNull Argument<? super TicketCustomField> type) throws IOException {
         if (decoder.decodeNull()) {
