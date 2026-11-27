@@ -132,7 +132,7 @@ class SearchResponseSpec extends Z4jSpec {
         SearchResult result = new SearchResult().withId(100L).withName("Ticket Search Result")
         User user = new User().withId(200L).withName("Sideloaded User")
         Organization org = new Organization().withId(300L)
-        Group group = new Group()
+        Group group = new Group().withId(400L).withName("Sideloaded Group")
         SearchResponse response = new SearchResponse(
                 1,
                 "facets_str",
@@ -172,6 +172,8 @@ class SearchResponseSpec extends Z4jSpec {
             organizations().size() == 1
             organizations().first().id == 300L
             groups().size() == 1
+            groups().first().id == 400L
+            groups().first().name == "Sideloaded Group"
         }
     }
 
