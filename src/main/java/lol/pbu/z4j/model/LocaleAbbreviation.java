@@ -15,150 +15,125 @@
  */
 package lol.pbu.z4j.model;
 
+import static java.util.Locale.ROOT;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
-import java.util.Arrays;
+import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * The locale of the translation
+ * The locale code for Zendesk content and translations.
  */
 @Serdeable
-public enum LocaleAbbreviation {
+public final class LocaleAbbreviation implements Serializable, Comparable<LocaleAbbreviation> {
 
-    @JsonProperty("ar")
-    ARABIC("ar"),
+    private static final long serialVersionUID = 1L;
 
-    @JsonProperty("pt-br")
-    PORTUGUESE_BRAZIL("pt-br"),
+    public static final LocaleAbbreviation ARABIC = new LocaleAbbreviation("ar");
+    public static final LocaleAbbreviation PORTUGUESE_BRAZIL = new LocaleAbbreviation("pt-br");
+    public static final LocaleAbbreviation BULGARIAN = new LocaleAbbreviation("bg");
+    public static final LocaleAbbreviation CZECH = new LocaleAbbreviation("cs");
+    public static final LocaleAbbreviation DANISH = new LocaleAbbreviation("da");
+    public static final LocaleAbbreviation DUTCH = new LocaleAbbreviation("nl");
+    public static final LocaleAbbreviation ENGLISH_UNITED_KINGDOM = new LocaleAbbreviation("en-gb");
+    public static final LocaleAbbreviation ENGLISH_UNITED_STATES = new LocaleAbbreviation("en-us");
+    public static final LocaleAbbreviation ENGLISH_VIETNAM = new LocaleAbbreviation("en-vn");
+    public static final LocaleAbbreviation DARI_PERSIAN_AFGHANISTAN = new LocaleAbbreviation("fa-af");
+    public static final LocaleAbbreviation FILIPINO = new LocaleAbbreviation("fil");
+    public static final LocaleAbbreviation FINNISH = new LocaleAbbreviation("fi");
+    public static final LocaleAbbreviation FRENCH = new LocaleAbbreviation("fr");
+    public static final LocaleAbbreviation FRENCH_CANADA = new LocaleAbbreviation("fr-ca");
+    public static final LocaleAbbreviation GERMAN = new LocaleAbbreviation("de");
+    public static final LocaleAbbreviation GREEK = new LocaleAbbreviation("el");
+    public static final LocaleAbbreviation HEBREW = new LocaleAbbreviation("he");
+    public static final LocaleAbbreviation HINDI = new LocaleAbbreviation("hi");
+    public static final LocaleAbbreviation HUNGARIAN = new LocaleAbbreviation("hu");
+    public static final LocaleAbbreviation INDONESIAN = new LocaleAbbreviation("id");
+    public static final LocaleAbbreviation ITALIAN = new LocaleAbbreviation("it");
+    public static final LocaleAbbreviation JAPANESE = new LocaleAbbreviation("ja");
+    public static final LocaleAbbreviation KOREAN = new LocaleAbbreviation("ko");
+    public static final LocaleAbbreviation MALAY = new LocaleAbbreviation("ms");
+    public static final LocaleAbbreviation NORWEGIAN = new LocaleAbbreviation("no");
+    public static final LocaleAbbreviation POLISH = new LocaleAbbreviation("pl");
+    public static final LocaleAbbreviation PORTUGUESE = new LocaleAbbreviation("pt");
+    public static final LocaleAbbreviation ROMANIAN = new LocaleAbbreviation("ro");
+    public static final LocaleAbbreviation RUSSIAN = new LocaleAbbreviation("ru");
+    public static final LocaleAbbreviation SIMPLIFIED_CHINESE = new LocaleAbbreviation("zh-cn");
+    public static final LocaleAbbreviation SPANISH = new LocaleAbbreviation("es");
+    public static final LocaleAbbreviation SLOVAK = new LocaleAbbreviation("sk");
+    public static final LocaleAbbreviation SWEDISH = new LocaleAbbreviation("sv");
+    public static final LocaleAbbreviation THAI = new LocaleAbbreviation("th");
+    public static final LocaleAbbreviation TRADITIONAL_CHINESE = new LocaleAbbreviation("zh-tw");
+    public static final LocaleAbbreviation TURKISH = new LocaleAbbreviation("tr");
+    public static final LocaleAbbreviation UKRAINIAN = new LocaleAbbreviation("uk");
+    public static final LocaleAbbreviation VIETNAMESE_VIETNAM = new LocaleAbbreviation("vi-vn");
+    public static final LocaleAbbreviation VIETNAMESE = new LocaleAbbreviation("vi");
+    public static final LocaleAbbreviation ZULU_SOUTH_AFRICA = new LocaleAbbreviation("zu-za");
 
-    @JsonProperty("bg")
-    BULGARIAN("bg"),
+    private static final List<LocaleAbbreviation> KNOWN_VALUES = List.of(
+            ARABIC,
+            PORTUGUESE_BRAZIL,
+            BULGARIAN,
+            CZECH,
+            DANISH,
+            DUTCH,
+            ENGLISH_UNITED_KINGDOM,
+            ENGLISH_UNITED_STATES,
+            ENGLISH_VIETNAM,
+            DARI_PERSIAN_AFGHANISTAN,
+            FILIPINO,
+            FINNISH,
+            FRENCH,
+            FRENCH_CANADA,
+            GERMAN,
+            GREEK,
+            HEBREW,
+            HINDI,
+            HUNGARIAN,
+            INDONESIAN,
+            ITALIAN,
+            JAPANESE,
+            KOREAN,
+            MALAY,
+            NORWEGIAN,
+            POLISH,
+            PORTUGUESE,
+            ROMANIAN,
+            RUSSIAN,
+            SIMPLIFIED_CHINESE,
+            SPANISH,
+            SLOVAK,
+            SWEDISH,
+            THAI,
+            TRADITIONAL_CHINESE,
+            TURKISH,
+            UKRAINIAN,
+            VIETNAMESE_VIETNAM,
+            VIETNAMESE,
+            ZULU_SOUTH_AFRICA
+    );
 
-    @JsonProperty("cs")
-    CZECH("cs"),
+    public static final Map<String, LocaleAbbreviation> VALUE_MAPPING = KNOWN_VALUES.stream()
+            .collect(Collectors.toUnmodifiableMap(LocaleAbbreviation::getValue, Function.identity()));
 
-    @JsonProperty("da")
-    DANISH("da"),
-
-    @JsonProperty("nl")
-    DUTCH("nl"),
-
-    @JsonProperty("en-gb")
-    ENGLISH_UNITED_KINGDOM("en-gb"),
-
-    @JsonProperty("en-us")
-    ENGLISH_UNITED_STATES("en-us"),
-
-    @JsonProperty("en-vn")
-    ENGLISH_VIETNAM("en-vn"),
-
-    @JsonProperty("fa-af")
-    DARI_PERSIAN_AFGHANISTAN("fa-af"),
-
-    @JsonProperty("fil")
-    FILIPINO("fil"),
-
-    @JsonProperty("fi")
-    FINNISH("fi"),
-
-    @JsonProperty("fr")
-    FRENCH("fr"),
-
-    @JsonProperty("fr-ca")
-    FRENCH_CANADA("fr-ca"),
-
-    @JsonProperty("de")
-    GERMAN("de"),
-
-    @JsonProperty("el")
-    GREEK("el"),
-
-    @JsonProperty("he")
-    HEBREW("he"),
-
-    @JsonProperty("hi")
-    HINDI("hi"),
-
-    @JsonProperty("hu")
-    HUNGARIAN("hu"),
-
-    @JsonProperty("id")
-    INDONESIAN("id"),
-
-    @JsonProperty("it")
-    ITALIAN("it"),
-
-    @JsonProperty("ja")
-    JAPANESE("ja"),
-
-    @JsonProperty("ko")
-    KOREAN("ko"),
-
-    @JsonProperty("ms")
-    MALAY("ms"),
-
-    @JsonProperty("false")
-    NORWEGIAN("false"),
-
-    @JsonProperty("pl")
-    POLISH("pl"),
-
-    @JsonProperty("pt")
-    PORTUGUESE("pt"),
-
-    @JsonProperty("ro")
-    ROMANIAN("ro"),
-
-    @JsonProperty("ru")
-    RUSSIAN("ru"),
-
-    @JsonProperty("zh-cn")
-    SIMPLIFIED_CHINESE("zh-cn"),
-
-    @JsonProperty("es")
-    SPANISH("es"),
-
-    @JsonProperty("sk")
-    SLOVAK("sk"),
-
-    @JsonProperty("sv")
-    SWEDISH("sv"),
-
-    @JsonProperty("th")
-    THAI("th"),
-
-    @JsonProperty("zh-tw")
-    TRADITIONAL_CHINESE("zh-tw"),
-
-    @JsonProperty("tr")
-    TURKISH("tr"),
-
-    @JsonProperty("uk")
-    UKRAINIAN("uk"),
-
-    @JsonProperty("vi-vn")
-    VIETNAMESE_VIETNAM("vi-vn"),
-
-    @JsonProperty("vi")
-    VIETNAMESE("vi"),
-
-    @JsonProperty("zu-za")
-    ZULU_SOUTH_AFRICA("zu-za"),
-    ;
-
-    public static final Map<String, LocaleAbbreviation> VALUE_MAPPING = Map.copyOf(Arrays.stream(values())
-            .collect(Collectors.toMap(v -> v.value, Function.identity())));
+    private static final Pattern LOCALE_PATTERN = Pattern.compile("^[a-z]{2,3}(?:-[a-z0-9]{1,8}){0,10}$");
 
     private final String value;
 
-    LocaleAbbreviation(String value) {
+    private LocaleAbbreviation(String value) {
         this.value = value;
+    }
+
+    public static LocaleAbbreviation[] values() {
+        return KNOWN_VALUES.toArray(LocaleAbbreviation[]::new);
     }
 
     @JsonValue
@@ -167,10 +142,10 @@ public enum LocaleAbbreviation {
     }
 
     /**
-     * Create this enum from a value.
+     * Parses a locale string into a {@link LocaleAbbreviation}.
      *
-     * @param value The value
-     * @return The enum
+     * @param value The locale string
+     * @return The matching locale, or null when blank
      */
     @JsonCreator
     @Nullable
@@ -178,14 +153,48 @@ public enum LocaleAbbreviation {
         if (value == null || value.trim().isEmpty()) {
             return null;
         }
-        if (!VALUE_MAPPING.containsKey(value.toLowerCase())) {
+        String normalized = value.trim().toLowerCase(ROOT);
+        LocaleAbbreviation known = VALUE_MAPPING.get(normalized);
+        if (known != null) {
+            return known;
+        }
+        if (!LOCALE_PATTERN.matcher(normalized).matches()) {
             throw new IllegalArgumentException("Unexpected value '" + value + "'");
         }
-        return VALUE_MAPPING.get(value.toLowerCase());
+        return new LocaleAbbreviation(normalized);
+    }
+
+    public static LocaleAbbreviation of(String value) {
+        LocaleAbbreviation parsed = fromValue(value);
+        if (parsed == null) {
+            throw new IllegalArgumentException("Locale value must not be null or blank");
+        }
+        return parsed;
+    }
+
+    @Override
+    public int compareTo(LocaleAbbreviation other) {
+        return value.compareTo(other.value);
     }
 
     @Override
     public String toString() {
-        return String.valueOf(value);
+        return value;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (!(other instanceof LocaleAbbreviation that)) {
+            return false;
+        }
+        return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value);
     }
 }

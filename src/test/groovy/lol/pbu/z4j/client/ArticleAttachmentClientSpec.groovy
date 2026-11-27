@@ -16,6 +16,7 @@
 package lol.pbu.z4j.client
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.micronaut.http.HttpResponseProvider
 import io.micronaut.http.MediaType
 import io.micronaut.http.client.exceptions.HttpClientException
 import io.micronaut.http.client.exceptions.HttpClientResponseException
@@ -472,18 +473,26 @@ class ArticleAttachmentClientSpec extends Z4jSpec {
                 false
         ).block()
 
-        then: "forbidden or unauthorized exception is thrown"
-        HttpClientResponseException ex = thrown(HttpClientResponseException)
-        ex.status.code in [401, 403, 404]
+        then: "forbidden, unauthorized, or write not found exception is thrown"
+        HttpClientException ex = thrown(HttpClientException)
+        verifyAll {
+            ex instanceof HttpClientResponseException || ex instanceof ZendeskWriteNotFoundException
+            ex instanceof HttpResponseProvider
+            ((HttpResponseProvider) ex).response.code() in [401, 403, 404]
+        }
     }
 
     def "end user cannot delete article attachment"() {
         when: "end user attempts to delete an attachment"
         userAttachmentClient.deleteArticleAttachment(12345L).block()
 
-        then: "forbidden or unauthorized exception is thrown"
-        HttpClientResponseException ex = thrown(HttpClientResponseException)
-        ex.status.code in [401, 403, 404]
+        then: "forbidden, unauthorized, or write not found exception is thrown"
+        HttpClientException ex = thrown(HttpClientException)
+        verifyAll {
+            ex instanceof HttpClientResponseException || ex instanceof ZendeskWriteNotFoundException
+            ex instanceof HttpResponseProvider
+            ((HttpResponseProvider) ex).response.code() in [401, 403, 404]
+        }
     }
 
     def "calling article attachment client with bad url fails"() {

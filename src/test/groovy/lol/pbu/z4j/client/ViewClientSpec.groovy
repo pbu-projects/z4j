@@ -388,6 +388,10 @@ class ViewClientSpec extends Z4jSpec {
         try {
             adminViewClient.deleteView(id).block()
             createdViewIds.remove(id)
+        } catch (ZendeskWriteNotFoundException e) {
+            if (e.status == HttpStatus.NOT_FOUND) {
+                createdViewIds.remove(id)
+            }
         } catch (HttpClientResponseException e) {
             if (e.status == HttpStatus.NOT_FOUND) {
                 createdViewIds.remove(id)

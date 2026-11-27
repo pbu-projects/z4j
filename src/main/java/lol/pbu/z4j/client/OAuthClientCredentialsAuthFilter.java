@@ -19,16 +19,28 @@ import io.micronaut.context.BeanProvider;
 import io.micronaut.context.annotation.Context;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.order.Ordered;
+import io.micronaut.http.HttpHeaders;
+import io.micronaut.http.HttpMethod;
+import io.micronaut.http.HttpResponse;
+import io.micronaut.http.HttpResponseProvider;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MutableHttpRequest;
 import io.micronaut.http.annotation.ClientFilter;
-import io.micronaut.http.annotation.RequestFilter;
+import io.micronaut.http.client.exceptions.HttpClientException;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
+import io.micronaut.http.filter.ClientFilterChain;
+import io.micronaut.http.filter.HttpClientFilter;
 import jakarta.inject.Inject;
+import java.net.URI;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicReference;
 import lol.pbu.z4j.model.OAuthTokenResponse;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -42,11 +54,13 @@ import reactor.core.publisher.Mono;
 @ClientFilter(value = "/**", serviceId = "zendesk")
 @Requires(property = "micronaut.http.services.zendesk.oauth.client-id", pattern = "\\S+.*")
 @Requires(missingBeans = BearerAuthFilter.class)
-public class OAuthClientCredentialsAuthFilter {
+public class OAuthClientCredentialsAuthFilter implements HttpClientFilter, Ordered {
 
     private static final Logger log = LoggerFactory.getLogger(OAuthClientCredentialsAuthFilter.class);
     private static final long REFRESH_WINDOW_SECONDS = 60L;
     private static final String DEFAULT_URL = "https://localhost";
+    private static final String TOKEN_PATH = "/oauth/tokens";
+    private static final int FILTER_ORDER = -100;
 
     private final String clientId;
     private final String clientSecret;
@@ -115,13 +129,63 @@ public class OAuthClientCredentialsAuthFilter {
         this.directClient = directClient;
     }
 
-    @RequestFilter
-    public Mono<MutableHttpRequest<?>> doFilter(MutableHttpRequest<?> request) {
+    @Override
+    public int getOrder() {
+        return FILTER_ORDER;
+    }
+
+    @Override
+    public Publisher<? extends HttpResponse<?>> doFilter(MutableHttpRequest<?> request, ClientFilterChain chain) {
+        if (isTokenEndpointRequest(request) || request.getHeaders().getAuthorization().isPresent()) {
+            return chain.proceed(request);
+        }
+        return Flux.defer(() -> executeWithToken(request, chain, true));
+    }
+
+    @SuppressWarnings("unchecked")
+    private Flux<HttpResponse<?>> executeWithToken(
+            MutableHttpRequest<?> request,
+            ClientFilterChain chain,
+            boolean retryOnUnauthorized
+    ) {
         return obtainAccessTokenReactive()
-                .map(token -> {
-                    request.getHeaders().set("Authorization", "Bearer " + token);
-                    return request;
+                .flatMapMany(token -> {
+                    request.getHeaders().set(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+                    return Flux.from((Publisher<HttpResponse<?>>) chain.proceed(request))
+                            .onErrorResume(HttpClientResponseException.class, e -> {
+                                if (retryOnUnauthorized && e.getStatus() == HttpStatus.UNAUTHORIZED) {
+                                    log.debug("Received HTTP 401 for {} {}; clearing cached token and retrying once",
+                                            request.getMethodName(), request.getPath());
+                                    invalidateCachedToken(token);
+                                    return executeWithToken(request, chain, false);
+                                }
+                                return Flux.error(e);
+                            });
                 });
+    }
+
+    private void invalidateCachedToken(String failedToken) {
+        cachedToken.updateAndGet(current ->
+                current != null && current.token().equals(failedToken) ? null : current
+        );
+    }
+
+    private boolean isTokenEndpointRequest(MutableHttpRequest<?> request) {
+        if (request.getMethod() != HttpMethod.POST) {
+            return false;
+        }
+        String requestPath = request.getPath();
+        if (requestPath.isBlank()) {
+            return false;
+        }
+        if (TOKEN_PATH.equals(requestPath)) {
+            return true;
+        }
+        if (tokenEndpointUrl == null || tokenEndpointUrl.isBlank()) {
+            return false;
+        }
+        String tokenPath = URI.create(tokenEndpointUrl).getPath();
+        return tokenPath != null && !tokenPath.isBlank() && tokenPath.equals(requestPath);
     }
 
     public Mono<String> obtainAccessTokenReactive() {
@@ -147,9 +211,16 @@ public class OAuthClientCredentialsAuthFilter {
                 return Mono.just(current.token());
             }
             AtomicReference<Mono<String>> ref = new AtomicReference<>();
+            // Clear inFlightRefresh on emission too so synchronous 401 retries never reuse the stale refresh Mono.
+            // Do not cache errors or empty results so concurrent callers retry cleanly.
             Mono<String> newRefresh = fetchNewToken()
+                    .doOnNext(token -> inFlightRefresh.compareAndSet(ref.get(), null))
                     .doFinally(signalType -> inFlightRefresh.compareAndSet(ref.get(), null))
-                    .cache();
+                    .cache(
+                            token -> Duration.ofSeconds(30),
+                            error -> Duration.ZERO,
+                            () -> Duration.ZERO
+                    );
             ref.set(newRefresh);
             if (inFlightRefresh.compareAndSet(null, newRefresh)) {
                 return newRefresh;
@@ -168,22 +239,7 @@ public class OAuthClientCredentialsAuthFilter {
         .switchIfEmpty(Mono.error(new IllegalStateException(
                 "No token endpoint was found at " + tokenEndpointUrl + ". Check the micronaut.http.services.zendesk.url setting."
         )))
-        .onErrorResume(HttpClientResponseException.class, e -> {
-            int status = e.getStatus().getCode();
-            if (status == 404) {
-                return Mono.error(new IllegalStateException(
-                        "No token endpoint was found at " + tokenEndpointUrl + ". Check the micronaut.http.services.zendesk.url setting.",
-                        e
-                ));
-            }
-            if (status == 400 || status == 401) {
-                return Mono.error(new IllegalStateException(
-                        "Zendesk refused OAuth client credentials for client id '" + clientId + "': HTTP " + status,
-                        e
-                ));
-            }
-            return Mono.error(e);
-        })
+        .onErrorResume(HttpClientException.class, this::mapTokenFetchError)
         .flatMap(resp -> {
             if (resp == null || resp.accessToken() == null || resp.accessToken().isBlank()) {
                 return Mono.error(new IllegalStateException(
@@ -198,6 +254,25 @@ public class OAuthClientCredentialsAuthFilter {
         });
     }
 
+    private Mono<OAuthTokenResponse> mapTokenFetchError(HttpClientException e) {
+        if (e instanceof HttpResponseProvider responseProvider) {
+            int status = responseProvider.getResponse().code();
+            if (status == 404) {
+                return Mono.error(new IllegalStateException(
+                        "No token endpoint was found at " + tokenEndpointUrl + ". Check the micronaut.http.services.zendesk.url setting.",
+                        e
+                ));
+            }
+            if (status == 400 || status == 401) {
+                return Mono.error(new IllegalStateException(
+                        "Zendesk refused OAuth client credentials for client id '" + clientId + "': HTTP " + status,
+                        e
+                ));
+            }
+        }
+        return Mono.error(e);
+    }
+
     private OAuthTokenClient resolveTokenClient() {
         return directClient != null ? directClient : tokenClientProvider.get();
     }
@@ -207,6 +282,6 @@ public class OAuthClientCredentialsAuthFilter {
         while (base.endsWith("/")) {
             base = base.substring(0, base.length() - 1);
         }
-        return base + "/oauth/tokens";
+        return base + TOKEN_PATH;
     }
 }

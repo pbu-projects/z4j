@@ -211,6 +211,10 @@ class UserSegmentClientSpec extends Z4jSpec {
         try {
             userSegmentClient.deleteUserSegment(id).block()
             createdSegmentIds.remove(id)
+        } catch (ZendeskWriteNotFoundException e) {
+            if (e.status == HttpStatus.NOT_FOUND) {
+                createdSegmentIds.remove(id)
+            }
         } catch (HttpClientResponseException e) {
             if (e.status == HttpStatus.NOT_FOUND) {
                 createdSegmentIds.remove(id)
