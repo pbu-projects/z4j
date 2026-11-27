@@ -58,7 +58,7 @@ public class UnsignedAuthFilter implements HttpClientFilter, Ordered {
 
     private Publisher<HttpResponse<?>> handleResponseError(MutableHttpRequest<?> request, HttpClientResponseException ex) {
         int code = ex.code();
-        boolean authMissing = request.getHeaders() != null && request.getHeaders().getAuthorization().isEmpty();
+        boolean authMissing = request.getHeaders().getAuthorization().isEmpty();
         if (authMissing && (code == HttpStatus.UNAUTHORIZED.getCode() || code == HttpStatus.FORBIDDEN.getCode())) {
             HttpStatus status = HttpStatus.valueOf(code);
             HttpResponse<?> response = ex.getResponse();
@@ -74,8 +74,7 @@ public class UnsignedAuthFilter implements HttpClientFilter, Ordered {
         if (request.getMethod() != HttpMethod.POST) {
             return false;
         }
-        String path = request.getPath();
-        return path != null && path.endsWith(TOKEN_PATH_SUFFIX);
+        return request.getPath().endsWith(TOKEN_PATH_SUFFIX);
     }
 
     private String buildDiagnosticMessage(MutableHttpRequest<?> request, HttpStatus status, @Nullable String body) {

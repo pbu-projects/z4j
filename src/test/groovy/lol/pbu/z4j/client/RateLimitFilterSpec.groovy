@@ -61,10 +61,7 @@ class RateLimitFilterSpec extends Specification {
 
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> "/api/v2/users"
-        request.getMethodName() >> "GET"
-        request.getUri() >> URI.create("https://z.com/api/v2/users")
+        def request = HttpRequest.GET("https://z.com/api/v2/users")
 
         def chain = Mock(ClientFilterChain)
         def response = Mock(HttpResponse)
@@ -74,7 +71,7 @@ class RateLimitFilterSpec extends Specification {
         response.getHeaders() >> headers
         response.getStatus() >> HttpStatus.OK
 
-        chain.proceed(request) >> Flux.just(response)
+        chain.proceed(_ as MutableHttpRequest) >> Flux.just(response)
 
         when:
         def start = System.currentTimeMillis()
@@ -103,10 +100,7 @@ class RateLimitFilterSpec extends Specification {
 
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> "/api/v2/users"
-        request.getMethodName() >> "GET"
-        request.getUri() >> URI.create("https://z.com/api/v2/users")
+        def request = HttpRequest.GET("https://z.com/api/v2/users")
 
         def chain = Mock(ClientFilterChain)
         def response = Mock(HttpResponse)
@@ -116,7 +110,7 @@ class RateLimitFilterSpec extends Specification {
         response.getHeaders() >> headers
         response.getStatus() >> HttpStatus.OK
 
-        chain.proceed(request) >> Flux.just(response)
+        chain.proceed(_ as MutableHttpRequest) >> Flux.just(response)
 
         when:
         def start = System.currentTimeMillis()
@@ -138,10 +132,7 @@ class RateLimitFilterSpec extends Specification {
         config.setRequestsPerSecond(5.0) // 200ms spacing between requests
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> "/api/v2/tickets"
-        request.getMethodName() >> "GET"
-        request.getUri() >> URI.create("https://z.com/api/v2/tickets")
+        def request = HttpRequest.GET("https://z.com/api/v2/tickets")
 
         def response = Mock(HttpResponse)
         def headers = Mock(HttpHeaders)
@@ -150,7 +141,7 @@ class RateLimitFilterSpec extends Specification {
         response.getStatus() >> HttpStatus.OK
 
         def chain = Mock(ClientFilterChain)
-        chain.proceed(request) >> Flux.just(response)
+        chain.proceed(_ as MutableHttpRequest) >> Flux.just(response)
 
         when: "two requests are sent sequentially"
         def start = System.currentTimeMillis()
@@ -184,10 +175,7 @@ class RateLimitFilterSpec extends Specification {
         config.setAutoWaitEnabled(false)
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> "/api/v2/articles"
-        request.getMethodName() >> "GET"
-        request.getUri() >> URI.create("https://z.com/api/v2/articles")
+        def request = HttpRequest.GET("https://z.com/api/v2/articles")
 
         def response429 = HttpResponse.status(HttpStatus.TOO_MANY_REQUESTS).header("Retry-After", "1")
         def exception429 = new HttpClientResponseException("Rate limit exceeded", response429)
@@ -195,7 +183,7 @@ class RateLimitFilterSpec extends Specification {
 
         def chain = Mock(ClientFilterChain)
         def attempts = 0
-        chain.proceed(request) >> {
+        chain.proceed(_ as MutableHttpRequest) >> {
             attempts++
             if (attempts == 1) {
                 return Flux.error(exception429)
@@ -224,10 +212,7 @@ class RateLimitFilterSpec extends Specification {
         config.setAutoWaitEnabled(false)
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> "/api/v2/sections"
-        request.getMethodName() >> "GET"
-        request.getUri() >> URI.create("https://z.com/api/v2/sections")
+        def request = HttpRequest.GET("https://z.com/api/v2/sections")
 
         def cloudflareHtml = "<html><head><title>400 Bad Request</title></head><body><center><h1>400 Bad Request</h1></center><hr><center>cloudflare</center></body></html>"
         def response400 = HttpResponse.status(HttpStatus.BAD_REQUEST)
@@ -238,7 +223,7 @@ class RateLimitFilterSpec extends Specification {
 
         def chain = Mock(ClientFilterChain)
         def attempts = 0
-        chain.proceed(request) >> {
+        chain.proceed(_ as MutableHttpRequest) >> {
             attempts++
             return Flux.error(exception400)
         }
@@ -261,10 +246,7 @@ class RateLimitFilterSpec extends Specification {
         config.setAutoWaitEnabled(false)
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> "/api/v2/tickets"
-        request.getMethodName() >> "POST"
-        request.getUri() >> URI.create("https://z.com/api/v2/tickets")
+        def request = HttpRequest.POST("https://z.com/api/v2/tickets", "{}")
 
         def response400 = HttpResponse.status(HttpStatus.BAD_REQUEST)
                 .body("{\"error\":\"RecordInvalid\",\"description\":\"Record validation failed\"}")
@@ -273,7 +255,7 @@ class RateLimitFilterSpec extends Specification {
 
         def chain = Mock(ClientFilterChain)
         def attempts = 0
-        chain.proceed(request) >> {
+        chain.proceed(_ as MutableHttpRequest) >> {
             attempts++
             return Flux.error(exception400)
         }
@@ -297,17 +279,14 @@ class RateLimitFilterSpec extends Specification {
         config.setWaitDurationSeconds(0)
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> "/api/v2/articles"
-        request.getMethodName() >> "GET"
-        request.getUri() >> URI.create("https://z.com/api/v2/articles")
+        def request = HttpRequest.GET("https://z.com/api/v2/articles")
 
         def response429 = HttpResponse.status(HttpStatus.TOO_MANY_REQUESTS).header("Retry-After", "0")
         def exception429 = new HttpClientResponseException("Rate limit exceeded", response429)
 
         def chain = Mock(ClientFilterChain)
         def attempts = 0
-        chain.proceed(request) >> {
+        chain.proceed(_ as MutableHttpRequest) >> {
             attempts++
             return Flux.error(exception429)
         }
@@ -330,17 +309,14 @@ class RateLimitFilterSpec extends Specification {
         config.setAutoWaitEnabled(false)
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> "/api/v2/articles"
-        request.getMethodName() >> "GET"
-        request.getUri() >> URI.create("https://z.com/api/v2/articles")
+        def request = HttpRequest.GET("https://z.com/api/v2/articles")
 
         def response500 = HttpResponse.serverError()
         def exception500 = new HttpClientResponseException("Server error", response500)
 
         def chain = Mock(ClientFilterChain)
         def attempts = 0
-        chain.proceed(request) >> {
+        chain.proceed(_ as MutableHttpRequest) >> {
             attempts++
             return Flux.error(exception500)
         }
@@ -363,18 +339,14 @@ class RateLimitFilterSpec extends Specification {
         config.setAutoWaitEnabled(false)
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> "/api/v2/users/me"
-        request.getMethodName() >> "GET"
-        request.getMethod() >> HttpMethod.GET
-        request.getUri() >> URI.create("https://z.com/api/v2/users/me")
+        def request = HttpRequest.GET("https://z.com/api/v2/users/me")
 
         def response401 = HttpResponse.status(HttpStatus.UNAUTHORIZED)
         def exception401 = new HttpClientResponseException("Unauthorized", response401)
 
         def chain = Mock(ClientFilterChain)
         def attempts = 0
-        chain.proceed(request) >> {
+        chain.proceed(_ as MutableHttpRequest) >> {
             attempts++
             return Flux.error(exception401)
         }
@@ -397,18 +369,14 @@ class RateLimitFilterSpec extends Specification {
         config.setAutoWaitEnabled(false)
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> "/api/v2/tickets"
-        request.getMethodName() >> "GET"
-        request.getMethod() >> HttpMethod.GET
-        request.getUri() >> URI.create("https://z.com/api/v2/tickets")
+        def request = HttpRequest.GET("https://z.com/api/v2/tickets")
 
         def response403 = HttpResponse.status(HttpStatus.FORBIDDEN)
         def exception403 = new HttpClientResponseException("Forbidden", response403)
 
         def chain = Mock(ClientFilterChain)
         def attempts = 0
-        chain.proceed(request) >> {
+        chain.proceed(_ as MutableHttpRequest) >> {
             attempts++
             return Flux.error(exception403)
         }
@@ -431,18 +399,14 @@ class RateLimitFilterSpec extends Specification {
         config.setAutoWaitEnabled(false)
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> "/api/v2/tickets"
-        request.getMethodName() >> "POST"
-        request.getMethod() >> HttpMethod.POST
-        request.getUri() >> URI.create("https://z.com/api/v2/tickets")
+        def request = HttpRequest.POST("https://z.com/api/v2/tickets", "{}")
 
         def response500 = HttpResponse.serverError()
         def exception500 = new HttpClientResponseException("Server error", response500)
 
         def chain = Mock(ClientFilterChain)
         def attempts = 0
-        chain.proceed(request) >> {
+        chain.proceed(_ as MutableHttpRequest) >> {
             attempts++
             return Flux.error(exception500)
         }
@@ -467,18 +431,14 @@ class RateLimitFilterSpec extends Specification {
         config.setTransientRetryDelaySeconds(0)
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> "/api/v2/tickets"
-        request.getMethodName() >> "POST"
-        request.getMethod() >> HttpMethod.POST
-        request.getUri() >> URI.create("https://z.com/api/v2/tickets")
+        def request = HttpRequest.POST("https://z.com/api/v2/tickets", "{}")
 
         def response500 = HttpResponse.serverError()
         def exception500 = new HttpClientResponseException("Server error", response500)
 
         def chain = Mock(ClientFilterChain)
         def attempts = 0
-        chain.proceed(request) >> {
+        chain.proceed(_ as MutableHttpRequest) >> {
             attempts++
             return Flux.error(exception500)
         }
@@ -503,11 +463,7 @@ class RateLimitFilterSpec extends Specification {
         config.setTransientRetryDelaySeconds(0)
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> path
-        request.getMethodName() >> method.name()
-        request.getMethod() >> method
-        request.getUri() >> URI.create("https://z.com" + path)
+        def request = HttpRequest.create(method, "https://z.com" + path)
 
         def response503 = HttpResponse.status(HttpStatus.SERVICE_UNAVAILABLE)
         def exception503 = new HttpClientResponseException("Service Unavailable", response503)
@@ -515,7 +471,7 @@ class RateLimitFilterSpec extends Specification {
 
         def chain = Mock(ClientFilterChain)
         def attempts = 0
-        chain.proceed(request) >> {
+        chain.proceed(_ as MutableHttpRequest) >> {
             attempts++
             if (attempts == 1) {
                 return Flux.error(exception503)
@@ -549,18 +505,14 @@ class RateLimitFilterSpec extends Specification {
         config.setTransientRetryDelaySeconds(0)
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> "/api/v2/tickets/1"
-        request.getMethodName() >> "GET"
-        request.getMethod() >> HttpMethod.GET
-        request.getUri() >> URI.create("https://z.com/api/v2/tickets/1")
+        def request = HttpRequest.GET("https://z.com/api/v2/tickets/1")
 
         def response500 = HttpResponse.serverError()
         def exception500 = new HttpClientResponseException("Server error", response500)
 
         def chain = Mock(ClientFilterChain)
         def attempts = 0
-        chain.proceed(request) >> {
+        chain.proceed(_ as MutableHttpRequest) >> {
             attempts++
             return Flux.error(exception500)
         }
@@ -583,11 +535,7 @@ class RateLimitFilterSpec extends Specification {
         config.setAutoWaitEnabled(false)
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> "/api/v2/help_center/en-us/articles/123/attachments"
-        request.getMethodName() >> "POST"
-        request.getMethod() >> HttpMethod.POST
-        request.getUri() >> URI.create("https://z.com/api/v2/help_center/en-us/articles/123/attachments")
+        def request = HttpRequest.POST("https://z.com/api/v2/help_center/en-us/articles/123/attachments", "{}")
 
         def response409 = HttpResponse.status(HttpStatus.CONFLICT)
         def exception409 = new HttpClientResponseException("Conflict", response409)
@@ -595,7 +543,7 @@ class RateLimitFilterSpec extends Specification {
 
         def chain = Mock(ClientFilterChain)
         def attempts = 0
-        chain.proceed(request) >> {
+        chain.proceed(_ as MutableHttpRequest) >> {
             attempts++
             if (attempts == 1) {
                 return Flux.error(exception409)
@@ -621,18 +569,14 @@ class RateLimitFilterSpec extends Specification {
         config.setAutoWaitEnabled(false)
         def filter = new RateLimitFilter(tracker, config)
 
-        def request = Mock(MutableHttpRequest)
-        request.getPath() >> "/api/v2/help_center/en-us/articles/123/attachments"
-        request.getMethodName() >> "POST"
-        request.getMethod() >> HttpMethod.POST
-        request.getUri() >> URI.create("https://z.com/api/v2/help_center/en-us/articles/123/attachments")
+        def request = HttpRequest.POST("https://z.com/api/v2/help_center/en-us/articles/123/attachments", "{}")
 
         def response409 = HttpResponse.status(HttpStatus.CONFLICT)
         def exception409 = new HttpClientResponseException("Conflict", response409)
 
         def chain = Mock(ClientFilterChain)
         def attempts = 0
-        chain.proceed(request) >> {
+        chain.proceed(_ as MutableHttpRequest) >> {
             attempts++
             return Flux.error(exception409)
         }
@@ -1323,7 +1267,7 @@ class RateLimitFilterSpec extends Specification {
         }
     }
 
-    def "handleResponse safely handles null headers, null request, and null request URI"() {
+    def "handleResponse safely handles null response, null request, and empty headers"() {
         given:
         def tracker = new RateLimitTracker()
         def config = new RateLimitConfiguration()
@@ -1331,27 +1275,21 @@ class RateLimitFilterSpec extends Specification {
         def captured = []
         tracker.addListener { snapshot -> captured << snapshot }
 
-        def responseWithNullHeaders = Mock(HttpResponse) {
-            code() >> 200
-            getHeaders() >> null
-        }
+        def responseWithEmptyHeaders = HttpResponse.ok()
         def requestWithUri = HttpRequest.GET("https://z.com/api/v2/tickets")
-        def requestWithoutUri = Mock(MutableHttpRequest) {
-            getMethodName() >> "GET"
-            getPath() >> "/api/v2/tickets"
-            getUri() >> null
-        }
 
         when:
-        filter.handleResponse(requestWithUri, responseWithNullHeaders)
-        filter.handleResponse(null, responseWithNullHeaders)
-        filter.handleResponse(requestWithoutUri, responseWithNullHeaders)
+        filter.handleResponse(requestWithUri, null)
+        filter.handleResponse(requestWithUri, responseWithEmptyHeaders)
+        filter.handleResponse(null, responseWithEmptyHeaders)
 
         then:
         noExceptionThrown()
         verifyAll {
-            captured.size() == 3
+            captured.size() == 2
             captured[0].statusCode == 200
+            captured[0].requestMethod == "GET"
+            captured[0].requestPath == "/api/v2/tickets"
             captured[0].requestUri == "https://z.com/api/v2/tickets"
             captured[0].globalLimit == null
             captured[0].endpointLimits.isEmpty()
@@ -1359,10 +1297,8 @@ class RateLimitFilterSpec extends Specification {
             captured[1].requestMethod == null
             captured[1].requestPath == null
             captured[1].requestUri == null
-            captured[2].statusCode == 200
-            captured[2].requestMethod == "GET"
-            captured[2].requestPath == "/api/v2/tickets"
-            captured[2].requestUri == null
+            captured[1].globalLimit == null
+            captured[1].endpointLimits.isEmpty()
         }
     }
 }

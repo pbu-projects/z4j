@@ -16,7 +16,6 @@
 package lol.pbu.z4j.client;
 
 import io.micronaut.core.annotation.Nullable;
-import io.micronaut.core.convert.value.MutableConvertibleValues;
 import io.micronaut.core.order.Ordered;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpMethod;
@@ -109,8 +108,7 @@ public class RateLimitFilter implements HttpClientFilter, Ordered {
         if (request == null) {
             return false;
         }
-        Optional<Boolean> inProgress = request.getAttribute(ATTR_IN_PROGRESS, Boolean.class);
-        return inProgress != null && Boolean.TRUE.equals(inProgress.orElse(false));
+        return request.getAttribute(ATTR_IN_PROGRESS, Boolean.class).orElse(false);
     }
 
     Duration calculatePacingDelay() {
@@ -176,10 +174,7 @@ public class RateLimitFilter implements HttpClientFilter, Ordered {
         return (Publisher<HttpResponse<?>>) chain.proceed(attemptRequest);
     }
 
-    MutableHttpRequest<?> copyRequest(MutableHttpRequest<?> source) {
-        if (source == null || source.getMethod() == null || source.getUri() == null || source.getHeaders() == null) {
-            return source;
-        }
+    private MutableHttpRequest<Object> copyRequest(MutableHttpRequest<?> source) {
         MutableHttpRequest<Object> copy = HttpRequest.create(
                 source.getMethod(),
                 source.getUri().toString(),
@@ -188,14 +183,11 @@ public class RateLimitFilter implements HttpClientFilter, Ordered {
         source.getBody().ifPresent(copy::body);
         source.getHeaders().forEach((name, values) ->
                 values.forEach(value -> copy.header(name, value)));
-        MutableConvertibleValues<Object> attributes = source.getAttributes();
-        if (attributes != null) {
-            attributes.forEach((name, value) -> {
-                if (!NETTY_CHANNEL_ATTRIBUTE.equals(name)) {
-                    copy.setAttribute(name, value);
-                }
-            });
-        }
+        source.getAttributes().forEach((name, value) -> {
+            if (!NETTY_CHANNEL_ATTRIBUTE.equals(name)) {
+                copy.setAttribute(name, value);
+            }
+        });
         copy.setAttribute(ATTR_IN_PROGRESS, Boolean.TRUE);
         return copy;
     }
@@ -368,17 +360,15 @@ public class RateLimitFilter implements HttpClientFilter, Ordered {
 
     private Publisher<HttpResponse<?>> mapCloudflareBlock(MutableHttpRequest<?> request, HttpClientResponseException ex) {
         HttpResponse<?> original = ex.getResponse();
-        HttpHeaders originalHeaders = original != null ? original.getHeaders() : null;
-        String cfRay = originalHeaders != null ? originalHeaders.get(HEADER_CF_RAY) : null;
+        HttpHeaders originalHeaders = original.getHeaders();
+        String cfRay = originalHeaders.get(HEADER_CF_RAY);
         log.warn("Cloudflare edge returned 400 HTML instead of 403 Forbidden for {} {} (cf-ray={}). Mapping to 403 Forbidden.",
                 request.getMethodName(), request.getPath(), cfRay != null ? cfRay : "none");
 
         String body = extractResponseBody(original);
         MutableHttpResponse<String> mapped = HttpResponse.status(HttpStatus.FORBIDDEN);
-        if (originalHeaders != null) {
-            originalHeaders.forEach((name, values) ->
-                    values.forEach(value -> mapped.header(name, value)));
-        }
+        originalHeaders.forEach((name, values) ->
+                values.forEach(value -> mapped.header(name, value)));
         if (body != null) {
             mapped.body(body);
         }
@@ -426,18 +416,16 @@ public class RateLimitFilter implements HttpClientFilter, Ordered {
         Integer globalResetSeconds = parseIntegerHeader(headers, HEADER_RATELIMIT_RESET);
         Integer retryAfterSeconds = parseRetryAfterSeconds(headers);
 
-        Map<String, EndpointRateLimit> endpointLimits = headers != null && headers.names() != null
-                ? headers.names().stream()
-                        .filter(name -> name != null && name.toLowerCase().startsWith(EndpointRateLimit.PREFIX))
-                        .flatMap(name -> Optional.ofNullable(headers.get(name)).stream()
-                                .map(value -> EndpointRateLimit.parse(name, value)))
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toMap(EndpointRateLimit::getName, limit -> limit, (first, second) -> second))
-                : Map.of();
+        Map<String, EndpointRateLimit> endpointLimits = headers.names().stream()
+                .filter(name -> name != null && name.toLowerCase().startsWith(EndpointRateLimit.PREFIX))
+                .flatMap(name -> Optional.ofNullable(headers.get(name)).stream()
+                        .map(value -> EndpointRateLimit.parse(name, value)))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(EndpointRateLimit::getName, limit -> limit, (first, second) -> second));
 
         String requestMethod = request != null ? request.getMethodName() : null;
         String requestPath = request != null ? request.getPath() : null;
-        String requestUri = request != null && request.getUri() != null ? request.getUri().toString() : null;
+        String requestUri = request != null ? request.getUri().toString() : null;
 
         RateLimitSnapshot snapshot = RateLimitSnapshot.builder()
                 .requestMethod(requestMethod)
@@ -474,8 +462,7 @@ public class RateLimitFilter implements HttpClientFilter, Ordered {
         if (code > 0) {
             return code;
         }
-        HttpStatus status = response.getStatus();
-        return status != null ? status.getCode() : 0;
+        return response.getStatus().getCode();
     }
 
     private static int resolveStatusCode(HttpClientResponseException ex) {
@@ -509,8 +496,8 @@ public class RateLimitFilter implements HttpClientFilter, Ordered {
         }
     }
 
-    private static long formatSeconds(Duration duration) {
-        if (duration.isZero() || duration.isNegative()) {
+    private static long formatSeconds(@Nullable Duration duration) {
+        if (duration == null || duration.isZero() || duration.isNegative()) {
             return 0;
         }
         return (duration.toMillis() + 999L) / 1000L;
