@@ -19,6 +19,7 @@ import io.micronaut.serde.annotation.Serdeable;
 import lol.pbu.z4j.Generated;
 
 @Serdeable
+@Serdeable.Deserializable(using = SearchResultsInnerDeserializer.class)
 @Generated
 public interface SearchResultsInner {
 

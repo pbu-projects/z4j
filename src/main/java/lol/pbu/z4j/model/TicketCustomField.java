@@ -16,10 +16,9 @@
 package lol.pbu.z4j.model;
 
 import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import java.util.List;
-
-import io.micronaut.core.annotation.Nullable;
 import lol.pbu.z4j.Generated;
 
 /**
@@ -44,7 +43,7 @@ public sealed interface TicketCustomField
 
     @Generated @Serdeable record Text(Long id, String value) implements TicketCustomField {}
     @Generated @Serdeable record Numeric(Long id, Long value) implements TicketCustomField {}
-    @Generated @Serdeable record Decimal(Long id, Float value) implements TicketCustomField {}
+    @Generated @Serdeable record Decimal(Long id, Double value) implements TicketCustomField {}
     @Generated @Serdeable record Checkbox(Long id, Boolean value) implements TicketCustomField {}
     @Generated @Serdeable record TagList(Long id, List<String> value) implements TicketCustomField {}
     @Generated @Serdeable record Raw(Long id, @Nullable Object value) implements TicketCustomField {}

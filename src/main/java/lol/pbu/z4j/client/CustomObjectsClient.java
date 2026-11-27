@@ -19,6 +19,8 @@ import io.micronaut.http.annotation.*;
 import io.micronaut.http.client.annotation.Client;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lol.pbu.z4j.model.CustomObjectLimitsResponse;
 import lol.pbu.z4j.model.CustomObjectResponse;
 import lol.pbu.z4j.model.CustomObjectsCreateRequest;
@@ -60,7 +62,11 @@ public interface CustomObjectsClient {
      */
     @Delete("/api/v2/custom_objects/{custom_object_key}")
     Mono<Void> deleteCustomObject(
-            @PathVariable("custom_object_key") @NotNull String customObjectKey
+            @PathVariable("custom_object_key")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectKey
     );
 
     /**
@@ -79,7 +85,11 @@ public interface CustomObjectsClient {
      */
     @Get("/api/v2/custom_objects/{custom_object_key}")
     Mono<@Valid CustomObjectResponse> showCustomObject(
-            @PathVariable("custom_object_key") @NotNull String customObjectKey
+            @PathVariable("custom_object_key")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectKey
     );
 
     /**
@@ -91,7 +101,11 @@ public interface CustomObjectsClient {
      */
     @Patch("/api/v2/custom_objects/{custom_object_key}")
     Mono<@Valid CustomObjectResponse> updateCustomObject(
-            @PathVariable("custom_object_key") @NotNull String customObjectKey,
+            @PathVariable("custom_object_key")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectKey,
             @Body @NotNull @Valid CustomObjectsCreateRequest customObjectsCreateRequest
     );
 }

@@ -16,12 +16,13 @@
 package lol.pbu.z4j.model;
 
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.type.Argument;
 import io.micronaut.serde.Decoder;
 import io.micronaut.serde.Deserializer;
 import jakarta.inject.Singleton;
-
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.List;
 import lol.pbu.z4j.Generated;
 
@@ -37,16 +38,18 @@ public class SealedTicketCustomFieldDeserializer implements Deserializer<TicketC
 
     @Override
     public TicketCustomField deserialize(@NonNull Decoder decoder, @NonNull DecoderContext context, @NonNull Argument<? super TicketCustomField> type) throws IOException {
+        if (decoder.decodeNull()) {
+            return null;
+        }
 
         Long id = null;
         Object value = null;
 
-        // 1. Gather raw data using streaming decoder
         try (Decoder objectDecoder = decoder.decodeObject()) {
             String key;
             while ((key = objectDecoder.decodeKey()) != null) {
                 switch (key) {
-                    case "id" -> id = objectDecoder.decodeLong();
+                    case "id" -> id = objectDecoder.decodeNull() ? null : objectDecoder.decodeLong();
                     case "value" -> value = objectDecoder.decodeArbitrary();
                     default -> objectDecoder.skipValue();
                 }
@@ -57,9 +60,8 @@ public class SealedTicketCustomFieldDeserializer implements Deserializer<TicketC
             return new TicketCustomField.Raw(id, null);
         }
 
-        if (value instanceof List<?> l) {
-            @SuppressWarnings("unchecked") List<String> castedList = (List<String>) l;
-            return new TicketCustomField.TagList(id, castedList);
+        if (value instanceof List<?> list) {
+            return decodeList(id, list);
         }
 
         return switch (value) {
@@ -70,9 +72,20 @@ public class SealedTicketCustomFieldDeserializer implements Deserializer<TicketC
         };
     }
 
-    private TicketCustomField handleNumericType(Long id, Number n) {
-        if (n instanceof Double || n instanceof Float) {
-            return new TicketCustomField.Decimal(id, n.floatValue());
+    private TicketCustomField decodeList(@Nullable Long id, List<?> list) {
+        boolean allStrings = list.stream().allMatch(item -> item == null || item instanceof String);
+        if (!allStrings) {
+            return new TicketCustomField.Raw(id, list);
+        }
+        List<String> tags = list.stream()
+                .map(String.class::cast)
+                .toList();
+        return new TicketCustomField.TagList(id, tags);
+    }
+
+    private TicketCustomField handleNumericType(@Nullable Long id, Number n) {
+        if (n instanceof Double || n instanceof Float || n instanceof BigDecimal) {
+            return new TicketCustomField.Decimal(id, n.doubleValue());
         }
         return new TicketCustomField.Numeric(id, n.longValue());
     }

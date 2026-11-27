@@ -30,6 +30,7 @@ import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.ArticleCreateRequest;
 import lol.pbu.z4j.model.ArticleResponse;
 import lol.pbu.z4j.model.ArticleSourceLocaleRequest;
+import lol.pbu.z4j.model.ArticleUpdateInput;
 import lol.pbu.z4j.model.ArticleUpdateRequest;
 import lol.pbu.z4j.model.ArticlesResponse;
 import lol.pbu.z4j.model.BulkAttachmentsRequest;
@@ -338,6 +339,50 @@ public interface ArticleClient {
             @NotNull @Valid ArticleUpdateRequest body
     ) {
         return updateArticleNoLocale(articleId, body);
+    }
+
+    /**
+     * <h1>{@summary Update Article}</h1>
+     *
+     * @param localeAbbreviation The locale in which the article is displayed (required)
+     * @param articleId          The unique ID of the article (required)
+     * @param article            {@link ArticleUpdateInput} (required)
+     * @return OK (status code 200)
+     */
+    default Mono<@Valid ArticleResponse> updateArticle(
+            @NotNull LocaleAbbreviation localeAbbreviation,
+            @NotNull Long articleId,
+            @NotNull @Valid ArticleUpdateInput article
+    ) {
+        return updateArticle(localeAbbreviation, articleId, ArticleUpdateRequest.of(article));
+    }
+
+    /**
+     * <h1>{@summary Update Article (No Locale)}</h1>
+     *
+     * @param articleId The unique ID of the article (required)
+     * @param article   {@link ArticleUpdateInput} (required)
+     * @return OK (status code 200)
+     */
+    default Mono<@Valid ArticleResponse> updateArticleNoLocale(
+            @NotNull Long articleId,
+            @NotNull @Valid ArticleUpdateInput article
+    ) {
+        return updateArticleNoLocale(articleId, ArticleUpdateRequest.of(article));
+    }
+
+    /**
+     * <h1>{@summary Update Article}</h1>
+     *
+     * @param articleId The unique ID of the article (required)
+     * @param article   {@link ArticleUpdateInput} (required)
+     * @return OK (status code 200)
+     */
+    default Mono<@Valid ArticleResponse> updateArticle(
+            @NotNull Long articleId,
+            @NotNull @Valid ArticleUpdateInput article
+    ) {
+        return updateArticleNoLocale(articleId, ArticleUpdateRequest.of(article));
     }
 
     /**

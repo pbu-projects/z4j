@@ -21,23 +21,17 @@ import io.micronaut.core.type.Argument;
 import io.micronaut.json.tree.JsonNode;
 import io.micronaut.serde.Decoder;
 import io.micronaut.serde.Deserializer;
-import io.micronaut.serde.ObjectMapper;
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
+import io.micronaut.serde.exceptions.SerdeException;
 import jakarta.inject.Singleton;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import java.util.Objects;
 import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Custom deserializer for {@link AuditEventsInner} supporting polymorphic and arbitrary payloads.
+ * Custom deserializer for {@link AuditEventsInner} supporting different event types and flexible payloads.
  *
  * @author Jonathan-Zollinger
  * @since 0.3.2
@@ -46,17 +40,6 @@ import org.slf4j.LoggerFactory;
 public class AuditEventsInnerDeserializer implements Deserializer<AuditEventsInner> {
 
     private static final Logger log = LoggerFactory.getLogger(AuditEventsInnerDeserializer.class);
-
-    private static final Set<String> KNOWN_FIELDS = Set.of(
-            "id", "type", "field_name", "body", "value", "previous_value", "via", "subject", "recipients"
-    );
-
-    private final Provider<ObjectMapper> objectMapperProvider;
-
-    @Inject
-    public AuditEventsInnerDeserializer(Provider<ObjectMapper> objectMapperProvider) {
-        this.objectMapperProvider = objectMapperProvider;
-    }
 
     @Override
     public AuditEventsInner deserialize(
@@ -74,151 +57,119 @@ public class AuditEventsInnerDeserializer implements Deserializer<AuditEventsInn
         populateId(node, builder);
         populateStringFields(node, builder);
         populateBody(node, builder);
-        preserveUnmappedFieldsIfBodyEmpty(node, builder);
         populateValues(node, builder);
-        populateVia(node, builder);
+        populateVia(node, context, builder);
         populateRecipients(node, builder);
 
         return builder.build();
     }
 
-    private void populateId(JsonNode node, AuditEventsInnerBuilder builder) {
+    private void populateId(JsonNode node, AuditEventsInnerBuilder builder) throws IOException {
         JsonNode idNode = node.get("id");
-        if (idNode != null) {
-            if (idNode.isNumber()) {
-                builder.id(idNode.getLongValue());
-            } else if (idNode.isString()) {
-                try {
-                    builder.id(Long.parseLong(idNode.getStringValue().trim()));
-                } catch (NumberFormatException _) {
-                    // Ignore non-numeric id
-                }
-            }
-        }
-    }
-
-    private void populateStringFields(JsonNode node, AuditEventsInnerBuilder builder) {
-        JsonNode typeNode = node.get("type");
-        if (typeNode != null && !typeNode.isNull()) {
-            builder.type(typeNode.isString() ? typeNode.getStringValue() : typeNode.coerceStringValue());
-        }
-
-        JsonNode fieldNameNode = node.get("field_name");
-        if (fieldNameNode != null && !fieldNameNode.isNull()) {
-            builder.fieldName(fieldNameNode.isString() ? fieldNameNode.getStringValue() : fieldNameNode.coerceStringValue());
-        }
-
-        JsonNode subjectNode = node.get("subject");
-        if (subjectNode != null && !subjectNode.isNull()) {
-            builder.subject(subjectNode.isString() ? subjectNode.getStringValue() : subjectNode.coerceStringValue());
-        }
-    }
-
-    private void populateBody(JsonNode node, AuditEventsInnerBuilder builder) throws IOException {
-        JsonNode bodyNode = node.get("body");
-        if (bodyNode != null && !bodyNode.isNull()) {
-            if (bodyNode.isString()) {
-                builder.body(bodyNode.getStringValue());
-            } else {
-                ObjectMapper mapper = objectMapperProvider.get();
-                if (mapper != null) {
-                    builder.body(mapper.writeValueAsString(bodyNode));
-                } else {
-                    builder.body(bodyNode.coerceStringValue());
-                }
-            }
-        }
-    }
-
-    private void preserveUnmappedFieldsIfBodyEmpty(JsonNode node, AuditEventsInnerBuilder builder) throws IOException {
-        if (builder.body() != null && !builder.body().isBlank()) {
+        if (idNode == null || idNode.isNull()) {
             return;
         }
-        Map<String, Object> unmapped = new LinkedHashMap<>();
-        for (Entry<String, JsonNode> entry : node.entries()) {
-            if (!KNOWN_FIELDS.contains(entry.getKey())) {
-                unmapped.put(entry.getKey(), extractArbitraryValue(entry.getValue()));
+        if (idNode.isNumber()) {
+            builder.id(idNode.getLongValue());
+        } else if (idNode.isString()) {
+            try {
+                builder.id(Long.parseLong(idNode.getStringValue().trim()));
+            } catch (NumberFormatException e) {
+                throw new SerdeException("Invalid numeric audit event id: '" + idNode.getStringValue() + "'", e);
             }
+        } else {
+            throw new SerdeException("Invalid audit event id type: expected number or string");
         }
-        if (!unmapped.isEmpty()) {
-            ObjectMapper mapper = objectMapperProvider.get();
-            if (mapper != null) {
-                builder.body(mapper.writeValueAsString(unmapped));
-            }
+    }
+
+    private void populateStringFields(JsonNode node, AuditEventsInnerBuilder builder) throws SerdeException {
+        String type = readStringField(node, "type");
+        if (type != null) {
+            builder.type(type);
+        }
+
+        String fieldName = readStringField(node, "field_name");
+        if (fieldName != null) {
+            builder.fieldName(fieldName);
+        }
+
+        String subject = readStringField(node, "subject");
+        if (subject != null) {
+            builder.subject(subject);
+        }
+    }
+
+    @Nullable
+    private static String readStringField(JsonNode node, String fieldName) throws SerdeException {
+        JsonNode fieldNode = node.get(fieldName);
+        if (fieldNode == null || fieldNode.isNull()) {
+            return null;
+        }
+        if (fieldNode.isString()) {
+            return fieldNode.getStringValue();
+        }
+        if (!fieldNode.isValueNode()) {
+            throw new SerdeException("Expected scalar string value for audit event field '" + fieldName + "'");
+        }
+        return fieldNode.coerceStringValue();
+    }
+
+    private void populateBody(JsonNode node, AuditEventsInnerBuilder builder) {
+        JsonNode bodyNode = node.get("body");
+        if (bodyNode != null && !bodyNode.isNull()) {
+            builder.body(bodyNode.isString() ? bodyNode.getStringValue() : JsonNodeTreeDecoder.toJson(bodyNode));
         }
     }
 
     private void populateValues(JsonNode node, AuditEventsInnerBuilder builder) {
         JsonNode valueNode = node.get("value");
         if (valueNode != null && !valueNode.isNull()) {
-            builder.value(extractArbitraryValue(valueNode));
+            builder.value(JsonNodeTreeDecoder.toArbitrary(valueNode));
         }
 
         JsonNode prevValueNode = node.get("previous_value");
         if (prevValueNode != null && !prevValueNode.isNull()) {
-            builder.previousValue(extractArbitraryValue(prevValueNode));
+            builder.previousValue(JsonNodeTreeDecoder.toArbitrary(prevValueNode));
         }
     }
 
-    private void populateVia(JsonNode node, AuditEventsInnerBuilder builder) {
+    private void populateVia(JsonNode node, DecoderContext context, AuditEventsInnerBuilder builder) throws IOException {
         JsonNode viaNode = node.get("via");
-        if (viaNode != null && !viaNode.isNull()) {
-            try {
-                ObjectMapper mapper = objectMapperProvider.get();
-                if (mapper != null) {
-                    builder.via(mapper.readValueFromTree(viaNode, Via.class));
-                }
-            } catch (Exception e) {
-                log.debug("Failed to deserialize audit event 'via' structure, ignoring to preserve audit stream: {}", e.getMessage());
-            }
+        if (viaNode == null || viaNode.isNull()) {
+            return;
+        }
+        if (viaNode.isString()) {
+            builder.via(new Via(viaNode.getStringValue(), null));
+        } else if (viaNode.isObject()) {
+            builder.via(PolymorphicSerdeSupport.deserializeTarget(viaNode, context, Via.class));
+        } else {
+            throw new SerdeException("Invalid audit event via type: expected object or string");
         }
     }
 
     private void populateRecipients(JsonNode node, AuditEventsInnerBuilder builder) {
         JsonNode recipientsNode = node.get("recipients");
         if (recipientsNode != null && recipientsNode.isArray()) {
-            List<Long> recipients = new ArrayList<>();
-            for (JsonNode r : recipientsNode.values()) {
-                if (r.isNumber()) {
-                    recipients.add(r.getLongValue());
-                } else if (r.isString()) {
-                    try {
-                        recipients.add(Long.parseLong(r.getStringValue().trim()));
-                    } catch (NumberFormatException e) {
-                        log.debug("Skipping non-numeric recipient ID '{}': {}", r.getStringValue(), e.getMessage());
-                    }
-                }
-            }
+            List<Long> recipients = StreamSupport.stream(recipientsNode.values().spliterator(), false)
+                    .map(this::parseRecipientId)
+                    .filter(Objects::nonNull)
+                    .toList();
             builder.recipients(recipients);
         }
     }
 
     @Nullable
-    private Object extractArbitraryValue(JsonNode node) {
-        if (node == null || node.isNull()) {
-            return null;
+    private Long parseRecipientId(JsonNode recipientNode) {
+        if (recipientNode.isNumber()) {
+            return recipientNode.getLongValue();
         }
-        if (node.isString()) {
-            return node.getStringValue();
-        }
-        if (node.isBoolean()) {
-            return node.getBooleanValue();
-        }
-        if (node.isNumber()) {
-            return node.getNumberValue();
-        }
-        if (node.isArray()) {
-            return StreamSupport.stream(node.values().spliterator(), false)
-                    .map(this::extractArbitraryValue)
-                    .toList();
-        }
-        if (node.isObject()) {
-            Map<String, Object> map = new LinkedHashMap<>();
-            for (Entry<String, JsonNode> entry : node.entries()) {
-                map.put(entry.getKey(), extractArbitraryValue(entry.getValue()));
+        if (recipientNode.isString()) {
+            try {
+                return Long.parseLong(recipientNode.getStringValue().trim());
+            } catch (NumberFormatException e) {
+                log.debug("Skipping non-numeric recipient ID '{}': {}", recipientNode.getStringValue(), e.getMessage());
             }
-            return map;
         }
-        return node.coerceStringValue();
+        return null;
     }
 }

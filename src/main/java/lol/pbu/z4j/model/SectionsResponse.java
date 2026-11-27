@@ -15,7 +15,9 @@
  */
 package lol.pbu.z4j.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.serde.annotation.Serdeable;
 import io.soabase.recordbuilder.core.RecordBuilder;
@@ -25,15 +27,37 @@ import java.util.List;
 
 @Serdeable
 @RecordBuilder
+@JsonPropertyOrder({
+        SectionsResponse.JSON_PROPERTY_SECTIONS,
+        SectionsResponse.JSON_PROPERTY_COUNT,
+        SectionsResponse.JSON_PROPERTY_PAGE,
+        SectionsResponse.JSON_PROPERTY_PAGE_COUNT,
+        SectionsResponse.JSON_PROPERTY_NEXT_PAGE,
+        SectionsResponse.JSON_PROPERTY_PREVIOUS_PAGE
+})
 public record SectionsResponse(
-        @Nullable @JsonProperty(JSON_PROPERTY_SECTIONS) List<@Valid Section> sections
-) implements SectionsResponseBuilder.With {
+        @Nullable @JsonProperty(JSON_PROPERTY_SECTIONS) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) List<@Valid Section> sections,
+        @Nullable @JsonProperty(JSON_PROPERTY_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer count,
+        @Nullable @JsonProperty(JSON_PROPERTY_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer page,
+        @Nullable @JsonProperty(JSON_PROPERTY_PAGE_COUNT) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) Integer pageCount,
+        @Nullable @JsonProperty(JSON_PROPERTY_NEXT_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String nextPage,
+        @Nullable @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE) @JsonInclude(JsonInclude.Include.USE_DEFAULTS) String previousPage
+) implements OffsetPaginationResponse, SectionsResponseBuilder.With {
 
     public static final String JSON_PROPERTY_SECTIONS = "sections";
+    public static final String JSON_PROPERTY_COUNT = "count";
+    public static final String JSON_PROPERTY_PAGE = "page";
+    public static final String JSON_PROPERTY_PAGE_COUNT = "page_count";
+    public static final String JSON_PROPERTY_NEXT_PAGE = "next_page";
+    public static final String JSON_PROPERTY_PREVIOUS_PAGE = "previous_page";
+
+    public SectionsResponse(@Nullable List<@Valid Section> sections) {
+        this(sections, null, null, null, null, null);
+    }
 
     public SectionsResponse addSectionsItem(Section item) {
         List<Section> list = new ArrayList<>(sections != null ? sections : List.of());
         list.add(item);
-        return new SectionsResponse(list);
+        return new SectionsResponse(list, count, page, pageCount, nextPage, previousPage);
     }
 }

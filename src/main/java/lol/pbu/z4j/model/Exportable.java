@@ -25,6 +25,7 @@ import lol.pbu.z4j.Generated;
  * @since 0.1.4
  */
 @Serdeable
+@Serdeable.Deserializable(using = ExportableDeserializer.class)
 @Generated
 public interface Exportable {
 }

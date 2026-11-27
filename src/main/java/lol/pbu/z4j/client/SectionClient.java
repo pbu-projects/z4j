@@ -15,14 +15,17 @@
  */
 package lol.pbu.z4j.client;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Put;
+import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.http.client.annotation.Client;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import lol.pbu.z4j.model.CreateSectionRequest;
 import lol.pbu.z4j.model.LocaleAbbreviation;
@@ -61,9 +64,25 @@ public interface SectionClient {
      * @param localeAbbreviation The locale in which the section is displayed (required)
      * @return OK (status code 200)
      */
+    default Mono<@Valid SectionsResponse> listSections(
+            @NotNull LocaleAbbreviation localeAbbreviation
+    ) {
+        return listSections(localeAbbreviation, null, null);
+    }
+
+    /**
+     * <h1>List Sections by Locale with Pagination</h1>
+     *
+     * @param localeAbbreviation The locale in which the section is displayed (required)
+     * @param page               Page number for offset pagination (optional)
+     * @param perPage            Number of results per page. Max 100. (optional)
+     * @return OK (status code 200)
+     */
     @Get("/api/v2/help_center/{locale}/sections")
     Mono<@Valid SectionsResponse> listSections(
-            @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation
+            @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
+            @QueryValue("page") @Nullable Integer page,
+            @QueryValue("per_page") @Nullable @Max(100) Integer perPage
     );
 
     /**
@@ -71,8 +90,22 @@ public interface SectionClient {
      *
      * @return OK (status code 200)
      */
+    default Mono<@Valid SectionsResponse> listSectionsNoLocale() {
+        return listSectionsNoLocale(null, null);
+    }
+
+    /**
+     * <h1>List Sections with Pagination</h1>
+     *
+     * @param page    Page number for offset pagination (optional)
+     * @param perPage Number of results per page. Max 100. (optional)
+     * @return OK (status code 200)
+     */
     @Get("/api/v2/help_center/sections")
-    Mono<@Valid SectionsResponse> listSectionsNoLocale();
+    Mono<@Valid SectionsResponse> listSectionsNoLocale(
+            @QueryValue("page") @Nullable Integer page,
+            @QueryValue("per_page") @Nullable @Max(100) Integer perPage
+    );
 
     /**
      * <h1>List Sections in Category by Locale</h1>
@@ -81,10 +114,28 @@ public interface SectionClient {
      * @param categoryId         The unique ID of the category (required)
      * @return OK (status code 200)
      */
+    default Mono<@Valid SectionsResponse> listSectionsInCategory(
+            @NotNull LocaleAbbreviation localeAbbreviation,
+            @NotNull Long categoryId
+    ) {
+        return listSectionsInCategory(localeAbbreviation, categoryId, null, null);
+    }
+
+    /**
+     * <h1>List Sections in Category by Locale with Pagination</h1>
+     *
+     * @param localeAbbreviation The locale in which the section is displayed (required)
+     * @param categoryId         The unique ID of the category (required)
+     * @param page               Page number for offset pagination (optional)
+     * @param perPage            Number of results per page. Max 100. (optional)
+     * @return OK (status code 200)
+     */
     @Get("/api/v2/help_center/{locale}/categories/{category_id}/sections")
     Mono<@Valid SectionsResponse> listSectionsInCategory(
             @PathVariable("locale") @NotNull LocaleAbbreviation localeAbbreviation,
-            @PathVariable("category_id") @NotNull Long categoryId
+            @PathVariable("category_id") @NotNull Long categoryId,
+            @QueryValue("page") @Nullable Integer page,
+            @QueryValue("per_page") @Nullable @Max(100) Integer perPage
     );
 
     /**
@@ -93,9 +144,25 @@ public interface SectionClient {
      * @param categoryId The unique ID of the category (required)
      * @return OK (status code 200)
      */
+    default Mono<@Valid SectionsResponse> listSectionsInCategoryNoLocale(
+            @NotNull Long categoryId
+    ) {
+        return listSectionsInCategoryNoLocale(categoryId, null, null);
+    }
+
+    /**
+     * <h1>List Sections in Category with Pagination</h1>
+     *
+     * @param categoryId The unique ID of the category (required)
+     * @param page       Page number for offset pagination (optional)
+     * @param perPage    Number of results per page. Max 100. (optional)
+     * @return OK (status code 200)
+     */
     @Get("/api/v2/help_center/categories/{category_id}/sections")
     Mono<@Valid SectionsResponse> listSectionsInCategoryNoLocale(
-            @PathVariable("category_id") @NotNull Long categoryId
+            @PathVariable("category_id") @NotNull Long categoryId,
+            @QueryValue("page") @Nullable Integer page,
+            @QueryValue("per_page") @Nullable @Max(100) Integer perPage
     );
 
     /**

@@ -24,6 +24,8 @@ import io.micronaut.http.annotation.Put;
 import io.micronaut.http.client.annotation.Client;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lol.pbu.z4j.model.HelpCenterLocalesResponse;
 import lol.pbu.z4j.model.LocaleAbbreviation;
 import lol.pbu.z4j.model.MissingTranslationsResponse;
@@ -62,7 +64,11 @@ public interface TranslationClient {
      */
     @Get("/api/v2/help_center/{resource_type}/{resource_id}/translations")
     Mono<@Valid TranslationsResponse> listTranslations(
-            @PathVariable("resource_type") @NotNull String resourceType,
+            @PathVariable("resource_type")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String resourceType,
             @PathVariable("resource_id") @NotNull Long resourceId
     );
 
@@ -76,7 +82,11 @@ public interface TranslationClient {
      */
     @Get("/api/v2/help_center/{resource_type}/{resource_id}/translations/{locale}")
     Mono<@Valid TranslationResponse> showTranslation(
-            @PathVariable("resource_type") @NotNull String resourceType,
+            @PathVariable("resource_type")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String resourceType,
             @PathVariable("resource_id") @NotNull Long resourceId,
             @PathVariable("locale") @NotNull LocaleAbbreviation locale
     );
@@ -91,7 +101,11 @@ public interface TranslationClient {
      */
     @Post("/api/v2/help_center/{resource_type}/{resource_id}/translations")
     Mono<@Valid TranslationResponse> createTranslation(
-            @PathVariable("resource_type") @NotNull String resourceType,
+            @PathVariable("resource_type")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String resourceType,
             @PathVariable("resource_id") @NotNull Long resourceId,
             @Body @NotNull @Valid TranslationCreateRequest body
     );
@@ -107,7 +121,11 @@ public interface TranslationClient {
      */
     @Put("/api/v2/help_center/{resource_type}/{resource_id}/translations/{locale}")
     Mono<@Valid TranslationResponse> updateTranslation(
-            @PathVariable("resource_type") @NotNull String resourceType,
+            @PathVariable("resource_type")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String resourceType,
             @PathVariable("resource_id") @NotNull Long resourceId,
             @PathVariable("locale") @NotNull LocaleAbbreviation locale,
             @Body @NotNull @Valid TranslationUpdateRequest body
@@ -133,7 +151,11 @@ public interface TranslationClient {
      */
     @Get("/api/v2/help_center/{resource_type}/{resource_id}/translations/missing")
     Mono<@Valid MissingTranslationsResponse> listMissingTranslations(
-            @PathVariable("resource_type") @NotNull String resourceType,
+            @PathVariable("resource_type")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String resourceType,
             @PathVariable("resource_id") @NotNull Long resourceId
     );
 

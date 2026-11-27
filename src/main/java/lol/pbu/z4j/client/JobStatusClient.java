@@ -20,6 +20,8 @@ import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.client.annotation.Client;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lol.pbu.z4j.model.JobStatus;
 import lol.pbu.z4j.model.JobStatusResponse;
 import reactor.core.publisher.Mono;
@@ -48,5 +50,11 @@ public interface JobStatusClient {
      * @return Job status response containing progress, completion state, and results (status code 200)
      */
     @Get("/api/v2/job_statuses/{job_status_id}")
-    Mono<@Valid JobStatusResponse> showJobStatus(@PathVariable("job_status_id") @NotNull String jobStatusId);
+    Mono<@Valid JobStatusResponse> showJobStatus(
+            @PathVariable("job_status_id")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String jobStatusId
+    );
 }

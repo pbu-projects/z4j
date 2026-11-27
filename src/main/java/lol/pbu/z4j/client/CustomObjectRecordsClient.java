@@ -20,6 +20,8 @@ import io.micronaut.http.annotation.*;
 import io.micronaut.http.client.annotation.Client;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lol.pbu.z4j.model.CustomObjectRecord;
 import lol.pbu.z4j.model.CustomObjectRecordResponse;
 import lol.pbu.z4j.model.CustomObjectRecordsCreateRequest;
@@ -44,7 +46,11 @@ public interface CustomObjectRecordsClient {
      */
     @Post("/api/v2/custom_objects/{custom_object_key}/records")
     Mono<@Valid CustomObjectRecordResponse> createCustomObjectRecord(
-            @PathVariable("custom_object_key") @NotNull String customObjectKey,
+            @PathVariable("custom_object_key")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectKey,
             @Body @NotNull @Valid CustomObjectRecordsCreateRequest customObjectRecordsCreateRequest
     );
 
@@ -57,8 +63,16 @@ public interface CustomObjectRecordsClient {
      */
     @Delete("/api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}")
     Mono<Void> deleteCustomObjectRecord(
-            @PathVariable("custom_object_key") @NotNull String customObjectKey,
-            @PathVariable("custom_object_record_id") @NotNull String customObjectRecordId
+            @PathVariable("custom_object_key")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectKey,
+            @PathVariable("custom_object_record_id")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectRecordId
     );
 
     /**
@@ -75,7 +89,11 @@ public interface CustomObjectRecordsClient {
      */
     @Get("/api/v2/custom_objects/{custom_object_key}/records")
     Mono<@Valid CustomObjectRecordsResponse> listCustomObjectRecords(
-            @PathVariable("custom_object_key") @NotNull String customObjectKey,
+            @PathVariable("custom_object_key")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectKey,
             @QueryValue("filter[ids]") @Nullable String filterIds,
             @QueryValue("filter[external_ids]") @Nullable String filterExternalIds,
             @QueryValue("sort") @Nullable String sort,
@@ -84,7 +102,12 @@ public interface CustomObjectRecordsClient {
             @QueryValue("page[size]") @Nullable Long pageSize
     );
 
-    default Mono<@Valid CustomObjectRecordsResponse> listCustomObjectRecords(String customObjectKey) {
+    default Mono<@Valid CustomObjectRecordsResponse> listCustomObjectRecords(
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectKey
+    ) {
         return listCustomObjectRecords(customObjectKey, null, null, null, null, null, null);
     }
 
@@ -95,11 +118,22 @@ public interface CustomObjectRecordsClient {
      * @param customObjectKey Key of custom object (required)
      * @return Flux of all custom object records
      */
-    default Flux<CustomObjectRecord> listAllCustomObjectRecords(String customObjectKey) {
+    default Flux<CustomObjectRecord> listAllCustomObjectRecords(
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectKey
+    ) {
         return listAllCustomObjectRecords(customObjectKey, null);
     }
 
-    default Flux<CustomObjectRecord> listAllCustomObjectRecords(String customObjectKey, Long pageSize) {
+    default Flux<CustomObjectRecord> listAllCustomObjectRecords(
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectKey,
+            Long pageSize
+    ) {
         return listCustomObjectRecords(customObjectKey, null, null, null, null, null, pageSize)
                 .expand(response -> {
                     if (response.meta() != null && Boolean.TRUE.equals(response.meta().get("has_more"))) {
@@ -126,7 +160,11 @@ public interface CustomObjectRecordsClient {
      */
     @Get("/api/v2/custom_objects/{custom_object_key}/records/search")
     Mono<@Valid CustomObjectRecordsResponse> searchCustomObjectRecords(
-            @PathVariable("custom_object_key") @NotNull String customObjectKey,
+            @PathVariable("custom_object_key")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectKey,
             @QueryValue("query") @Nullable String query,
             @QueryValue("sort") @Nullable String sort,
             @QueryValue("page[before]") @Nullable String pageBefore,
@@ -134,7 +172,13 @@ public interface CustomObjectRecordsClient {
             @QueryValue("page[size]") @Nullable Long pageSize
     );
 
-    default Mono<@Valid CustomObjectRecordsResponse> searchCustomObjectRecords(String customObjectKey, String query) {
+    default Mono<@Valid CustomObjectRecordsResponse> searchCustomObjectRecords(
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectKey,
+            String query
+    ) {
         return searchCustomObjectRecords(customObjectKey, query, null, null, null, null);
     }
 
@@ -147,8 +191,16 @@ public interface CustomObjectRecordsClient {
      */
     @Get("/api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}")
     Mono<@Valid CustomObjectRecordResponse> showCustomObjectRecord(
-            @PathVariable("custom_object_key") @NotNull String customObjectKey,
-            @PathVariable("custom_object_record_id") @NotNull String customObjectRecordId
+            @PathVariable("custom_object_key")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectKey,
+            @PathVariable("custom_object_record_id")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectRecordId
     );
 
     /**
@@ -161,8 +213,16 @@ public interface CustomObjectRecordsClient {
      */
     @Patch("/api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}")
     Mono<@Valid CustomObjectRecordResponse> updateCustomObjectRecord(
-            @PathVariable("custom_object_key") @NotNull String customObjectKey,
-            @PathVariable("custom_object_record_id") @NotNull String customObjectRecordId,
+            @PathVariable("custom_object_key")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectKey,
+            @PathVariable("custom_object_record_id")
+            @NotNull
+            @Size(min = 1, max = PathValidation.MAX_PATH_SEGMENT_LENGTH)
+            @Pattern(regexp = PathValidation.SAFE_SEGMENT_PATTERN)
+            String customObjectRecordId,
             @Body @NotNull @Valid CustomObjectRecordsCreateRequest customObjectRecordsCreateRequest
     );
 }
