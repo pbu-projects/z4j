@@ -15,18 +15,10 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.serde.ObjectMapper
-import lol.pbu.z4j.Z4jSpec
-import spock.lang.Shared
 
-class ContentTagsJobSpec extends Z4jSpec {
+class ContentTagsJobSpec extends ModelSpec {
 
-    @Shared
-    ObjectMapper objectMapper
 
-    void setupSpec() {
-        objectMapper = adminCtx.getBean(ObjectMapper.class)
-    }
 
     def "should create ContentTagsJob with convenience constructor, canonical constructor, and builder"() {
         when:

@@ -15,27 +15,9 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.serde.ObjectMapper
 import io.micronaut.serde.exceptions.SerdeException
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
 
-class AuditEventsInnerDeserializerSpec extends Specification {
-
-    @Shared
-    @AutoCleanup
-    ApplicationContext context
-
-    @Shared
-    ObjectMapper objectMapper
-
-    void setupSpec() {
-        context = ApplicationContext.run()
-        objectMapper = context.getBean(ObjectMapper)
-    }
-
+class AuditEventsInnerDeserializerSpec extends ModelSpec {
     def "AutomaticAnswerSend event with array body reads without error"() {
         given:
         String json = '''{

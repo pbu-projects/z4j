@@ -15,18 +15,10 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.serde.ObjectMapper
-import lol.pbu.z4j.Z4jSpec
-import spock.lang.Shared
 
-class VoteCreateRequestSpec extends Z4jSpec {
+class VoteCreateRequestSpec extends ModelSpec {
 
-    @Shared
-    ObjectMapper objectMapper
 
-    void setupSpec() {
-        objectMapper = adminCtx.getBean(ObjectMapper.class)
-    }
 
     def "should create VoteCreateRequest with constructors and builder"() {
         given:

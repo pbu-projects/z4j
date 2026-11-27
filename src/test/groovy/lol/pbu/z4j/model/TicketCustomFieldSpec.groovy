@@ -15,16 +15,7 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.serde.ObjectMapper
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
-
-class TicketCustomFieldSpec extends Specification {
-
-    @Shared
-    @AutoCleanup
-    ObjectMapper.CloseableObjectMapper objectMapper = ObjectMapper.create(Map.of(), "lol.pbu.z4j.model")
+class TicketCustomFieldSpec extends ModelSpec {
 
     def "should deserialize null value to TicketCustomField.Raw"() {
         given:

@@ -15,19 +15,11 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.serde.ObjectMapper
-import lol.pbu.z4j.Z4jSpec
-import spock.lang.Shared
 import spock.lang.Unroll
 
-class LocaleAbbreviationSpec extends Z4jSpec {
+class LocaleAbbreviationSpec extends ModelSpec {
 
-    @Shared
-    ObjectMapper objectMapper
 
-    void setupSpec() {
-        objectMapper = adminCtx.getBean(ObjectMapper.class)
-    }
 
     @Unroll
     def "#locale getValue(), toString(), fromValue(), and JSON round-trip should match"() {

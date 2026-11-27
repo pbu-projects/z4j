@@ -15,19 +15,11 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.serde.ObjectMapper
-import lol.pbu.z4j.Z4jSpec
-import spock.lang.Shared
 import spock.lang.Unroll
 
-class TicketFieldTypeEnumSpec extends Z4jSpec {
+class TicketFieldTypeEnumSpec extends ModelSpec {
 
-    @Shared
-    ObjectMapper objectMapper
 
-    void setupSpec() {
-        objectMapper = adminCtx.getBean(ObjectMapper.class)
-    }
 
     @Unroll
     def "#fieldType toString() and getValue() should return #expectedString"() {

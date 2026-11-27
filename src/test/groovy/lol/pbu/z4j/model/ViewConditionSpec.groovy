@@ -15,21 +15,11 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.serde.ObjectMapper
 import io.micronaut.serde.exceptions.SerdeException
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
 
-class ViewConditionSpec extends Specification {
+class ViewConditionSpec extends ModelSpec {
 
-    @Shared
-    @AutoCleanup
-    ApplicationContext context = ApplicationContext.run()
 
-    @Shared
-    ObjectMapper objectMapper = context.getBean(ObjectMapper.class)
 
     def "should create ViewCondition with constructors and builder"() {
         when:

@@ -15,18 +15,10 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.serde.ObjectMapper
-import lol.pbu.z4j.Z4jSpec
-import spock.lang.Shared
 
-class CreatePermissionGroupRequestSpec extends Z4jSpec {
+class CreatePermissionGroupRequestSpec extends ModelSpec {
 
-    @Shared
-    ObjectMapper objectMapper
 
-    void setupSpec() {
-        objectMapper = adminCtx.getBean(ObjectMapper.class)
-    }
 
     def "should create CreatePermissionGroupRequest with canonical constructor and builder"() {
         given:

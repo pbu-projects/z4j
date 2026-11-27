@@ -15,18 +15,10 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.serde.ObjectMapper
-import lol.pbu.z4j.Z4jSpec
-import spock.lang.Shared
 
-class VoteResponseSpec extends Z4jSpec {
+class VoteResponseSpec extends ModelSpec {
 
-    @Shared
-    ObjectMapper objectMapper
 
-    void setupSpec() {
-        objectMapper = adminCtx.getBean(ObjectMapper.class)
-    }
 
     def "should create VoteResponse with canonical constructor and builder"() {
         given:

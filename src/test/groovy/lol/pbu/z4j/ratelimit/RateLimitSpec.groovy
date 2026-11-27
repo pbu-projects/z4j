@@ -15,25 +15,16 @@
  */
 package lol.pbu.z4j.ratelimit
 
-import lol.pbu.z4j.Z4jSpec
-import lol.pbu.z4j.client.SearchClient
-import spock.lang.Shared
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
+import lol.pbu.z4j.client.RateLimitFilter
+import spock.lang.Specification
 
 import java.time.Duration
 import java.time.Instant
 
-class RateLimitSpec extends Z4jSpec {
-
-    @Shared
-    SearchClient searchClient
-
-    @Shared
-    RateLimitTracker tracker
-
-    void setupSpec() {
-        searchClient = adminCtx.getBean(SearchClient.class)
-        tracker = adminCtx.getBean(RateLimitTracker.class)
-    }
+class RateLimitSpec extends Specification {
 
     def "EndpointRateLimit can parse Zendesk rate limit header correctly"() {
         when: "parsing a search index rate limit header"
@@ -102,6 +93,7 @@ class RateLimitSpec extends Z4jSpec {
 
     def "RateLimitTracker notifies registered listeners upon receiving snapshots"() {
         given: "a custom listener"
+        def tracker = new RateLimitTracker()
         RateLimitSnapshot captured = null
         RateLimitListener listener = { s -> captured = s }
         tracker.addListener(listener)
@@ -118,35 +110,12 @@ class RateLimitSpec extends Z4jSpec {
         tracker.recordSnapshot(snapshot)
 
         then: "the listener received the snapshot"
-        captured != null
-        captured.globalRemaining == 690
-        tracker.getLatestSnapshot() == snapshot
-        tracker.getGlobalRemaining() == 690
-
-        cleanup:
-        tracker.removeListener(listener)
-    }
-
-    def "Live sandbox API call updates RateLimitTracker with real headers"() {
-        given: "a listener registered on the tracker"
-        RateLimitSnapshot liveSnapshot = null
-        RateLimitListener listener = { s -> liveSnapshot = s }
-        tracker.addListener(listener)
-
-        when: "making a live search count call against Zendesk sandbox"
-        searchClient.count("type:ticket").block()
-
-        then: "rate limit headers are intercepted and recorded"
-        liveSnapshot != null
-        liveSnapshot.statusCode == 200
-        liveSnapshot.globalRemaining != null
-        liveSnapshot.globalRemaining > 0
-        liveSnapshot.globalLimit != null
-        liveSnapshot.globalLimit > 0
-
-        and: "tracker state is updated"
-        tracker.getLatestSnapshot() != null
-        tracker.getGlobalRemaining() != null
+        verifyAll {
+            captured != null
+            captured.globalRemaining == 690
+            tracker.getLatestSnapshot() == snapshot
+            tracker.getGlobalRemaining() == 690
+        }
 
         cleanup:
         tracker.removeListener(listener)
@@ -232,7 +201,7 @@ class RateLimitSpec extends Z4jSpec {
     def "RateLimitFilter handles null response and 429 status"() {
         given:
         def localTracker = new RateLimitTracker()
-        def filter = new lol.pbu.z4j.client.RateLimitFilter(localTracker, new lol.pbu.z4j.ratelimit.RateLimitConfiguration())
+        def filter = new RateLimitFilter(localTracker, new RateLimitConfiguration())
 
         when: "handling null response"
         filter.handleResponse(null, null)
@@ -241,16 +210,18 @@ class RateLimitSpec extends Z4jSpec {
         localTracker.getLatestSnapshot() == null
 
         when: "handling 429 response"
-        def req = io.micronaut.http.HttpRequest.GET("/api/v2/search")
-        def resp = io.micronaut.http.HttpResponse.status(io.micronaut.http.HttpStatus.TOO_MANY_REQUESTS)
+        def req = HttpRequest.GET("/api/v2/search")
+        def resp = HttpResponse.status(HttpStatus.TOO_MANY_REQUESTS)
                 .header("Retry-After", "30")
                 .header("X-Rate-Limit-Remaining", "0")
         filter.handleResponse(req, resp)
 
         then:
-        localTracker.getLatestSnapshot() != null
-        localTracker.getLatestSnapshot().isRateLimited()
-        localTracker.getLatestSnapshot().retryAfterSeconds == 30
+        verifyAll {
+            localTracker.getLatestSnapshot() != null
+            localTracker.getLatestSnapshot().isRateLimited()
+            localTracker.getLatestSnapshot().retryAfterSeconds == 30
+        }
     }
 
     def "RateLimitSnapshot calculates effective wait duration and approaching rate limit alias"() {

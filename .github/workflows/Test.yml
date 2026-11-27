@@ -28,9 +28,9 @@ jobs:
     env:
       Z4J_URL: ${{ secrets.ZENDESK_URL }}
       Z4J_TOKEN: ${{ secrets.ZENDESK_TOKEN }}
-      Z4J_ADMIN_EMAIL: ${{ secrets.ZENDESK_ADMIN_EMAIL}}
-      Z4J_AGENT_EMAIL: ${{ secrets.ZENDESK_AGENT_EMAIL}}
-      Z4J_END_USER_EMAIL: ${{ secrets.ZENDESK_END_USER_EMAIL}}
+      Z4J_ADMIN_EMAIL: ${{ secrets.ZENDESK_ADMIN_EMAIL }}
+      Z4J_AGENT_EMAIL: ${{ secrets.ZENDESK_AGENT_EMAIL }}
+      Z4J_END_USER_EMAIL: ${{ secrets.ZENDESK_END_USER_EMAIL }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GITHUB_TOKEN is required for SonarCloud to decorate PRs
     steps:
@@ -38,17 +38,18 @@ jobs:
         with:
           fetch-depth: 0 # SonarCloud needs a full history to assign issues correctly
       - name: Set up JDK
-        uses: graalvm/setup-graalvm@60c26726de13f8b90771df4bc1641a52a3159994
+        uses: graalvm/setup-graalvm@60e76998d25690099182b796e99b8804da582d90 # v1.6.10
         with:
           java-version: '25'
           distribution: 'graalvm-community'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
-      - name: Build and Sonar Scan
+      - name: Build and Check
         if: ${{ github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed') }}
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew build sonar -Dsonar.token="${SONAR_TOKEN}"
+        run: ./gradlew check --no-daemon
+      - name: Sonar Scan
+        if: ${{ (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')) && env.SONAR_TOKEN != '' }}
+        run: ./gradlew sonar --no-daemon -Dsonar.token="${SONAR_TOKEN}"
       - name: Upload test report
         if: failure()
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -65,7 +66,6 @@ jobs:
         uses: graalvm/setup-graalvm@60e76998d25690099182b796e99b8804da582d90 # v1.6.10
         with:
           java-version: '25'
-
           distribution: 'graalvm-community'
       - name: Generate and submit dependency graph
         uses: gradle/actions/dependency-submission@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1

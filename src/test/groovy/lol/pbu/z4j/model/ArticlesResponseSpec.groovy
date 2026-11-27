@@ -15,19 +15,11 @@
  */
 package lol.pbu.z4j.model
 
-import io.micronaut.serde.ObjectMapper
 import java.net.URI
-import lol.pbu.z4j.Z4jSpec
-import spock.lang.Shared
 
-class ArticlesResponseSpec extends Z4jSpec {
+class ArticlesResponseSpec extends ModelSpec {
 
-    @Shared
-    ObjectMapper objectMapper
 
-    void setupSpec() {
-        objectMapper = adminCtx.getBean(ObjectMapper.class)
-    }
 
     def "should create ArticlesResponse with canonical constructor and builder"() {
         given:
